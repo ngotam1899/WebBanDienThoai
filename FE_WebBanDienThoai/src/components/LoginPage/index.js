@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 
 class LoginPage extends Component {
@@ -5,7 +6,7 @@ class LoginPage extends Component {
 		return (
 			<div>
 				<img class="wave" src="img/wave.png" alt="" />
-				<div class="container">
+				<div class="container_login">
 					<div class="img">
 						<img src="img/bg.svg" alt="" />
 					</div>
@@ -32,7 +33,15 @@ class LoginPage extends Component {
 								</div>
 							</div>
 							<a href="#">Forgot Password?</a>
-							<input type="submit" class="btn" value="Login" />
+							<div className="row">
+								<div className="col-12 col-sm-6">
+									<input type="submit" class="btn" value="Login" />
+								</div>
+								<div className="col-12 col-sm-6">
+									<input type="submit" class="btn" value="Register" />
+								</div>
+								
+							</div>
 						</form>
 					</div>
 				</div>

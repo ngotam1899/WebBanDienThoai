@@ -17,13 +17,13 @@ body{
 	z-index: -1;
 }
 
-.container{
+.container_login{
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     grid-gap :7rem;
-    padding: 0 2rem;
+	padding: 0 2rem;
+	grid-template-columns: repeat(2, 1fr);
 }
 
 .img{
@@ -38,27 +38,49 @@ body{
 	align-items: center;
 	text-align: center;
 }
-
+.register-page{
+	background-color: #32be8f;
+	height: 100vh;
+	align-items: center;
+	text-align: center;
+}
+.register-content{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	width: 720px;
+}
 .img img{
 	width: 500px;
+}
+.card{
+	border-radius: 25px;
+}
+.center-page{
+	align-items: center;
+	height: 100vh;
 }
 
 form{
 	width: 360px;
+}
+.register-content form{
+	width: 100%;
+	padding:20px 50px;
 }
 
 .login-content img{
     height: 100px;
 }
 
-.login-content h2{
+h2{
 	margin: 15px 0;
 	color: #333;
-	text-transform: uppercase;
-	font-size: 2.9rem;
+	font-size: 2.5rem;
 }
 
-.login-content .input-div{
+.input-div{
 	position: relative;
     display: grid;
     grid-template-columns: 7% 93%;
@@ -67,7 +89,7 @@ form{
     border-bottom: 2px solid #d9d9d9;
 }
 
-.login-content .input-div.one{
+.input-div.one{
 	margin-top: 0;
 }
 
@@ -183,7 +205,7 @@ a:hover{
 
 
 @media screen and (max-width: 1050px){
-	.container{
+	.container_login{
 		grid-gap: 5rem;
 	}
 }
@@ -193,7 +215,7 @@ a:hover{
 		width: 290px;
 	}
 
-	.login-content h2{
+	h2{
         font-size: 2.4rem;
         margin: 8px 0;
 	}
@@ -204,7 +226,7 @@ a:hover{
 }
 
 @media screen and (max-width: 900px){
-	.container{
+	.container_login{
 		grid-template-columns: 1fr;
 	}
 
@@ -218,5 +240,10 @@ a:hover{
 
 	.login-content{
 		justify-content: center;
+	}
+	.register-content{
+		justify-content: center;
+		width: 80vw;
+		margin: auto;
 	}
 }
