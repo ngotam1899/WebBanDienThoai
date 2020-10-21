@@ -5,13 +5,16 @@ import RegisterPage from './components/RegisterPage';
 import Header from './containers/Header';
 import Footer from './containers/Footer';
 import HomePage from './components/HomePage';
+import ProductPage from './components/ProductPage';
+import CartPage from './components/CartPage';
+import CheckoutPage from './components/CheckoutPage';
 
 class App extends Component {
  render() {
   return (
     <>
     <Header/>
-    <HomePage/>
+    <CheckoutPage/>
     <Footer/>
     </>
   );

@@ -1,7 +1,7 @@
 .footer-top-area .zigzag-bottom{background: #f4f4f4}
 .footer-top-area {background: none repeat scroll 0 0 #333;
 color: #999;
-padding: 35px 0 180px;}
+padding: 35px 0 20px;}
 
 
 .footer-bottom-area {background: #000;color: #fff}
@@ -75,5 +75,12 @@ a:hover, a:focus {color: #17a78b}
 .footer-bottom-area {
   background: none repeat scroll 0 0 #000;
   color: #fff;
-  padding-bottom: 40px;
+}
+.footer-card-icon {
+  font-size: 30px;
+  text-align: right;
+}
+.footer-card-icon .svg-inline--fa.fa-w-18 {
+  width: auto;
+  padding-right: 10px;
 }

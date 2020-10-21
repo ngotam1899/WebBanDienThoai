@@ -63,8 +63,10 @@ class HomePage extends Component {
                     <div className="latest-product">
                         <h2 className="section-title">Latest Products</h2>
                         <div className="product-carousel">
-                            <div className="single-product">
-                                <div className="product-f-image">
+                            <div className="row">
+                              <div className="col-3">
+                                <div className="single-product">
+                                <div className="product-f-image text-center">
                                     <img src={ assets("products/product-1.jpg")} alt=""/>
                                     <div className="product-hover">
                                         <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
@@ -76,10 +78,12 @@ class HomePage extends Component {
                                 
                                 <div className="product-carousel-price">
                                     <ins>$700.00</ins> <del>$100.00</del>
-                                </div> 
+                                </div>
+                                </div>
                             </div>
+                            <div className="col-3">
                             <div className="single-product">
-                                <div className="product-f-image">
+                                <div className="product-f-image text-center">
                                     <img src={ assets("products/product-2.jpg")} alt=""/>
                                     <div className="product-hover">
                                         <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
@@ -92,8 +96,10 @@ class HomePage extends Component {
                                     <ins>$899.00</ins> <del>$999.00</del>
                                 </div> 
                             </div>
+                            </div>
+                            <div className="col-3">
                             <div className="single-product">
-                                <div className="product-f-image">
+                                <div className="product-f-image text-center">
                                     <img src={ assets("products/product-3.jpg")} alt=""/>
                                     <div className="product-hover">
                                         <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
@@ -107,8 +113,10 @@ class HomePage extends Component {
                                     <ins>$400.00</ins> <del>$425.00</del>
                                 </div>                                 
                             </div>
+                            </div>
+                            <div className="col-3">
                             <div className="single-product">
-                                <div className="product-f-image">
+                                <div className="product-f-image text-center">
                                     <img src={ assets("products/product-4.jpg")} alt=""/>
                                     <div className="product-hover">
                                         <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
@@ -122,36 +130,8 @@ class HomePage extends Component {
                                     <ins>$200.00</ins> <del>$225.00</del>
                                 </div>                            
                             </div>
-                            <div className="single-product">
-                                <div className="product-f-image">
-                                    <img src={ assets("products/product-5.jpg")} alt=""/>
-                                    <div className="product-hover">
-                                        <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2>iPhone 6</h2>
-
-                                <div className="product-carousel-price">
-                                    <ins>$1200.00</ins> <del>$1355.00</del>
-                                </div>                                 
                             </div>
-                            <div className="single-product">
-                                <div className="product-f-image">
-                                    <img src={ assets("products/product-6.jpg")} alt=""/>
-                                    <div className="product-hover">
-                                        <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2><a href="single-product.html">Samsung gallaxy note 4</a></h2>
-
-                                <div className="product-carousel-price">
-                                    <ins>$400.00</ins>
-                                </div>                            
-                            </div>
+                           </div>
                         </div>
                     </div>
                 </div>

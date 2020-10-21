@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
 
 class Header extends Component {
@@ -12,7 +14,7 @@ class Header extends Component {
                 <div className="col-md-8">
                     <div className="user-menu">
                         <ul>
-                            <li><a href="#"><i className="fa fa-user"></i> My Account</a></li>
+                            <li><a href="#"><FontAwesomeIcon icon={faUser} /> My Account</a></li>
                             <li><a href="#"><i className="fa fa-heart"></i> Wishlist</a></li>
                             <li><a href="cart.html"><i className="fa fa-user"></i> My Cart</a></li>
                             <li><a href="checkout.html"><i className="fa fa-user"></i> Checkout</a></li>
@@ -77,17 +79,13 @@ class Header extends Component {
       <div class="collapse navbar-collapse" id="collapsibleNavId">
         <ul class="navbar-nav mr-auto mt-lg-0">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link px-3" href="#">Trang chủ <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link px-3" href="#">Điện thoại</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-            <div class="dropdown-menu" aria-labelledby="dropdownId">
-              <a class="dropdown-item" href="#">Action 1</a>
-              <a class="dropdown-item" href="#">Action 2</a>
-            </div>
+          <li class="nav-item">
+            <a class="nav-link px-3" href="#">Phụ kiện</a>
           </li>
         </ul>
       </div>

@@ -1,0 +1,139 @@
+img {
+    max-width: 100%;
+    height: auto;
+}
+table.shop_table td.product-remove a {
+    display: inline-block;
+    padding: 0 5px 2px;
+    text-transform: uppercase;
+  }
+  
+  .quantity {
+    float: left;
+    margin-right: 15px;
+}
+.quantity input[type="number"] {
+    border: 1px solid #5a88ca;
+    padding: 5px;
+    width: 50px;
+}
+  table.shop_table td.product-remove a:hover {color: #fff;background: red;text-decoration: none}
+  table.shop_table td.product-name a{color: #222;}
+  table.shop_table td.product-name a:hover {color: #5a88ca;text-decoration: none}
+  div.quantity input.plus:hover, div.quantity input.minus:hover {background-color: #222}
+  div.cart-collaterals ul.products li.product a:hover h3 {color: #5a88ca}
+  div.cart-collaterals ul.products li.product a:hover {text-decoration: none}
+  
+  div.cart-collaterals ul.products li.product:hover .add_to_cart_button{background-color: #222}
+  
+  
+  .cart-collaterals .shipping_calculator {
+    float: right;
+    width: 40%;
+  }
+  table.shop_table {
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    margin-bottom: 50px;
+    width: 100%;
+}
+table.shop_table th, table.shop_table td {
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding: 15px;
+    text-align: center;
+}
+table.shop_table th {
+    background: none repeat scroll 0 0 #f4f4f4;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+td.product-thumbnail img {
+    height: auto;
+    width: 70px;
+}
+td.product-name {
+    font-size: 18px;
+}
+div.quantity input.plus, div.quantity input.minus {
+    background: none repeat scroll 0 0 #5a88ca;
+    border: medium none;
+    color: #fff;
+    height: 25px;
+    line-height: 15px;
+    width: 25px;
+}
+td.product-quantity div.quantity {
+    float: none;
+    margin: 0;
+}
+td.actions div.coupon {
+    float: left;
+}
+.cart-collaterals {
+    overflow: hidden;
+}
+.cart_totals {
+    float: right;
+    margin-bottom: 50px;
+    width: 40%;
+}
+.cart_totals table {
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    width: 100%;
+}
+.cart_totals table th, .cart_totals table td {
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+}
+.cart_totals table th {
+    background: none repeat scroll 0 0 #f4f4f4;
+}
+.cross-sells {
+    float: left;
+    margin-right: 3%;
+    width: 57%;
+}
+.cart-collaterals h2 {
+    color: #5a88ca;
+    font-size: 25px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+div.cart-collaterals ul.products {
+    list-style: outside none none;
+    margin: 0 0 0 -30px;
+    padding: 0;
+}
+div.cart-collaterals ul.products li.product {
+    float: left;
+    margin-left: 20px;
+    position: relative;
+    width: 198px;
+}
+div.cart-collaterals ul.products li.product .onsale {
+    background: none repeat scroll 0 0 #5a88ca;
+    color: #fff;
+    padding: 5px 10px;
+    position: absolute;
+    right: 0;
+}
+div.cart-collaterals ul.products li.product h3 {
+    color: #333;
+    font-size: 20px;
+    margin-top: 15px;
+}
+div.cart-collaterals ul.products li.product .price {
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+div.cart-collaterals ul.products li.product .price ins {
+    color: #5a88ca;
+    font-weight: 700;
+    margin-left: 10px;
+    text-decoration: none;
+}

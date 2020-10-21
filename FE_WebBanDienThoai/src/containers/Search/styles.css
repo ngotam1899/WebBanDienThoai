@@ -1,0 +1,60 @@
+.sidebar-title {
+    color: #fead53;
+    font-size: 25px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+.single-sidebar {
+    margin-bottom: 50px;
+}
+input[type="text"], input[type="password"], input[type="email"], textarea {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+input[type="submit"], button[type=submit] {
+    background: none repeat scroll 0 0 #5a88ca;
+    border: medium none;
+    color: #fff;
+    padding: 11px 20px;
+    text-transform: uppercase;
+}
+input[type="submit"]:hover, button[type=submit]:hover {background-color: #222}
+.single-sidebar input[type="text"] {
+    margin-bottom: 10px;
+    width: 100%;
+}
+.thubmnail-recent {
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+.recent-thumb {
+    float: left;
+    height: auto;
+    margin-right: 15px;
+    width: 63px;
+}
+.thubmnail-recent > h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+.thubmnail-recent > h2 a {
+    color: #222;
+}
+.product-sidebar-price > ins {
+    color: #5a88ca;
+    font-weight: 700;
+    margin-right: 10px;
+    text-decoration: none;
+}
+.single-sidebar > ul {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+}
+.single-sidebar li {
+    border-bottom: 1px solid #f1f1f1;
+    padding: 10px 0;
+}
+.single-sidebar a {
+    display: block;
+}

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
+import { faFacebookF, faTwitter, faYoutube , faLinkedin, faCcDiscover, faCcMastercard, faCcPaypal, faCcVisa } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
 
 class Footer extends Component {
@@ -15,10 +17,10 @@ class Footer extends Component {
                         <h2><img src={ assets('brand-footer.png') } className="w-100"/></h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis sunt id doloribus vero quam laborum quas alias dolores blanditiis iusto consequatur, modi aliquid eveniet eligendi iure eaque ipsam iste, pariatur omnis sint! Suscipit, debitis, quisquam. Laborum commodi veritatis magni at?</p>
                         <div className="footer-social">
-                            <a href="#" target="_blank"><i className="fa fa-facebook"></i></a>
-                            <a href="#" target="_blank"><i className="fa fa-twitter"></i></a>
-                            <a href="#" target="_blank"><i className="fa fa-youtube"></i></a>
-                            <a href="#" target="_blank"><i className="fa fa-linkedin"></i></a>
+                            <a href="#" target="_blank"><FontAwesomeIcon icon={faFacebookF} /></a>
+                            <a href="#" target="_blank"><FontAwesomeIcon icon={faTwitter} /></a>
+                            <a href="#" target="_blank"><FontAwesomeIcon icon={faYoutube} /></a>
+                            <a href="#" target="_blank"><FontAwesomeIcon icon={faLinkedin} /></a>
                         </div>
                     </div>
                 </div>
@@ -76,10 +78,10 @@ class Footer extends Component {
                 
                 <div className="col-md-4">
                     <div className="footer-card-icon">
-                        <i className="fa fa-cc-discover"></i>
-                        <i className="fa fa-cc-mastercard"></i>
-                        <i className="fa fa-cc-paypal"></i>
-                        <i className="fa fa-cc-visa"></i>
+                        <FontAwesomeIcon icon={faCcDiscover} />
+                        <FontAwesomeIcon icon={faCcMastercard} />
+                        <FontAwesomeIcon icon={faCcPaypal} />
+                        <FontAwesomeIcon icon={faCcVisa} />
                     </div>
                 </div>
             </div>
