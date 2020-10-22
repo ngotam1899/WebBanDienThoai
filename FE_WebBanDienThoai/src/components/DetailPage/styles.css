@@ -1,0 +1,104 @@
+.product-breadcroumb {
+    margin-bottom: 20px;
+}
+.product-breadcroumb > a {
+    margin-right: 31px;
+    position: relative;
+}
+.product-breadcroumb > a::before {
+    content: "/";
+    position: absolute;
+    right: -20px;
+    top: 2px;
+}
+.product-breadcroumb > a:last-child::before {
+    display: none;
+}
+.product-main-img {
+    margin-bottom: 20px;
+}
+.product-gallery {
+    margin-bottom: 25px;
+    margin-left: -15px;
+    overflow: hidden;
+}
+.product-gallery img {
+    height: auto;
+    margin-left: 15px;
+    width: 76px;
+}
+.product-name {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+.product-inner-price {
+    margin-bottom: 25px;
+}
+.product-inner-price > ins {
+    color: #5a88ca;
+    font-weight: 700;
+    margin-right: 10px;
+    text-decoration: none;
+}
+.quantity {
+    float: left;
+    margin-right: 15px;
+}
+.quantity input[type="number"] {
+    border: 1px solid #5a88ca;
+    padding: 5px;
+    width: 50px;
+}
+.add_to_cart_button {
+    background: none repeat scroll 0 0 #5a88ca;
+    border: medium none;
+    color: #fff;
+    padding: 6px 25px;display: inline-block
+}
+.add_to_cart_button:hover {background-color: #222;color: #fff;text-decoration: none}
+.tab-content h2 {
+    font-size: 20px;
+}
+.tab-content {
+    margin-bottom: 30px;
+}
+.submit-review label {
+    display: block;
+}
+.submit-review input[type="text"], .submit-review input[type="email"], .submit-review textarea {
+    
+    width: 100%;
+}
+.rating-chooser {
+    margin-bottom: 30px;
+}
+.rating-chooser p {
+    font-weight: 700;
+}
+.rating-wrap-post {
+    font-size: 20px;
+}
+
+.submit-review textarea {
+    height: 105px;
+}
+
+.related-products-wrapper {
+  margin-top: 30px;
+}
+.related-products-title {color: #feae52;
+font-size: 25px;
+margin-bottom: 30px;
+text-transform: uppercase;}
+
+.related-products-wrapper .owl-nav {
+  position: absolute;
+  right: 0;
+  top: -56px;
+}
+.tab-pane {padding:0}
+.tab-pane label {
+    display: inline-block;
+    max-width: 100%;
+    font-weight: 700;
+}

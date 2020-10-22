@@ -78,8 +78,8 @@ class CheckoutPage extends Component {
 
                             <form enctype="multipart/form-data" action="#" className="checkout" method="post" name="checkout">
 
-                                <div id="customer_details" className="col2-set">
-                                    <div className="col-1">
+                                <div id="customer_details" className="row">
+                                    <div className="col-6">
                                         <div className="woocommerce-billing-fields">
                                             <h3>Billing Details</h3>
                                             <p id="billing_country_field" className="form-row form-row-wide address-field update_totals_on_change validate-required woocommerce-validated">
@@ -164,7 +164,7 @@ class CheckoutPage extends Component {
                                         </div>
                                     </div>
 
-                                    <div className="col-2">
+                                    <div className="col-6">
                                         <div className="woocommerce-shipping-fields">
                                             <h3 id="ship-to-different-address">
                         <label className="checkbox" for="ship-to-different-address-checkbox">Ship to a different address?</label>
