@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ListCountry } from '../../constants/common';
 import Search from '../../containers/Search';
 import './styles.css'
 
@@ -87,7 +88,11 @@ class CheckoutPage extends Component {
                                                 </label>
                                                 <select className="country_to_state country_select" id="billing_country" name="billing_country">
                                                     <option value="">Select a country…</option>
-                                                    <option value="AX">Åland Islands</option>
+                                                    {ListCountry.map((country, index) => {
+                          return (
+                            <option value={country.value} key={index}>{country.name}</option>
+                          )
+                        })}
                                                 </select>
                                             </p>
 
@@ -176,7 +181,11 @@ class CheckoutPage extends Component {
                                                     </label>
                                                     <select className="country_to_state country_select" id="shipping_country" name="shipping_country">
                                                         <option value="">Select a country…</option>
-                                                        <option value="AX">Åland Islands</option>
+                                                        {ListCountry.map((country, index) => {
+                          return (
+                            <option value={country.value} key={index}>{country.name}</option>
+                          )
+                        })}
                                                     </select>
                                                 </p>
 

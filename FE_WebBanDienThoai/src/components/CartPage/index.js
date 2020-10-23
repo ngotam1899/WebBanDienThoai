@@ -156,7 +156,12 @@ class CartPage extends Component {
                       <select rel="calc_shipping_state" className="country_to_state" id="calc_shipping_country"
                         name="calc_shipping_country">
                         <option value="">Select a country…</option>
-                        <option value="AX">Åland Islands</option>
+                        {ListCountry.map((country, index) => {
+                          return (
+                            <option value={country.value} key={index}>{country.name}</option>
+                          )
+                        })}
+                        
                       </select>
                     </p>
 

@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
+import { Link, Route } from 'react-router-dom'
 import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
 
 class Header extends Component {
+    
     render() {
+        const MenuLink = ({label, to, activeOnlyWhenExact })=>{
+            return (
+              <Route path={to} exact={activeOnlyWhenExact} children={({ match })=>{
+                var active = match ? ' active' : 'nav-item';
+                return (
+                  <li className={`nav-item ${active}`}>
+                    <Link exact={activeOnlyWhenExact} className="nav-link px-3" to={to}>{label}</Link>
+                  </li>
+                )
+              }}/>
+            )
+          }
         return (
             <>
                 <div className="header-area">
@@ -55,13 +69,13 @@ class Header extends Component {
             <div className="row">
                 <div className="col-sm-6 col-md-5 col-lg-4 col-xl-3">
                     <div className="logo">
-                        <h1><a href="./"><img src={assets("brand.png")} alt="" className="w-100"/></a></h1>
+                        <Link exact to="/"><img src={assets("brand.png")} alt="" className="w-100"/></Link>
                     </div>
                 </div>
                 
                 <div className="col-sm-6 col-md-7 col-lg-8 col-xl-9">
                     <div className="shopping-item">
-                        <a href="#">Cart - <span className="cart-amunt">$100</span> <i className="fa fa-shopping-cart"></i> <span className="product-count">5</span></a>
+                        <Link exact to="/carts">Cart - <span className="cart-amunt">$100</span> <i className="fa fa-shopping-cart"></i> <span className="product-count">5</span></Link>
                     </div>
                 </div>
             </div>
@@ -71,21 +85,17 @@ class Header extends Component {
     <div className="mainmenu-area">
         <div className="container">
             <div className="row">
-            <nav class="navbar navbar-expand-sm navbar-light bg-light">
-      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+            <nav className="navbar navbar-expand-sm navbar-light bg-light">
+      <button className="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
           aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <span className="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="collapsibleNavId">
-        <ul class="navbar-nav mr-auto mt-lg-0">
-          <li class="nav-item active">
-            <a class="nav-link px-3" href="#">Trang chủ <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link px-3" href="#">Điện thoại</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link px-3" href="#">Phụ kiện</a>
+      <div className="collapse navbar-collapse" id="collapsibleNavId">
+        <ul className="navbar-nav mr-auto mt-lg-0">
+          <MenuLink label="Trang chủ" to="/" activeOnlyWhenExact={true}/>
+          <MenuLink label="Điện thoại" to="/products/dien-thoai" activeOnlyWhenExact={true}/>
+          <li className="nav-item">
+            <a className="nav-link px-3" href="#">Phụ kiện</a>
           </li>
         </ul>
       </div>
