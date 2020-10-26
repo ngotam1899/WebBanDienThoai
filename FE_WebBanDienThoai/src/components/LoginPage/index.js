@@ -1,44 +1,47 @@
 
 import React, { Component } from 'react';
+import './loginStyles.css'
+import { assets } from '../../constants/assetsImage';
 
 class LoginPage extends Component {
 	render() {
 		return (
 			<div>
-				<img class="wave" src="img/wave.png" alt="" />
-				<div class="container_login">
-					<div class="img">
-						<img src="img/bg.svg" alt="" />
+				<img className="wave" src={ assets("wave.png")} alt="" />
+				<div className="container_login">
+					<div className="img">
+						<img src={ assets("bg.svg")} alt="" />
 					</div>
-					<div class="login-content">
+					<div className="login-content">
 						<form action="index.html">
 							<img src="img/avatar.svg" alt="" />
-							<h2 class="title">Welcome to Bookstore</h2>
-							<div class="input-div one">
-								<div class="i">
-									<i class="fas fa-user" />
+							<h2 className="title">Welcome to</h2>
+							<img className="pb-4" src={assets("brand.png")}></img>
+							<div className="input-div one">
+								<div className="i">
+									<i className="fas fa-user" />
 								</div>
-								<div class="div">
+								<div className="div">
 									<h5>Username</h5>
-									<input type="text" class="input" />
+									<input type="text" className="input" />
 								</div>
 							</div>
-							<div class="input-div pass">
-								<div class="i">
-									<i class="fas fa-lock" />
+							<div className="input-div pass">
+								<div className="i">
+									<i className="fas fa-lock" />
 								</div>
-								<div class="div">
+								<div className="div">
 									<h5>Password</h5>
-									<input type="password" class="input" />
+									<input type="password" className="input" />
 								</div>
 							</div>
 							<a href="#">Forgot Password?</a>
-							<div className="row">
-								<div className="col-12 col-sm-6">
-									<input type="submit" class="btn" value="Login" />
+							<div classNameName="row">
+								<div classNameName="col-12 col-sm-6">
+									<input type="submit" className="btn" value="Login" />
 								</div>
-								<div className="col-12 col-sm-6">
-									<input type="submit" class="btn" value="Register" />
+								<div classNameName="col-12 col-sm-6">
+									<input type="submit" className="btn" value="Register" />
 								</div>
 								
 							</div>
