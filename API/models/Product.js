@@ -18,7 +18,7 @@ const ProductSchema = new Schema({
         type: Number
     },
     createdate: {
-        type: Date
+        type: String
     },
     bigimage: {
         type: String
@@ -35,10 +35,6 @@ const ProductSchema = new Schema({
         ref: "Brand"
     },
     origin: {
-        type: Schema.Types.ObjectId,
-        ref: "Origin"
-    },
-    child: {
         type: String
     }
 })

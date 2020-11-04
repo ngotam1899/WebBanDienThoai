@@ -11,6 +11,7 @@ const routerShop = require('./routes/shop')
 const routerProduct = require('./routes/product')
 
 const mongoose = require('mongoose')
+mongoose.set('useFindAndModify', false);
 
 const bodyParser = require('body-parser')
 

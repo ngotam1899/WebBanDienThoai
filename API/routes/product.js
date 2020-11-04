@@ -10,6 +10,7 @@ const colorController = require('../controllers/color')
 const cpuController = require('../controllers/cpu')
 const widescreenController = require('../controllers/widescreen')
 const operationController = require('../controllers/operation')
+const mobileController = require('../controllers/phone')
 
 const passport = require('passport')
 require('../middlewares/passport')
@@ -73,5 +74,12 @@ router.route('/operations/:IDOperation')
 //Region comment
 router.route('/comment')
     .post(passport.authenticate('jwt', { session: false }), commentController.addComment)
+
+router.route('/phones')
+    .get(mobileController.getAllMobile)
+    .post(mobileController.addMobile)
+router.route('/phones/:IDMobile/update')
+    .put(mobileController.updateMobile)
+
 
 module.exports = router

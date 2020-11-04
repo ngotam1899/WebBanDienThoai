@@ -38,27 +38,28 @@ const MobileSchema = new Schema({
         type: String
     },
     sim: {
-        type: int
+        type: String
     },
     network: {
         type: String
     },
     pin: {
-        type: Number
+        type: String
     },
     quickcharging: {
         type: String
     },
     weight: {
-        type: Number
-    },
-    thick: {
-        type: Number
-    },
-    color: {
         type: String
     },
-    parent: {
+    thick: {
+        type: String
+    },
+    color: {
+        type: Schema.Types.ObjectId,
+        ref: "Color"
+    },
+    generalinfo: {
         type: Schema.Types.ObjectId,
         ref: "Product"
     }
