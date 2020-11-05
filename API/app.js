@@ -11,7 +11,6 @@ const routerShop = require('./routes/shop')
 const routerProduct = require('./routes/product')
 
 const mongoose = require('mongoose')
-mongoose.set('useFindAndModify', false);
 
 const bodyParser = require('body-parser')
 
@@ -20,7 +19,8 @@ const app = express();
 mongoose.connect('mongodb://localhost/LearnAPI', {
         useCreateIndex: true,
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     })
     .then(() => console.log('Connected to MongoDB!'))
     .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))

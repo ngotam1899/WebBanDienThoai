@@ -86,20 +86,35 @@ const updateMobile = async(req, res, next) => {
         const { name, price, amount, pathseo, warrently, createdate, bigimage, image, category, brand, origin } = req.body.generalinfo
         const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body
 
-        const newMobile = new Mobile({ display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color })
-        const newProduct = new Product({ name, price, amount, pathseo, warrently, createdate, bigimage, image, category, brand, origin })
+        mobile.display = display
+        mobile.revolution = revolution
+        mobile.widescreen = widescreen
+        mobile.operation = operation
+        mobile.camera1 = camera1
+        mobile.camera2 = camera2
+        mobile.cpu = cpu
+        mobile.ram = ram
+        mobile.memory = memory
+        mobile.microcard = microcard
+        mobile.sim = sim
+        mobile.pin = pin
+        mobile.network = network
+        mobile.quickcharging = quickcharging
+        mobile.weight = weight
+        mobile.thick = thick
+        mobile.color = color
+        mobile.save()
 
-
-        console.log(mobile)
-        await Mobile.replaceOne({ IDMobile }, newMobile)
-
-        slp.sleep(1)
-        console.log("OK1")
-        const product_ID = mobile.generalinfo
-
-
-        await Product.replaceOne({ product_ID }, newProduct)
-        console.log("OK2")
+        const product = await Product.findById(mobile.generalinfo)
+        product.name = name
+        product.price = price
+        product.amount = amount
+        product.pathseo = pathseo
+        product.warrently = warrently
+        product.category = category
+        product.brand = brand
+        product.origin = origin
+        product.save()
 
         return res.status(200).json({ success: 'true' })
     } catch (error) {
