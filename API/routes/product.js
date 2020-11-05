@@ -80,6 +80,8 @@ router.route('/phones')
     .post(mobileController.addMobile)
 router.route('/phones/:IDMobile/update')
     .put(mobileController.updateMobile)
+router.route('/phones/:IDMobile/delete')
+    .delete(mobileController.deleteMobile)
 
 
 module.exports = router

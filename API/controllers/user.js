@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const createError = require('http-errors')
+const bcrypts = require('bcryptjs')
 
 const JWT = require('jsonwebtoken')
 const { JWT_SECRET } = require('../configs/config')
@@ -13,9 +14,17 @@ const encodedToken = (userID) => {
     }, JWT_SECRET)
 }
 
-const signIn = async(req, res, next) => {
-    const token = encodedToken(req.user._id)
+const logOut = async(req, res, next) => {
+    headers = req.headers
+}
 
+const signIn = async(req, res, next) => {
+    const salt = await bcrypts.genSalt(15)
+    req.user.devide_code = await bcrypts.hash(req.user.email, salt)
+    req.user.save()
+
+    const token = encodedToken(req.user._id)
+    res.setHeader('Devide_code', req.user.devide_code)
     res.setHeader('Authorization', token)
 
     return res.status(200).json({ success: 'true' })
@@ -33,7 +42,6 @@ const signUp = async(req, res, next) => {
     await newUser.save()
 
     const token = encodedToken(newUser._id)
-    console.log(newUser._id)
 
     res.setHeader("Authorization", token)
 
@@ -98,5 +106,6 @@ module.exports = {
     replaceUser,
     signIn,
     signUp,
-    secret
+    secret,
+    logOut
 }

@@ -15,8 +15,8 @@ router.route('/signin')
 router.route('/signup')
     .post(userController.signUp)
 
-router.route('/secret')
-    .get(passport.authenticate('jwt', { session: false }), userController.secret)
+router.route('/logout')
+    .get(passport.authenticate('jwt', { session: false }), userController.logOut)
 
 router.route('/:userID')
     .get(userController.getUser)

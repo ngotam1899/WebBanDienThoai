@@ -9,12 +9,13 @@ const Operation = require('../models/Operation')
 const CPU = require('../models/CPU')
 const Color = require('../models/Color')
 const slp = require('sleep')
-const { addWideScreen } = require('./widescreen')
 
 const addMobile = async(req, res, next) => {
     try {
         const { name, price, amount, pathseo, warrently, createdate, bigimage, image, category, brand, origin } = req.body.generalinfo
         const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body
+
+        console.log(image)
 
         const is_category = await Category.findById(category)
         if (!is_category) return res.status(404).json({ error: { message: 'Can not matching any Category' } })
@@ -114,6 +115,9 @@ const updateMobile = async(req, res, next) => {
         product.category = category
         product.brand = brand
         product.origin = origin
+        product.createdate = createdate
+        product.bigimage = bigimage
+        product.image = image
         product.save()
 
         return res.status(200).json({ success: 'true' })
@@ -122,8 +126,24 @@ const updateMobile = async(req, res, next) => {
     }
 }
 
+const deleteMobile = async(req, res, next) => {
+    try {
+        const { IDMobile } = req.params
+        const mobile = await Mobile.findById(IDMobile)
+        if (!mobile) return res.status(404).json({ error: { message: 'The product is not exist' } })
+
+        await Product.findByIdAndDelete(mobile.generalinfo)
+        await Mobile.findByIdAndDelete(IDMobile)
+
+        return res.status(200).json({ message: 'success' })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     getAllMobile,
     addMobile,
-    updateMobile
+    updateMobile,
+    deleteMobile
 }
