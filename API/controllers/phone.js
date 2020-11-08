@@ -8,7 +8,7 @@ const Widescreen = require('../models/Widescreen')
 const Operation = require('../models/Operation')
 const CPU = require('../models/CPU')
 const Color = require('../models/Color')
-//const slp = require('sleep')
+    //const slp = require('sleep')
 
 const addMobile = async(req, res, next) => {
     try {
@@ -141,9 +141,32 @@ const deleteMobile = async(req, res, next) => {
     }
 }
 
+const getMobile = async(req, res, next) => {
+    try {
+        const { IDMobile } = req.params
+
+        const product = await User.findById(IDMobile)
+            .populate({ path: 'display', select: 'name' })
+            .populate({ path: 'revolution', select: 'revolution' })
+            .populate({ path: 'widescreen', select: 'widescreen' })
+            .populate({ path: 'operation', select: 'operation' })
+            .populate({ path: 'cpu', select: 'cpu' })
+            .populate({ path: 'color', select: 'color' })
+            .populate({ path: 'generalinfo', populate: { path: 'category', select: 'name' } })
+            .populate({ path: 'generalinfo', populate: { path: 'brand', select: 'name' } })
+
+        if (!product) return res.status(404).json({ message: 'can not found any record' })
+
+        return res.status(200).json({ product })
+    } catch (error) {
+        return next(error)
+    }
+}
+
 module.exports = {
     getAllMobile,
     addMobile,
     updateMobile,
-    deleteMobile
+    deleteMobile,
+    getMobile
 }
