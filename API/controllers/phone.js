@@ -145,7 +145,7 @@ const getMobile = async(req, res, next) => {
     try {
         const { IDMobile } = req.params
 
-        const product = await User.findById(IDMobile)
+        const product = await Mobile.findById(IDMobile)
             .populate({ path: 'display', select: 'name' })
             .populate({ path: 'revolution', select: 'revolution' })
             .populate({ path: 'widescreen', select: 'widescreen' })
