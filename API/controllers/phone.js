@@ -8,7 +8,7 @@ const Widescreen = require('../models/Widescreen')
 const Operation = require('../models/Operation')
 const CPU = require('../models/CPU')
 const Color = require('../models/Color')
-const slp = require('sleep')
+//const slp = require('sleep')
 
 const addMobile = async(req, res, next) => {
     try {
@@ -44,11 +44,11 @@ const addMobile = async(req, res, next) => {
         const newProduct = new Product({ name, price, amount, pathseo, warrently, createdate, bigimage, image, category, brand, origin })
         await newProduct.save()
 
-        slp.sleep(2)
+        //slp.sleep(2)
 
         const newMobile = new Mobile({ display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color })
         newMobile.generalinfo = newProduct._id
-        newMobile.save()
+        await newMobile.save()
 
 
         newMobile.generalinfo = newProduct

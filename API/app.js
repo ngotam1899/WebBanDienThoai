@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const express = require('express');
 
-const logger = require('morgan');
+//const logger = require('morgan');
 
 const routerUser = require('./routes/user')
 const routerReview = require('./routes/review')
@@ -16,7 +16,7 @@ const bodyParser = require('body-parser')
 
 const app = express();
 
-mongoose.connect('mongodb://localhost/LearnAPI', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
         useCreateIndex: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -26,7 +26,7 @@ mongoose.connect('mongodb://localhost/LearnAPI', {
     .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))
 
 //Middlewares
-app.use(logger('dev'))
+//app.use(logger('dev'))
 
 app.use(bodyParser.json())
 
@@ -35,7 +35,6 @@ app.use('/users', routerUser)
 app.use('/reviews', routerReview)
 app.use('/shop-info', routerShop)
 app.use('/products', routerProduct)
-
 
 
 //Catch 404 error and forward them to error handler
@@ -59,5 +58,7 @@ app.use((err, req, res, next) => {
 //Error handler function
 
 //Start server
-const port = app.get('port') || 3000
-app.listen(port, () => console.log(`Server is listening on port ${port}`))
+app.set('port', process.env.PORT || 3000);
+app.listen(app.get('port'), function(){
+    console.log('Server is listening at port ' + app.get('port'));
+});

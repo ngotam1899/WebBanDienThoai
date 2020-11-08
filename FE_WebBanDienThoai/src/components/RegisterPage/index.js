@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+//dispatch action
+import {bindActionCreators} from 'redux';
+
 import '../LoginPage/loginStyles.css'
 
 class RegisterPage extends Component {
@@ -94,4 +98,14 @@ class RegisterPage extends Component {
 	}
 }
 
-export default RegisterPage;
+const mapStateToProps = (state) => {
+  return {
+   
+  };
+};
+
+const mapDispatchToProps = {
+	
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);
