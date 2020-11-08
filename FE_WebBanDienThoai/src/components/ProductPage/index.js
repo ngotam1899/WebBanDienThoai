@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import './styles.css';
 import { assets } from '../../constants/assetsImage';
 
+import ProductsSelectors from "../../redux/selectors/products";
+import ProductsActions from "../../redux/actions/products";
+
 class ProductPage extends Component {
+    componentDidMount() {
+        const {onGetList} = this.props;
+        onGetList();
+    }
+
     render() {
+        const {listProducts} = this.props;
         return (
             <>
             <div className="product-big-title-area">
@@ -236,4 +246,14 @@ class ProductPage extends Component {
     }
 }
 
-export default ProductPage;
+const mapStateToProps = (state)=>{ 
+    return { 
+        listProducts: ProductsSelectors.getList(state)
+    }
+}
+
+const mapDispatchToProps = {
+    onGetList: ProductsActions.onGetList,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);

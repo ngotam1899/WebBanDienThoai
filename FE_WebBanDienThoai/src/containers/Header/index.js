@@ -69,13 +69,13 @@ class Header extends Component {
             <div className="row">
                 <div className="col-sm-6 col-md-5 col-lg-4 col-xl-3">
                     <div className="logo">
-                        <Link exact to="/"><img src={assets("brand.png")} alt="" className="w-100"/></Link>
+                        <Link to="/"><img src={assets("brand.png")} alt="" className="w-100"/></Link>
                     </div>
                 </div>
                 
                 <div className="col-sm-6 col-md-7 col-lg-8 col-xl-9">
                     <div className="shopping-item">
-                        <Link exact to="/carts">Cart - <span className="cart-amunt">$100</span> <i className="fa fa-shopping-cart"></i> <span className="product-count">5</span></Link>
+                        <Link to="/carts">Cart - <span className="cart-amunt">$100</span> <i className="fa fa-shopping-cart"></i> <span className="product-count">5</span></Link>
                     </div>
                 </div>
             </div>
