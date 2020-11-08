@@ -6,14 +6,9 @@ import { getAllProducts } from "../apis/products";
 function* handleGetList({ payload }) {
   try {
     const result = yield call(getAllProducts, payload);
-    console.log("result",result);
     const data = get(result, "data");
-    if (get(data, "code") !== 200) {
-      throw data;
-    }
-    yield put(ProductsActions.onGetListSuccess(data));
+    yield put(ProductsActions.onGetListSuccess(data.products.products));
   } catch (error) {
-    console.log("error",error);
     yield put(ProductsActions.onGetListError(error));
   }
 }

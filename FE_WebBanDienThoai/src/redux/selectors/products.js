@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { get } from "lodash";
 
-const getState = (state) => get(state, "product");
+const getState = (state) => get(state, "products");
 
 const getList = createSelector(getState, (state) => get(state, "list", []));
 

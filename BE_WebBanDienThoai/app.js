@@ -1,41 +1,74 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+//Config enviroment
+require('dotenv').config()
+const cors = require('cors')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const express = require('express');
 
-var app = express();
+//const logger = require('morgan');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+const routerUser = require('./routes/user')
+const routerReview = require('./routes/review')
+const routerShop = require('./routes/shop')
+const routerProduct = require('./routes/product')
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+const mongoose = require('mongoose')
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+const bodyParser = require('body-parser')
 
-// catch 404 and forward to error handler
+const app = express();
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
+        useCreateIndex: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false
+    })
+    .then(() => console.log('Connected to MongoDB!'))
+    .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))
+
+//Middlewares
+//app.use(logger('dev'))
+app.use(cors());
 app.use(function(req, res, next) {
-  next(createError(404));
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    next();
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(bodyParser.json())
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+//Routes
+app.use('/users', routerUser)
+app.use('/reviews', routerReview)
+app.use('/shop-info', routerShop)
+app.use('/products', routerProduct)
+
+
+//Catch 404 error and forward them to error handler
+app.use((req, res, next) => {
+    const err = new HttpError('Not Found')
+    err.status = 404
+    next(err)
+})
+
+app.use((err, req, res, next) => {
+    const error = app.get('env') === 'development' ? err : {}
+    const status = err.status || 500
+
+    return res.status(status).json({
+        error: {
+            message: error.message
+        }
+    })
+})
+
+//Error handler function
+
+//Start server
+app.set('port', process.env.PORT || 3000);
+app.listen(app.get('port'), function(){
+    console.log('Server is listening at port ' + app.get('port'));
 });
-
-module.exports = app;

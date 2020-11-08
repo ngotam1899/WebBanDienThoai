@@ -49,17 +49,15 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_LIST_ERROR:
       return {
         ...state,
-        /* loading: false,
-        apiResultGetList: omit(get(action, "payload"), ["data"]), */
+         loading: false,
+        /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
       };
 
     case ProductsActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        /* loading: false,
-        list: get(action, "payload.data.data", []),
-        metadata: omit(get(action, "payload.data"), ["data"]),
-        apiResultGetList: omit(get(action, "payload"), ["data"]), */
+        loading: false,
+        list: get(action, "payload", []),
       };
 
     case ProductsActionTypes.GET_DETAIL:
