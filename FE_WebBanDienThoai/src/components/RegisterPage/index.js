@@ -6,6 +6,26 @@ import {bindActionCreators} from 'redux';
 import '../LoginPage/loginStyles.css'
 
 class RegisterPage extends Component {
+	componentDidMount(){ 
+		const inputs = document.querySelectorAll(".input");
+		function addcl(){
+			let parent = this.parentNode.parentNode;
+			parent.classList.add("focus");
+		}
+
+		function remcl(){
+			let parent = this.parentNode.parentNode;
+			if(this.value == ""){
+				parent.classList.remove("focus");
+			}
+		}
+		inputs.forEach(input => {
+			input.addEventListener("focus", addcl);
+			input.addEventListener("blur", remcl);
+		});
+	}
+
+
 	render() {
 		return (
 			<div className="register-page">
@@ -22,7 +42,8 @@ class RegisterPage extends Component {
 													<i className="fas fa-user-edit" />
 												</div>
 												<div className="div">
-													<input type="text" className="input" placeholder="First name" />
+													<h5>First name</h5>
+													<input type="text" className="input"/>
 												</div>
 											</div>
 											<div className="col-12 col-sm-6 input-div one">
@@ -30,7 +51,8 @@ class RegisterPage extends Component {
 													<i className="fas fa-user-edit" />
 												</div>
 												<div className="div">
-													<input type="text" className="input" placeholder="Last name" />
+													<h5>Last name</h5>
+													<input type="text" className="input" />
 												</div>
 											</div>
 										</div>
@@ -40,7 +62,8 @@ class RegisterPage extends Component {
 													<i className="fas fa-mobile-alt" />
 												</div>
 												<div className="div">
-													<input type="tel" className="input" placeholder="Phone number" />
+													<h5>Phone number</h5>
+													<input type="tel" className="input" />
 												</div>
 											</div>
 										</div>
@@ -50,7 +73,8 @@ class RegisterPage extends Component {
 												<i className="fas fa-home" />
 											</div>
 											<div className="div">
-												<input type="text" className="input" placeholder="Address" />
+												<h5>Address</h5>
+												<input type="text" className="input" />
 											</div>
 										</div>
                     </div>
@@ -60,7 +84,8 @@ class RegisterPage extends Component {
 												<i className="fas fa-user" />
 											</div>
 											<div className="div">
-												<input type="text" className="input" placeholder="Email" />
+												<h5>Email</h5>
+												<input type="text" className="input"/>
 											</div>
 										</div>
                     </div>
@@ -70,7 +95,8 @@ class RegisterPage extends Component {
 												<i className="fas fa-lock" />
 											</div>
 											<div className="div">
-												<input type="password" className="input" placeholder="Password" />
+												<h5>Password</h5>
+												<input type="password" className="input"/>
 											</div>
 										</div>
                     <div className="col-12 col-sm-6 input-div pass">
@@ -78,7 +104,8 @@ class RegisterPage extends Component {
 												<i className="fas fa-check-circle" />
 											</div>
 											<div className="div">
-												<input type="password" className="input" placeholder="Confirm Password" />
+												<h5>Confirm Password</h5>
+												<input type="password" className="input" />
 											</div>
 										</div>
                     </div>
