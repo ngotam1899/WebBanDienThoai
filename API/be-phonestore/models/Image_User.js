@@ -10,13 +10,9 @@ const ImageSchema = new Schema({
     },
     public_url: {
         type: String
-    },
-    use: [{
-        type: Schema.Types.ObjectId,
-        ref: "Product"
-    }]
+    }
 })
 
-const Image_Pro = mongoose.model('Image_Pro', ImageSchema)
+const Image_User = mongoose.model('Image_User', ImageSchema)
 
-module.exports = Image_Pro
+module.exports = Image_User

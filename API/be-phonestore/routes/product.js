@@ -12,6 +12,7 @@ const widescreenController = require('../controllers/widescreen')
 const operationController = require('../controllers/operation')
 const mobileController = require('../controllers/phone')
 const productController = require('../controllers/product')
+const imageController = require('../controllers/image')
 
 const passport = require('passport')
 require('../middlewares/passport')
@@ -88,8 +89,12 @@ router.route('/phones/:IDProduct')
 router.route('/phones/:IDProduct')
     .delete(mobileController.deleteproduct)
 
-router.route('/image/upload/:IDProduct').post(productController.uploadImageMobile)
+router.route('/image')
+    .get(imageController.getAllImg)
+    .post(imageController.uploadImage)
 
-
+router.route('/image/:IDImage')
+    .get(imageController.getImage)
+    .delete(imageController.deleteImage)
 
 module.exports = router
