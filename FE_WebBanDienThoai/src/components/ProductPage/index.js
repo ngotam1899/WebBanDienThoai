@@ -14,8 +14,7 @@ class ProductPage extends Component {
   
 
   render() {
-    const { listProducts } = this.props;
-    console.log("list",listProducts)
+    const { listProducts, onAddProductToCart } = this.props;
     return (
       <>
         <div className="product-big-title-area">
@@ -36,7 +35,8 @@ class ProductPage extends Component {
           <div className="container">
             <div className="row">
               {listProducts.map((product, index) => {
-                return (<ProductItem product={product} key={index}/>)
+                return (<ProductItem product={product} key={index} 
+                  onAddProductToCart={onAddProductToCart}/>)
               })}
               
             </div>
@@ -78,8 +78,15 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = {
-  onGetList: ProductsActions.onGetList,
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onGetList: () => {
+      dispatch(ProductsActions.onGetList())
+    },
+    onAddProductToCart: (product) => {
+      dispatch(ProductsActions.onAddProductToCart(product, 1));
+    },
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);

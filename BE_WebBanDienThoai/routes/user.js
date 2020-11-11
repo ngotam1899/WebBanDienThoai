@@ -1,6 +1,7 @@
 const express = require('express')
 const router = require("express-promise-router")()
 const userController = require('../controllers/user')
+const imageController = require('../controllers/image')
 
 const passport = require('passport')
 require('../middlewares/passport')
@@ -22,4 +23,10 @@ router.route('/:userID')
     .get(userController.getUser)
     .put(userController.replaceUser)
 
+router.route('/image')
+    .get(imageController.getAllImgUser)
+    .post(imageController.uploadImageUser)
+
+router.route('/image/:IDImage')
+    .get(imageController.getImageUser)
 module.exports = router

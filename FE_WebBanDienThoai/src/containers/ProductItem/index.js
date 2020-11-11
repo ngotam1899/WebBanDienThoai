@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { assets } from '../../constants/assetsImage';
 
 class ProductItem extends Component {
+	onAddToCart = (product) =>{
+		var {onAddProductToCart} = this.props;
+		onAddProductToCart(product);
+	}
+
 	render() {
     const {product} = this.props;
 		return (
@@ -18,16 +23,12 @@ class ProductItem extends Component {
 					</div>
 
 					<div className="product-option-shop">
-						<a
+						<button
 							className="add_to_cart_button"
-							data-quantity="1"
-							data-product_sku=""
-							data-product_id="70"
-							rel="nofollow"
-							href="/canvas/shop/?add-to-cart=70"
+							onClick ={ () => this.onAddToCart(product)}
 						>
 							Add to cart
-						</a>
+						</button>
 					</div>
 				</div>
 			</div>

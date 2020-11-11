@@ -3,8 +3,8 @@ require('dotenv').config()
 const cors = require('cors')
 
 const express = require('express');
-
-//const logger = require('morgan');
+const cloudinary = require('cloudinary').v2
+    //const logger = require('morgan');
 
 const routerUser = require('./routes/user')
 const routerReview = require('./routes/review')
@@ -14,8 +14,14 @@ const routerProduct = require('./routes/product')
 const mongoose = require('mongoose')
 
 const bodyParser = require('body-parser')
+const fileUpload = require('express-fileupload');
+
+
 
 const app = express();
+app.use(fileUpload({
+    useTempFiles: true
+}))
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
         useCreateIndex: true,
@@ -25,6 +31,12 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
     })
     .then(() => console.log('Connected to MongoDB!'))
     .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))
+
+cloudinary.config({
+    cloud_name: 'bephonestore',
+    api_key: '537574645278545',
+    api_secret: 'AsNGJDBvVsBj06nS_GHi7R12A50'
+})
 
 //Middlewares
 //app.use(logger('dev'))
@@ -37,7 +49,6 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
     next();
 });
-
 app.use(bodyParser.json())
 
 //Routes
@@ -69,6 +80,6 @@ app.use((err, req, res, next) => {
 
 //Start server
 app.set('port', process.env.PORT || 3000);
-app.listen(app.get('port'), function(){
+app.listen(app.get('port'), function() {
     console.log('Server is listening at port ' + app.get('port'));
 });

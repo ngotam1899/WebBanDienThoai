@@ -21,6 +21,10 @@ export const ProductsActionTypes = {
 
   CLEAR_DETAIL: "CLEAR_DETAIL",
   CLEAR_STATE: "CLEAR_STATE",
+
+  ADD_PRODUCT_TO_CART: "ADD_PRODUCT_TO_CART",
+  UPDATE_PRODUCT_CART: "UPDATE_PRODUCT_CART",
+  DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
 };
 
 Object.keys(ProductsActionTypes).forEach((key) => {
@@ -134,6 +138,29 @@ const onDeleteError = (error) => ({
   payload: error,
 });
 
+/**
+ *
+ * cart _ products
+ */
+
+const onAddProductToCart = (product, quantity) =>({
+  type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
+  product, quantity
+})
+
+const onDeleteProductInCart = (product) =>{
+  return {
+    type: ProductsActionTypes.DELETE_PRODUCT_CART,
+    product
+  }
+}
+
+const onUpdateProductInCart = (product, quantity) =>{
+  return {
+    type: ProductsActionTypes.UPDATE_PRODUCT_CART,
+    product, quantity
+  }
+}
 const ProductsActions = {
   onClearDetail,
 
@@ -158,6 +185,10 @@ const ProductsActions = {
   onDelete,
   onDeleteSuccess,
   onDeleteError,
+
+  onAddProductToCart,
+  onDeleteProductInCart,
+  onUpdateProductInCart,
 };
 
 export default ProductsActions;

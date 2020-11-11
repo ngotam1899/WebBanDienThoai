@@ -72,6 +72,7 @@ const getUser = async(req, res, next) => {
     } catch (error) {
         return next(error)
     }
+
 }
 
 const newUser = async(req, res) => {

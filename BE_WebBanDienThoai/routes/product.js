@@ -11,6 +11,8 @@ const cpuController = require('../controllers/cpu')
 const widescreenController = require('../controllers/widescreen')
 const operationController = require('../controllers/operation')
 const mobileController = require('../controllers/phone')
+const productController = require('../controllers/product')
+const imageController = require('../controllers/image')
 
 const passport = require('passport')
 require('../middlewares/passport')
@@ -72,18 +74,27 @@ router.route('/operations/:IDOperation')
     .put(operationController.updateOperation)
 
 //Region comment
+router.route('/').get(productController.getAllProduct)
 router.route('/comment')
     .post(passport.authenticate('jwt', { session: false }), commentController.addComment)
 
+//Region Mobile
 router.route('/phones')
     .get(mobileController.getAllMobile)
-    .post(mobileController.addMobile)
-router.route('/phones/:IDMobile/detail')
-    .get(mobileController.getMobile)
-router.route('/phones/:IDMobile/update')
-    .put(mobileController.updateMobile)
-router.route('/phones/:IDMobile/delete')
-    .delete(mobileController.deleteMobile)
+    .post(mobileController.addproduct)
+router.route('/phones/:IDProduct')
+    .get(mobileController.getproduct)
+router.route('/phones/:IDProduct')
+    .put(mobileController.updateproduct)
+router.route('/phones/:IDProduct')
+    .delete(mobileController.deleteproduct)
 
+router.route('/image')
+    .get(imageController.getAllImg)
+    .post(imageController.uploadImage)
+
+router.route('/image/:IDImage')
+    .get(imageController.getImage)
+    .delete(imageController.deleteImage)
 
 module.exports = router
