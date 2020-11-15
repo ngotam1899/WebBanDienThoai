@@ -6,6 +6,7 @@ import ProductPage from '../components/ProductPage';
 import CartPage from '../components/CartPage';
 import CheckoutPage from '../components/CheckoutPage';
 import NotFound from '../containers/NotFound';
+import DetailPage from '../components/DetailPage';
 
 const routes = [
 	{
@@ -27,6 +28,11 @@ const routes = [
 		path: '/carts/checkout',
 		exact: true,
 		main: () => <CheckoutPage />
+	},
+	{
+		path: '/products/dien-thoai/:productID',
+		exact: true,
+		main: () => <DetailPage />
 	},
 	{
 		path: '',

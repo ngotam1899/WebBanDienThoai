@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { assets } from '../../constants/assetsImage';
+import {Link} from 'react-router-dom'
+import {CLOUDINARY_IMAGE} from '../../constants'
 
 class ProductItem extends Component {
 	onAddToCart = (product) =>{
@@ -13,15 +15,14 @@ class ProductItem extends Component {
 			<div className="col-md-3 col-sm-6">
 				<div className="single-shop-product">
 					<div className="product-upper">
-						<img src={assets('products/product-2.jpg')} alt="" />
+						<Link to={`/products/dien-thoai/${product._id}`}><img src={`${CLOUDINARY_IMAGE}${product.bigimage}.png`} alt="" /></Link>
 					</div>
 					<h2>
-						<a href="">{product.generalinfo.name}</a>
+						<Link to={`/products/dien-thoai/${product._id}`}>{product.name}</Link>
 					</h2>
 					<div className="product-carousel-price">
-            <ins>$ {product.generalinfo.price}</ins> <del>${product.generalinfo.price + 100}</del>
+            <ins>$ {product.price}</ins> <del>${product.price + 100}</del>
 					</div>
-
 					<div className="product-option-shop">
 						<button
 							className="add_to_cart_button"
