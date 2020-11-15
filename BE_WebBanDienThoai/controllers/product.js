@@ -88,7 +88,7 @@ const uploadImageMobile = async(req, res, next) => {
 
 const getAllProduct = async(req, res, next) => {
     try {
-        const products = await Product.find()
+        const products = await Product.find({})
         return res.status(200).json({ products: { success: 'true', products } })
     } catch (error) {
         return next(error)

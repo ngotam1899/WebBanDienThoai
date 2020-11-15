@@ -31,11 +31,11 @@ class CartItem extends Component {
         </td>
 
         <td className="product-name">
-          <a href="single-product.html">{product.generalinfo.name}</a>
+          <a href="single-product.html">{product.name}</a>
         </td>
 
         <td className="product-price">
-          <span className="amount">{product.generalinfo.price}</span>
+          <span className="amount">{product.price}</span>
         </td>
 
         <td className="product-quantity">
@@ -48,7 +48,7 @@ class CartItem extends Component {
         </td>
 
         <td className="product-subtotal">
-          <span className="amount">{quantity*product.generalinfo.price}</span>
+          <span className="amount">{quantity*product.price}</span>
         </td>
       </tr>
       <tr>
