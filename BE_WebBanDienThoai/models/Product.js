@@ -21,10 +21,12 @@ const ProductSchema = new Schema({
         type: String
     },
     bigimage: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: "Image_Pro"
     },
     image: [{
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: "Image_Pro"
     }],
     category: {
         type: Schema.Types.ObjectId,
@@ -36,6 +38,16 @@ const ProductSchema = new Schema({
     },
     origin: {
         type: String
+    },
+    detail_info: {
+        mobile: {
+            type: Schema.Types.ObjectId,
+            ref: "Mobile"
+        },
+        charger: {
+            type: Schema.Types.ObjectId,
+            ref: "Mobile"
+        }
     }
 })
 

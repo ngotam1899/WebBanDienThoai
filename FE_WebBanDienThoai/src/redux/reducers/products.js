@@ -105,7 +105,6 @@ export default function(state = init, action) {
         ...state,
         processing: false,
       };
-
     default:
       return state;
   }

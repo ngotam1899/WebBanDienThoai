@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
 import './loginStyles.css'
 import { assets } from '../../constants/assetsImage';
 
@@ -60,7 +61,9 @@ class LoginPage extends Component {
 									<input type="submit" className="btn" value="Login" />
 								</div>
 								<div classNameName="col-12 col-sm-6">
-									<input type="submit" className="btn" value="Register" />
+									<form action="/user/dang-ky" method="get">
+									<input type="submit" className="btn" value="Register"/>
+									</form>
 								</div>
 								
 							</div>

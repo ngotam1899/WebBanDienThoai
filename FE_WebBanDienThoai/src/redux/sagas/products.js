@@ -7,7 +7,7 @@ function* handleGetList({ payload }) {
   try {
     const result = yield call(getAllProducts, payload);
     const data = get(result, "data");
-    yield put(ProductsActions.onGetListSuccess(data.products.products));
+    yield put(ProductsActions.onGetListSuccess(data.product));
   } catch (error) {
     yield put(ProductsActions.onGetListError(error));
   }

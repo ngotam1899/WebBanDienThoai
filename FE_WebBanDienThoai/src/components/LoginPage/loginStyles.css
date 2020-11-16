@@ -45,7 +45,7 @@
 .img img{
 	width: 500px;
 }
-.card{
+.login-content .card{
 	border-radius: 25px;
 }
 .center-page{
@@ -53,7 +53,7 @@
 	height: 100vh;
 }
 
-form{
+.login-content form{
 	width: 360px;
 }
 .register-content form{
@@ -65,7 +65,7 @@ form{
     height: 100px;
 }
 
-h2{
+.login-content h2{
 	margin: 15px 0;
 	color: #333;
 	font-size: 2.5rem;
@@ -80,7 +80,7 @@ h2{
     border-bottom: 2px solid #d9d9d9;
 }
 
-.input-div.one{
+.login-content .input-div.one{
 	margin-top: 0;
 }
 
@@ -173,7 +173,7 @@ h2{
 	color: #38d39f;
 }
 
-.btn{
+.login-content .btn, .register-content .btn{
 	display: block;
 	width: 100%;
 	height: 50px;
@@ -190,8 +190,11 @@ h2{
 	cursor: pointer;
 	transition: .5s;
 }
-.btn:hover{
+.login-content .btn:hover, .register-content .btn:hover{
 	background-position: right;
+}
+.register-content .input-div{
+	margin: 10px 0;
 }
 
 
@@ -202,15 +205,17 @@ h2{
 }
 
 @media screen and (max-width: 1000px){
-	form{
+	.login-content form{
 		width: 290px;
 	}
 
-	h2{
+	.login-content h2{
         font-size: 2.4rem;
         margin: 8px 0;
 	}
-
+	.register-content .input-div{
+		margin: 1vw 0;
+	}
 	.img img{
 		width: 400px;
 	}
@@ -236,5 +241,29 @@ h2{
 		justify-content: center;
 		width: 80vw;
 		margin: auto;
+	}
+	.register-content .input-div{
+		margin: 0.5vw 0;
+	}
+}
+
+@media screen and (max-width: 440px){
+	.register-content .center-page > .col-12 {
+		padding: auto 0;
+	}
+	.register-content h2, .register-content h2 i{
+		font-size: 7vw;
+	}
+	.register-content .input-div > div > h5 {
+		font-size: 5vw;
+	}
+	.register-content .input-div > div {
+		height: 5vh;
+	}
+	.register-content .input-div.focus > div > h5{
+		font-size: 4vw;
+	}
+	.register-content form {
+		padding: 20px 40px;
 	}
 }
