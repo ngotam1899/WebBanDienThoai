@@ -193,13 +193,13 @@ export default [
         _tag: 'CSidebarNavItem',
         name: 'Badges',
         to: '/notifications/badges',
-      },
+      },*/
       {
         _tag: 'CSidebarNavItem',
         name: 'Modal',
         to: '/notifications/modals',
       },
-      {
+      /*{
         _tag: 'CSidebarNavItem',
         name: 'Toaster',
         to: '/notifications/toaster'
