@@ -1,30 +1,28 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import ImagesActions, { ImagesActionTypes } from "../actions/cloudinary";
-import { getImage } from "../apis/cloudinary";
+import { getImage, getAllImages } from "../apis/cloudinary";
+
+function* handleGetList({ payload }) {
+  try {
+    const result = yield call(getAllImages, payload);
+    const data = get(result, "data");
+    yield put(ImagesActions.onGetListSuccess(data.images.img));
+  } catch (error) {
+    yield put(ImagesActions.onGetListError(error));
+  }
+}
 
 function* handleGetDetail({ id }) {
   try {
     const result = yield call(getImage, id);
     const data = get(result, "data");
     console.log("data",data)
-    yield put(ImagesActions.onGetAnImageSuccess(data.image));
+    yield put(ImagesActions.onGetAnImageSuccess(data.images));
   } catch (error) {
     yield put(ImagesActions.onGetAnImageError(error));
   }
 }
-
-/* function* handleGetDetail({ filters, id }) {
-  try {
-    const result = yield call(EcommerceApi.Product.getDetail, id);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    yield put(ProductsActions.onGetDetailSuccess(data));
-  } catch (error) {
-    message.error(get(error, "msg", "Error when get detail!"));
-    yield put(ProductsActions.onGetDetailError(error));
-  }
-} */
 
 /**
  *
@@ -108,14 +106,15 @@ function* handleGetDetail({ id }) {
 /**
  *
  */
+
+export function* watchGetList() {
+  yield takeEvery(ImagesActionTypes.GET_LIST, handleGetList);
+}
 export function* watchGetDetail() {
-  yield takeEvery(ImagesActionTypes.GET_AN_IMAGE, handleGetDetail);
+  yield takeEvery(ImagesActionTypes.GET_DETAIL, handleGetDetail);
 }
 
-/* export function* watchGetDetail() {
-  yield takeEvery(ProductsActionTypes.GET_DETAIL, handleGetDetail);
-}
-
+/*
 export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
 }
@@ -128,6 +127,7 @@ export function* watchDelete() {
 
 export default function* rootSaga() {
   yield all([
+    fork(watchGetList),
     fork(watchGetDetail),
     /* fork(watchGetDetail),
     fork(watchCreate),

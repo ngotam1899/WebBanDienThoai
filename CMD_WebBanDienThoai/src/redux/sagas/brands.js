@@ -1,27 +1,15 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
-import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct, addProduct } from "../apis/products";
-
+import BrandActions, { BrandActionTypes } from "../actions/brands";
+import { getAllBrands } from "../apis/brands";
 
 function* handleGetList({ payload }) {
   try {
-    yield delay(1000)
-    const result = yield call(getAllProducts, payload);
+    const result = yield call(getAllBrands, payload);
     const data = get(result, "data");
-    yield put(ProductsActions.onGetListSuccess(data.product));
+    yield put(BrandActions.onGetListSuccess(data.brands.brands));
   } catch (error) {
-    yield put(ProductsActions.onGetListError(error));
-  }
-}
-
-function* handleGetDetail({ filters, id }) {
-  try {
-    const result = yield call(getDetailProduct, id);
-    const data = get(result, "data", {});
-    yield put(ProductsActions.onGetDetailSuccess(data.product));
-  } catch (error) {
-    yield put(ProductsActions.onGetDetailError(error));
+    yield put(BrandActions.onGetListError(error));
   }
 }
 
@@ -29,16 +17,27 @@ function* handleGetDetail({ filters, id }) {
  *
  * create
  */
-function* handleCreate( payload ) {
+/* function* handleCreate({ payload, filters, callback, merchant_id }) {
   console.log("load",payload);
   try {
-    const result = yield call(addProduct, payload);
+    const result = yield call(EcommerceApi.Product.create, payload);
     const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    message.success("Create product success!");
+    if (callback) {
+      callback();
+    }
     yield put(ProductsActions.onCreateSuccess(data));
+    yield put(ProductsActions.onGetList(filters));
+    if(merchant_id){
+      yield put(MerchantActions.onGetListProduct({id:merchant_id}));
+    }
   } catch (error) {
+    console.log(error);
+    message.error(get(error, "msg", "Error when create product!"));
     yield put(ProductsActions.onCreateError(error));
   }
-}
+} */
 
 /**
  *
@@ -96,18 +95,16 @@ function* handleCreate( payload ) {
 /**
  *
  */
+
 export function* watchGetList() {
-  yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
+  yield takeEvery(BrandActionTypes.GET_LIST, handleGetList);
 }
 
- export function* watchGetDetail() {
-  yield takeEvery(ProductsActionTypes.GET_DETAIL, handleGetDetail);
-}
-
+/*
 export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
 }
-/*export function* watchUpdate() {
+export function* watchUpdate() {
   yield takeEvery(ProductsActionTypes.UPDATE, handleUpdate);
 }
 export function* watchDelete() {
@@ -117,9 +114,9 @@ export function* watchDelete() {
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
-    fork(watchGetDetail),
+    /* fork(watchGetDetail),
     fork(watchCreate),
-    /*fork(watchUpdate),
+    fork(watchUpdate),
     fork(watchDelete), */
   ]);
 }

@@ -79,11 +79,9 @@ const onGetDetailError = (error) => ({
  *
  * create
  */
-const onCreate = ({ params, filters, callback }) => ({
+const onCreate = (params) => ({
   type: ProductsActionTypes.CREATE,
-  payload: { params },
-  filters,
-  callback,
+  payload: params,
 });
 
 const onCreateSuccess = (detail) => ({
@@ -100,11 +98,9 @@ const onCreateError = (error) => ({
  *
  * update
  */
-const onUpdate = ({ id, params, filters, callback }) => ({
+const onUpdate = ({ id, params }) => ({
   type: ProductsActionTypes.UPDATE,
   payload: { id, params },
-  filters,
-  callback,
 });
 
 const onUpdateSuccess = (detail) => ({

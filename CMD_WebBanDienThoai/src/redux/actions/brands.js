@@ -1,4 +1,4 @@
-export const ImagesActionTypes = {
+export const BrandActionTypes = {
   GET_LIST: "GET_LIST",
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
@@ -8,41 +8,41 @@ export const ImagesActionTypes = {
   GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
 };
 
-Object.keys(ImagesActionTypes).forEach((key) => {
-  ImagesActionTypes[
+Object.keys(BrandActionTypes).forEach((key) => {
+  BrandActionTypes[
     key
-  ] = `IMAGES_${ImagesActionTypes[key]}`;
+  ] = `BRAND_${BrandActionTypes[key]}`;
 });
 
 const onGetList = (payload) => ({
-  type: ImagesActionTypes.GET_LIST,
+  type: BrandActionTypes.GET_LIST,
   payload,
 });
 
 const onGetListSuccess = (payload) => ({
-  type: ImagesActionTypes.GET_LIST_SUCCESS,
+  type: BrandActionTypes.GET_LIST_SUCCESS,
   payload,
 });
 
 const onGetListError = (error) => ({
-  type: ImagesActionTypes.GET_LIST_ERROR,
+  type: BrandActionTypes.GET_LIST_ERROR,
   payload: error,
 });
 
 const onGetDetail = (id) => ({
-  type: ImagesActionTypes.GET_AN_IMAGE,
+  type: BrandActionTypes.GET_AN_IMAGE,
   id
 });
 const onGetDetailSuccess = (image) => ({
-  type: ImagesActionTypes.GET_AN_IMAGE_SUCCESS,
+  type: BrandActionTypes.GET_AN_IMAGE_SUCCESS,
   payload: image
 });
 const onGetDetailError = (error) => ({
-  type: ImagesActionTypes.GET_AN_IMAGE_ERROR,
+  type: BrandActionTypes.GET_AN_IMAGE_ERROR,
   payload: error
 });
 
-const ImagesActions = {
+const BrandActions = {
   onGetList,
   onGetListSuccess,
   onGetListError,
@@ -52,4 +52,4 @@ const ImagesActions = {
   onGetDetailError,
 };
 
-export default ImagesActions;
+export default BrandActions;

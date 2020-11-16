@@ -1,4 +1,5 @@
 import React, { Component }  from 'react'
+import { get } from "lodash";
 import { connect } from "react-redux";
 import {
   CBadge,
@@ -11,9 +12,10 @@ import {
   CRow,
 } from '@coreui/react'
 import ProductDetail from './ProductDetail'
-import usersData from '../../views/users/UsersData'
 import ProductsActions from "../../redux/actions/products";
-import ImageCloudinary from '../../views/ImageCloudinary';
+import ImagesActions from "../../redux/actions/cloudinary";
+import BrandActions from "../../redux/actions/brands";
+import CategoryActions from "../../redux/actions/categories";
 
 const getBadge = status => {
   switch (status) {
@@ -30,24 +32,66 @@ class ProductList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      large: false
+      large: false,
     }
   }
-
   componentDidMount() {
-    const { onGetList } = this.props;
+    const { onGetList, onClearState,onGetListImage, onGetListBrand, onGetListCategory } = this.props;
+    onClearState();
+    onGetListImage();
+    onGetListBrand();
+    onGetListCategory();
     onGetList();
   }
 
-  setLarge = (large) =>{
+  setLarge = (large) => {
     this.setState({
       large
     })
   }
 
+  onUpdate = (large, item) =>{
+    const { onGetDetail } = this.props;
+    this.setState({
+      large
+    })
+    if(item){onGetDetail(item)}
+    //onGetDetail(item)
+  }
+
+  onClose = (large) =>{
+    const { onClearDetail } = this.props;
+    this.setState({
+      large
+    })
+    onClearDetail();
+  }
+
+  onSubmit = (data, _id) =>{
+    const { onCreate, onUpdate } = this.props;
+    if(_id === ''){
+      onCreate(data);
+    }
+    else {
+      onUpdate(_id, data);
+    }
+  }
+
+  setImage = (image) => {
+    const {listImages} = this.props;
+    const img = listImages.find(obj => obj._id === image);
+    return get(img, "public_url");
+  }
+
+  setBrand = (brand) =>{
+    const {listBrands} = this.props;
+    const brandName = listBrands.find(obj => obj._id === brand);
+    return get(brandName, "name");
+  }
+
   render () {
     const {large} = this.state;
-    const {listProducts} = this.props;
+    const {listProducts, productDetail, listCategories, listBrands, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -74,13 +118,18 @@ class ProductList extends Component {
                   scopedSlots = {{
                     'image':
                     (item) => (
-                      <ImageCloudinary item={item.bigimage}/>
+                      <td>
+                        <img src={ this.setImage(item.bigimage) } style={{width:'10vw'}}/>
+                      </td>
+                    ),
+                    'brand': (item) => (
+                      <td>{this.setBrand(item.brand)}</td>
                     ),
                     'actions':
                     (item)=>(
                       <td>
                         <CButton
-                          onClick={() => this.setLarge(!large)}
+                          onClick={() => this.onUpdate(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"
                           color="warning"
                         >
@@ -96,7 +145,13 @@ class ProductList extends Component {
                       </td>)
                   }}
                 />
-                <ProductDetail large={large} setLarge={this.setLarge}/>
+                {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
+                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
+                onSubmit={this.onSubmit}/>}
+
+                {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
+                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
+                onSubmit={this.onSubmit}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -108,7 +163,11 @@ class ProductList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listProducts: state.products.list
+    listProducts: state.products.list,
+    productDetail: state.products.detail,
+    listImages: state.cloudinary.list,
+    listBrands: state.brands.list,
+    listCategories: state.categories.list,
   }
 }
 
@@ -117,8 +176,29 @@ const mapDispatchToProps = (dispatch) => {
     onGetList: () => {
       dispatch(ProductsActions.onGetList())
     },
-    onAddProductToCart: (product) => {
-      dispatch(ProductsActions.onAddProductToCart(product, 1));
+    onGetDetail: (id) => {
+      dispatch(ProductsActions.onGetDetail(id))
+    },
+    onGetListImage: () => {
+      dispatch(ImagesActions.onGetList())
+    },
+    onGetListBrand: () => {
+      dispatch(BrandActions.onGetList())
+    },
+    onGetListCategory: () => {
+      dispatch(CategoryActions.onGetList())
+    },
+    onClearState: () =>{
+      dispatch(ProductsActions.onClearState())
+    },
+    onClearDetail: () =>{
+      dispatch(ProductsActions.onClearDetail())
+    },
+    onCreate: (data) =>{
+      dispatch(ProductsActions.onCreate(data))
+    },
+    onUpdate: (id, data) =>{
+      dispatch(ProductsActions.onCreate(id, data))
     },
   }
 }
