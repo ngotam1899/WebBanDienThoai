@@ -3,18 +3,20 @@ const Image_Pro = require('../models/Image_Pro')
 const cloudinary = require('cloudinary')
 const fs = require('fs')
 
-const getAllImg = async(res, next) => {
+const getAllImg = async(req, res, next) => {
     try {
         const img = await Image_Pro.find()
+        if (!img) res.status(404).json({ message: 'can not found any record' })
         return res.status(200).json({ images: { success: 'true', img } })
     } catch (error) {
+        console.log(error)
         return next(error)
     }
 }
-
 const getAllImgUser = async(res, next) => {
     try {
         const img = await Image_User.find()
+        if (!img) res.status(404).json({ message: 'can not found any record' })
         return res.status(200).json({ images: { success: 'true', img } })
     } catch (error) {
         return next(error)
