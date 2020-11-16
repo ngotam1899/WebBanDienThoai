@@ -19,12 +19,12 @@ const logOut = async(req, res, next) => {
 }
 
 const signIn = async(req, res, next) => {
-    const salt = await bcrypts.genSalt(15)
+    /*const salt = await bcrypts.genSalt(15)
     req.user.devide_code = await bcrypts.hash(req.user.email, salt)
-    req.user.save()
+    req.user.save()*/
 
     const token = encodedToken(req.user._id)
-    res.setHeader('Devide_code', req.user.devide_code)
+        //res.setHeader('Devide_code', req.user.devide_code)
     res.setHeader('Authorization', token)
 
     return res.status(200).json({ success: 'true' })

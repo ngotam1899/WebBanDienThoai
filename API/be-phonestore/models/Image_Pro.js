@@ -10,7 +10,11 @@ const ImageSchema = new Schema({
     },
     public_url: {
         type: String
-    }
+    },
+    use: [{
+        type: Schema.Types.ObjectId,
+        ref: "Product"
+    }]
 })
 
 const Image_Pro = mongoose.model('Image_Pro', ImageSchema)
