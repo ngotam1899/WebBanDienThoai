@@ -5,6 +5,7 @@
 /src/coreui-new
 /src/coreui-icons
 /src/coreui-charts
+/src/views
 
 # testing
 /coverage

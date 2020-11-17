@@ -1,20 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { get } from "lodash";
 import './styles.css';
 import ProductItem from "../../containers/ProductItem"
 
 import ProductsSelectors from "../../redux/selectors/products";
 import ProductsActions from "../../redux/actions/products";
+import ImagesActions from "../../redux/actions/cloudinary";
 
 class ProductPage extends Component {
   componentDidMount() {
-    const { onGetList } = this.props;
+    const { onGetList, onGetListImage } = this.props;
+    onGetListImage();
     onGetList();
   }
   
+  setImage = (image) => {
+    const {listImages} = this.props;
+    const img = listImages.find(obj => obj._id === image);
+    return get(img, "public_url");
+  }
 
   render() {
-    const { listProducts, onAddProductToCart } = this.props;
+    const { listProducts, onAddProductToCart, listImages } = this.props;
     return (
       <>
         <div className="product-big-title-area">
@@ -36,7 +44,8 @@ class ProductPage extends Component {
             <div className="row">
               {listProducts.map((product, index) => {
                 return (<ProductItem product={product} key={index} 
-                  onAddProductToCart={onAddProductToCart}/>)
+                  onAddProductToCart={onAddProductToCart}
+                  setImage={this.setImage} />)
               })}
               
             </div>
@@ -74,7 +83,8 @@ class ProductPage extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listProducts: ProductsSelectors.getList(state)
+    listProducts: ProductsSelectors.getList(state),
+    listImages: state.cloudinary.list,
   }
 }
 
@@ -85,6 +95,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onAddProductToCart: (product) => {
       dispatch(ProductsActions.onAddProductToCart(product, 1));
+    },
+    onGetListImage: () => {
+      dispatch(ImagesActions.onGetList())
     },
   }
 }

@@ -1,30 +1,28 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
-import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts } from "../apis/products";
+import ImagesActions, { ImagesActionTypes } from "../actions/cloudinary";
+import { getImage, getAllImages } from "../apis/cloudinary";
 
 function* handleGetList({ payload }) {
   try {
-    yield delay(500)
-    const result = yield call(getAllProducts, payload);
+    const result = yield call(getAllImages, payload);
     const data = get(result, "data");
-    yield put(ProductsActions.onGetListSuccess(data.product));
+    yield put(ImagesActions.onGetListSuccess(data.images.img));
   } catch (error) {
-    yield put(ProductsActions.onGetListError(error));
+    yield put(ImagesActions.onGetListError(error));
   }
 }
 
-/* function* handleGetDetail({ filters, id }) {
+function* handleGetDetail({ id }) {
   try {
-    const result = yield call(EcommerceApi.Product.getDetail, id);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    yield put(ProductsActions.onGetDetailSuccess(data));
+    const result = yield call(getImage, id);
+    const data = get(result, "data");
+    console.log("data",data)
+    yield put(ImagesActions.onGetAnImageSuccess(data.images));
   } catch (error) {
-    message.error(get(error, "msg", "Error when get detail!"));
-    yield put(ProductsActions.onGetDetailError(error));
+    yield put(ImagesActions.onGetAnImageError(error));
   }
-} */
+}
 
 /**
  *
@@ -57,7 +55,7 @@ function* handleGetList({ payload }) {
  * update
  */
 /* function* handleUpdate({ payload, filters, callback, merchant_id }) {
-  
+
   try {
     const result = yield call(EcommerceApi.Product.update, payload);
     const data = get(result, "data", {});
@@ -66,7 +64,7 @@ function* handleGetList({ payload }) {
     if (callback) {
       callback();
     }
-    
+
     const detailResult = yield call(EcommerceApi.Product.getDetail, payload.id);
     yield put(ProductsActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(ProductsActions.onGetList(filters));
@@ -108,14 +106,15 @@ function* handleGetList({ payload }) {
 /**
  *
  */
+
 export function* watchGetList() {
-  yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
+  yield takeEvery(ImagesActionTypes.GET_LIST, handleGetList);
+}
+export function* watchGetDetail() {
+  yield takeEvery(ImagesActionTypes.GET_DETAIL, handleGetDetail);
 }
 
-/* export function* watchGetDetail() {
-  yield takeEvery(ProductsActionTypes.GET_DETAIL, handleGetDetail);
-}
-
+/*
 export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
 }
@@ -129,6 +128,7 @@ export function* watchDelete() {
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
+    fork(watchGetDetail),
     /* fork(watchGetDetail),
     fork(watchCreate),
     fork(watchUpdate),

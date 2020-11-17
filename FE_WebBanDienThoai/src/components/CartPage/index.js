@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
 import { ListCountry } from '../../constants/common';
+import { get } from "lodash";
 import { assets } from '../../constants/assetsImage';
 import {connect} from 'react-redux';
 import Search from '../../containers/Search';
 import CartItem from '../../containers/CartItem'
 import ProductsActions from '../../redux/actions/products'
+import ImagesActions from "../../redux/actions/cloudinary";
 import './styles.css';
 
-
 class CartPage extends Component {
-  
+  componentWillMount() {
+    const { onGetListImage } = this.props;
+    onGetListImage();
+  }
+
+  setImage = (image) => {
+    const {listImages} = this.props;
+    const img = listImages.find(obj => obj._id === image);
+    return get(img, "public_url");
+  }
 
   render() {
-    var {cart, onDeleteProductInCart, onUpdateProductInCart} = this.props;
-    
+    var {cart, onDeleteProductInCart, onUpdateProductInCart, listImages} = this.props;
     return (<>
       <div className="product-big-title-area">
         <div className="container">
@@ -46,15 +55,15 @@ class CartPage extends Component {
                           <th className="product-subtotal">Total</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      {listImages && <tbody>
                         {cart.map((item, index) =>{
                           return (
                             <CartItem key={index} cart={item} onDeleteProductInCart={onDeleteProductInCart}
-                            onUpdateProductInCart={onUpdateProductInCart}/>
+                            onUpdateProductInCart={onUpdateProductInCart} setImage={this.setImage}/>
                           )
                         })}
                         
-                      </tbody>
+                      </tbody>}
                     </table>
                   </form>
 
@@ -162,7 +171,8 @@ class CartPage extends Component {
 
 const mapStateToProps = (state) =>{
   return {
-    cart: state.cart
+    cart: state.cart,
+    listImages: state.cloudinary.list,
   }
 }
 
@@ -173,7 +183,10 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onUpdateProductInCart: (product, quantity) => {
       dispatch(ProductsActions.onUpdateProductInCart(product, quantity))
-    }
+    },
+    onGetListImage: () => {
+      dispatch(ImagesActions.onGetList())
+    },
   }
 }
 

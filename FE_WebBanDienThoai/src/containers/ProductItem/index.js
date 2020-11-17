@@ -10,12 +10,12 @@ class ProductItem extends Component {
 	}
 
 	render() {
-    const {product} = this.props;
+    const {product, setImage} = this.props;
 		return (
 			<div className="col-md-3 col-sm-6">
 				<div className="single-shop-product">
 					<div className="product-upper">
-						<Link to={`/products/dien-thoai/${product._id}`}><img src={`${CLOUDINARY_IMAGE}${product.bigimage}.png`} alt="" /></Link>
+						<Link to={`/products/dien-thoai/${product._id}`}><img src={setImage(product.bigimage)} alt="" /></Link>
 					</div>
 					<h2>
 						<Link to={`/products/dien-thoai/${product._id}`}>{product.name}</Link>
