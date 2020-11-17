@@ -4,7 +4,7 @@ import {
   LOGIN_ERROR,
   LOGOUT,
 } from "../actions/auth";
-import { LocalStorage } from "../../constants";
+/* import { LocalStorage } from "../../constants"; */
 
 export const AuthActionState = {
   LoginSuccess: LOGIN_SUCCESS,
@@ -36,8 +36,8 @@ export default function(state = INITIAL_STATE, action) {
         actionState: AuthActionState.LoginError,
       };
     case LOGOUT:
-      window.localStorage.removeItem(LocalStorage.Token);
-      window.localStorage.removeItem(LocalStorage.Device);
+      /* window.localStorage.removeItem(LocalStorage.Token);
+      window.localStorage.removeItem(LocalStorage.Device); */
       return {
         ...state,
         actionState: null,

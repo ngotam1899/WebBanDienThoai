@@ -32,7 +32,7 @@ const routes = [
 	{
 		path: '/products/dien-thoai/:productID',
 		exact: true,
-		main: () => <DetailPage />
+		main: ({match}) => <DetailPage match={match} />
 	},
 	{
 		path: '',

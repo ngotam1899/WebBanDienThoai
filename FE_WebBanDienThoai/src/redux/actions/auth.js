@@ -4,14 +4,14 @@ export const LOGIN_ERROR = "LOGIN_ERROR";
 
 /* export const DEVICE_INIT = "DEVICE_INIT";
 export const DEVICE_INIT_SUCCESS = "DEVICE_INIT_SUCCESS";
-export const DEVICE_INIT_ERROR = "DEVICE_INIT_ERROR";
+export const DEVICE_INIT_ERROR = "DEVICE_INIT_ERROR";*/
 
 export const GET_PROFILE = "GET_PROFILE";
 export const GET_PROFILE_SUCCESS = "GET_PROFILE_SUCCESS";
 export const GET_PROFILE_ERROR = "GET_PROFILE_ERROR";
 
-export const TOKEN_ERROR = "TOKEN_ERROR"; */
-export const LOGOUT = "LOGOUT";
+/* export const TOKEN_ERROR = "TOKEN_ERROR"; */
+export const LOGOUT = "LOGOUT"; 
 
 /**
  *
@@ -44,7 +44,7 @@ export const onDeviceInitSuccess = (payload) => ({
 export const onDeviceInitError = (error) => ({
   type: DEVICE_INIT_ERROR,
   payload: error,
-});
+});*/
 
 export const onGetProfile = () => ({
   type: GET_PROFILE,
@@ -57,7 +57,7 @@ export const onGetProfileSuccess = () => ({
 export const onGetProfileError = (error) => ({
   type: GET_PROFILE_ERROR,
   payload: error,
-}); */
+}); 
 
 export const onLogout = () => ({
   type: LOGOUT,

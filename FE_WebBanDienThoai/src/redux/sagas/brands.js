@@ -1,26 +1,15 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
-import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct } from "../apis/products";
+import BrandActions, { BrandActionTypes } from "../actions/brands";
+import { getAllBrands } from "../apis/brands";
 
 function* handleGetList({ payload }) {
   try {
-    yield delay(500)
-    const result = yield call(getAllProducts, payload);
+    const result = yield call(getAllBrands, payload);
     const data = get(result, "data");
-    yield put(ProductsActions.onGetListSuccess(data.product));
+    yield put(BrandActions.onGetListSuccess(data.brands.brands));
   } catch (error) {
-    yield put(ProductsActions.onGetListError(error));
-  }
-}
-
-function* handleGetDetail({ filters, id }) {
-  try {
-    const result = yield call(getDetailProduct, id);
-    const data = get(result, "data", {});
-    yield put(ProductsActions.onGetDetailSuccess(data.product));
-  } catch (error) {
-    yield put(ProductsActions.onGetDetailError(error));
+    yield put(BrandActions.onGetListError(error));
   }
 }
 
@@ -55,7 +44,7 @@ function* handleGetDetail({ filters, id }) {
  * update
  */
 /* function* handleUpdate({ payload, filters, callback, merchant_id }) {
-  
+
   try {
     const result = yield call(EcommerceApi.Product.update, payload);
     const data = get(result, "data", {});
@@ -64,7 +53,7 @@ function* handleGetDetail({ filters, id }) {
     if (callback) {
       callback();
     }
-    
+
     const detailResult = yield call(EcommerceApi.Product.getDetail, payload.id);
     yield put(ProductsActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(ProductsActions.onGetList(filters));
@@ -106,15 +95,13 @@ function* handleGetDetail({ filters, id }) {
 /**
  *
  */
+
 export function* watchGetList() {
-  yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
+  yield takeEvery(BrandActionTypes.GET_LIST, handleGetList);
 }
 
-export function* watchGetDetail() {
-  yield takeEvery(ProductsActionTypes.GET_DETAIL, handleGetDetail);
-}
-
-/* export function* watchCreate() {
+/*
+export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
 }
 export function* watchUpdate() {
@@ -127,8 +114,8 @@ export function* watchDelete() {
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
-    fork(watchGetDetail),
-    /* fork(watchCreate),
+    /* fork(watchGetDetail),
+    fork(watchCreate),
     fork(watchUpdate),
     fork(watchDelete), */
   ]);

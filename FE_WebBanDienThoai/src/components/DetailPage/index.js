@@ -1,101 +1,204 @@
 import React, { Component } from 'react';
 import { assets } from '../../constants/assetsImage';
+import {connect} from 'react-redux';
+import { get } from "lodash";
+import ProductsActions from '../../redux/actions/products'
+import ImagesActions from "../../redux/actions/cloudinary";
+import BrandActions from "../../redux/actions/brands";
+import CategoryActions from "../../redux/actions/categories";
 import Search from '../../containers/Search';
 import './styles.css';
 
 class DetailPage extends Component {
+  componentDidMount(){
+    const {match, onGetDetailProduct, onGetListImage, onGetListBrand, onGetListCategory} = this.props;
+    onGetListImage();
+    onGetListBrand();
+    onGetListCategory();
+    onGetDetailProduct(match.params.productID);
+  }
+
+  setImage = (image) => {
+    const {listImages} = this.props;
+    const img = listImages.find(obj => obj._id === image);
+    return get(img, "public_url");
+  }
+
+  setBrand = (brand) =>{
+    const {listBrands} = this.props;
+    const brandName = listBrands.find(obj => obj._id === brand);
+    return get(brandName, "name");
+  }
+
+  setCategory = (category) =>{
+    const {listCategories} = this.props;
+    const categoryName = listCategories.find(obj => obj._id === category);
+    return get(categoryName, "name");
+  }
+
   render() {
+    const {product} = this.props;
     return (<>
-      <div class="product-big-title-area">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="product-bit-title text-center">
+      <div className="product-big-title-area">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="product-bit-title text-center">
                 <h2>Shop</h2>
               </div>
             </div> 
           </div>
         </div>
       </div>
-      <div class="single-product-area">
-        <div class="zigzag-bottom"></div>
-        <div class="container">
-          <div class="row">
+      <div className="single-product-area">
+        <div className="zigzag-bottom"></div>
+        <div className="container">
+          <div className="row">
             <Search />
-            <div class="col-md-8">
-              <div class="product-content-right">
-                <div class="product-breadcroumb">
+            <div className="col-md-8">
+              <div className="product-content-right">
+                <div className="product-breadcroumb">
                   <a href="">Home</a>
-                  <a href="">Category Name</a>
-                  <a href="">Sony Smart TV - 2015</a>
+                  <a href="">{product && this.setCategory(product.category)}</a>
+                  <a href="">{product && product.name}</a>
                 </div>
 
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="product-images">
-                      <div class="product-main-img">
-                        <img src={assets("products/product-2.jpg")} alt="" />
+                {product && <div className="row">
+                  <div className="col-sm-6">
+                    <div className="product-images">
+                      <div className="product-main-img">
+                        <img src={this.setImage(product.bigimage)} alt="" />
                       </div>
 
-                      <div class="product-gallery">
-                        <img src={assets("products/product-thumb-1.jpg")} alt="" />
-                        <img src={assets("products/product-thumb-2.jpg")} alt="" />
-                        <img src={assets("products/product-thumb-3.jpg")} alt="" />
-                      </div>
+                      {product.image && product.image.map((img, index) =>{
+                        return (
+                          <div className="product-gallery">
+                            <img key={index} src={this.setImage(img)} alt="" />
+                          </div>
+                        )})}
                     </div>
                   </div>
 
-                  <div class="col-sm-6">
-                    <div class="product-inner">
-                      <h2 class="product-name">Sony Smart TV - 2015</h2>
-                      <div class="product-inner-price">
-                        <ins>$700.00</ins> <del>$100.00</del>
+                  <div className="col-sm-6">
+                    <div className="product-inner">
+                      <h2 className="product-name">{product.name}</h2>
+                      <div className="product-inner-price">
+                        <ins>${product.price}</ins> <del>$100.00</del>
                       </div>
 
-                      <form action="" class="cart">
-                        <div class="quantity">
-                          <input type="number" size="4" class="input-text qty text" title="Qty" value="1" name="quantity" min="1" step="1" />
+                      <form action="" className="cart">
+                        <div className="quantity">
+                          <input type="number" size="4" className="input-text qty text" title="Qty" value="1" name="quantity" min="1" step="1" />
                         </div>
-                        <button class="add_to_cart_button" type="submit">Add to cart</button>
+                        <button className="add_to_cart_button" type="submit">Add to cart</button>
                       </form>
 
-                      <div class="product-inner-category">
-                        <p class="m-0">Category: <a href="">Summer</a></p>
-                        <p>Tags: <a href="">awesome</a>, <a href="">best</a>, <a href="">sale</a>, <a href="">shoes</a></p>
+                      <div className="product-inner-category">
+                        <p className="m-0">Category: <a href="">{this.setCategory(product.category)}</a></p>
+                        <p className="m-0">Brand: <a href="">{this.setBrand(product.brand)}</a></p>
+                        <p>Color: <a href="">{product.detail_info.mobile.color}</a></p>
                       </div>
 
-                      <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                          <a class="nav-link active" data-toggle="tab" href="#description">Description</a>
+                      <ul className="nav nav-tabs">
+                        <li className="nav-item">
+                          <a className="nav-link active" data-toggle="tab" href="#description">Description</a>
                         </li>
-                        <li class="nav-item">
-                          <a class="nav-link" data-toggle="tab" href="#review">Reviews</a>
+                        <li className="nav-item">
+                          <a className="nav-link" data-toggle="tab" href="#review">Reviews</a>
                         </li>
                       </ul>
 
-                      <div class="tab-content">
-                        <div class="tab-pane container active" id="description">
+                      <div className="tab-content">
+                        <div className="tab-pane container active" id="description">
                           <br />
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tristique, diam in consequat iaculis, est purus iaculis mauris, imperdiet facilisis ante ligula at nulla. Quisque volutpat nulla risus, id maximus ex aliquet ut. Suspendisse potenti. Nulla varius lectus id turpis dignissim porta. Quisque magna arcu, blandit quis felis vehicula, feugiat gravida diam. Nullam nec turpis ligula. Aliquam quis blandit elit, ac sodales nisl. Aliquam eget dolor eget elit malesuada aliquet. In varius lorem lorem, semper bibendum lectus lobortis ac.</p>
-                          <p>Mauris placerat vitae lorem gravida viverra. Mauris in fringilla ex. Nulla facilisi. Etiam scelerisque tincidunt quam facilisis lobortis. In malesuada pulvinar neque a consectetur. Nunc aliquam gravida purus, non malesuada sem accumsan in. Morbi vel sodales libero.</p>
+                          <table  class="table table-inverse table-responsive">
+                            <thead class="thead-inverse">
+                              <tbody>
+                                <tr>
+                                  <td scope="row">Display</td>
+                                  <td>{product.detail_info.mobile.display}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Revolution</td>
+                                  <td>{product.detail_info.mobile.revolution}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Widescreen</td>
+                                  <td>{product.detail_info.mobile.widescreen}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Operation</td>
+                                  <td>{product.detail_info.mobile.operation}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Camera 1</td>
+                                  <td>{product.detail_info.mobile.camera1}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Camera 2</td>
+                                  <td>{product.detail_info.mobile.camera2}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">CPU</td>
+                                  <td>{product.detail_info.mobile.cpu}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">RAM</td>
+                                  <td>{product.detail_info.mobile.ram} GB</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Memory</td>
+                                  <td>{product.detail_info.mobile.memory} GB</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Microcard</td>
+                                  <td>{product.detail_info.mobile.microcard}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Sim</td>
+                                  <td>{product.detail_info.mobile.sim}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Network</td>
+                                  <td>{product.detail_info.mobile.network}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Pin</td>
+                                  <td>{product.detail_info.mobile.pin}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Quick Charging</td>
+                                  <td>{product.detail_info.mobile.quickcharging}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Weight</td>
+                                  <td>{product.detail_info.mobile.weight}</td>
+                                </tr>
+                                <tr>
+                                  <td scope="row">Thick</td>
+                                  <td>{product.detail_info.mobile.thick}</td>
+                                </tr>
+                              </tbody>
+                            </thead>
+                          </table>
                         </div>
-                        <div class="tab-pane container fade" id="review">
+                        <div className="tab-pane container fade" id="review">
                           <br />
-                          <div class="submit-review">
-                            <p><label for="name">Name</label> <input name="name" type="text" /></p>
-                            <p><label for="email">Email</label> <input name="email" type="email" /></p>
-                            <div class="rating-chooser">
-                              <p class="m-0">Your rating</p>
+                          <div className="submit-review">
+                            <p><label>Name</label> <input name="name" type="text" /></p>
+                            <p><label>Email</label> <input name="email" type="email" /></p>
+                            <div className="rating-chooser">
+                              <p className="m-0">Your rating</p>
 
-                              <div class="rating-wrap-post">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
+                              <div className="rating-wrap-post">
+                                <i className="fa fa-star"></i>
+                                <i className="fa fa-star"></i>
+                                <i className="fa fa-star"></i>
+                                <i className="fa fa-star"></i>
+                                <i className="fa fa-star"></i>
                               </div>
                             </div>
-                            <p><label for="review">Your review</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
+                            <p><label>Your review</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
                             <p><input type="submit" value="Submit" /></p>
                           </div>
                         </div>
@@ -105,59 +208,59 @@ class DetailPage extends Component {
 
                     </div>
                   </div>
-                </div>
+                </div>}
 
 
-                <div class="related-products-wrapper">
-                  <h2 class="related-products-title">Related Products</h2>
-                  <div class="related-products-carousel">
-                    <div class="row">
-                      <div class="col-4">
-                        <div class="single-product">
-                          <div class="product-f-image text-center">
+                <div className="related-products-wrapper">
+                  <h2 className="related-products-title">Related Products</h2>
+                  <div className="related-products-carousel">
+                    <div className="row">
+                      <div className="col-4">
+                        <div className="single-product">
+                          <div className="product-f-image text-center">
                             <img src={assets("products/product-1.jpg")} alt="" />
-                            <div class="product-hover">
-                              <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                              <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                            <div className="product-hover">
+                              <a href="" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
+                              <a href="" className="view-details-link"><i className="fa fa-link"></i> See details</a>
                             </div>
                           </div>
 
                           <h2><a href="">Sony Smart TV - 2015</a></h2>
 
-                          <div class="product-carousel-price">
+                          <div className="product-carousel-price">
                             <ins>$700.00</ins> <del>$100.00</del>
                           </div>
                         </div>
                       </div>
-                      <div class="col-4">
-                        <div class="single-product">
-                          <div class="product-f-image text-center">
+                      <div className="col-4">
+                        <div className="single-product">
+                          <div className="product-f-image text-center">
                             <img src={assets("products/product-2.jpg")} alt="" />
-                            <div class="product-hover">
-                              <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                              <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                            <div className="product-hover">
+                              <a href="" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
+                              <a href="" className="view-details-link"><i className="fa fa-link"></i> See details</a>
                             </div>
                           </div>
 
                           <h2><a href="">Apple new mac book 2015 March :P</a></h2>
-                          <div class="product-carousel-price">
+                          <div className="product-carousel-price">
                             <ins>$899.00</ins> <del>$999.00</del>
                           </div>
                         </div>
                       </div>
-                      <div class="col-4">
-                        <div class="single-product">
-                          <div class="product-f-image text-center">
+                      <div className="col-4">
+                        <div className="single-product">
+                          <div className="product-f-image text-center">
                             <img src={assets("products/product-3.jpg")} alt="" />
-                            <div class="product-hover">
-                              <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                              <a href="" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                            <div className="product-hover">
+                              <a href="" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
+                              <a href="" className="view-details-link"><i className="fa fa-link"></i> See details</a>
                             </div>
                           </div>
 
                           <h2><a href="">Apple new i phone 6</a></h2>
 
-                          <div class="product-carousel-price">
+                          <div className="product-carousel-price">
                             <ins>$400.00</ins> <del>$425.00</del>
                           </div>
                         </div>
@@ -174,4 +277,32 @@ class DetailPage extends Component {
     )
   }
 }
-export default DetailPage;
+
+const mapStateToProps = (state) =>{
+  return {
+    product: state.products.detail,
+    listImages: state.cloudinary.list,
+    listBrands: state.brands.list,
+    listCategories: state.categories.list,
+  }
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    onGetListImage: () => {
+      dispatch(ImagesActions.onGetList())
+    },
+    onGetDetailProduct: (id) => {
+      dispatch(ProductsActions.onGetDetail(id))
+    },
+    onGetListBrand: () => {
+      dispatch(BrandActions.onGetList())
+    },
+    onGetListCategory: () => {
+      dispatch(CategoryActions.onGetList())
+    },
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps) (DetailPage);
