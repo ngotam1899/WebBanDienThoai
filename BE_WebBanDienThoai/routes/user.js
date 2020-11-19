@@ -9,7 +9,8 @@ require('../middlewares/passport')
 router.route('/')
     .get(userController.getAllUser)
     .post(userController.newUser)
-
+router.route('/api/auth/profile')
+    .post(passport.authenticate('jwt', { session: false }), userController.returnUserByToken)
 router.route('/signin')
     .post(passport.authenticate('local', { session: false }), userController.signIn)
 

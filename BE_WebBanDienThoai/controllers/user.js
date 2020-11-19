@@ -16,18 +16,19 @@ const encodedToken = (userID) => {
 
 const logOut = async(req, res, next) => {
     headers = req.headers
+    return status(200).json({ message: 'success' })
 }
 
 const signIn = async(req, res, next) => {
-    const salt = await bcrypts.genSalt(15)
+    /*const salt = await bcrypts.genSalt(15)
     req.user.devide_code = await bcrypts.hash(req.user.email, salt)
-    req.user.save()
+    req.user.save()*/
 
     const token = encodedToken(req.user._id)
-    res.setHeader('Devide_code', req.user.devide_code)
+        /*res.setHeader('Devide_code', req.user.devide_code)*/
     res.setHeader('Authorization', token)
 
-    return res.status(200).json({ success: 'true' })
+    return res.status(200).json({ success: 'true', user: req.user })
 }
 
 const signUp = async(req, res, next) => {
@@ -99,6 +100,14 @@ const replaceUser = async(req, res) => {
     return res.status(200).json({ success: 'true' })
 }
 
+const returnUserByToken = async(req, res, next) => {
+    try {
+        return res.status(200).json({ message: 'success', user: req.user })
+    } catch (error) {
+
+    }
+}
+
 module.exports = {
     getAllUser,
     getUser,
@@ -107,5 +116,6 @@ module.exports = {
     signIn,
     signUp,
     secret,
-    logOut
+    logOut,
+    returnUserByToken
 }
