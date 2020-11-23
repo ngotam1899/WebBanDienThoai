@@ -1,18 +1,41 @@
 const User = require('../models/User')
 const createError = require('http-errors')
 const bcrypts = require('bcryptjs')
+var smtpTransport = require('nodemailer-smtp-transport');
+
+const os = require('os')
+const nodemailer = require('nodemailer')
 
 const JWT = require('jsonwebtoken')
-const { JWT_SECRET } = require('../configs/config')
-
+const { JWT_SECRET, EMAIL_NAME, PASS, PORT } = require('../configs/config')
+const hashString = async(textString) => {
+    const salt = await bcrypts.genSalt(15);
+    return await bcrypts.hash(textString, salt)
+}
 const encodedToken = (userID) => {
     return 'Bearer ' + JWT.sign({
         iss: 'Mai Tuong',
-        sub: userID,
-        iat: new Date().getTime(),
-        exp: new Date().setHours(6)
-    }, JWT_SECRET)
+        sub: userID
+    }, JWT_SECRET, { expiresIn: '6h' })
 }
+const encodedTokenSignUp = (userID) => {
+    return JWT.sign({
+        iss: 'Mai Tuong',
+        sub: userID
+    }, JWT_SECRET, { expiresIn: '1h' })
+}
+
+const transporter = nodemailer.createTransport(smtpTransport({
+    host: 'smtp.gmail.com',
+    service: 'gmail',
+    port: 8000,
+    secure: false,
+    auth: {
+        type: "login",
+        user: EMAIL_NAME,
+        pass: PASS
+    }
+}))
 
 const logOut = async(req, res, next) => {
     headers = req.headers
@@ -20,10 +43,6 @@ const logOut = async(req, res, next) => {
 }
 
 const signIn = async(req, res, next) => {
-    /*const salt = await bcrypts.genSalt(15)
-    req.user.devide_code = await bcrypts.hash(req.user.email, salt)
-    req.user.save()*/
-
     const token = encodedToken(req.user._id)
         /*res.setHeader('Devide_code', req.user.devide_code)*/
     res.setHeader('Authorization', token)
@@ -31,22 +50,65 @@ const signIn = async(req, res, next) => {
     return res.status(200).json({ success: 'true', user: req.user })
 }
 
-const signUp = async(req, res, next) => {
-    const { firstname, lastname, phonenumber, address, image, email, password, role } = req.body
+const activeAccount = async(req, res, next) => {
+    try {
+        const { tokenUser } = req.params
+        if (tokenUser) {
+            JWT.verify(tokenUser, JWT_SECRET, async(err, decodeToken) => {
+                if (err) {
+                    return res.status(400).json({ error: { message: 'Incorect or Expired link' } })
+                }
+                const user = await User.findById(decodeToken.sub)
+                console.log(user)
+                if (!user) {
+                    res.status(400).json({ error: { message: 'Incorect Link' } })
+                } else {
+                    user.confirmed = true;
+                    user.save();
+                }
+                return res.status(200).json("Activate Successfull")
+            })
+        }
+    } catch (error) {
 
-    const foundUser = await User.findOne({ email })
-    if (foundUser) {
-        return next(createError(403, 'Email is already in use'))
     }
-    const newUser = new User({ firstname, lastname, phonenumber, address, image, email, password, role })
+}
+const signUp = async(req, res, next) => {
+    try {
+        const { firstname, lastname, phonenumber, address, image, email, password, role } = req.body
 
-    await newUser.save()
+        const foundUser = await User.findOne({ email })
+        if (foundUser) {
+            return next(createError(403, 'Email is already in use'))
+        }
+        const newUser = new User({ firstname, lastname, phonenumber, address, image, email, role });
 
-    const token = encodedToken(newUser._id)
 
-    res.setHeader("Authorization", token)
+        newUser.password = await hashString(password);
 
-    return res.status(201).json({ success: true })
+        const token = encodedTokenSignUp(newUser._id)
+        const url = os.hostname() + ":3000/users/authentication/activate/" + token;
+        transporter.sendMail({
+                from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
+                to: email,
+                subject: 'Activate Account',
+                text: "Click button below to active",
+                html: `<h2>Nhấn xác nhận bên dưới để kích hoạt tài khoản</h2>
+                    <p>${url}</p>`
+            },
+            async(err, response) => {
+                if (err) {
+                    return res.status(500).json({ error: { message: 'Please check email and try again!' } })
+                } else {
+                    console.log(response)
+                    await newUser.save()
+                }
+            })
+
+        return res.status(201).json({ success: true })
+    } catch (error) {
+        next(error)
+    }
 }
 
 const secret = async(req, res, next) => {
@@ -117,5 +179,6 @@ module.exports = {
     signUp,
     secret,
     logOut,
-    returnUserByToken
+    returnUserByToken,
+    activeAccount
 }

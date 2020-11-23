@@ -17,9 +17,6 @@ const ProductSchema = new Schema({
     warrently: {
         type: Number
     },
-    createdate: {
-        type: String
-    },
     bigimage: {
         type: Schema.Types.ObjectId,
         ref: "Image_Pro"
@@ -49,6 +46,8 @@ const ProductSchema = new Schema({
             ref: "Mobile"
         }
     }
+}, {
+    timestamps: true
 })
 
 const Product = mongoose.model('Product', ProductSchema)

@@ -9,50 +9,88 @@ const CPU = require('../models/CPU')
 const Color = require('../models/Color')
 const Mobile = require('../models/Mobile')
 const Image_Pro = require('../models/Image_Pro')
+const Origin = require('../models/Origin')
 const { Schema } = require('mongoose')
 
 const addproduct = async(req, res, next) => {
     try {
-        const { name, price, amount, pathseo, warrently, createdate, bigimage, image, category, brand, origin } = req.body
+        const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, origin } = req.body
         const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info
 
-        const is_category = await Category.findById(category)
-        if (!is_category) return res.status(404).json({ error: { message: 'Can not matching any Category' } })
+        const product = new Product();
+        if (name) product.name = name;
+        if (price) product.price = price;
+        if (amount) product.amount = amount;
+        if (pathseo) product.pathseo = pathseo;
+        if (warrently) product.warrently = warrently;
+        if (bigimage) product.bigimage = bigimage;
+        if (image) product.image = image
+        if (category) {
+            const is_category = await Category.findById(category)
+            if (!is_category) return res.status(404).json({ message: 'category is identify' })
+            product.category = category
+        }
+        if (brand) {
+            const is_brand = await Brand.findById(brand)
+            if (!is_brand) return res.status(404).json({ message: 'brand is identify' })
+            product.brand = brand;
+        }
+        if (origin) {
+            const is_origin = await Origin.findById(origin)
+            if (!is_origin) return res.status(404).json({ message: 'origin is identify' })
+        }
 
-        const is_brand = await Brand.findById(brand)
-        if (!is_brand) return res.status(404).json({ error: { message: 'Can not matching any Brand' } })
+        const mobile = new Mobile();
 
-        const is_display = await Display.findById(display)
-        if (!is_display) return res.status(404).json({ error: { message: 'Can not matching any Display' } })
+        if (display) {
+            const is_display = await Display.findById(display)
+            if (!is_display) return res.status(404).json({ message: 'display is identify' })
+            mobile.display = display;
+        }
+        if (revolution) {
+            const is_revolution = await Revolution.findById(revolution);
+            if (!is_revolution) return res.status(404).json({ message: 'revolution is identify' });
+            mobile.revolution = revolution
+        }
+        if (widescreen) {
+            const is_widescreen = await Widescreen.findById(widescreen);
+            if (!is_widescreen) return res.status(404).json({ message: 'widecreen is identify' });
+            mobile.widescreen = widescreen;
+        }
+        if (operation) {
+            const is_operation = await Operation.findById(operation);
+            if (!is_operation) return res.status(404).json({ message: 'operation is identify' });
+            mobile.operation = operation;
+        }
+        if (camera1) mobile.camera1 = camera1
+        if (camera2) mobile.camera2 = camera2
+        if (cpu) {
+            const is_cpu = await CPU.findById(cpu);
+            if (!is_cpu) return res.status(404).json({ message: 'cpu is identify' });
+            mobile.cpu = cpu;
+        }
+        if (ram) mobile.ram = ram;
+        if (memory) mobile.memory = memory;
+        if (microcard) mobile.microcard = microcard
+        if (sim) mobile.sim = sim
+        if (pin) mobile.pin = pin
+        if (network) mobile.network = network
+        if (quickcharging) mobile.quickcharging = quickcharging
+        if (weight) mobile.weight = weight
+        if (thick) mobile.thick = thick
+        if (color) {
+            const is_color = await Color.findById(color);
+            if (!is_color) return res.status(404).json({ message: 'color is identify' });
+            mobile.color = color
+        }
+        await mobile.save()
 
-        const is_revolution = await Revolution.findById(revolution)
-        if (!is_revolution) return res.status(404).json({ error: { message: 'Can not matching any Revolution' } })
+        product.detail_info.mobile = mobile._id
+        await product.save()
 
-        const is_widescreen = await Widescreen.findById(widescreen)
-        if (!is_widescreen) return res.status(404).json({ error: { message: 'Can not matching any WideCreen' } })
+        //await useImage(newProduct)
 
-        const is_operation = await Operation.findById(operation)
-        if (!is_operation) return res.status(404).json({ error: { message: 'Can not matching any Operation' } })
-
-        const is_cpu = await CPU.findById(cpu)
-        if (!is_cpu) return res.status(404).json({ error: { message: 'Can not matching any CPU' } })
-
-        const is_color = await Color.findById(color)
-        if (!is_color) return res.status(404).json({ error: { message: 'Can not matching any Color' } })
-
-        const newMobile = new Mobile({ display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color })
-        await newMobile.save()
-
-        const newProduct = new Product({ name, price, amount, pathseo, warrently, createdate, bigimage, image, category, brand, origin })
-        newProduct.detail_info.mobile = newMobile._id
-        await newProduct.save()
-
-        newMobile.generalinfo = newProduct._id
-        await newMobile.save()
-
-        await useImage(newProduct)
-
-        const returnProduct = await Product.findById(newProduct._id).populate('detail_info.mobile')
+        const returnProduct = await Product.findById(product._id).populate('detail_info.mobile')
         return res.status(201).json({
             product: returnProduct
         })
@@ -67,50 +105,61 @@ const updateproduct = async(req, res, next) => {
     try {
         const { IDProduct } = req.params
 
-        const { name, price, amount, pathseo, warrently, createdate, bigimage, image, category, brand, origin } = req.body
+        const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, origin } = req.body
         const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info.mobile
 
         const product = await Product.findById(IDProduct)
         if (!product) return res.status(404).json({ error: { message: 'Can not found product need to update' } })
-
-        await unUseImage(product)
 
         if (name) product.name = name;
         if (price) product.price = price;
         if (amount) product.amount = amount;
         if (pathseo) product.pathseo = pathseo;
         if (warrently) product.warrently = warrently;
-        if (createdate) product.createdate = createdate;
         if (bigimage) product.bigimage = bigimage;
         if (image) product.image = image
+        if (category) {
+            const is_category = await Category.findById(category)
+            if (!is_category) return res.status(404).json({ message: 'category is identify' })
+            product.category = category
+        }
+        if (brand) {
+            const is_brand = await Brand.findById(brand)
+            if (!is_brand) return res.status(404).json({ message: 'brand is identify' })
+            product.brand = brand;
+        }
+        if (origin) {
+            const is_origin = await Origin.findById(origin)
+            if (!is_origin) return res.status(404).json({ message: 'origin is identify' })
+        }
 
         const mobile = await Mobile.findById(product.detail_info.mobile)
         if (display) {
             const is_display = await Display.findById(display)
             if (!is_display) return res.status(404).json({ message: 'display is identify' })
-            product.display = display;
+            mobile.display = display;
         }
         if (revolution) {
             const is_revolution = await Revolution.findById(revolution);
             if (!is_revolution) return res.status(404).json({ message: 'revolution is identify' });
-            product.revolution = revolution
+            mobile.revolution = revolution
         }
         if (widescreen) {
             const is_widescreen = await Widescreen.findById(widescreen);
             if (!is_widescreen) return res.status(404).json({ message: 'widecreen is identify' });
-            product.widescreen = widescreen;
+            mobile.widescreen = widescreen;
         }
         if (operation) {
             const is_operation = await Operation.findById(operation);
             if (!is_operation) return res.status(404).json({ message: 'operation is identify' });
-            product.operation = operation;
+            mobile.operation = operation;
         }
         if (camera1) mobile.camera1 = camera1
         if (camera2) mobile.camera2 = camera2
         if (cpu) {
             const is_cpu = await CPU.findById(revolution);
             if (!is_cpu) return res.status(404).json({ message: 'cpu is identify' });
-            product.cpu = cpu;
+            mobile.cpu = cpu;
         }
         if (ram) mobile.ram = ram;
         if (memory) mobile.memory = memory;
@@ -127,8 +176,9 @@ const updateproduct = async(req, res, next) => {
             mobile.color = color
         }
 
+        //await unUseImage(product)
         await product.save()
-        await useImage(product)
+            //await useImage(product)
 
         await mobile.save()
         return res.status(200).json({ success: 'true' })
