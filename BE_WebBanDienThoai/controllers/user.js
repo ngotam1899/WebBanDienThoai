@@ -43,6 +43,11 @@ const logOut = async(req, res, next) => {
 }
 
 const signIn = async(req, res, next) => {
+    if (req.user.confirmed == false) {
+        sendEmail(req.user._id);
+        return res.status(403).json({ message: 'An email activate have send to' + req.user.email });
+    }
+
     const token = encodedToken(req.user._id)
         /*res.setHeader('Devide_code', req.user.devide_code)*/
     res.setHeader('Authorization', token)
@@ -86,25 +91,9 @@ const signUp = async(req, res, next) => {
 
         newUser.password = await hashString(password);
 
-        const token = encodedTokenSignUp(newUser._id)
-        const url = "http://" + os.hostname() + "/users/authentication/activate/" + token;
-        const at = {
-            from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
-            to: email,
-            subject: 'Activate Account',
-            text: "Click button below to active",
-            html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
-        };
-        transporter.sendMail(at,
-            async(err, response) => {
-                if (err) {
-                    return res.status(500).json({ error: { message: 'Please check email and try again!' } })
-                } else {
-                    console.log(response)
-                    await newUser.save()
-                }
-            })
+        sendEmail(newUser._id, email);
 
+        await newUser.save();
         return res.status(201).json({ success: true })
     } catch (error) {
         next(error)
@@ -113,6 +102,25 @@ const signUp = async(req, res, next) => {
 
 const secret = async(req, res, next) => {
     return res.status(200).json({ resources: true })
+}
+const sendEmail = (ID, email) => {
+    const token = encodedTokenSignUp(ID)
+    const url = "http://" + os.hostname() + "/users/authentication/activate/" + token;
+    const at = {
+        from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
+        to: email,
+        subject: 'Activate Account',
+        text: "Click button below to active",
+        html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
+    };
+    transporter.sendMail(at,
+        async(err, response) => {
+            if (err) {
+                return res.status(500).json({ error: { message: 'Please check email and try again!' } })
+            } else {
+                console.log(response)
+            }
+        })
 }
 
 const getAllUser = async(req, res, next) => {

@@ -38,8 +38,6 @@ passport.use(new LocalStrategy({
         const isCorrectPassword = await user.isSignin(password)
 
         if (!isCorrectPassword) return done(null, false)
-
-
         done(null, user)
     } catch (error) {
         done(error, false)
