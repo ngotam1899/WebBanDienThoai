@@ -5,19 +5,18 @@ const fs = require('fs')
 
 const getAllImg = async(req, res, next) => {
     try {
-        const img = await Image_Pro.find();
-        if (!img) return res.status(404).json({ message: 'Can not found any record' });
+        const img = await Image_Pro.find()
+        if (!img) res.status(404).json({ message: 'can not found any record' })
         return res.status(200).json({ images: { success: 'true', img } })
     } catch (error) {
         console.log(error)
         return next(error)
     }
 }
-
-const getAllImgUser = async(req, res, next) => {
+const getAllImgUser = async(res, next) => {
     try {
         const img = await Image_User.find()
-        if (!img) return res.status(404).json({ message: 'Can not found any record' });
+        if (!img) res.status(404).json({ message: 'can not found any record' })
         return res.status(200).json({ images: { success: 'true', img } })
     } catch (error) {
         return next(error)

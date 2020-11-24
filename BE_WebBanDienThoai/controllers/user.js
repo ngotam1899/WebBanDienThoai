@@ -87,15 +87,15 @@ const signUp = async(req, res, next) => {
         newUser.password = await hashString(password);
 
         const token = encodedTokenSignUp(newUser._id)
-        const url = os.hostname() + ":3000/users/authentication/activate/" + token;
-        transporter.sendMail({
-                from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
-                to: email,
-                subject: 'Activate Account',
-                text: "Click button below to active",
-                html: `<h2>Nhấn xác nhận bên dưới để kích hoạt tài khoản</h2>
-                    <p>${url}</p>`
-            },
+        const url = "http://" + os.hostname() + "/users/authentication/activate/" + token;
+        const at = {
+            from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
+            to: email,
+            subject: 'Activate Account',
+            text: "Click button below to active",
+            html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
+        };
+        transporter.sendMail(at,
             async(err, response) => {
                 if (err) {
                     return res.status(500).json({ error: { message: 'Please check email and try again!' } })

@@ -29,24 +29,18 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    confirmed: {
+        type: Boolean,
+        default: false
+    },
     role: {
         type: String
     },
     devide_code: {
         type: String
     }
-})
-
-UserSchema.pre('save', async function(next) {
-    try {
-        const salt = await bcrypts.genSalt(15)
-        const passwordHash = await bcrypts.hash(this.password, salt)
-        this.password = passwordHash
-
-        next()
-    } catch (error) {
-        next(error)
-    }
+}, {
+    timestamps: true
 })
 
 UserSchema.pre('findByIdAndUpdate', async function(next) {
