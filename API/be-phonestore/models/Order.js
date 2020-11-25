@@ -11,21 +11,32 @@ const OrderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
-    fullname: {
-        type: String
+    total_price: {
+        type: Number,
+        default: 0
     },
-    phonenumber: {
-        type: String
+    shipping_phonenumber: {
+        type: Number
     },
     email: {
         type: String
     },
-    address: {
+    shipping_address: {
         type: String
     },
     note: {
         type: String
+    },
+    status: {
+        type: Boolean,
+        default: false
+    },
+    confirmed: {
+        type: Boolean,
+        default: false
     }
+}, {
+    timestamps: true
 })
 
 const Order = mongoose.model('Order', OrderSchema)

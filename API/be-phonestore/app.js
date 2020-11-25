@@ -10,6 +10,7 @@ const routerUser = require('./routes/user')
 const routerReview = require('./routes/review')
 const routerShop = require('./routes/shop')
 const routerProduct = require('./routes/product')
+const routerOrder = require('./routes/order')
 
 const mongoose = require('mongoose')
 
@@ -56,6 +57,7 @@ app.use('/users', routerUser)
 app.use('/reviews', routerReview)
 app.use('/shop-info', routerShop)
 app.use('/products', routerProduct)
+app.use('/orders', routerOrder)
 
 
 //Catch 404 error and forward them to error handler

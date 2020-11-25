@@ -3,27 +3,23 @@ const createError = require('http-errors')
 const bcrypts = require('bcryptjs')
 var smtpTransport = require('nodemailer-smtp-transport');
 
+const service = require('../services/service')
 const os = require('os')
 const nodemailer = require('nodemailer')
 
 const JWT = require('jsonwebtoken')
-const { JWT_SECRET, EMAIL_NAME, PASS, PORT } = require('../configs/config')
+const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config')
 const hashString = async(textString) => {
     const salt = await bcrypts.genSalt(15);
     return await bcrypts.hash(textString, salt)
 }
-const encodedToken = (userID) => {
-    return 'Bearer ' + JWT.sign({
-        iss: 'Mai Tuong',
-        sub: userID
-    }, JWT_SECRET, { expiresIn: '6h' })
-}
-const encodedTokenSignUp = (userID) => {
+
+/*const encodedTokenSignUp = (userID) => {
     return JWT.sign({
         iss: 'Mai Tuong',
         sub: userID
     }, JWT_SECRET, { expiresIn: '1h' })
-}
+}*/
 
 const transporter = nodemailer.createTransport(smtpTransport({
     host: 'smtp.gmail.com',
@@ -43,7 +39,12 @@ const logOut = async(req, res, next) => {
 }
 
 const signIn = async(req, res, next) => {
-    const token = encodedToken(req.user._id)
+    if (req.user.confirmed == false) {
+        sendEmail(req.user._id);
+        return res.status(403).json({ message: 'An email activate have send to' + req.user.email });
+    }
+
+    const token = 'Bearer ' + service.encodedToken(req.user._id, '6h')
         /*res.setHeader('Devide_code', req.user.devide_code)*/
     res.setHeader('Authorization', token)
 
@@ -56,16 +57,15 @@ const activeAccount = async(req, res, next) => {
         if (tokenUser) {
             JWT.verify(tokenUser, JWT_SECRET, async(err, decodeToken) => {
                 if (err) {
-                    return res.status(400).json({ error: { message: 'Incorect or Expired link' } })
+                    return res.status(400).json({ error: { message: 'Incorect or Expired link' } });
                 }
-                const user = await User.findById(decodeToken.sub)
-                console.log(user)
+                const email = decodeToken.sub;
+                const user = await User.findOne({ email });
                 if (!user) {
-                    res.status(400).json({ error: { message: 'Incorect Link' } })
-                } else {
-                    user.confirmed = true;
-                    user.save();
+                    return res.status(400).json({ error: { message: 'Incorect Link' } });
                 }
+                user.confirmed = true;
+                await user.save();
                 return res.status(200).json("Activate Successfull")
             })
         }
@@ -86,25 +86,8 @@ const signUp = async(req, res, next) => {
 
         newUser.password = await hashString(password);
 
-        const token = encodedTokenSignUp(newUser._id)
-        const url = "http://" + os.hostname() + "/users/authentication/activate/" + token;
-        const at = {
-            from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
-            to: email,
-            subject: 'Activate Account',
-            text: "Click button below to active",
-            html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
-        };
-        transporter.sendMail(at,
-            async(err, response) => {
-                if (err) {
-                    return res.status(500).json({ error: { message: 'Please check email and try again!' } })
-                } else {
-                    console.log(response)
-                    await newUser.save()
-                }
-            })
-
+        await sendEmail(email);
+        await newUser.save();
         return res.status(201).json({ success: true })
     } catch (error) {
         next(error)
@@ -113,6 +96,25 @@ const signUp = async(req, res, next) => {
 
 const secret = async(req, res, next) => {
     return res.status(200).json({ resources: true })
+}
+const sendEmail = async(email) => {
+    const token = service.encodedToken(email, '1h');
+    const url = "http://" + os.hostname() + "/users/authentication/activate/" + token;
+    const at = {
+        from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
+        to: email,
+        subject: 'Activate Account',
+        text: "Click button below to active",
+        html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
+    };
+    transporter.sendMail(at,
+        async(err, response) => {
+            if (err) {
+                return res.status(500).json({ error: { message: 'Please check email and try again!' } })
+            } else {
+
+            }
+        })
 }
 
 const getAllUser = async(req, res, next) => {

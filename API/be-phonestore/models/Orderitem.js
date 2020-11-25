@@ -11,21 +11,14 @@ const OrderitemSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Product"
     },
-    name: {
-        type: String
-    },
     price: {
         type: Number
     },
-    amount: {
+    quantity: {
         type: Number
-    },
-    totalitem: {
-        type: Number
-    },
-    color: {
-        type: String
     }
+}, {
+    timestamps: true
 })
 
 const Orderitem = mongoose.model('Orderitem', OrderitemSchema)
