@@ -2,9 +2,14 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const OrderSchema = new Schema({
-    orderitem: [{
-        type: Schema.Types.ObjectId,
-        ref: "Orderitem"
+    order_list: [{
+        product: {
+            type: Schema.Types.ObjectId,
+            ref: "Product"
+        },
+        quantity: {
+            type: Number
+        }
     }],
     //must be add all info product to keep the price
     user: {
@@ -12,6 +17,10 @@ const OrderSchema = new Schema({
         ref: "User"
     },
     total_price: {
+        type: Number,
+        default: 0
+    },
+    total_quantity: {
         type: Number,
         default: 0
     },

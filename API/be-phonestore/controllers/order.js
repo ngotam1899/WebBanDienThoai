@@ -1,5 +1,4 @@
 const Order = require('../models/Order')
-const OrderItem = require('../models/OrderItem')
 const Product = require('../models/Product')
 
 var smtpTransport = require('nodemailer-smtp-transport');
@@ -32,7 +31,7 @@ const getAllOrder = async(req, res, next) => {
 }
 const addOrder = async(req, res, next) => {
     try {
-        const { shipping_phonenumber, email, shipping_address, note } = req.body;
+        const { shipping_phonenumber, email, shipping_address, note, total_price, total_quantity, order_list } = req.body;
         const userID = req.user._id;
         const order = new Order();
         if (!shipping_phonenumber) return res.status(400).json({ massage: 'Phone Number is required' });
@@ -42,7 +41,12 @@ const addOrder = async(req, res, next) => {
         if (note) order.note = note;
         if (!email) return res.status(400).json({ message: 'Email is required' });
         order.email = email;
+        if (!total_price) return res.status(400).json({ message: 'Total Price is required' })
+        order.total_price = total_price;
+        if (!total_quantity) return res.status(400).json({ message: 'Total Quantity is required' })
+        order.total_quantity = total_quantity;
 
+        order.order_list = order_list;
         order.user = userID;
         await order.save();
         return res.status(201).json({ message: 'success', order });
@@ -65,18 +69,6 @@ const addOrderItem = async(req, res, next) => {
         if (!quantity) return res.status(400).json({ message: 'Quantity is requied' });
         if (quantity < 1) return res.status(400).json({ message: 'Quantity equals 0' });
 
-        const order_item = new OrderItem();
-        order_item.product = productFound._id;
-        if (!price) {
-            order_item.price = productFound.price;
-        } else {
-            order_item.price = price;
-        }
-        order_item.quantity = quantity;
-        await order_item.save();
-
-        order.orderitem.push(order_item._id);
-        order.total_price = order.total_price + order_item.price;
         await order.save();
 
         return res.status(201).json({ message: 'success', order_item })
@@ -89,7 +81,7 @@ const requestSendEmail = async(req, res, next) => {
     try {
         const { IDOrder } = req.params;
         const order = await Order.findById(IDOrder)
-        if (!order) return res.status(404).json({ message: 'Something wrong, can not found Order to confirm' });
+        if (!order || order.confirmed == true) return res.status(404).json({ message: 'Something wrong, can not found Order to confirm' });
         if (String(order.user) != String(req.user._id)) return res.status(403).json({ message: 'permission denied' });
         if (!order.email) return res.status(400).json({ message: 'email of order is null' });
 
@@ -129,7 +121,6 @@ const confirmOrder = async(req, res, next) => {
                 if (err) {
                     return res.status(400).json({ error: { message: 'Incorect or Expired link' } });
                 }
-                console.log(decodeToken);
                 const IDOrder = decodeToken.sub;
                 const order = await Order.findById(IDOrder);
 

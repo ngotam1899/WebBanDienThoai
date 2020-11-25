@@ -99,7 +99,7 @@ const secret = async(req, res, next) => {
 }
 const sendEmail = async(email) => {
     const token = service.encodedToken(email, '1h');
-    const url = "http://" + os.hostname() + "/users/authentication/activate/" + token;
+    const url = "https://fe-phonestore.herokuapp.com/#/account/active/" + token;
     const at = {
         from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
         to: email,
