@@ -23,6 +23,7 @@ router.route('/brands')
     .post(brandController.addBrand)
 router.route('/brands/:IDBrand')
     .put(brandController.updateBrand)
+    .get(mobileController.getAllProductByBrand)
 
 //Region CateGory
 router.route('/categorys')
@@ -30,6 +31,7 @@ router.route('/categorys')
     .post(categoryController.addCategory)
 router.route('/categorys/:IDCategory')
     .put(categoryController.updateCategory)
+    .get(mobileController.getAllProductByCategory)
 
 //Region Display
 router.route('/displays')
@@ -51,6 +53,7 @@ router.route('/colors')
     .post(colorController.addColor)
 router.route('/colors/:IDColor')
     .put(colorController.updateColor)
+    .get(mobileController.getAllProductByColor)
 
 //Region CPU
 router.route('/cpus')

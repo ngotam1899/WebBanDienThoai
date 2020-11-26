@@ -10,7 +10,7 @@ const Color = require('../models/Color')
 const Mobile = require('../models/Mobile')
 const Image_Pro = require('../models/Image_Pro')
 const Origin = require('../models/Origin')
-const { Schema } = require('mongoose')
+const { Schema, Mongoose } = require('mongoose')
 
 const addproduct = async(req, res, next) => {
     try {
@@ -189,19 +189,12 @@ const updateproduct = async(req, res, next) => {
 
 const deleteproduct = async(req, res, next) => {
     try {
-        console.log("Ok1")
         const { IDProduct } = req.params
-        console.log("Ok2")
         const product = await Product.findById(IDProduct)
-        console.log("Ok3")
         if (!product) return res.status(404).json({ error: { message: 'The product is not exist' } })
-        console.log("Ok4")
         await unUseImage(product)
-        console.log("Ok5")
         await Mobile.findByIdAndDelete(product.detail_info.mobile)
-        console.log("Ok6")
         await Product.findByIdAndDelete(IDProduct)
-        console.log("Ok7")
         return res.status(200).json({ message: 'success' })
     } catch (error) {
         next(error)
@@ -270,10 +263,54 @@ const unUseImage = async(Schema) => {
     }
 }
 
+const getAllProductByBrand = async(req, res, next) => {
+    try {
+        const { IDBrand } = req.params
+        const brand = IDBrand;
+        const products = await Product.find({ brand });
+
+        return res.status(200).json({ message: 'success', products })
+    } catch (error) {
+        return next(error)
+    }
+}
+
+const getAllProductByColor = async(req, res, next) => {
+    try {
+        const { IDColor } = req.params
+        color = IDColor;
+        const mobile = await Mobile.find({ color });
+
+        const listID = [];
+
+        mobile.forEach(async(element) => {
+            listID.push(element._id);
+        });
+        const products = await Product.find({ "detail_info.mobile": listID });
+        return res.status(200).json({ message: 'success', products })
+    } catch (error) {
+        return next(error)
+    }
+}
+
+const getAllProductByCategory = async(req, res, next) => {
+    try {
+        const { IDCategory } = req.params
+        category = IDCategory;
+        const products = await Product.find({ category });
+
+        return res.status(200).json({ message: 'success', products })
+    } catch (error) {
+        return next(error)
+    }
+}
 module.exports = {
     getproduct,
     addproduct,
     updateproduct,
     deleteproduct,
-    getAllMobile
+    getAllMobile,
+    getAllProductByBrand,
+    getAllProductByCategory,
+    getAllProductByColor
 }
