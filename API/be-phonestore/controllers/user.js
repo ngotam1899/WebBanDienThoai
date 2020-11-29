@@ -21,21 +21,22 @@ const hashString = async(textString) => {
     }, JWT_SECRET, { expiresIn: '1h' })
 }*/
 
-const transporter = nodemailer.createTransport(smtpTransport({
+const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     service: 'gmail',
-    port: 8000,
+    port: 465,
     secure: false,
+    ignoreTLS: false,
     auth: {
-        type: "login",
+        type: 'login',
         user: EMAIL_NAME,
         pass: PASS
     }
-}))
+})
 
 const logOut = async(req, res, next) => {
     headers = req.headers
-    return status(200).json({ message: 'success' })
+    return res.status(200).json({ message: 'success' })
 }
 
 const signIn = async(req, res, next) => {
@@ -86,7 +87,7 @@ const signUp = async(req, res, next) => {
 
         newUser.password = await hashString(password);
 
-        await sendEmail(email);
+        sendEmail(email);
         await newUser.save();
         return res.status(201).json({ success: true })
     } catch (error) {
@@ -97,24 +98,18 @@ const signUp = async(req, res, next) => {
 const secret = async(req, res, next) => {
     return res.status(200).json({ resources: true })
 }
-const sendEmail = async(email) => {
+const sendEmail = (email) => {
     const token = service.encodedToken(email, '1h');
     const url = "https://fe-phonestore.herokuapp.com/#/account/active/" + token;
     const at = {
-        from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
+        from: '"noreply@be-phonestore.herokuapp.com" <noreply@be-phonestore.herokuapp.com/>',
         to: email,
         subject: 'Activate Account',
         text: "Click button below to active",
         html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
     };
-    transporter.sendMail(at,
-        async(err, response) => {
-            if (err) {
-                return res.status(500).json({ error: { message: 'Please check email and try again!' } })
-            } else {
+    transporter.sendMail(at, async(err, response) => {});
 
-            }
-        })
 }
 
 const getAllUser = async(req, res, next) => {
@@ -146,22 +141,27 @@ const newUser = async(req, res) => {
     return res.status(201).json({ user: newUser })
 }
 
-const replaceUser = async(req, res) => {
-    const { userID } = req.params
-    const newUser = req.body
+const replaceUser = async(req, res, next) => {
+    try {
+        const { userID } = req.params
+        const newUser = req.body
 
-    const user = await User.findById(userID)
+        const user = await User.findById(userID)
 
-    if (!user) {
-        return res.status(404).json({ error: { message: 'Can not found user need to update' } })
+        if (!user) {
+            return res.status(404).json({ error: { message: 'Can not found user need to update' } })
+        }
+
+        newUser.email = user.email;
+        newUser.password = user.password;
+
+        await user.update(newUser)
+
+        return res.status(200).json({ success: 'true' })
+    } catch (error) {
+
     }
 
-    newUser.email = user.email;
-    newUser.password = user.password;
-
-    await user.update(newUser)
-
-    return res.status(200).json({ success: 'true' })
 }
 
 const returnUserByToken = async(req, res, next) => {

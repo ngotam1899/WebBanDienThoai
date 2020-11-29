@@ -10,7 +10,8 @@ const Color = require('../models/Color')
 const Mobile = require('../models/Mobile')
 const Image_Pro = require('../models/Image_Pro')
 const Origin = require('../models/Origin')
-const { Schema, Mongoose } = require('mongoose')
+    //const { Schema, Mongoose } = require('mongoose')
+const Validator = require('../validators/validator')
 
 const addproduct = async(req, res, next) => {
     try {
@@ -266,8 +267,8 @@ const unUseImage = async(Schema) => {
 const getAllProductByBrand = async(req, res, next) => {
     try {
         const { IDBrand } = req.params
-        const brand = IDBrand;
-        const products = await Product.find({ brand });
+        if (!Validator.isValidObjId(IDBrand)) return res.status(400).json({ message: 'Bad Request, check link again!' })
+        const products = await Product.find({ "brand": IDBrand });
 
         return res.status(200).json({ message: 'success', products })
     } catch (error) {
@@ -278,8 +279,8 @@ const getAllProductByBrand = async(req, res, next) => {
 const getAllProductByColor = async(req, res, next) => {
     try {
         const { IDColor } = req.params
-        color = IDColor;
-        const mobile = await Mobile.find({ color });
+        if (!Validator.isValidObjId(IDColor)) return res.status(400).json({ message: 'Bad Request, check link again!' })
+        const mobile = await Mobile.find({ "color": IDColor });
 
         const listID = [];
 
@@ -296,8 +297,8 @@ const getAllProductByColor = async(req, res, next) => {
 const getAllProductByCategory = async(req, res, next) => {
     try {
         const { IDCategory } = req.params
-        category = IDCategory;
-        const products = await Product.find({ category });
+        if (!Validator.isValidObjId(IDCategory)) return res.status(400).json({ message: 'Bad Request, check link again!' })
+        const products = await Product.find({ "category": IDCategory });
 
         return res.status(200).json({ message: 'success', products })
     } catch (error) {
