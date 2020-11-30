@@ -1,64 +1,106 @@
-export const LOGIN = "LOGIN";
-export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-export const LOGIN_ERROR = "LOGIN_ERROR";
 
-/* export const DEVICE_INIT = "DEVICE_INIT";
-export const DEVICE_INIT_SUCCESS = "DEVICE_INIT_SUCCESS";
-export const DEVICE_INIT_ERROR = "DEVICE_INIT_ERROR";*/
+export const AuthorizationActionTypes = {
+  LOGIN : "LOGIN",
+  LOGIN_SUCCESS : "LOGIN_SUCCESS",
+  LOGIN_ERROR : "LOGIN_ERROR",
 
-export const GET_PROFILE = "GET_PROFILE";
-export const GET_PROFILE_SUCCESS = "GET_PROFILE_SUCCESS";
-export const GET_PROFILE_ERROR = "GET_PROFILE_ERROR";
+  REGISTER : "REGISTER",
+  REGISTER_SUCCESS : "REGISTER_SUCCESS",
+  REGISTER_ERROR : "REGISTER_ERROR",
 
-/* export const TOKEN_ERROR = "TOKEN_ERROR"; */
-export const LOGOUT = "LOGOUT"; 
+  ACTIVATE_ACCOUNT : "ACTIVATE_ACCOUNT",
+  ACTIVATE_ACCOUNT_SUCCESS : "ACTIVATE_ACCOUNT_SUCCESS",
+  ACTIVATE_ACCOUNT_ERROR : "ACTIVATE_ACCOUNT_ERROR",
 
+  GET_PROFILE : "GET_PROFILE",
+  GET_PROFILE_SUCCESS : "GET_PROFILE_SUCCESS",
+  GET_PROFILE_ERROR : "GET_PROFILE_ERROR",
+
+  LOGOUT : "LOGOUT",
+}
 /**
  *
  * @param {email, password} payload
  */
-export const onLogin = (payload) => ({
-  type: LOGIN,
+const onLogin = (payload) => ({
+  type: AuthorizationActionTypes.LOGIN,
   payload,
 });
 
-export const onLoginSuccess = (payload) => ({
-  type: LOGIN_SUCCESS,
+const onLoginSuccess = (payload) => ({
+  type: AuthorizationActionTypes.LOGIN_SUCCESS,
   payload,
 });
 
-export const onLoginError = (error) => ({
-  type: LOGIN_ERROR,
+const onLoginError = (error) => ({
+  type: AuthorizationActionTypes.LOGIN_ERROR,
   payload: error,
 });
 
-/* export const onDeviceInit = () => ({
-  type: DEVICE_INIT,
-});
 
-export const onDeviceInitSuccess = (payload) => ({
-  type: DEVICE_INIT_SUCCESS,
+const onRegister = (payload) => ({
+  type: AuthorizationActionTypes.REGISTER,
   payload,
 });
 
-export const onDeviceInitError = (error) => ({
-  type: DEVICE_INIT_ERROR,
+const onRegisterSuccess = (detail) => ({
+  type: AuthorizationActionTypes.REGISTER_SUCCESS,
+  payload: detail,
+});
+
+const onRegisterError = (error) => ({
+  type: AuthorizationActionTypes.REGISTER_ERROR,
   payload: error,
-});*/
-
-export const onGetProfile = () => ({
-  type: GET_PROFILE,
 });
 
-export const onGetProfileSuccess = () => ({
-  type: GET_PROFILE_SUCCESS,
+const onActivateAccount = (token) => ({
+  type: AuthorizationActionTypes.ACTIVATE_ACCOUNT,
+  payload: token
+});
+const onActivateAccountSuccess = (data) => ({
+  type: AuthorizationActionTypes.ACTIVATE_ACCOUNT_SUCCESS,
+  payload: data
+});
+const onActivateAccountError = (error) => ({
+  type: AuthorizationActionTypes.ACTIVATE_ACCOUNT_ERROR,
+  payload: error
 });
 
-export const onGetProfileError = (error) => ({
-  type: GET_PROFILE_ERROR,
+const onGetProfile = () => ({
+  type: AuthorizationActionTypes.GET_PROFILE,
+});
+
+const onGetProfileSuccess = () => ({
+  type: AuthorizationActionTypes.GET_PROFILE_SUCCESS,
+});
+
+const onGetProfileError = (error) => ({
+  type: AuthorizationActionTypes.GET_PROFILE_ERROR,
   payload: error,
 }); 
 
-export const onLogout = () => ({
-  type: LOGOUT,
+const onLogout = () => ({
+  type: AuthorizationActionTypes.LOGOUT,
 });
+
+const AuthorizationActions = {
+  onLogin,
+  onLoginSuccess,
+  onLoginError,
+
+  onRegister,
+  onRegisterSuccess,
+  onRegisterError,
+
+  onActivateAccount,
+  onActivateAccountSuccess,
+  onActivateAccountError,
+
+  onGetProfile,
+  onGetProfileSuccess,
+  onGetProfileError,
+
+  onLogout,
+};
+
+export default AuthorizationActions;

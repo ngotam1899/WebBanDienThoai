@@ -10,9 +10,31 @@ import ImagesActions from "../../redux/actions/cloudinary";
 import './styles.css';
 
 class CartPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      total: 0,
+      totalPrice: 0
+    }
+  }
+
   componentWillMount() {
     const { onGetListImage } = this.props;
     onGetListImage();
+  }
+
+  componentWillReceiveProps(props){
+    var total = 0;
+    var totalPrice=0;
+    var {cart} = this.props;
+    for(var i=0; i< cart.length; i++){
+      total = total+cart[i].quantity
+      totalPrice = totalPrice+ cart[i].quantity* cart[i].product.price
+    }
+    this.setState({ 
+      total,
+      totalPrice
+    })
   }
 
   setImage = (image) => {
@@ -22,7 +44,8 @@ class CartPage extends Component {
   }
 
   render() {
-    var {cart, onDeleteProductInCart, onUpdateProductInCart, listImages} = this.props;
+    var {cart, onDeleteProductInCart, onUpdateProductInCart, listImages, cart} = this.props;
+    var {total, totalPrice} = this.state;
     return (<>
       <div className="product-big-title-area">
         <div className="container">
@@ -39,8 +62,10 @@ class CartPage extends Component {
         <div className="zigzag-bottom"></div>
         <div className="container">
           <div className="row">
+            <div className="d-none d-lg-block">
             <Search />
-            <div className="col-md-8">
+            </div>
+            <div className="col-lg-8 col-12">
               <div className="product-content-right">
                 <div className="woocommerce">
                   <form method="post" action="#">
@@ -59,10 +84,22 @@ class CartPage extends Component {
                         {cart.map((item, index) =>{
                           return (
                             <CartItem key={index} cart={item} onDeleteProductInCart={onDeleteProductInCart}
-                            onUpdateProductInCart={onUpdateProductInCart} setImage={this.setImage}/>
+                            onUpdateProductInCart={onUpdateProductInCart} setImage={this.setImage} setTotal={this.setTotal}/>
                           )
                         })}
-                        
+                        <tr>
+                          <td className="actions" colspan="6">
+                            <div className="coupon">
+                              <label for="coupon_code">Coupon:</label>
+                              <input type="text" placeholder="Coupon code" value="" id="coupon_code" className="input-text"
+                                name="coupon_code" />
+                              <input type="submit" value="Apply Coupon" name="apply_coupon" className="button" />
+                            </div>
+                            <input type="submit" value="Update Cart" name="update_cart" className="button" />
+                            <input type="submit" value="Checkout" name="proceed"
+                              className="checkout-button button alt wc-forward" />
+                          </td>
+                        </tr>
                       </tbody>}
                     </table>
                   </form>
@@ -107,7 +144,7 @@ class CartPage extends Component {
                         <tbody>
                           <tr className="cart-subtotal">
                             <th>Cart Subtotal</th>
-                            <td><span className="amount">£15.00</span></td>
+                            <td><span className="amount">$ {cart && totalPrice}</span></td>
                           </tr>
 
                           <tr className="shipping">
@@ -154,8 +191,6 @@ class CartPage extends Component {
 
                       </section>
                     </form>
-
-
                   </div>
                 </div>
               </div>

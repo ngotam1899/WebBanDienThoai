@@ -159,7 +159,6 @@ const onUpdateProductInCart = (product, quantity) =>{
 }
 const ProductsActions = {
   onClearDetail,
-
   onClearState,
 
   onGetList,

@@ -42,7 +42,7 @@ class ProductPage extends Component {
           <div className="zigzag-bottom"></div>
           <div className="container">
             <div className="row">
-              {listProducts.map((product, index) => {
+              {listImages && listProducts.map((product, index) => {
                 return (<ProductItem product={product} key={index} 
                   onAddProductToCart={onAddProductToCart}
                   setImage={this.setImage} />)

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { assets } from '../../constants/assetsImage';
 
 class CartItem extends Component {
   onUpdateQuantity = (product, quantity) => {
@@ -49,19 +48,6 @@ class CartItem extends Component {
 
         <td className="product-subtotal">
           <span className="amount">{quantity*product.price}</span>
-        </td>
-      </tr>
-      <tr>
-        <td className="actions" colspan="6">
-          <div className="coupon">
-            <label for="coupon_code">Coupon:</label>
-            <input type="text" placeholder="Coupon code" value="" id="coupon_code" className="input-text"
-              name="coupon_code" />
-            <input type="submit" value="Apply Coupon" name="apply_coupon" className="button" />
-          </div>
-          <input type="submit" value="Update Cart" name="update_cart" className="button" />
-          <input type="submit" value="Checkout" name="proceed"
-            className="checkout-button button alt wc-forward" />
         </td>
       </tr>
     </>

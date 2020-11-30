@@ -14,12 +14,12 @@ class App extends Component {
  render() {
   return (
     <Provider store={store}>
-    <BrowserRouter>
-    <Switch>
-        <Route path="/" component={Main} exact/>
-        <Route path="/user/dang-nhap" component={LoginPage} exact/>
-        <Route path="/user/dang-ky" component={RegisterPage} exact/>
-      </Switch>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" component={Main} exact/>
+          <Route path="/user/dang-nhap" component={({history}) => <LoginPage history={history} />} exact/>
+          <Route path="/user/dang-ky" component={RegisterPage} exact/>
+        </Switch>
       </BrowserRouter>
     </Provider>
   );
