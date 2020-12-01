@@ -20,7 +20,7 @@ router.route('/signup')
     .post(userController.signUp)
 
 router.route('/logout')
-    .get(passport.authenticate('jwt', { session: false }), userController.logOut)
+    .get(userController.logOut)
 
 router.route('/:userID')
     .get(userController.getUser)

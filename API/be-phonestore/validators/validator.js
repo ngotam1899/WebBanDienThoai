@@ -3,6 +3,14 @@ isValidObjId = (ID) => {
     return pattern.test(ID);
 }
 
+isValidFile = (file) => {
+    if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/jpg') {
+        return false;
+    }
+    return true;
+}
+
 module.exports = {
-    isValidObjId
+    isValidObjId,
+    isValidFile
 }

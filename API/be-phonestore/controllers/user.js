@@ -36,7 +36,7 @@ const transporter = nodemailer.createTransport({
 
 const logOut = async(req, res, next) => {
     headers = req.headers
-    return res.status(200).json({ message: 'success' })
+    return res.status(200).json({ success: 'true', message: 'logout success', code: 200 })
 }
 
 const signIn = async(req, res, next) => {
