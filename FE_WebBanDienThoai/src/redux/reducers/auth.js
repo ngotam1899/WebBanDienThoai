@@ -1,43 +1,43 @@
-import {
-  LOGIN,
-  LOGIN_SUCCESS,
-  LOGIN_ERROR,
-  LOGOUT,
-} from "../actions/auth";
-/* import { LocalStorage } from "../../constants"; */
+import { AuthorizationActionTypes } from "../actions/auth";
 
-export const AuthActionState = {
-  LoginSuccess: LOGIN_SUCCESS,
-  LoginError: LOGIN_ERROR,
-  NeedLogout: LOGOUT,
+const INITIAL_STATE = {
   loading: true,
+  loggedIn: false,
 };
 
-const INITIAL_STATE = {};
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case LOGIN:
+    case AuthorizationActionTypes.REGISTER:
+      return {...state};
+    case AuthorizationActionTypes.REGISTER_SUCCESS:
+      return {...state};
+    case AuthorizationActionTypes.REGISTER_ERROR:
+      return {...state};
+    case AuthorizationActionTypes.ACTIVATE_ACCOUNT:
+      return {...state};
+    case AuthorizationActionTypes.ACTIVATE_ACCOUNT_SUCCESS:
+      return {...state};
+    case AuthorizationActionTypes.ACTIVATE_ACCOUNT_ERROR:
+      return {...state};
+    case AuthorizationActionTypes.LOGIN:
       return {
         ...state,
-        isLogin: true,
+        loggedIn: false,
+        detail: null,
       };
-
-    case LOGIN_SUCCESS:
+    case AuthorizationActionTypes.LOGIN_SUCCESS:
       return {
         ...state,
-        isLogin: false,
-        actionState: AuthActionState.LoginSuccess,
-        ...action.payload,
+        loggedIn: true,
+        detail: action.payload,
       };
-    case LOGIN_ERROR:
+    case AuthorizationActionTypes.LOGIN_ERROR:
       return {
         ...state,
-        isLogin: false,
-        actionState: AuthActionState.LoginError,
+        loggedIn: false,
+        detail: null,
       };
-    case LOGOUT:
-      /* window.localStorage.removeItem(LocalStorage.Token);
-      window.localStorage.removeItem(LocalStorage.Device); */
+    case AuthorizationActionTypes.LOGOUT:
       return {
         ...state,
         actionState: null,

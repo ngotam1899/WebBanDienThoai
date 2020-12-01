@@ -1,12 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 //dispatch action
-import {bindActionCreators} from 'redux';
+import AuthorizationActions from '../../redux/actions/auth'
 
 import '../LoginPage/loginStyles.css'
 
 class RegisterPage extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			firstname: null,
+			lastname: null,
+			phonenumber: null,
+			address: null,
+			email: null,
+			password: null,
+			confirmPassword: null,
+		}
+	}
+
+	onChange = (event) =>{
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
+	}
+	
+	onRegister(data){
+		const {firstname, lastname, phonenumber, address, email, password} = this.state;
+		const {onRegister} = this.props;
+		data = {firstname, lastname, phonenumber, address, email, password};
+		onRegister(data);
+	}
+
 	componentDidMount(){ 
+		this.improveScreen();
+	}
+
+	improveScreen(){
 		const inputs = document.querySelectorAll(".input");
 		function addcl(){
 			let parent = this.parentNode.parentNode;
@@ -15,7 +48,7 @@ class RegisterPage extends Component {
 
 		function remcl(){
 			let parent = this.parentNode.parentNode;
-			if(this.value == ""){
+			if(this.value === ""){
 				parent.classList.remove("focus");
 			}
 		}
@@ -25,8 +58,8 @@ class RegisterPage extends Component {
 		});
 	}
 
-
 	render() {
+		const {firstname, lastname, phonenumber, address, email, password, confirmPassword} = this.state;
 		return (
 			<div className="register-page">
 				<div className="container">
@@ -43,7 +76,7 @@ class RegisterPage extends Component {
 												</div>
 												<div className="div">
 													<h5>First name</h5>
-													<input type="text" className="input"/>
+													<input type="text" className="input" name="firstname" value={firstname} onChange={this.onChange}/>
 												</div>
 											</div>
 											<div className="col-12 col-sm-6 input-div one">
@@ -52,7 +85,7 @@ class RegisterPage extends Component {
 												</div>
 												<div className="div">
 													<h5>Last name</h5>
-													<input type="text" className="input" />
+													<input type="text" className="input" name="lastname" value={lastname} onChange={this.onChange}/>
 												</div>
 											</div>
 										</div>
@@ -63,7 +96,7 @@ class RegisterPage extends Component {
 												</div>
 												<div className="div">
 													<h5>Phone number</h5>
-													<input type="tel" className="input" />
+													<input type="tel" className="input" name="phonenumber" value={phonenumber} onChange={this.onChange}/>
 												</div>
 											</div>
 										</div>
@@ -74,7 +107,7 @@ class RegisterPage extends Component {
 											</div>
 											<div className="div">
 												<h5>Address</h5>
-												<input type="text" className="input" />
+												<input type="text" className="input" name="address" value={address} onChange={this.onChange}/>
 											</div>
 										</div>
                     </div>
@@ -85,7 +118,7 @@ class RegisterPage extends Component {
 											</div>
 											<div className="div">
 												<h5>Email</h5>
-												<input type="text" className="input"/>
+												<input type="email" className="input" name="email" value={email} onChange={this.onChange}/>
 											</div>
 										</div>
                     </div>
@@ -96,7 +129,7 @@ class RegisterPage extends Component {
 											</div>
 											<div className="div">
 												<h5>Password</h5>
-												<input type="password" className="input"/>
+												<input type="password" className="input" name="password" value={password} onChange={this.onChange}/>
 											</div>
 										</div>
                     <div className="col-12 col-sm-6 input-div pass">
@@ -105,13 +138,13 @@ class RegisterPage extends Component {
 											</div>
 											<div className="div">
 												<h5>Confirm Password</h5>
-												<input type="password" className="input" />
+												<input type="password" className="input" name="confirmPassword" value={confirmPassword} onChange={this.onChange}/>
 											</div>
 										</div>
                     </div>
 										<div className="row">
 											<div className="col-12">
-												<input type="submit" className="btn" value="Register" />
+												<input className="btn" value="Register" onClick={() => this.onRegister()}/>
 											</div>
 										</div>
 									</form>
@@ -131,8 +164,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = {
-	
+const mapDispatchToProps =(dispatch)=> {
+	return {
+		onRegister : (data) =>{
+			dispatch(AuthorizationActions.onRegister(data))
+		},
+	}
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);

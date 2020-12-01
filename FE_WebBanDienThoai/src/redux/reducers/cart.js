@@ -45,7 +45,7 @@ const findProductInCart = (cart, product) => {
   if(cart.length>0){
     for(var i=0; i<cart.length; i++){
       // xem coi các product trong mảng cart có tồn tại product mới chọn ko?
-      if(cart[i].product.id === product.id){
+      if(cart[i].product._id === product._id){
         index = i;  //trả về vị trí
         break;
       }

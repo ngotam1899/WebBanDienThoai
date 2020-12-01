@@ -10,8 +10,7 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import ProductDetail from './ProductDetail'
-import ProductsActions from "../../redux/actions/products";
+import CategoryDetail from './CategoryDetail'
 import ImagesActions from "../../redux/actions/cloudinary";
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
@@ -26,12 +25,11 @@ class ProductList extends Component {
     }
   }
   componentDidMount() {
-    const { onGetList, onClearState,onGetListImage, onGetListBrand, onGetListCategory } = this.props;
+    const { onClearState,onGetListImage, onGetListBrand, onGetListCategory } = this.props;
     onClearState();
     onGetListImage();
     onGetListBrand();
     onGetListCategory();
-    onGetList();
   }
 
   setLarge = (large) => {
@@ -136,11 +134,11 @@ class ProductList extends Component {
                       </td>)
                   }}
                 />
-                {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
+                {(productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
 
-                {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
+                {(!productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
               </CCardBody>}
@@ -164,12 +162,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetList: () => {
-      dispatch(ProductsActions.onGetList())
-    },
-    onGetDetail: (id) => {
-      dispatch(ProductsActions.onGetDetail(id))
-    },
     onGetListImage: () => {
       dispatch(ImagesActions.onGetList())
     },
@@ -180,16 +172,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(CategoryActions.onGetList())
     },
     onClearState: () =>{
-      dispatch(ProductsActions.onClearState())
+      dispatch(CategoryActions.onClearState())
     },
     onClearDetail: () =>{
-      dispatch(ProductsActions.onClearDetail())
-    },
-    onCreate: (data) =>{
-      dispatch(ProductsActions.onCreate(data))
-    },
-    onUpdate: (id, data) =>{
-      dispatch(ProductsActions.onCreate(id, data))
+      dispatch(CategoryActions.onClearDetail())
     },
   }
 }

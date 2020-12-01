@@ -31,8 +31,8 @@ export default [
   },
   {
     _tag: 'CSidebarNavDropdown',
-    name: 'Base',
-    route: '/base',
+    name: 'Quản lý sản phẩm',
+    route: '/products',
     icon: 'cil-puzzle',
     _children: [
       /* {
@@ -102,8 +102,13 @@ export default [
       }, */
       {
         _tag: 'CSidebarNavItem',
-        name: 'Tables',
-        to: '/base/tables',
+        name: 'Danh sách sản phẩm',
+        to: '/products/product-manage',
+      },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách loại sản phẩm',
+        to: '/products/category-manage',
       },
       /* {
         _tag: 'CSidebarNavItem',

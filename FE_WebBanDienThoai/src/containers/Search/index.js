@@ -5,7 +5,7 @@ import './styles.css';
 class Search extends Component {
 	render() {
 		return (
-			<div className="col-md-4">
+			<div className="col">
 				<div className="single-sidebar">
 					<h2 className="sidebar-title">Search Products</h2>
 					<form action="#">
