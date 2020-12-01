@@ -28,46 +28,46 @@ const addproduct = async(req, res, next) => {
         if (image) product.image = image
         if (category) {
             const is_category = await Category.findById(category)
-            if (!is_category) return res.status(404).json({ message: 'category is identify' })
+            if (!is_category) return res.status(200).json({ success: false, code: 404, message: 'category is identify' })
             product.category = category
         }
         if (brand) {
             const is_brand = await Brand.findById(brand)
-            if (!is_brand) return res.status(404).json({ message: 'brand is identify' })
+            if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
             product.brand = brand;
         }
         if (origin) {
             const is_origin = await Origin.findById(origin)
-            if (!is_origin) return res.status(404).json({ message: 'origin is identify' })
+            if (!is_origin) return res.status(200).json({ success: false, code: 404, message: 'origin is identify' })
         }
 
         const mobile = new Mobile();
 
         if (display) {
             const is_display = await Display.findById(display)
-            if (!is_display) return res.status(404).json({ message: 'display is identify' })
+            if (!is_display) return res.status(200).json({ success: false, code: 404, message: 'display is identify' })
             mobile.display = display;
         }
         if (revolution) {
             const is_revolution = await Revolution.findById(revolution);
-            if (!is_revolution) return res.status(404).json({ message: 'revolution is identify' });
+            if (!is_revolution) return res.status(200).json({ success: false, code: 404, message: 'revolution is identify' });
             mobile.revolution = revolution
         }
         if (widescreen) {
             const is_widescreen = await Widescreen.findById(widescreen);
-            if (!is_widescreen) return res.status(404).json({ message: 'widecreen is identify' });
+            if (!is_widescreen) return res.status(200).json({ success: false, code: 404, message: 'widecreen is identify' });
             mobile.widescreen = widescreen;
         }
         if (operation) {
             const is_operation = await Operation.findById(operation);
-            if (!is_operation) return res.status(404).json({ message: 'operation is identify' });
+            if (!is_operation) return res.status(200).json({ success: false, code: 404, message: 'operation is identify' });
             mobile.operation = operation;
         }
         if (camera1) mobile.camera1 = camera1
         if (camera2) mobile.camera2 = camera2
         if (cpu) {
             const is_cpu = await CPU.findById(cpu);
-            if (!is_cpu) return res.status(404).json({ message: 'cpu is identify' });
+            if (!is_cpu) return res.status(200).json({ success: false, code: 404, message: 'cpu is identify' });
             mobile.cpu = cpu;
         }
         if (ram) mobile.ram = ram;
@@ -81,7 +81,7 @@ const addproduct = async(req, res, next) => {
         if (thick) mobile.thick = thick
         if (color) {
             const is_color = await Color.findById(color);
-            if (!is_color) return res.status(404).json({ message: 'color is identify' });
+            if (!is_color) return res.status(200).json({ success: false, code: 404, message: 'color is identify' });
             mobile.color = color
         }
         await mobile.save()
@@ -93,6 +93,8 @@ const addproduct = async(req, res, next) => {
 
         const returnProduct = await Product.findById(product._id).populate('detail_info.mobile')
         return res.status(201).json({
+            success: true,
+            code: 201,
             product: returnProduct
         })
 
@@ -110,7 +112,7 @@ const updateproduct = async(req, res, next) => {
         const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info.mobile
 
         const product = await Product.findById(IDProduct)
-        if (!product) return res.status(404).json({ error: { message: 'Can not found product need to update' } })
+        if (!product) return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' })
 
         if (name) product.name = name;
         if (price) product.price = price;
@@ -121,45 +123,45 @@ const updateproduct = async(req, res, next) => {
         if (image) product.image = image
         if (category) {
             const is_category = await Category.findById(category)
-            if (!is_category) return res.status(404).json({ message: 'category is identify' })
+            if (!is_category) return res.status(200).json({ success: false, code: 404, message: 'category is identify' })
             product.category = category
         }
         if (brand) {
             const is_brand = await Brand.findById(brand)
-            if (!is_brand) return res.status(404).json({ message: 'brand is identify' })
+            if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
             product.brand = brand;
         }
         if (origin) {
             const is_origin = await Origin.findById(origin)
-            if (!is_origin) return res.status(404).json({ message: 'origin is identify' })
+            if (!is_origin) return res.status(200).json({ success: false, code: 404, message: 'origin is identify' })
         }
 
         const mobile = await Mobile.findById(product.detail_info.mobile)
         if (display) {
             const is_display = await Display.findById(display)
-            if (!is_display) return res.status(404).json({ message: 'display is identify' })
+            if (!is_display) return res.status(200).json({ success: false, code: 404, message: 'display is identify' })
             mobile.display = display;
         }
         if (revolution) {
             const is_revolution = await Revolution.findById(revolution);
-            if (!is_revolution) return res.status(404).json({ message: 'revolution is identify' });
+            if (!is_revolution) return res.status(200).json({ success: false, code: 404, message: 'revolution is identify' });
             mobile.revolution = revolution
         }
         if (widescreen) {
             const is_widescreen = await Widescreen.findById(widescreen);
-            if (!is_widescreen) return res.status(404).json({ message: 'widecreen is identify' });
+            if (!is_widescreen) return res.status(200).json({ success: false, code: 404, message: 'widecreen is identify' });
             mobile.widescreen = widescreen;
         }
         if (operation) {
             const is_operation = await Operation.findById(operation);
-            if (!is_operation) return res.status(404).json({ message: 'operation is identify' });
+            if (!is_operation) return res.status(200).json({ success: false, code: 404, message: 'operation is identify' });
             mobile.operation = operation;
         }
         if (camera1) mobile.camera1 = camera1
         if (camera2) mobile.camera2 = camera2
         if (cpu) {
             const is_cpu = await CPU.findById(revolution);
-            if (!is_cpu) return res.status(404).json({ message: 'cpu is identify' });
+            if (!is_cpu) return res.status(200).json({ success: false, code: 404, message: 'cpu is identify' });
             mobile.cpu = cpu;
         }
         if (ram) mobile.ram = ram;
@@ -173,7 +175,7 @@ const updateproduct = async(req, res, next) => {
         if (thick) mobile.thick = thick
         if (color) {
             const is_color = await Color.findById(color);
-            if (!is_color) return res.status(404).json({ message: 'color is identify' });
+            if (!is_color) return res.status(200).json({ success: false, code: 404, message: 'color is identify' });
             mobile.color = color
         }
 
@@ -182,7 +184,7 @@ const updateproduct = async(req, res, next) => {
             //await useImage(product)
 
         await mobile.save()
-        return res.status(200).json({ success: 'true' })
+        return res.status(200).json({ success: true, code: 200, message: '' })
     } catch (error) {
         return next(error)
     }
@@ -192,11 +194,11 @@ const deleteproduct = async(req, res, next) => {
     try {
         const { IDProduct } = req.params
         const product = await Product.findById(IDProduct)
-        if (!product) return res.status(404).json({ error: { message: 'The product is not exist' } })
+        if (!product) return res.status(200).json({ success: false, code: 404, message: 'The product is not exist' })
         await unUseImage(product)
         await Mobile.findByIdAndDelete(product.detail_info.mobile)
         await Product.findByIdAndDelete(IDProduct)
-        return res.status(200).json({ message: 'success' })
+        return res.status(200).json({ success: true, code: 200, message: 'success' })
     } catch (error) {
         next(error)
     }
@@ -208,9 +210,7 @@ const getproduct = async(req, res, next) => {
 
         const product = await Product.findById(IDProduct).populate('detail_info.mobile')
 
-        if (!product) return res.status(404).json({ message: 'can not found any record' })
-
-        return res.status(200).json({ product })
+        return res.status(200).json({ success: true, code: 200, message: '', product })
     } catch (error) {
         return next(error)
     }
@@ -219,9 +219,7 @@ const getAllMobile = async(req, res, next) => {
     try {
         const product = await Product.find().where('detail_info.mobile').ne(null)
 
-        if (!product) return res.status(404).json({ message: 'can not found any record' })
-
-        return res.status(200).json({ product })
+        return res.status(200).json({ success: true, code: 200, message: '', product })
     } catch (error) {
         return next(error)
     }
@@ -267,10 +265,10 @@ const unUseImage = async(Schema) => {
 const getAllProductByBrand = async(req, res, next) => {
     try {
         const { IDBrand } = req.params
-        if (!Validator.isValidObjId(IDBrand)) return res.status(400).json({ message: 'Bad Request, check link again!' })
+        if (!Validator.isValidObjId(IDBrand)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
         const products = await Product.find({ "brand": IDBrand });
 
-        return res.status(200).json({ message: 'success', products })
+        return res.status(200).json({ success: true, code: 200, message: 'success', products })
     } catch (error) {
         return next(error)
     }
@@ -279,7 +277,7 @@ const getAllProductByBrand = async(req, res, next) => {
 const getAllProductByColor = async(req, res, next) => {
     try {
         const { IDColor } = req.params
-        if (!Validator.isValidObjId(IDColor)) return res.status(400).json({ message: 'Bad Request, check link again!' })
+        if (!Validator.isValidObjId(IDColor)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
         const mobile = await Mobile.find({ "color": IDColor });
 
         const listID = [];
@@ -288,7 +286,7 @@ const getAllProductByColor = async(req, res, next) => {
             listID.push(element._id);
         });
         const products = await Product.find({ "detail_info.mobile": listID });
-        return res.status(200).json({ message: 'success', products })
+        return res.status(200).json({ success: true, code: 200, message: 'success', products })
     } catch (error) {
         return next(error)
     }
@@ -297,10 +295,10 @@ const getAllProductByColor = async(req, res, next) => {
 const getAllProductByCategory = async(req, res, next) => {
     try {
         const { IDCategory } = req.params
-        if (!Validator.isValidObjId(IDCategory)) return res.status(400).json({ message: 'Bad Request, check link again!' })
+        if (!Validator.isValidObjId(IDCategory)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
         const products = await Product.find({ "category": IDCategory });
 
-        return res.status(200).json({ message: 'success', products })
+        return res.status(200).json({ success: true, code: 200, message: 'success', products: products })
     } catch (error) {
         return next(error)
     }

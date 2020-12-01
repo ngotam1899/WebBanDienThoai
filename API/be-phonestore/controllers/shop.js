@@ -10,7 +10,7 @@ const updateShopInfo = async(req, res, next) => {
 
     const result = await Shop.findByIdAndUpdate(IDShop, shop)
 
-    return res.status(200).json({ success: 'true' })
+    return res.status(200).json({ success: true, code: 200, message: '' })
 }
 
 module.exports = {

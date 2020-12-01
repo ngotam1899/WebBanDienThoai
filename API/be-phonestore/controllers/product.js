@@ -5,7 +5,7 @@ const cloudinary = require('cloudinary')
 
 const createError = require('http-errors')
 const Product = require('../models/Product')
-/* const slp = require('sleep') */
+    /* const slp = require('sleep') */
 
 const uploadImageMobile = async(req, res, next) => {
     try {
@@ -89,7 +89,7 @@ const uploadImageMobile = async(req, res, next) => {
 const getAllProduct = async(req, res, next) => {
     try {
         const products = await Product.find({})
-        return res.status(200).json({ products: { success: 'true', products } })
+        return res.status(200).json({ success: true, code: 200, message: '', products: products })
     } catch (error) {
         return next(error)
     }

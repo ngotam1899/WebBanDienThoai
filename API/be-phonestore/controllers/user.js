@@ -14,13 +14,6 @@ const hashString = async(textString) => {
     return await bcrypts.hash(textString, salt)
 }
 
-/*const encodedTokenSignUp = (userID) => {
-    return JWT.sign({
-        iss: 'Mai Tuong',
-        sub: userID
-    }, JWT_SECRET, { expiresIn: '1h' })
-}*/
-
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     service: 'gmail',
@@ -36,20 +29,20 @@ const transporter = nodemailer.createTransport({
 
 const logOut = async(req, res, next) => {
     headers = req.headers
-    return res.status(200).json({ success: 'true', message: 'logout success', code: 200 })
+    return res.status(200).json({ success: true, message: 'logout success', code: 200 })
 }
 
 const signIn = async(req, res, next) => {
     if (req.user.confirmed == false) {
         sendEmail(req.user._id);
-        return res.status(403).json({ message: 'An email activate have send to' + req.user.email });
+        return res.status(200).json({ success: false, code: 403, message: 'An email activate have send to' + req.user.email });
     }
 
     const token = 'Bearer ' + service.encodedToken(req.user._id, '6h')
         /*res.setHeader('Devide_code', req.user.devide_code)*/
     res.setHeader('Authorization', token)
 
-    return res.status(200).json({ success: 'true', user: req.user })
+    return res.status(200).json({ success: true, code: 200, message: '', user: req.user })
 }
 
 const activeAccount = async(req, res, next) => {
@@ -58,16 +51,16 @@ const activeAccount = async(req, res, next) => {
         if (tokenUser) {
             JWT.verify(tokenUser, JWT_SECRET, async(err, decodeToken) => {
                 if (err) {
-                    return res.status(400).json({ error: { message: 'Incorect or Expired link' } });
+                    return res.status(200).json({ success: false, code: 400, message: 'Incorect or Expired link' });
                 }
                 const email = decodeToken.sub;
                 const user = await User.findOne({ email });
                 if (!user) {
-                    return res.status(400).json({ error: { message: 'Incorect Link' } });
+                    return res.status(200).json({ success: false, code: 400, message: 'Incorect Link' });
                 }
                 user.confirmed = true;
                 await user.save();
-                return res.status(200).json("Activate Successfull")
+                return res.status(200).json({ success: true, code: 200, message: 'Activate Successfull' })
             })
         }
     } catch (error) {
@@ -80,7 +73,7 @@ const signUp = async(req, res, next) => {
 
         const foundUser = await User.findOne({ email })
         if (foundUser) {
-            return next(createError(403, 'Email is already in use'))
+            return res.status(200).json({ success: false, code: 403, message: 'Email is already to use' })
         }
         const newUser = new User({ firstname, lastname, phonenumber, address, image, email, role });
 
@@ -89,14 +82,14 @@ const signUp = async(req, res, next) => {
 
         sendEmail(email);
         await newUser.save();
-        return res.status(201).json({ success: true })
+        return res.status(200).json({ success: true, code: 200, message: '' })
     } catch (error) {
         next(error)
     }
 }
 
 const secret = async(req, res, next) => {
-    return res.status(200).json({ resources: true })
+    return res.status(200).json({ success: true, code: 200, message: '', resources: true })
 }
 const sendEmail = (email) => {
     const token = service.encodedToken(email, '1h');
@@ -116,7 +109,7 @@ const getAllUser = async(req, res, next) => {
     try {
         const users = await User.find()
 
-        return res.status(200).json({ users: { success: 'true', users } })
+        return res.status(200).json({ success: true, code: 200, message: '', users: users })
     } catch (error) {
         return next(error)
     }
@@ -128,7 +121,7 @@ const getUser = async(req, res, next) => {
 
         const user = await User.findById(userID)
 
-        return res.status(200).json({ user })
+        return res.status(200).json({ success: true, code: 200, message: '', user: user })
     } catch (error) {
         return next(error)
     }
@@ -138,7 +131,7 @@ const getUser = async(req, res, next) => {
 const newUser = async(req, res) => {
     const newUser = new User(req.body)
     await newUser.save()
-    return res.status(201).json({ user: newUser })
+    return res.status(200).json({ success: true, code: 201, message: '', user: newUser })
 }
 
 const replaceUser = async(req, res, next) => {
@@ -149,7 +142,7 @@ const replaceUser = async(req, res, next) => {
         const user = await User.findById(userID)
 
         if (!user) {
-            return res.status(404).json({ error: { message: 'Can not found user need to update' } })
+            return res.status(200).json({ success: false, code: 404, message: 'Can not found user need to update' })
         }
 
         newUser.email = user.email;
@@ -157,7 +150,7 @@ const replaceUser = async(req, res, next) => {
 
         await user.update(newUser)
 
-        return res.status(200).json({ success: 'true' })
+        return res.status(200).json({ success: true, code: 200, message: '' })
     } catch (error) {
 
     }
@@ -166,7 +159,7 @@ const replaceUser = async(req, res, next) => {
 
 const returnUserByToken = async(req, res, next) => {
     try {
-        return res.status(200).json({ message: 'success', user: req.user })
+        return res.status(200).json({ success: true, code: 200, message: 'success', user: req.user })
     } catch (error) {
 
     }

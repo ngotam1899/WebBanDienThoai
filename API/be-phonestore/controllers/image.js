@@ -8,17 +8,15 @@ const getAllImg = async(req, res, next) => {
     try {
         const img = await Image_Pro.find()
         if (!img) res.status(404).json({ message: 'can not found any record' })
-        return res.status(200).json({ images: { success: 'true', img } })
+        return res.status(200).json({ images: { success: true, code: 200, images: img } })
     } catch (error) {
-        console.log(error)
         return next(error)
     }
 }
 const getAllImgUser = async(res, next) => {
     try {
         const img = await Image_User.find()
-        if (!img) res.status(404).json({ message: 'can not found any record' })
-        return res.status(200).json({ images: { success: 'true', img } })
+        return res.status(200).json({ images: { success: true, code: 200, message: '', images: img } })
     } catch (error) {
         return next(error)
     }
@@ -28,7 +26,7 @@ const uploadImage = async(req, res, next) => {
     try {
 
         if (!req.files || Object.keys(req.files).length === 0)
-            return res.status(400).json({ message: 'No file were uploaded' })
+            return res.status(200).json({ success: false, code: 400, message: 'No file were uploaded' })
         const image = [];
         var isValid;
         const fileimage = req.files.image;
@@ -37,7 +35,7 @@ const uploadImage = async(req, res, next) => {
             isValid = Validator.isValidFile(fileimage);
             if (isValid == false) {
                 await removeTmp(fileimage.tempFilePath);
-                return res.status(200).json({ success: 'false', code: 400, message: 'The format file is incorrect!' })
+                return res.status(200).json({ success: false, code: 400, message: 'The format file is incorrect!' })
             }
             image.push(await (upload(fileimage, Image_Pro)));
         } else {
@@ -51,13 +49,13 @@ const uploadImage = async(req, res, next) => {
                 }
             }
             if (isValid == false) {
-                return res.status(200).json({ success: 'false', code: 400, message: 'The format file is incorrect!' })
+                return res.status(200).json({ success: false, code: 400, message: 'The format file is incorrect!' })
             }
             for (let item of fileimage) {
                 image.push(await (upload(item, Image_Pro)))
             }
         }
-        return res.status(200).json({ success: 'true', code: 200, message: "", images: image })
+        return res.status(200).json({ success: true, code: 200, message: "", images: image })
 
     } catch (error) {
         next(error)
@@ -83,22 +81,22 @@ const uploadImageUser = async(req, res, next) => {
     try {
 
         if (!req.files || Object.keys(req.files).length === 0)
-            return res.status(400).json({ message: 'No file were uploaded' })
+            return res.status(400).json({ success: false, code: 400, message: 'No file were uploaded' })
         const fileimage = req.files.image
         if (fileimage.length > 0) {
             fileimage.forEach(element => {
                 removeTmp(element)
             });
-            return res.status(200).json({ success: 'false', code: 400, message: 'Can not upload multiple file' })
+            return res.status(200).json({ success: false, code: 400, message: 'Can not upload multiple file' })
         }
         if (Validator.isValidFile(fileimage) == false) {
             await removeTmp(fileimage);
-            return res.status(200).json({ success: 'false', code: 400, message: 'The format file is incorrect!' })
+            return res.status(200).json({ success: false, code: 400, message: 'The format file is incorrect!' })
         }
 
         const image = await upload(fileimage, Image_User)
 
-        return res.status(200).json({ success: 'true', code: 200, message: "", image: image })
+        return res.status(200).json({ success: true, code: 200, message: "", image: image })
 
     } catch (error) {
         next(error)
@@ -111,9 +109,7 @@ const getImage = async(req, res, next) => {
 
         const image = await Image_Pro.findById(IDImage)
 
-        if (!image) return res.status(404).json({ message: 'Can not found any image' })
-
-        return res.status(200).json({ image })
+        return res.status(200).json({ success: true, code: 200, message: '', image: image })
     } catch (error) {
         return next(error)
     }
@@ -125,9 +121,7 @@ const getImageUser = async(req, res, next) => {
 
         const image = await Image_User.findById(IDImage)
 
-        if (!image) return res.status(404).json({ message: 'Can not found any image' })
-
-        return res.status(200).json({ image })
+        return res.status(200).json({ success: true, code: 200, message: '', image: image })
     } catch (error) {
         return next(error)
     }
@@ -137,8 +131,8 @@ const deleteImage = async(req, res, next) => {
     try {
         const { IDImage } = req.params
         const image = await Image_Pro.findById(IDImage)
-        if (!image) return res.status(404).json({ message: 'Can not matching any Image' })
-        if (image.use) return res.status(403).json({ message: 'Image are using, can not delete' })
+        if (!image) return res.status(200).json({ success: false, code: 200, message: 'Can not matching any Image' })
+        if (image.use) return res.status(200).json({ success: false, code: 403, message: 'Image are using, can not delete' })
 
         const public_id = image.id_cloud
         await cloudinary.v2.uploader.destroy(public_id, async(err, result) => {
@@ -146,7 +140,7 @@ const deleteImage = async(req, res, next) => {
         })
 
         await Image_Pro.findByIdAndDelete(IDImage)
-        return res.status(200).json({ message: 'deleted image' })
+        return res.status(200).json({ success: true, code: 200, message: 'deleted image' })
 
     } catch (error) {
 

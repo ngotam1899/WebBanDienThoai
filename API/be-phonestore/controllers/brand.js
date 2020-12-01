@@ -6,7 +6,7 @@ const getAllBrand = async(req, res, next) => {
     try {
         const brands = await Brand.find()
 
-        return res.status(200).json({ brands: { success: 'true', brands } })
+        return res.status(200).json({ success: true, code: 200, message: '', brands: brands })
     } catch (error) {
         return next(error)
     }
@@ -14,7 +14,7 @@ const getAllBrand = async(req, res, next) => {
 const addBrand = async(req, res, next) => {
     const newBrand = new Brand(req.body)
     await newBrand.save()
-    return res.status(201).json({ brand: newBrand })
+    return res.status(200).json({ success: true, code: 201, message: '', brand: newBrand })
 }
 const updateBrand = async(req, res, next) => {
 
@@ -25,10 +25,10 @@ const updateBrand = async(req, res, next) => {
     const result = await Brand.findByIdAndUpdate(IDBrand, brand)
 
     if (!result) {
-        return res.status(404).json("message: id brand is not correctly")
+        return res.status(200).json({ success: false, code: 400, message: 'id brand is not correctly' });
     }
 
-    return res.status(200).json({ success: 'true' })
+    return res.status(200).json({ success: true, code: 200, message: '' })
 }
 
 module.exports = {

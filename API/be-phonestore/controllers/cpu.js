@@ -6,7 +6,7 @@ const getAllCPU = async(req, res, next) => {
     try {
         const cpus = await CPU.find()
 
-        return res.status(200).json({ cpus: { success: 'true', cpus } })
+        return res.status(200).json({ success: true, code: 200, message: '', cpus: cpus })
     } catch (error) {
         return next(error)
     }
@@ -14,7 +14,7 @@ const getAllCPU = async(req, res, next) => {
 const addCPU = async(req, res, next) => {
     const newCPU = new CPU(req.body)
     await newCPU.save()
-    return res.status(201).json({ cpu: newCPU })
+    return res.status(200).json({ success: true, code: 201, message: '', cpu: newCPU })
 }
 const updateCPU = async(req, res, next) => {
 
@@ -25,10 +25,10 @@ const updateCPU = async(req, res, next) => {
     const result = await CPU.findByIdAndUpdate(IDCPU, cpu)
 
     if (!result) {
-        return res.status(404).json({ message: 'id cpu is not correctly' })
+        return res.status(200).json({ success: false, code: 400, message: 'id cpu is not correctly' })
     }
 
-    return res.status(200).json({ success: 'true' })
+    return res.status(200).json({ success: true, code: 200, message: '' })
 }
 
 module.exports = {
