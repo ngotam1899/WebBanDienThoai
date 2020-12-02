@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
-import { registerAccount, loginAccount, activateAccount } from "../apis/auth";
+import { registerAccount, loginAccount, activateAccount, getProfile } from "../apis/auth";
 import { message } from "antd";
 /**
  *
@@ -23,7 +23,7 @@ function* handleLogin({ payload }) {
   try {
     const result = yield call(loginAccount, payload);
     const data = get(result, "data", {});
-    console.log("data", result.headers.authorization);
+    localStorage.setItem('AUTH_USER', result.headers.authorization);
     yield put(AuthorizationActions.onLoginSuccess(data.user));
   } catch (error) {
     console.log(error);
@@ -39,6 +39,17 @@ function* handleActiveAccount({ payload}) {
   } catch (error) {
     console.log(error, "Incorect or Expired link");
     yield put(AuthorizationActions.onActivateAccountError(error));
+  }
+}
+
+function* handleGetProfile() {
+  try {
+    const result = yield call(getProfile, null);
+    const data = get(result, "data.user", {}); 
+    yield put(AuthorizationActions.onGetProfileSuccess(data));
+  } catch (error) {
+    console.log(error, "Incorect or Expired link");
+    yield put(AuthorizationActions.onGetProfileError(error));
   }
 }
 /**
@@ -116,6 +127,10 @@ export function* watchLogin() {
 export function* watchActivateAccount() {
   yield takeEvery(AuthorizationActionTypes.ACTIVATE_ACCOUNT, handleActiveAccount);
 }
+
+export function* watchGetProfile() {
+  yield takeEvery(AuthorizationActionTypes.GET_PROFILE, handleGetProfile);
+}
 /*export function* watchUpdate() {
   yield takeEvery(ProductsActionTypes.UPDATE, handleUpdate);
 }
@@ -130,6 +145,7 @@ export default function* rootSaga() {
     fork(watchRegister),
     fork(watchLogin),
     fork(watchActivateAccount),
+    fork(watchGetProfile),
     /* fork(watchUpdate),
     fork(watchDelete), */
   ]);

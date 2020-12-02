@@ -70,8 +70,9 @@ const onGetProfile = () => ({
   type: AuthorizationActionTypes.GET_PROFILE,
 });
 
-const onGetProfileSuccess = () => ({
+const onGetProfileSuccess = (data) => ({
   type: AuthorizationActionTypes.GET_PROFILE_SUCCESS,
+  payload: data
 });
 
 const onGetProfileError = (error) => ({

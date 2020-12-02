@@ -5,6 +5,7 @@ import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
+import AuthorizationActions from '../../redux/actions/auth'
 
 class Header extends Component {
   constructor(props) {
@@ -14,6 +15,12 @@ class Header extends Component {
       totalPrice: 0
     }
   }
+  componentDidMount(){
+    const {onGetProfile} = this.props;
+    const token = localStorage.getItem('AUTH_USER')
+    onGetProfile(null,token);
+  }
+
   componentWillReceiveProps(props) {
     var total = 0;
     var totalPrice = 0;
@@ -26,6 +33,12 @@ class Header extends Component {
       total,
       totalPrice
     })
+  }
+
+  setLogout= () => {
+    const {onLogout} = this.props;
+    localStorage.removeItem('AUTH_USER')
+    onLogout()
   }
 
   render() {
@@ -42,7 +55,7 @@ class Header extends Component {
       )
     }
     const {total, totalPrice}=this.state;
-    const {userInfo} = this.props;
+    const {userInfo, isLogin} = this.props;
     return (
       <>
         <div className="header-area">
@@ -52,10 +65,11 @@ class Header extends Component {
                 <div className="user-menu">
                   <ul>
                     {userInfo && <li><a href="#"><FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}</a></li>}
-                    <li><a href="#"><i className="fa fa-heart"></i> Wishlist</a></li>
-                    <li><a href="cart.html"><i className="fa fa-user"></i> My Cart</a></li>
+                    <li><a href="cart.html"><i className="fa fa-heart"></i> My Cart</a></li>
                     <li><a href="checkout.html"><i className="fa fa-user"></i> Checkout</a></li>
-                    <li><a href="/user/dang-nhap"><i className="fa fa-user"></i> Login</a></li>
+                    {isLogin===false
+                    ? <li><a href="/user/dang-nhap"><i className="fa fa-user"></i> Login</a></li>
+                    : <li><button type="button" className="btn-logout" style={{'outline': 'none'}} onClick={() => this.setLogout()}><i className="fa fa-user"></i> Logout</button></li>}
                   </ul>
                 </div>
               </div>
@@ -134,9 +148,21 @@ class Header extends Component {
 const mapStateToProps = (state) =>{
   return {
     cart: state.cart,
-    userInfo: state.auth.detail
+    userInfo: state.auth.detail,
+    isLogin: state.auth.loggedIn
   }
 }
 
+const mapDispatchToProps =(dispatch)=> {
+	return {
+		onGetProfile : (data, headers) =>{
+			dispatch(AuthorizationActions.onGetProfile(data, headers))
+    },
+    onLogout : ()=>{
+      dispatch(AuthorizationActions.onLogout())
+    }
+	}
+};
 
-export default connect(mapStateToProps, null) (Header);
+
+export default connect(mapStateToProps, mapDispatchToProps) (Header);

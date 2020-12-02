@@ -19,3 +19,8 @@ export const loginAccount = (data) =>{
 export const activateAccount = (token) =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/authentication/activate/${token}`);
 }
+
+//4. Từ token lấy thông tin người dùng
+export const getProfile = (data) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}/api/auth/profile`, data);
+};

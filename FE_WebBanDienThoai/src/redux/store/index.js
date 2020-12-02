@@ -2,6 +2,7 @@ import {createStore, compose, applyMiddleware} from 'redux';
 import rootReducer from '../reducers';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../sagas';
+import createApiAuthMiddle from "./middlewares";
 
 //kiểm tra môi trường web là dev và tích hợp redux_dev_tool
 const composeEnhencers = process.env.NODE_ENV !== 'production' &&
@@ -15,7 +16,7 @@ const sagaMiddleware =createSagaMiddleware();
 
 const configureStore = () =>{
     //chứa các middleware
-    const middlewares = [sagaMiddleware];
+    const middlewares = [sagaMiddleware, createApiAuthMiddle];
     const enhancers = [
         applyMiddleware(...middlewares)
     ];

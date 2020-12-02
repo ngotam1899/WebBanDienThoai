@@ -7,7 +7,7 @@ function* handleGetList({ payload }) {
   try {
     const result = yield call(getAllImages, payload);
     const data = get(result, "data");
-    yield put(ImagesActions.onGetListSuccess(data.images.img));
+    yield put(ImagesActions.onGetListSuccess(data.images.images));
   } catch (error) {
     yield put(ImagesActions.onGetListError(error));
   }
@@ -18,7 +18,7 @@ function* handleGetDetail({ id }) {
     const result = yield call(getImage, id);
     const data = get(result, "data");
     console.log("data",data)
-    yield put(ImagesActions.onGetAnImageSuccess(data.images));
+    yield put(ImagesActions.onGetAnImageSuccess(data.image));
   } catch (error) {
     yield put(ImagesActions.onGetAnImageError(error));
   }

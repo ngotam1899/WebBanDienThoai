@@ -23,24 +23,40 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         loggedIn: false,
-        detail: null,
       };
     case AuthorizationActionTypes.LOGIN_SUCCESS:
-      return {
+      return {  
         ...state,
         loggedIn: true,
-        detail: action.payload,
       };
     case AuthorizationActionTypes.LOGIN_ERROR:
       return {
         ...state,
         loggedIn: false,
-        detail: null,
       };
     case AuthorizationActionTypes.LOGOUT:
       return {
         ...state,
-        actionState: null,
+        loggedIn: false,
+        detail: null,
+      };
+    case AuthorizationActionTypes.GET_PROFILE:
+      return {
+        ...state,
+        loggedIn: false,
+        detail: null,
+      };
+    case AuthorizationActionTypes.GET_PROFILE_SUCCESS:
+      return {
+        ...state,
+        loggedIn: true,
+        detail: action.payload,
+      };
+    case AuthorizationActionTypes.GET_PROFILE_ERROR:
+      return {
+        ...state,
+        detail: null,
+        loggedIn: false,
       };
     default:
       return state;
