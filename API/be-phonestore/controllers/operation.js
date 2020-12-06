@@ -1,5 +1,5 @@
 const Operation = require('../models/Operation')
-
+const Validator = require('../validators/validator')
 const createError = require('http-errors')
 
 const getAllOperation = async(req, res, next) => {
@@ -19,7 +19,7 @@ const addOperation = async(req, res, next) => {
 const updateOperation = async(req, res, next) => {
 
     const { IDOperation } = req.params
-
+    if (Validator.isValidFile(IDOperation) == false) return res.status(200).json({ success: false, code: 400, message: 'check link and try again' })
     const operation = req.body
 
     const result = await Operation.findByIdAndUpdate(IDOperation, operation)
@@ -30,9 +30,19 @@ const updateOperation = async(req, res, next) => {
 
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
+const deleteOperation = async(req, res, next) => {
+    const { IDOperation } = req.params
+    const isValid = await Validator.isValidObjId(IDOperation);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id operator is not correctly' }) } else {
+        const result = await Operation.findByIdAndDelete(IDColor);
+        if (result) return res.status(200).json({ success: true, code: 200, message: '' })
+    }
+
+}
 
 module.exports = {
     getAllOperation,
     addOperation,
-    updateOperation
+    updateOperation,
+    deleteOperation
 }

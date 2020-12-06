@@ -1,5 +1,5 @@
 const Color = require('../models/Color')
-
+const Validator = require('../validators/validator')
 const createError = require('http-errors')
 
 const getAllColor = async(req, res, next) => {
@@ -30,9 +30,19 @@ const updateColor = async(req, res, next) => {
 
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
+const deleteColor = async(req, res, next) => {
+    const { IDColor } = req.params
+    const isValid = await Validator.isValidObjId(IDColor);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id color is not correctly' }) } else {
+        const result = await Color.findByIdAndDelete(IDColor);
+        if (result) return res.status(200).json({ success: true, code: 200, message: '' })
+    }
+
+}
 
 module.exports = {
     getAllColor,
     addColor,
-    updateColor
+    updateColor,
+    deleteColor
 }

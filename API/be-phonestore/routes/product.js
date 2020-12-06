@@ -24,6 +24,7 @@ router.route('/brands')
 router.route('/brands/:IDBrand')
     .put(brandController.updateBrand)
     .get(mobileController.getAllProductByBrand)
+    .delete(brandController.deleteBrand)
 
 //Region CateGory
 router.route('/categorys')

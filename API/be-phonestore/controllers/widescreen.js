@@ -1,4 +1,5 @@
 const WideScreen = require('../models/Widescreen')
+const Validator = require('../validators/validator')
 
 const createError = require('http-errors')
 
@@ -30,9 +31,19 @@ const updateWideScreen = async(req, res, next) => {
 
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
+const deleteWidecreen = async(req, res, next) => {
+    const { IDWideScreen } = req.params
+    const isValid = await Validator.isValidObjId(IDWideScreen);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id widescreen is not correctly' }) } else {
+        const result = await WideScreen.findByIdAndDelete(IDWideScreen);
+        if (result) return res.status(200).json({ success: true, code: 200, message: '' })
+    }
+
+}
 
 module.exports = {
     getAllWideScreen,
     addWideScreen,
-    updateWideScreen
+    updateWideScreen,
+    deleteWidecreen
 }

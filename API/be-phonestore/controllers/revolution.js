@@ -1,4 +1,5 @@
 const Revolution = require('../models/Revolution')
+const Validator = require('../validators/validator')
 
 const createError = require('http-errors')
 
@@ -30,9 +31,19 @@ const updateRevolution = async(req, res, next) => {
 
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
+const deleteRevolution = async(req, res, next) => {
+    const { IDRevolution } = req.params
+    const isValid = await Validator.isValidObjId(IDRevolution);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id revolution is not correctly' }) } else {
+        const result = await Revolution.findByIdAndDelete(IDRevolution);
+        if (result) return res.status(200).json({ success: true, code: 200, message: '' })
+    }
+
+}
 
 module.exports = {
     getAllRevolution,
     addRevolution,
-    updateRevolution
+    updateRevolution,
+    deleteRevolution
 }

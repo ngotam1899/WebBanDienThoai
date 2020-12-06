@@ -1,6 +1,8 @@
 const Brand = require('../models/Brand')
 
 const createError = require('http-errors')
+const Validator = require('../validators/validator')
+const { findByIdAndDelete } = require('../models/Brand')
 
 const getAllBrand = async(req, res, next) => {
     try {
@@ -30,9 +32,19 @@ const updateBrand = async(req, res, next) => {
 
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
+const deleteBrand = async(req, res, next) => {
+    const { IDBrand } = req.params
+    const isValid = await Validator.isValidObjId(IDBrand);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id brand is not correctly' }) } else {
+        const result = await Brand.findByIdAndDelete(IDBrand);
+        if (result) return res.status(200).json({ success: true, code: 200, message: '' })
+    }
+
+}
 
 module.exports = {
     getAllBrand,
     addBrand,
-    updateBrand
+    updateBrand,
+    deleteBrand
 }
