@@ -33,6 +33,7 @@ router.route('/categorys')
 router.route('/categorys/:IDCategory')
     .put(categoryController.updateCategory)
     .get(mobileController.getAllProductByCategory)
+    .delete(categoryController.deleteCategory)
 
 //Region Display
 router.route('/displays')
@@ -40,6 +41,7 @@ router.route('/displays')
     .post(displayController.addDisplay)
 router.route('/displays/:IDDisplay')
     .put(displayController.updateDisplay)
+    .delete(displayController.deleteDisplay)
 
 //Region Revolution
 router.route('/revolutions')
@@ -47,6 +49,7 @@ router.route('/revolutions')
     .post(revolutionController.addRevolution)
 router.route('/revolutions/:IDRevolution')
     .put(revolutionController.updateRevolution)
+    .delete(revolutionController.deleteRevolution)
 
 //Region Color
 router.route('/colors')
@@ -55,6 +58,7 @@ router.route('/colors')
 router.route('/colors/:IDColor')
     .put(colorController.updateColor)
     .get(mobileController.getAllProductByColor)
+    .delete(colorController.deleteColor)
 
 //Region CPU
 router.route('/cpus')
@@ -62,6 +66,7 @@ router.route('/cpus')
     .post(cpuController.addCPU)
 router.route('/cpus/:IDCPU')
     .put(cpuController.updateCPU)
+    .delete(cpuController.deleteCPU)
 
 //Region Widescreen
 router.route('/widescreens')
@@ -69,6 +74,7 @@ router.route('/widescreens')
     .post(widescreenController.addWideScreen)
 router.route('/widescreens/:IDWideScreen')
     .put(widescreenController.updateWideScreen)
+    .delete(widescreenController.deleteWidecreen)
 
 //Region Operation
 router.route('/operations')
@@ -76,6 +82,7 @@ router.route('/operations')
     .post(operationController.addOperation)
 router.route('/operations/:IDOperation')
     .put(operationController.updateOperation)
+    .delete(operationController.deleteOperation)
 
 //Region comment
 router.route('/').get(productController.getAllProduct)
