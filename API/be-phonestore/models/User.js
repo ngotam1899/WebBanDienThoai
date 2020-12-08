@@ -17,7 +17,8 @@ const UserSchema = new Schema({
         type: String
     },
     image: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: "Image_User"
     },
     email: {
         type: String,

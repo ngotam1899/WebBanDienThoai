@@ -38,12 +38,20 @@ const deleteCategory = async(req, res, next) => {
         const result = await Category.findByIdAndDelete(IDCategory);
         if (result) return res.status(200).json({ success: true, code: 200, message: '' })
     }
-
+}
+const getDetailCategory = async(req, res, next) => {
+    const { IDCategory } = req.params;
+    const isValid = await Validator.isValidObjId(IDCategory);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id category is not correctly' }) } else {
+        const result = await Category.findById(IDCategory);
+        return res.status(200).json({ success: true, code: 200, message: '', category: result })
+    }
 }
 
 module.exports = {
     getAllCategory,
     addCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    getDetailCategory
 }

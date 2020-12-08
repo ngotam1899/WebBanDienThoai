@@ -34,6 +34,9 @@ router.route('/categorys/:IDCategory')
     .put(categoryController.updateCategory)
     .get(mobileController.getAllProductByCategory)
     .delete(categoryController.deleteCategory)
+router.route('/categorys/detail/:IDCategory')
+    .get(categoryController.getDetailCategory)
+
 
 //Region Display
 router.route('/displays')
