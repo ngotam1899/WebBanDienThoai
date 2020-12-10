@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import OrdersActions from '../../redux/actions/order'
 
 class ActiveOrder extends Component {
+  componentWillMount(){
+    localStorage.removeItem("CART")
+  }
+  componentDidMount(){
+    const {match, onConfirmOrder} = this.props;
+    onConfirmOrder(match.params.token)
+  }
+
   render() {
     return (
       <div>
@@ -11,4 +21,17 @@ class ActiveOrder extends Component {
   }
 }
 
-export default ActiveOrder;
+const mapStateToProps = (state) =>{
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    onConfirmOrder: (token) => {
+      dispatch(OrdersActions.onConfirmOrder(token))
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (ActiveOrder);

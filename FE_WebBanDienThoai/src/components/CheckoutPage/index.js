@@ -45,12 +45,21 @@ class CheckoutPage extends Component {
   }
   
   placeOrder(){
-    const {onCreateAnOrder, authInfo, shipping_phone, shipping_address} = this.props;
-    const {shipToDifferentAddress, order_comments, total, totalPrice} = this.state;
+    const {onCreateAnOrder, authInfo} = this.props;
+    const {shipToDifferentAddress, order_comments, total, totalPrice, shipping_phone, shipping_address} = this.state;
+    //1. Lấy cartItem từ LocalStorage
     const cartItem = JSON.parse(localStorage.getItem("CART"))
-
+    //2. Chuyển đổi thành mảng ứng với đầu vào req
+    var items = cartItem.map((item) => {
+      var dataItem = {
+        product: item.product._id, 
+        quantity: item.quantity
+      }
+      return dataItem;
+    })
+    //3. Truyền thông tin order vào body req
     var data = {
-      order_list: cartItem,
+      order_list: items,
       total_price: totalPrice,
       total_quantity: total,
       shipping_phonenumber: authInfo.phonenumber,
@@ -60,7 +69,7 @@ class CheckoutPage extends Component {
     }
     if(shipToDifferentAddress){
       data = {
-        order_list: cartItem,
+        order_list: items,
         total_price: totalPrice,
         total_quantity: total,
         shipping_phonenumber: shipping_phone,

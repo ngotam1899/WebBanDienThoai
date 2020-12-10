@@ -52,7 +52,7 @@ const routes = [
 		path: '/order/active/:token',
 		exact: true,
 		name: "Active Order",
-		main: () => <ActiveOrder />
+		main: ({match}) => <ActiveOrder match={match}/>
 	},
 	{
 		path: '/products/dien-thoai/:pathseo/:productID',

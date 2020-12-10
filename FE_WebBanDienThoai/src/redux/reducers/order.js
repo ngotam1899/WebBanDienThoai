@@ -34,6 +34,18 @@ export default function(state = init, action) {
       return {...state};
     case OrdersActionTypes.ADD_ORDER_ERROR:
       return {...state};
+    case OrdersActionTypes.SEND_CONFIRM_EMAIL:
+      return {...state};
+    case OrdersActionTypes.SEND_CONFIRM_EMAIL_SUCCESS:
+      return {...state};
+    case OrdersActionTypes.SEND_CONFIRM_EMAIL_ERROR:
+      return {...state};
+    case OrdersActionTypes.CONFIRM_ORDER:
+      return {...state};
+    case OrdersActionTypes.CONFIRM_ORDER_SUCCESS:
+      return {...state};
+    case OrdersActionTypes.CONFIRM_ORDER_ERROR:
+      return {...state};
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import OrdersActions, { OrdersActionTypes } from "../actions/order";
-import { addOrder } from "../apis/order";
+import { addOrder, sendConfirmEmail, confirmOrder } from "../apis/order";
 
 /* function* handleGetList({ payload }) {
   try {
@@ -23,13 +23,25 @@ function* handleCreate({ payload }) {
   try {
     const result = yield call(addOrder, payload);
     const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
+    if (data.code !== 201) throw data;
     yield put(OrdersActions.onCreateAnOrderSuccess(data));
+    const email = yield call(sendConfirmEmail, data.order._id);
+    yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
   } catch (error) {
     yield put(OrdersActions.onCreateAnOrderError(error));
   }
 }
 
+function* handleConfirmOrder({ payload}) {
+  try {
+    const result = yield call(confirmOrder, payload);
+    const data = get(result, "data", {});  
+    yield put(OrdersActions.onConfirmOrderSuccess(data));
+  } catch (error) {
+    console.log(error, "Incorect or Expired link");
+    yield put(OrdersActions.onConfirmOrderSuccess(error));
+  }
+}
 /**
  *
  * update
@@ -89,6 +101,10 @@ function* handleCreate({ payload }) {
 export function* watchCreate() {
   yield takeEvery(OrdersActionTypes.ADD_ORDER, handleCreate);
 }
+
+export function* watchConfirmOrder() {
+  yield takeEvery(OrdersActionTypes.CONFIRM_ORDER, handleConfirmOrder);
+}
 /* export function* watchUpdateUserImage() {
   yield takeEvery(UsersActionTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
 } */
@@ -100,6 +116,7 @@ export default function* rootSaga() {
   yield all([
     /* fork(watchGetList),*/
     fork(watchCreate),
+    fork(watchConfirmOrder),
     /* fork(watchUpdateUserImage), */
     /* fork(watchDelete), */
   ]);
