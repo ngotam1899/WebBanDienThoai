@@ -104,6 +104,12 @@ export default function(state = init, action) {
         ...state,
         processing: false,
       };
+    case ImagesActionTypes.CREATE_USER_IMAGE:
+      return {...state};
+    case ImagesActionTypes.CREATE_USER_SUCCESS:
+      return {...state};
+    case ImagesActionTypes.CREATE_USER_ERROR:
+      return {...state};
     default:
       return state;
   }

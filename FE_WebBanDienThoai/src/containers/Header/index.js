@@ -64,9 +64,9 @@ class Header extends Component {
               <div className="col-md-8">
                 <div className="user-menu">
                   <ul>
-                    {userInfo && <li><a href="#"><FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}</a></li>}
-                    <li><a href="cart.html"><i className="fa fa-heart"></i> My Cart</a></li>
-                    <li><a href="checkout.html"><i className="fa fa-user"></i> Checkout</a></li>
+                    {userInfo && <li><a href="/#/account/detail"><FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}</a></li>}
+                    <li><a href="/#/carts"><i className="fa fa-heart"></i> My Cart</a></li>
+                    <li><a href="/#/carts/checkout"><i className="fa fa-user"></i> Checkout</a></li>
                     {isLogin===false
                     ? <li><a href="/user/dang-nhap"><i className="fa fa-user"></i> Login</a></li>
                     : <li><button type="button" className="btn-logout" style={{'outline': 'none'}} onClick={() => this.setLogout()}><i className="fa fa-user"></i> Logout</button></li>}

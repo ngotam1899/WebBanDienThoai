@@ -15,10 +15,10 @@ class ProductItem extends Component {
 			<div className="col-md-3 col-sm-6">
 				<div className="single-shop-product">
 					<div className="product-upper">
-						<Link to={`/products/dien-thoai/${product._id}`}><img src={setImage(product.bigimage)} alt="" /></Link>
+						<Link to={`/products/dien-thoai/${product.pathseo}/${product._id}`}><img src={setImage(product.bigimage)} alt="" /></Link>
 					</div>
 					<h2>
-						<Link to={`/products/dien-thoai/${product._id}`}>{product.name}</Link>
+						<Link to={`/products/dien-thoai/${product.pathseo}/${product._id}`}>{product.name}</Link>
 					</h2>
 					<div className="product-carousel-price">
             <ins>$ {product.price}</ins> <del>${product.price + 100}</del>

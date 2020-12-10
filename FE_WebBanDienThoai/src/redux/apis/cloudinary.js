@@ -1,7 +1,7 @@
 //Nơi chứa các hàm gọi API riêng biệt cho từng module
 //Module Product
 import axiosService from '../../utils/AxiosService';
-import {API_ENDPOINT} from '../../constants/index';
+import {API_ENDPOINT, API_ENDPOINT_AUTH} from '../../constants/index';
 import queryString from 'query-string';
 
 const url = '/products/image';
@@ -18,7 +18,11 @@ export const getAllImages = (params = {}) =>{
   return axiosService.get(`${API_ENDPOINT}${url}${queryParams}`);
 };
 
-// http://localhost:3000/products/:id  METHOD = PUT
-/* export const updateProduct  = (data, productId) =>{
-    return axiosService.put(`${API_ENDPOINT}${url}/${productId}`, data);
-} */
+// http://localhost:3000/users/image  METHOD = POST
+export const addUserImage = (data) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}/users/image`, data);
+};
+// http://localhost:3000/users/image/:id  METHOD = GET
+export const getUserImage  = (userId) =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}/users/image/${userId}`);
+}

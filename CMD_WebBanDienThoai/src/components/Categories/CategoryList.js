@@ -86,7 +86,7 @@ class ProductList extends Component {
           <CCol>
             <CCard>
               <CCardHeader>
-                <h5 className="float-left my-2">Danh sách sản phẩm</h5>
+                <h5 className="float-left my-2">Danh sách category</h5>
                 <CButton
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"

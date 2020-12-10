@@ -11,6 +11,7 @@ import './styles.css';
 
 class DetailPage extends Component {
   componentDidMount(){
+    
     const {match, onGetDetailProduct, onGetListImage, onGetListBrand, onGetListCategory} = this.props;
     onGetListImage();
     onGetListBrand();

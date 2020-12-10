@@ -9,51 +9,61 @@ import NotFound from '../containers/NotFound';
 import ActiveAccount from '../containers/ActiveAccount';
 import ActiveOrder from '../containers/ActiveOrder';
 import DetailPage from '../components/DetailPage';
+import UserInfoPage from '../components/UserInfoPage';
 
 const routes = [
 	{
 		path: '/',
 		exact: true,
+		name: "Home Page",
 		main: () => <HomePage />
 	},
 	{
 		path: '/products/dien-thoai',
 		exact: true,
+		name: "Product Page",
 		main: () => <ProductPage />
 	},
 	{
 		path: '/carts',
 		exact: true,
-		main: () => <CartPage />
+		name: "Cart Page",
+		main: ({history}) => <CartPage history={history} />
 	},
 	{
 		path: '/carts/checkout',
 		exact: true,
+		name: "Checkout Page",
 		main: () => <CheckoutPage />
-	},
-	{
-		path: '/products/dien-thoai/:productID',
-		exact: true,
-		main: ({match}) => <DetailPage match={match} />
 	},
 	{
 		path: '/account/active/:token',
 		exact: true,
+		name: "Active Account",
 		main: ({match}) => <ActiveAccount match={match} />
+	},
+	{
+		path: '/account/detail',
+		exact: true,
+		name: "User Info",
+		main: () => <UserInfoPage/>
 	},
 	{
 		path: '/order/active/:token',
 		exact: true,
+		name: "Active Order",
 		main: () => <ActiveOrder />
 	},
 	{
-		path: '/products/dien-thoai/:productID',
+		path: '/products/dien-thoai/:pathseo/:productID',
 		exact: true,
+		name: "Detail Page",
 		main: ({match}) => <DetailPage match={match} />
 	},
 	{
 		path: '',
 		exact: true,
+		name: "404 Page",
 		main: () => <NotFound />
 	}
 ];
