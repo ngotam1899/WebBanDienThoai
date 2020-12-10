@@ -81,7 +81,7 @@ const uploadImageUser = async(req, res, next) => {
     try {
 
         if (!req.files || Object.keys(req.files).length === 0)
-            return res.status(400).json({ success: false, code: 400, message: 'No file were uploaded' })
+            return res.status(200).json({ success: false, code: 400, message: 'No file were uploaded' })
         const fileimage = req.files.image
         if (fileimage.length > 0) {
             fileimage.forEach(element => {

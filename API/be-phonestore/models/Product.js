@@ -33,17 +33,18 @@ const ProductSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Brand"
     },
-    origin: {
-        type: String
-    },
+    /*origin: {
+        type: Schema.Types.ObjectId,
+        ref: "Origin"
+    },*/
     detail_info: {
         mobile: {
             type: Schema.Types.ObjectId,
             ref: "Mobile"
         },
-        charger: {
+        earphone: {
             type: Schema.Types.ObjectId,
-            ref: "Mobile"
+            ref: "EarPhone"
         }
     }
 }, {

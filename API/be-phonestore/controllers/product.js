@@ -94,8 +94,52 @@ const getAllProduct = async(req, res, next) => {
         return next(error)
     }
 }
+const getAllProductByBrand = async(req, res, next) => {
+    try {
+        const { IDBrand } = req.params
+        if (!Validator.isValidObjId(IDBrand)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
+        const products = await Product.find({ "brand": IDBrand });
+
+        return res.status(200).json({ success: true, code: 200, message: 'success', products })
+    } catch (error) {
+        return next(error)
+    }
+}
+
+const getAllProductByColor = async(req, res, next) => {
+    try {
+        const { IDColor } = req.params
+        if (!Validator.isValidObjId(IDColor)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
+        const mobile = await Mobile.find({ "color": IDColor });
+
+        const listID = [];
+
+        mobile.forEach(async(element) => {
+            listID.push(element._id);
+        });
+        const products = await Product.find({ "detail_info.mobile": listID });
+        return res.status(200).json({ success: true, code: 200, message: 'success', products })
+    } catch (error) {
+        return next(error)
+    }
+}
+
+const getAllProductByCategory = async(req, res, next) => {
+    try {
+        const { IDCategory } = req.params
+        if (!Validator.isValidObjId(IDCategory)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
+        const products = await Product.find({ "category": IDCategory });
+
+        return res.status(200).json({ success: true, code: 200, message: 'success', products: products })
+    } catch (error) {
+        return next(error)
+    }
+}
 
 module.exports = {
     uploadImageMobile,
-    getAllProduct
+    getAllProduct,
+    getAllProductByBrand,
+    getAllProductByCategory,
+    getAllProductByColor
 }

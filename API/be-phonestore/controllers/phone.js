@@ -9,13 +9,13 @@ const CPU = require('../models/CPU')
 const Color = require('../models/Color')
 const Mobile = require('../models/Mobile')
 const Image_Pro = require('../models/Image_Pro')
-const Origin = require('../models/Origin')
+    //const Origin = require('../models/Origin')
     //const { Schema, Mongoose } = require('mongoose')
 const Validator = require('../validators/validator')
 
 const addproduct = async(req, res, next) => {
     try {
-        const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, origin } = req.body
+        const { name, price, amount, pathseo, warrently, bigimage, image, category, brand } = req.body
         const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info
 
         const product = new Product();
@@ -36,10 +36,10 @@ const addproduct = async(req, res, next) => {
             if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
             product.brand = brand;
         }
-        if (origin) {
-            const is_origin = await Origin.findById(origin)
-            if (!is_origin) return res.status(200).json({ success: false, code: 404, message: 'origin is identify' })
-        }
+        /* if (origin) {
+             const is_origin = await Origin.findById(origin)
+             if (!is_origin) return res.status(200).json({ success: false, code: 404, message: 'origin is identify' })
+         }*/
 
         const mobile = new Mobile();
 
@@ -108,7 +108,7 @@ const updateproduct = async(req, res, next) => {
     try {
         const { IDProduct } = req.params
 
-        const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, origin } = req.body
+        const { name, price, amount, pathseo, warrently, bigimage, image, category, brand } = req.body
         const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info.mobile
 
         const product = await Product.findById(IDProduct)
@@ -131,10 +131,10 @@ const updateproduct = async(req, res, next) => {
             if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
             product.brand = brand;
         }
-        if (origin) {
-            const is_origin = await Origin.findById(origin)
-            if (!is_origin) return res.status(200).json({ success: false, code: 404, message: 'origin is identify' })
-        }
+        /* if (origin) {
+             const is_origin = await Origin.findById(origin)
+             if (!is_origin) return res.status(200).json({ success: false, code: 404, message: 'origin is identify' })
+         }*/
 
         const mobile = await Mobile.findById(product.detail_info.mobile)
         if (display) {
@@ -266,7 +266,7 @@ const getAllProductByBrand = async(req, res, next) => {
     try {
         const { IDBrand } = req.params
         if (!Validator.isValidObjId(IDBrand)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
-        const products = await Product.find({ "brand": IDBrand });
+        const products = await Product.find({ "brand": IDBrand }).where('detail_info.mobile').ne(null);
 
         return res.status(200).json({ success: true, code: 200, message: 'success', products })
     } catch (error) {
@@ -285,7 +285,7 @@ const getAllProductByColor = async(req, res, next) => {
         mobile.forEach(async(element) => {
             listID.push(element._id);
         });
-        const products = await Product.find({ "detail_info.mobile": listID });
+        const products = await Product.find({ "detail_info.mobile": listID }).where('detail_info.mobile').ne(null);
         return res.status(200).json({ success: true, code: 200, message: 'success', products })
     } catch (error) {
         return next(error)
@@ -296,7 +296,7 @@ const getAllProductByCategory = async(req, res, next) => {
     try {
         const { IDCategory } = req.params
         if (!Validator.isValidObjId(IDCategory)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
-        const products = await Product.find({ "category": IDCategory });
+        const products = await Product.find({ "category": IDCategory }).where('detail_info.mobile').ne(null);
 
         return res.status(200).json({ success: true, code: 200, message: 'success', products: products })
     } catch (error) {

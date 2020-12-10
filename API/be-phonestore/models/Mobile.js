@@ -63,6 +63,8 @@ const MobileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Product"
     }
+}, {
+    timestamps: true
 })
 
 const Mobile = mongoose.model('Mobile', MobileSchema)
