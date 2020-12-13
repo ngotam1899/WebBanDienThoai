@@ -1,5 +1,6 @@
 const Order = require('../models/Order')
 const Product = require('../models/Product')
+const Validator = require('../validators/validator')
 
 var smtpTransport = require('nodemailer-smtp-transport');
 const nodemailer = require('nodemailer');
@@ -152,11 +153,25 @@ const finishOrder = async(req, res, next) => {
     }
 }
 
+const userGetOrder = async(req, res, next) => {
+    try {
+        const { IDUser } = req.params;
+        const isValid = await Validator.isValidObjId(IDUser);
+        if (!isValid) return res.status(200).json({ success: false, code: 400, message: 'User is not correctly' });
+        const order = await Order.find({ user: IDUser });
+
+        return res.status(200).json({ success: true, code: 200, message: "", orders: order })
+    } catch (error) {
+        return next(error)
+    }
+}
+
 module.exports = {
     getAllOrder,
     addOrder,
     addOrderItem,
     requestSendEmail,
     confirmOrder,
-    finishOrder
+    finishOrder,
+    userGetOrder
 }
