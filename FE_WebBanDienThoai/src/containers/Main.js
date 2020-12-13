@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Provider } from "react-redux";
-import { HashRouter } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import Header from './Header';
 import Footer from './Footer';
-import MainRoutes from '../components/MainRouters'
+import MainRouters from '../components/MainRouters';
 
 class Main extends Component {
  render() {
@@ -11,7 +11,7 @@ class Main extends Component {
     <>
     <HashRouter>
       <Header/>
-      <MainRoutes/>
+      <MainRouters/>
     </HashRouter>
     <Footer/>
     </>

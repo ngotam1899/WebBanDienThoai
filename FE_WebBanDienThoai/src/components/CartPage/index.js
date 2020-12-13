@@ -37,6 +37,12 @@ class CartPage extends Component {
     })
   }
 
+  checkoutOrder = () =>{
+    console.log("checked")
+    const {history} = this.props;
+    history.push('/carts/checkout')
+  }
+
   setImage = (image) => {
     const {listImages} = this.props;
     const img = listImages.find(obj => obj._id === image);
@@ -68,7 +74,7 @@ class CartPage extends Component {
             <div className="col-lg-8 col-12">
               <div className="product-content-right">
                 <div className="woocommerce">
-                  <form method="post" action="#">
+                  <form>
                     <table cellspacing="0" className="shop_table cart">
                       <thead>
                         <tr>
@@ -96,78 +102,49 @@ class CartPage extends Component {
                               <input type="submit" value="Apply Coupon" name="apply_coupon" className="button" />
                             </div>
                             <input type="submit" value="Update Cart" name="update_cart" className="button" />
-                            <input type="submit" value="Checkout" name="proceed"
-                              className="checkout-button button alt wc-forward" />
+                            <button className="checkout-button button alt wc-forward" onClick={() => this.checkoutOrder()}>CHECKOUT</button>
                           </td>
+                          
                         </tr>
                       </tbody>}
                     </table>
                   </form>
 
                   <div className="cart-collaterals">
+                    <div className="row">
+                    <div className="col-6">
+                      <div className="cart_totals ">
+                        <h2>Cart Totals</h2>
 
+                        <table cellspacing="0">
+                          <tbody>
+                            <tr className="cart-subtotal">
+                              <th>Cart Subtotal</th>
+                              <td><span className="amount">$ {cart && totalPrice}</span></td>
+                            </tr>
 
-                    <div className="cross-sells">
-                      <h2>You may be interested in...</h2>
-                      <ul className="products">
-                        <li className="product">
-                          <a href="single-product.html">
-                            <img width="325" height="325" alt="T_4_front" className="attachment-shop_catalog wp-post-image"
-                              src={assets("products/product-2.jpg")} />
-                            <h3>Ship Your Idea</h3>
-                            <span className="price"><span className="amount">£20.00</span></span>
-                          </a>
+                            <tr className="shipping">
+                              <th>Shipping and Handling</th>
+                              <td>Free Shipping</td>
+                            </tr>
 
-                          <a className="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="22"
-                            rel="nofollow" href="single-product.html">Select options</a>
-                        </li>
-
-                        <li className="product">
-                          <a href="single-product.html">
-                            <img width="325" height="325" alt="T_4_front" className="attachment-shop_catalog wp-post-image"
-                              src={assets("products/product-4.jpg")} />
-                            <h3>Ship Your Idea</h3>
-                            <span className="price"><span className="amount">£20.00</span></span>
-                          </a>
-
-                          <a className="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="22"
-                            rel="nofollow" href="single-product.html">Select options</a>
-                        </li>
-                      </ul>
+                            <tr className="order-total">
+                              <th>Order Total</th>
+                              <td><strong><span className="amount">$ {cart && totalPrice}</span></strong> </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
 
-
-                    <div className="cart_totals ">
-                      <h2>Cart Totals</h2>
-
-                      <table cellspacing="0">
-                        <tbody>
-                          <tr className="cart-subtotal">
-                            <th>Cart Subtotal</th>
-                            <td><span className="amount">$ {cart && totalPrice}</span></td>
-                          </tr>
-
-                          <tr className="shipping">
-                            <th>Shipping and Handling</th>
-                            <td>Free Shipping</td>
-                          </tr>
-
-                          <tr className="order-total">
-                            <th>Order Total</th>
-                            <td><strong><span className="amount">£15.00</span></strong> </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-
-
+                    <div className="col-6">
                     <form method="post" action="#" className="shipping_calculator">
                       <h2><a className="shipping-calculator-button" data-toggle="collapse" href="#calcalute-shipping-wrap"
                         aria-expanded="false" aria-controls="calcalute-shipping-wrap">Calculate Shipping</a></h2>
 
                       <section id="calcalute-shipping-wrap" className="shipping-calculator-form collapse">
 
-                        <p className="form-row form-row-wide">
+                        <p className="form-row form-row-wide m-0">
                           <select rel="calc_shipping_state" className="country_to_state" id="calc_shipping_country"
                             name="calc_shipping_country">
                             <option value="">Select a country…</option>
@@ -180,10 +157,10 @@ class CartPage extends Component {
                           </select>
                         </p>
 
-                        <p className="form-row form-row-wide"><input type="text" id="calc_shipping_state"
+                        <p className="form-row form-row-wide m-0"><input type="text" id="calc_shipping_state"
                           name="calc_shipping_state" placeholder="State / county" value="" className="input-text" /> </p>
 
-                        <p className="form-row form-row-wide"><input type="text" id="calc_shipping_postcode"
+                        <p className="form-row form-row-wide m-0"><input type="text" id="calc_shipping_postcode"
                           name="calc_shipping_postcode" placeholder="Postcode / Zip" value="" className="input-text" /></p>
 
 
@@ -191,6 +168,8 @@ class CartPage extends Component {
 
                       </section>
                     </form>
+                    </div>
+                    </div>
                   </div>
                 </div>
               </div>

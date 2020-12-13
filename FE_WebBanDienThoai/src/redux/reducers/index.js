@@ -5,7 +5,9 @@ import cloudinary from "./cloudinary";
 import auth from "./auth";
 import brands from "./brands";
 import categories from "./categories";
+import user from "./user";
+import order from "./order";
 
 export default combineReducers({
-  products,cart, cloudinary, auth, brands, categories
+  products,cart, cloudinary, auth, brands, categories, user, order
 });

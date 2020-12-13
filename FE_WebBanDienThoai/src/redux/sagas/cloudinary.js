@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import ImagesActions, { ImagesActionTypes } from "../actions/cloudinary";
-import { getImage, getAllImages } from "../apis/cloudinary";
+import { getImage, getAllImages, addUserImage } from "../apis/cloudinary";
 
 function* handleGetList({ payload }) {
   try {
@@ -28,28 +28,6 @@ function* handleGetDetail({ id }) {
  *
  * create
  */
-/* function* handleCreate({ payload, filters, callback, merchant_id }) {
-  console.log("load",payload);
-  try {
-    const result = yield call(EcommerceApi.Product.create, payload);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    message.success("Create product success!");
-    if (callback) {
-      callback();
-    }
-    yield put(ProductsActions.onCreateSuccess(data));
-    yield put(ProductsActions.onGetList(filters));
-    if(merchant_id){
-      yield put(MerchantActions.onGetListProduct({id:merchant_id}));
-    }
-  } catch (error) {
-    console.log(error);
-    message.error(get(error, "msg", "Error when create product!"));
-    yield put(ProductsActions.onCreateError(error));
-  }
-} */
-
 /**
  *
  * update
@@ -113,7 +91,6 @@ export function* watchGetList() {
 export function* watchGetDetail() {
   yield takeEvery(ImagesActionTypes.GET_DETAIL, handleGetDetail);
 }
-
 /*
 export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);

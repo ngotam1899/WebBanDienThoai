@@ -1,17 +1,19 @@
-import { takeEvery, fork, all, call, put } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
-import CategoryActions, { CategoryActionTypes } from "../actions/categories";
-import { getAllCategories } from "../apis/categories";
+import UsersActions, { UsersActionTypes } from "../actions/user";
+import { addUserImage, getUserImage } from "../apis/cloudinary";
+import { updateUserInfo, getUser } from "../apis/user";
 
-function* handleGetList({ payload }) {
+/* function* handleGetList({ payload }) {
   try {
-    const result = yield call(getAllCategories, payload);
+    yield delay(500)
+    const result = yield call(getAllProducts, payload);
     const data = get(result, "data");
-    yield put(CategoryActions.onGetListSuccess(data.categorys));
+    yield put(ProductsActions.onGetListSuccess(data.product));
   } catch (error) {
-    yield put(CategoryActions.onGetListError(error));
+    yield put(ProductsActions.onGetListError(error));
   }
-}
+} */
 
 /**
  *
@@ -43,29 +45,24 @@ function* handleGetList({ payload }) {
  *
  * update
  */
-/* function* handleUpdate({ payload, filters, callback, merchant_id }) {
-
+function* handleUpdateUserImage({payload}) {
   try {
-    const result = yield call(EcommerceApi.Product.update, payload);
+    //1. Load User Image lên Cloudinary
+    console.log(payload.id);
+    const result = yield call(addUserImage, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    message.success("Update product success!");
-    if (callback) {
-      callback();
-    }
-
-    const detailResult = yield call(EcommerceApi.Product.getDetail, payload.id);
-    yield put(ProductsActions.onUpdateSuccess(get(detailResult, "data")));
-    yield put(ProductsActions.onGetList(filters));
-    if(merchant_id){
-      yield put(MerchantActions.onGetListProduct({id:merchant_id}));
-    }
+    //2. Update user info
+    const detailResult = yield call(updateUserInfo,{"image":data.image._id}, payload.id);
+    yield put(UsersActions.onUpdateUserImageSuccess(get(detailResult, "data")));
+    //3. Get user info
+    
+    
   } catch (error) {
     console.log(error);
-    message.error(get(error, "msg", "Error when Update product!"));
-    yield put(ProductsActions.onUpdateError(error));
+    yield put(UsersActions.onUpdateUserImageError(error));
   }
-} */
+}
 
 /**
  *
@@ -95,28 +92,26 @@ function* handleGetList({ payload }) {
 /**
  *
  */
-
-export function* watchGetList() {
-  yield takeEvery(CategoryActionTypes.GET_LIST, handleGetList);
+/* export function* watchGetList() {
+  yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
 }
-
+*/
 /*
 export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
+} */
+export function* watchUpdateUserImage() {
+  yield takeEvery(UsersActionTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
 }
-export function* watchUpdate() {
-  yield takeEvery(ProductsActionTypes.UPDATE, handleUpdate);
-}
-export function* watchDelete() {
+/* export function* watchDelete() {
   yield takeEvery(ProductsActionTypes.DELETE, handleDelete);
 } */
 
 export default function* rootSaga() {
   yield all([
-    fork(watchGetList),
-    /* fork(watchGetDetail),
-    fork(watchCreate),
-    fork(watchUpdate),
-    fork(watchDelete), */
+    /* fork(watchGetList),*/
+    /*fork(watchCreate), */
+    fork(watchUpdateUserImage),
+    /* fork(watchDelete), */
   ]);
 }

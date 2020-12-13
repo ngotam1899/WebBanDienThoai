@@ -35,6 +35,8 @@ class LoginPage extends Component {
 
 	componentDidMount(){ 
 		this.improveScreen()
+		const {history} = this.props;
+		console.log("history", history)
 	}
 
 	componentWillReceiveProps(props){

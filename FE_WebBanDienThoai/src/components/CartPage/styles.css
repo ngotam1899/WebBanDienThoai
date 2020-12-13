@@ -27,10 +27,6 @@ table.shop_table td.product-remove a {
   div.cart-collaterals ul.products li.product:hover .add_to_cart_button{background-color: #222}
   
   
-  .cart-collaterals .shipping_calculator {
-    float: right;
-    width: 40%;
-  }
   table.shop_table {
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -72,11 +68,6 @@ td.actions div.coupon {
 }
 .cart-collaterals {
     overflow: hidden;
-}
-.cart_totals {
-    float: right;
-    margin-bottom: 50px;
-    width: 40%;
 }
 .cart_totals table {
     border-bottom: 1px solid #ddd;
@@ -136,4 +127,11 @@ div.cart-collaterals ul.products li.product .price ins {
     font-weight: 700;
     margin-left: 10px;
     text-decoration: none;
+}
+
+input[type="button"], button {
+    background: none repeat scroll 0 0 #5a88ca;
+    border: medium none;
+    color: #fff;
+    padding: 11px 20px;
 }
