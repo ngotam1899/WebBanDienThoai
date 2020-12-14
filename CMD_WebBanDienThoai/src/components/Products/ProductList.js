@@ -15,6 +15,7 @@ import ProductsActions from "../../redux/actions/products";
 import ImagesActions from "../../redux/actions/cloudinary";
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
+import DisplayActions from "../../redux/actions/display";
 
 const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { width: '15%'} }]
 
@@ -26,11 +27,13 @@ class ProductList extends Component {
     }
   }
   componentDidMount() {
-    const { onGetList, onClearState,onGetListImage, onGetListBrand, onGetListCategory } = this.props;
+    const { onGetList, onClearState,onGetListImage, onGetListBrand, onGetListCategory, onGetListDisplay } = this.props;
     onClearState();
+    onGetListDisplay();
     onGetListImage();
     onGetListBrand();
     onGetListCategory();
+
     onGetList();
   }
 
@@ -59,12 +62,17 @@ class ProductList extends Component {
 
   onSubmit = (data, _id) =>{
     const { onCreate, onUpdate } = this.props;
-    if(_id === ''){
+    if(!_id){
       onCreate(data);
     }
     else {
       onUpdate(_id, data);
     }
+  }
+
+  onDelete = (_id)=>{
+    const {onDelete} = this.props;
+    onDelete(_id);
   }
 
   setImage = (image) => {
@@ -81,7 +89,7 @@ class ProductList extends Component {
 
   render () {
     const {large} = this.state;
-    const {listProducts, productDetail, listCategories, listBrands, listImages, onClearDetail} = this.props;
+    const {listProducts, productDetail, listCategories, listBrands, listImages, onClearDetail, listDisplay} = this.props;
     return (
       <>
         <CRow>
@@ -97,7 +105,7 @@ class ProductList extends Component {
                 </CButton>
               </CCardHeader>
 
-              {listImages && listBrands && listCategories && <CCardBody>
+              {listImages && listBrands && listCategories && listDisplay && <CCardBody>
                 <CDataTable
                   items={listProducts}
                   fields={fields}
@@ -127,7 +135,7 @@ class ProductList extends Component {
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.setLarge(!large)}
+                          onClick={() => this.onDelete(item._id)}
                           className="mr-1"
                           color="danger"
                         >
@@ -138,10 +146,12 @@ class ProductList extends Component {
                 />
                 {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
+                listDisplay={listDisplay}
                 onSubmit={this.onSubmit}/>}
 
                 {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
+                listDisplay={listDisplay}
                 onSubmit={this.onSubmit}/>}
               </CCardBody>}
             </CCard>
@@ -159,6 +169,7 @@ const mapStateToProps = (state) => {
     listImages: state.cloudinary.list,
     listBrands: state.brands.list,
     listCategories: state.categories.list,
+    listDisplay: state.display.list,
   }
 }
 
@@ -188,8 +199,14 @@ const mapDispatchToProps = (dispatch) => {
     onCreate: (data) =>{
       dispatch(ProductsActions.onCreate(data))
     },
-    onUpdate: (id, data) =>{
-      dispatch(ProductsActions.onCreate(id, data))
+    onUpdate: (id, params) =>{
+      dispatch(ProductsActions.onUpdate({id, params}))
+    },
+    onDelete: (id) =>{
+      dispatch(ProductsActions.onDelete({id}))
+    },
+    onGetListDisplay: () => {
+      dispatch(DisplayActions.onGetList())
     },
   }
 }

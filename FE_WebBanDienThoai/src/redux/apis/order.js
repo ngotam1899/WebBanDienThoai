@@ -20,3 +20,8 @@ export const sendConfirmEmail = (orderId) =>{
 export const confirmOrder = (token) =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/confirm/${token}`);
 }
+
+// http://localhost:3000/orders/:userId/order-list
+export const orderHistory = (userId) =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${userId}/order-list`);
+}

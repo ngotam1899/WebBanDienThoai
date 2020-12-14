@@ -1,8 +1,9 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
-import OrdersActions, { OrdersActionTypes } from "../actions/order";
-import { addOrder, sendConfirmEmail, confirmOrder } from "../apis/order";
-
+import OrdersActions, { OrdersActionsTypes } from "../actions/order";
+import ProductsActions, { ProductsActionTypes } from "../actions/products";
+import { addOrder, sendConfirmEmail, confirmOrder, orderHistory } from "../apis/order";
+import { getDetailProduct } from "../apis/products";
 /* function* handleGetList({ payload }) {
   try {
     yield delay(500)
@@ -13,6 +14,18 @@ import { addOrder, sendConfirmEmail, confirmOrder } from "../apis/order";
     yield put(ProductsActions.onGetListError(error));
   }
 } */
+
+function* handleGetProductsOrder({ payload }) {
+  console.log("payload order", payload);
+  try {
+    /* const result = yield call(getAllProducts, payload);
+    const data = get(result, "data");*/
+    var data = [];
+    yield put(OrdersActions.onGetProductsOrderSuccess(data)); 
+  } catch (error) {
+    yield put(OrdersActions.onGetProductsOrderError(error));
+  }
+}
 
 /**
  *
@@ -39,7 +52,18 @@ function* handleConfirmOrder({ payload}) {
     yield put(OrdersActions.onConfirmOrderSuccess(data));
   } catch (error) {
     console.log(error, "Incorect or Expired link");
-    yield put(OrdersActions.onConfirmOrderSuccess(error));
+    yield put(OrdersActions.onConfirmOrderError(error));
+  }
+}
+
+function* handleHistoryOrder({ payload}) {
+  try {
+    const result = yield call(orderHistory, payload);
+    const data = get(result, "data", {});  
+    yield put(OrdersActions.onGetHistoryOrderSuccess(data.orders));
+  } catch (error) {
+    console.log(error, "Incorect or Expired link");
+    yield put(OrdersActions.onGetHistoryOrderSuccess(error));
   }
 }
 /**
@@ -94,29 +118,36 @@ function* handleConfirmOrder({ payload}) {
  *
  */
 /* export function* watchGetList() {
-  yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
+  yield takeEvery(ProductsActionsTypes.GET_LIST, handleGetList);
 }
 */
-
+export function* watchGetProductOrder() {
+  yield takeEvery(OrdersActionsTypes.GET_PRODUCT_ORDER, handleGetProductsOrder);
+}
 export function* watchCreate() {
-  yield takeEvery(OrdersActionTypes.ADD_ORDER, handleCreate);
+  yield takeEvery(OrdersActionsTypes.ADD_ORDER, handleCreate);
 }
 
 export function* watchConfirmOrder() {
-  yield takeEvery(OrdersActionTypes.CONFIRM_ORDER, handleConfirmOrder);
+  yield takeEvery(OrdersActionsTypes.CONFIRM_ORDER, handleConfirmOrder);
+}
+export function* watchHistoryOrder() {
+  yield takeEvery(OrdersActionsTypes.GET_HISTORY_ORDER, handleHistoryOrder);
 }
 /* export function* watchUpdateUserImage() {
-  yield takeEvery(UsersActionTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
+  yield takeEvery(UsersActionsTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
 } */
 /* export function* watchDelete() {
-  yield takeEvery(ProductsActionTypes.DELETE, handleDelete);
+  yield takeEvery(ProductsActionsTypes.DELETE, handleDelete);
 } */
 
 export default function* rootSaga() {
   yield all([
     /* fork(watchGetList),*/
+    fork(watchGetProductOrder),
     fork(watchCreate),
     fork(watchConfirmOrder),
+    fork(watchHistoryOrder),
     /* fork(watchUpdateUserImage), */
     /* fork(watchDelete), */
   ]);

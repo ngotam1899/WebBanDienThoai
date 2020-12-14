@@ -1,8 +1,10 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
+import OrdersActions, { OrdersActionTypes } from "../actions/order";
 import UsersActions, { UsersActionTypes } from "../actions/user";
 import { registerAccount, loginAccount, activateAccount, getProfile } from "../apis/auth";
+import {orderHistory } from "../apis/order";
 import { getUserImage } from "../apis/cloudinary";
 import { message } from "antd";
 /**
@@ -56,6 +58,9 @@ function* handleGetProfile() {
       const image = yield call(getUserImage, data.image);
       yield put(UsersActions.onGetUserImageSuccess(get(image, "data.image.public_url")));
     }
+    //4. Get order history
+    const orderData = yield call(orderHistory, data._id);
+    yield put(OrdersActions.onGetHistoryOrderSuccess(orderData.data.orders));
   } catch (error) {
     console.log(error, "Incorect or Expired link");
     yield put(AuthorizationActions.onGetProfileError(error));

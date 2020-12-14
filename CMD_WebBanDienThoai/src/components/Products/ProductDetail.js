@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+import MobieDecription from '../ProductDescription/MobieDecription'
 
 class ProductDetail extends Component {
   constructor(props){
     super(props);
     const {product} = props;
-    console.log("product",product);
     this.state = {
-      id: product ? product.id : '',
+      id: product ? product._id : '',
       name: product ? product.name : '',
       price: product ? product.price : null,
       amount: product ? product.amount : null,
@@ -15,7 +15,7 @@ class ProductDetail extends Component {
       category: product ? product.category : null,
       brand: product ? product.brand: null,
       bigimage: product ? product.bigimage : null,
-      image: product ? product.image : null,
+      image: product ? product.image : [],
     }
   }
   onChange = (event) =>{
@@ -28,16 +28,22 @@ class ProductDetail extends Component {
   }
 
   onSubmit = (data, _id) =>{
-    const {onSubmit} = this.props;
+    const {onSubmit, product} = this.props;
     const {id, name, price, amount, warrently, category, brand, bigimage, image} = this.state;
-    data = {name, price, amount, warrently, category, brand, bigimage, image}
     _id = id;
-    onSubmit(data, _id);
+    if(_id){
+      data = {name, price, amount, warrently, category, brand, bigimage, image, detail_info: { mobile: product.detail_info.mobile._id}}
+      onSubmit(data, _id);
+    }
+    else{
+      data = {name, price, amount, warrently, category, brand, bigimage, image, detail_info: {}}
+      onSubmit(data);
+    }
   }
 
 	render() {
     const {name, price, amount, warrently, category, brand, bigimage, image} = this.state;
-    const { large, onClose, setImage, listCategories, listBrands, product} = this.props;
+    const { large, onClose, setImage, listCategories, listBrands, product, listDisplay} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
@@ -87,12 +93,8 @@ class ProductDetail extends Component {
                     })}
                   </select>
 								</div>
-							</form>
-						</div>
-            <div className="col-12 col-lg-6">
-							<form>
 								<div className="form-group">
-                  <img src={setImage(bigimage)} style={{border: '1px solid'}}></img>
+                  <img src={setImage(bigimage)} style={{border: '1px solid', width: '100%'}}></img>
                   <input type="file" className="form-control" name="image"/>
 								</div>
                 <div className="form-group">
@@ -108,6 +110,16 @@ class ProductDetail extends Component {
 								</div>
 							</form>
 						</div>
+            <div className="col-12 col-lg-6">
+              <div class="card text-white mb-3" >
+                <div class="card-header bg-primary">Chi tiết sản phẩm</div>
+                <div class="card-body text-dark">
+                  {product && <MobieDecription description={product.detail_info} listDisplay={listDisplay}/>}
+                </div>
+              </div>
+
+						</div>
+
 					</div>
 				</CModalBody>
 				<CModalFooter>

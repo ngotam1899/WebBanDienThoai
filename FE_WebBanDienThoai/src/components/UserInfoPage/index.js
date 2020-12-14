@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import './styles.css'
-//dispatch action
+//@Components
+import OrderDetail from '../../containers/OrderDetail';
+
+//@Actions
 import UsersActions from '../../redux/actions/user'
+import OrdersActions from '../../redux/actions/order'
 
 class UserInfoPage extends Component {
   constructor(props) {
@@ -13,7 +17,6 @@ class UserInfoPage extends Component {
       fileInputState: ''
     }
   }
-
 
   handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -46,8 +49,6 @@ class UserInfoPage extends Component {
     reader.readAsDataURL(selectedFile);
     // mã hóa ảnh thành base64EncodedImage
     reader.onloadend = () => {
-      console.log(selectedFile)
-      console.log(authInfo._id)
       const formData = new FormData();
       formData.append('image',selectedFile);
       onUpdateUserImage(authInfo._id, formData);
@@ -59,8 +60,9 @@ class UserInfoPage extends Component {
   };
 
   render() {
-    const {authInfo, avatar} = this.props;
+    const {authInfo, avatar, orderList} = this.props;
     const {previewSource, fileInputState} = this.state;
+    console.log("orderList", orderList)
     return (
       <div class="bg-user-info py-4">
         <div class="container emp-profile">
@@ -161,52 +163,37 @@ class UserInfoPage extends Component {
                     </div>
                   </div>
                   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label>Experience</label>
-                      </div>
-                      <div class="col-md-6">
-                        <p>Expert</p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label>Hourly Rate</label>
-                      </div>
-                      <div class="col-md-6">
-                        <p>10$/hr</p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label>Total Projects</label>
-                      </div>
-                      <div class="col-md-6">
-                        <p>230</p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label>English Level</label>
-                      </div>
-                      <div class="col-md-6">
-                        <p>Expert</p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label>Availability</label>
-                      </div>
-                      <div class="col-md-6">
-                        <p>6 months</p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <label>Your Bio</label><br />
-                        <p>Your detail description</p>
-                      </div>
-                    </div>
+                  <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Ngày tạo đơn</th>
+      <th scope="col">Tình trạng</th>
+      <th scope="col">Thành tiền</th>
+      <th scope="col">Chi tiết</th>
+    </tr>
+  </thead>
+  {orderList && <tbody>
+    {orderList.map((orderItem, index) => {
+      return (
+        <>
+        <tr key={index}>
+          <th scope="row">{index}</th>
+          <td>{orderItem.createdAt}</td>
+          <td>{orderItem.status !== false ? <span class="badge badge-success">Đã thanh toán</span>
+          : <span class="badge badge-danger">Chưa giao hàng</span>}</td>
+          <td>{orderItem.total_price} VND</td>
+          <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Chi tiết</button>
+          <div class="modal fade" id="myModal" role="dialog">
+          <OrderDetail id={orderItem._id}/>
+        </div></td>
+        </tr>
+        </>
+      )
+    })}
+  </tbody>}
+</table>
+  
                   </div>
                 </div>
               </div>
@@ -229,7 +216,8 @@ class UserInfoPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
-    avatar: state.user.avatar
+    avatar: state.user.avatar,
+    orderList: state.order.detail
   }
 }
 
@@ -237,6 +225,9 @@ const mapDispatchToProps =(dispatch)=> {
 	return {
 		onUpdateUserImage : (id, data) =>{
 			dispatch(UsersActions.onUpdateUserImage({id, data}))
+    },
+    onGetHistoryOrder : (id) =>{
+			dispatch(OrdersActions.onGetHistoryOrder(id))
     },
 	}
 };
