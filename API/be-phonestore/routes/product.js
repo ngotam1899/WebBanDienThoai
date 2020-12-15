@@ -87,9 +87,9 @@ router.route('/operations/:IDOperation')
 
 //Region comment
 router.route('/').get(productController.getAllProduct)
-router.route('/follow-brand/IDBrand').get(productController.getAllProductByBrand)
-router.route('/follow-category/IDCategory').get(productController.getAllProductByCategory)
-router.route('/follow-color/IDColor').get(productController.getAllProductByColor)
+router.route('/follow-brand/:IDBrand').get(productController.getAllProductByBrand)
+router.route('/follow-category/:IDCategory').get(productController.getAllProductByCategory)
+router.route('/follow-color/:IDColor').get(productController.getAllProductByColor)
 router.route('/comment')
     .post(passport.authenticate('jwt', { session: false }), commentController.addComment)
 
