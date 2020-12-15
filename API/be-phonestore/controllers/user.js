@@ -1,8 +1,8 @@
 const User = require('../models/User')
-const createError = require('http-errors')
 const bcrypts = require('bcryptjs')
 var smtpTransport = require('nodemailer-smtp-transport');
 
+const Validator = require('../validators/validator')
 const service = require('../services/service')
 const os = require('os')
 const nodemailer = require('nodemailer')
@@ -164,6 +164,14 @@ const returnUserByToken = async(req, res, next) => {
 
     }
 }
+const deleteUser = async(req, res, next) => {
+    const { userID } = req.params
+    const isValid = await Validator.isValidObjId(userID);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id user is not correctly' }) } else {
+        const result = await User.findByIdAndDelete(userID);
+        if (result) return res.status(200).json({ success: true, code: 200, message: '' })
+    }
+}
 
 module.exports = {
     getAllUser,
@@ -175,5 +183,6 @@ module.exports = {
     secret,
     logOut,
     returnUserByToken,
-    activeAccount
+    activeAccount,
+    deleteUser
 }

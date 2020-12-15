@@ -1,5 +1,6 @@
 const Order = require('../models/Order')
 const Product = require('../models/Product')
+const Image_Pro = require('../models/Image_Pro')
 const Validator = require('../validators/validator')
 
 var smtpTransport = require('nodemailer-smtp-transport');
@@ -47,7 +48,25 @@ const addOrder = async(req, res, next) => {
         if (!total_quantity) return res.status(200).json({ success: false, code: 400, message: 'Total Quantity is required' })
         order.total_quantity = total_quantity;
 
-        order.order_list = order_list;
+        if (order_list) {
+            for (let item of order_list) {
+                let productFound = await Product.findById(item.product);
+                if (productFound) {
+                    let product = productFound._id;
+                    let name = productFound.name;
+                    let price = productFound.price;
+
+                    console.log(productFound)
+                    let imageFound = await Image_Pro.findById(productFound.bigimage);
+                    if (imageFound) {
+                        var image = imageFound.public_url;
+                    }
+                    let quantity = item.quantity
+                    await order.order_list.push({ product, name, price, image, quantity });
+                }
+            }
+        }
+        //order.order_list = order_list;
         order.user = userID;
         await order.save();
         return res.status(200).json({ success: true, code: 201, message: 'success', order: order });

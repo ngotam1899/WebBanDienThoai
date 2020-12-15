@@ -3,16 +3,10 @@ const Schema = mongoose.Schema
 
 const MobileSchema = new Schema({
     display: {
-        type: Schema.Types.ObjectId,
-        ref: "Display"
-    },
-    revolution: {
-        type: Schema.Types.ObjectId,
-        ref: "Revolution"
+        type: String
     },
     widescreen: {
-        type: Schema.Types.ObjectId,
-        ref: "Widescreen"
+        type: String
     },
     operation: {
         type: Schema.Types.ObjectId,
@@ -25,8 +19,7 @@ const MobileSchema = new Schema({
         type: String
     },
     cpu: {
-        type: Schema.Types.ObjectId,
-        ref: "CPU"
+        type: String
     },
     ram: {
         type: Number

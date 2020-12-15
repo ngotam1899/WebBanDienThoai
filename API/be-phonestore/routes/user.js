@@ -21,6 +21,7 @@ router.route('/logout')
 router.route('/:userID')
     .get(userController.getUser)
     .put(userController.replaceUser)
+    .delete(userController.deleteUser)
 
 router.route('/image')
     .get(imageController.getAllImgUser)

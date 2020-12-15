@@ -38,7 +38,6 @@ const deleteCPU = async(req, res, next) => {
         const result = await CPU.findByIdAndDelete(IDCPU);
         if (result) return res.status(200).json({ success: true, code: 200, message: '' })
     }
-
 }
 
 module.exports = {

@@ -1,11 +1,11 @@
 const Product = require('../models/Product')
 const Category = require('../models/Category')
 const Brand = require('../models/Brand')
-const Display = require('../models/Display')
-const Revolution = require('../models/Revolution')
-const Widescreen = require('../models/Widescreen')
+    //const Display = require('../models/Display')
+    //const Revolution = require('../models/Revolution')
+    //const Widescreen = require('../models/Widescreen')
 const Operation = require('../models/Operation')
-const CPU = require('../models/CPU')
+    //const CPU = require('../models/CPU')
 const Color = require('../models/Color')
 const Mobile = require('../models/Mobile')
 const Image_Pro = require('../models/Image_Pro')
@@ -16,7 +16,7 @@ const Validator = require('../validators/validator')
 const addproduct = async(req, res, next) => {
     try {
         const { name, price, amount, pathseo, warrently, bigimage, image, category, brand } = req.body
-        const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info
+        const { display, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info
 
         const product = new Product();
         if (name) product.name = name;
@@ -36,40 +36,19 @@ const addproduct = async(req, res, next) => {
             if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
             product.brand = brand;
         }
-        /* if (origin) {
-             const is_origin = await Origin.findById(origin)
-             if (!is_origin) return res.status(200).json({ success: false, code: 404, message: 'origin is identify' })
-         }*/
+
 
         const mobile = new Mobile();
-
-        if (display) {
-            const is_display = await Display.findById(display)
-            if (!is_display) return res.status(200).json({ success: false, code: 404, message: 'display is identify' })
-            mobile.display = display;
-        }
-        if (revolution) {
-            const is_revolution = await Revolution.findById(revolution);
-            if (!is_revolution) return res.status(200).json({ success: false, code: 404, message: 'revolution is identify' });
-            mobile.revolution = revolution
-        }
-        if (widescreen) {
-            const is_widescreen = await Widescreen.findById(widescreen);
-            if (!is_widescreen) return res.status(200).json({ success: false, code: 404, message: 'widecreen is identify' });
-            mobile.widescreen = widescreen;
-        }
         if (operation) {
             const is_operation = await Operation.findById(operation);
             if (!is_operation) return res.status(200).json({ success: false, code: 404, message: 'operation is identify' });
             mobile.operation = operation;
         }
-        if (camera1) mobile.camera1 = camera1
-        if (camera2) mobile.camera2 = camera2
-        if (cpu) {
-            const is_cpu = await CPU.findById(cpu);
-            if (!is_cpu) return res.status(200).json({ success: false, code: 404, message: 'cpu is identify' });
-            mobile.cpu = cpu;
-        }
+        if (camera1) mobile.camera1 = camera1;
+        if (camera2) mobile.camera2 = camera2;
+        if (cpu) mobile.cpu = cpu;
+        if (display) mobile.display = display;
+        if (widescreen) mobile.widescreen = widescreen;
         if (ram) mobile.ram = ram;
         if (memory) mobile.memory = memory;
         if (microcard) mobile.microcard = microcard
@@ -109,7 +88,7 @@ const updateproduct = async(req, res, next) => {
         const { IDProduct } = req.params
 
         const { name, price, amount, pathseo, warrently, bigimage, image, category, brand } = req.body
-        const { display, revolution, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info.mobile
+        const { display, widescreen, operation, camera1, camera2, cpu, ram, memory, microcard, sim, network, pin, quickcharging, weight, thick, color } = req.body.detail_info.mobile
 
         const product = await Product.findById(IDProduct)
         if (!product) return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' })
@@ -131,27 +110,10 @@ const updateproduct = async(req, res, next) => {
             if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
             product.brand = brand;
         }
-        /* if (origin) {
-             const is_origin = await Origin.findById(origin)
-             if (!is_origin) return res.status(200).json({ success: false, code: 404, message: 'origin is identify' })
-         }*/
 
         const mobile = await Mobile.findById(product.detail_info.mobile)
-        if (display) {
-            const is_display = await Display.findById(display)
-            if (!is_display) return res.status(200).json({ success: false, code: 404, message: 'display is identify' })
-            mobile.display = display;
-        }
-        if (revolution) {
-            const is_revolution = await Revolution.findById(revolution);
-            if (!is_revolution) return res.status(200).json({ success: false, code: 404, message: 'revolution is identify' });
-            mobile.revolution = revolution
-        }
-        if (widescreen) {
-            const is_widescreen = await Widescreen.findById(widescreen);
-            if (!is_widescreen) return res.status(200).json({ success: false, code: 404, message: 'widecreen is identify' });
-            mobile.widescreen = widescreen;
-        }
+        if (display) mobile.display = display;
+        if (widescreen) mobile.widescreen = widescreen;
         if (operation) {
             const is_operation = await Operation.findById(operation);
             if (!is_operation) return res.status(200).json({ success: false, code: 404, message: 'operation is identify' });
@@ -159,11 +121,7 @@ const updateproduct = async(req, res, next) => {
         }
         if (camera1) mobile.camera1 = camera1
         if (camera2) mobile.camera2 = camera2
-        if (cpu) {
-            const is_cpu = await CPU.findById(revolution);
-            if (!is_cpu) return res.status(200).json({ success: false, code: 404, message: 'cpu is identify' });
-            mobile.cpu = cpu;
-        }
+
         if (ram) mobile.ram = ram;
         if (memory) mobile.memory = memory;
         if (microcard) mobile.microcard = microcard
