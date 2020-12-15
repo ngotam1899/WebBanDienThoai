@@ -1,4 +1,4 @@
-export const ProductsActionTypes = {
+export const DisplayActionTypes = {
   GET_LIST: "GET_LIST",
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
@@ -21,38 +21,34 @@ export const ProductsActionTypes = {
 
   CLEAR_DETAIL: "CLEAR_DETAIL",
   CLEAR_STATE: "CLEAR_STATE",
-
-  ADD_PRODUCT_TO_CART: "ADD_PRODUCT_TO_CART",
-  UPDATE_PRODUCT_CART: "UPDATE_PRODUCT_CART",
-  DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
 };
 
-Object.keys(ProductsActionTypes).forEach((key) => {
-  ProductsActionTypes[
+Object.keys(DisplayActionTypes).forEach((key) => {
+  DisplayActionTypes[
     key
-  ] = `PRODUCTS_${ProductsActionTypes[key]}`;
+  ] = `DISPLAY_${DisplayActionTypes[key]}`;
 });
 
 const onClearDetail = () => ({
-  type: ProductsActionTypes.CLEAR_DETAIL,
+  type: DisplayActionTypes.CLEAR_DETAIL,
 });
 
 const onClearState = () => ({
-  type: ProductsActionTypes.CLEAR_STATE,
+  type: DisplayActionTypes.CLEAR_STATE,
 });
 
 const onGetList = (payload) => ({
-  type: ProductsActionTypes.GET_LIST,
+  type: DisplayActionTypes.GET_LIST,
   payload,
 });
 
 const onGetListSuccess = (payload) => ({
-  type: ProductsActionTypes.GET_LIST_SUCCESS,
+  type: DisplayActionTypes.GET_LIST_SUCCESS,
   payload,
 });
 
 const onGetListError = (error) => ({
-  type: ProductsActionTypes.GET_LIST_ERROR,
+  type: DisplayActionTypes.GET_LIST_ERROR,
   payload: error,
 });
 
@@ -61,17 +57,17 @@ const onGetListError = (error) => ({
  * @param String id
  */
 const onGetDetail = (id) => ({
-  type: ProductsActionTypes.GET_DETAIL,
+  type: DisplayActionTypes.GET_DETAIL,
   id,
 });
 
 const onGetDetailSuccess = (detail) => ({
-  type: ProductsActionTypes.GET_DETAIL_SUCCESS,
+  type: DisplayActionTypes.GET_DETAIL_SUCCESS,
   payload: detail,
 });
 
 const onGetDetailError = (error) => ({
-  type: ProductsActionTypes.GET_DETAIL_ERROR,
+  type: DisplayActionTypes.GET_DETAIL_ERROR,
   payload: error,
 });
 
@@ -80,17 +76,17 @@ const onGetDetailError = (error) => ({
  * create
  */
 const onCreate = (params) => ({
-  type: ProductsActionTypes.CREATE,
+  type: DisplayActionTypes.CREATE,
   payload: params,
 });
 
 const onCreateSuccess = (detail) => ({
-  type: ProductsActionTypes.CREATE_SUCCESS,
+  type: DisplayActionTypes.CREATE_SUCCESS,
   payload: detail,
 });
 
 const onCreateError = (error) => ({
-  type: ProductsActionTypes.CREATE_ERROR,
+  type: DisplayActionTypes.CREATE_ERROR,
   payload: error,
 });
 
@@ -99,17 +95,17 @@ const onCreateError = (error) => ({
  * update
  */
 const onUpdate = ({ id, params }) => ({
-  type: ProductsActionTypes.UPDATE,
+  type: DisplayActionTypes.UPDATE,
   payload: { id, params },
 });
 
 const onUpdateSuccess = (detail) => ({
-  type: ProductsActionTypes.UPDATE_SUCCESS,
+  type: DisplayActionTypes.UPDATE_SUCCESS,
   payload: detail,
 });
 
 const onUpdateError = (error) => ({
-  type: ProductsActionTypes.UPDATE_ERROR,
+  type: DisplayActionTypes.UPDATE_ERROR,
   payload: error,
 });
 
@@ -118,44 +114,20 @@ const onUpdateError = (error) => ({
  * delete
  */
 const onDelete = ({ id }) => ({
-  type: ProductsActionTypes.DELETE,
+  type: DisplayActionTypes.DELETE,
   id,
 });
 
 const onDeleteSuccess = (detail) => ({
-  type: ProductsActionTypes.DELETE_SUCCESS,
+  type: DisplayActionTypes.DELETE_SUCCESS,
   payload: detail,
 });
 
 const onDeleteError = (error) => ({
-  type: ProductsActionTypes.DELETE_ERROR,
+  type: DisplayActionTypes.DELETE_ERROR,
   payload: error,
 });
-
-/**
- *
- * cart _ products
- */
-
-const onAddProductToCart = (product, quantity) =>({
-  type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
-  product, quantity
-})
-
-const onDeleteProductInCart = (product) =>{
-  return {
-    type: ProductsActionTypes.DELETE_PRODUCT_CART,
-    product
-  }
-}
-
-const onUpdateProductInCart = (product, quantity) =>{
-  return {
-    type: ProductsActionTypes.UPDATE_PRODUCT_CART,
-    product, quantity
-  }
-}
-const ProductsActions = {
+const DisplayActions = {
   onClearDetail,
   onClearState,
 
@@ -178,10 +150,6 @@ const ProductsActions = {
   onDelete,
   onDeleteSuccess,
   onDeleteError,
-
-  onAddProductToCart,
-  onDeleteProductInCart,
-  onUpdateProductInCart,
 };
 
-export default ProductsActions;
+export default DisplayActions;

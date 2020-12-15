@@ -1,7 +1,7 @@
 //Nơi chứa các hàm gọi API riêng biệt cho từng module
 //Module Product
 import axiosService from '../../utils/AxiosService';
-import {API_ENDPOINT} from '../../constants/index';
+import {API_ENDPOINT_AUTH} from '../../constants/index';
 import queryString from 'query-string';
 
 // http://localhost:3000/products/categorys  METHOD = GET
@@ -12,6 +12,6 @@ export const getAllCategories = (params = {}) =>{
     if(Object.keys(params).length>0){
         queryParams = `?${queryString.stringify(params)}`;
     }
-    return axiosService.get(`${API_ENDPOINT}${url}${queryParams}`);
+    return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
 };
 

@@ -1,5 +1,5 @@
 import { get, omit, cloneDeep } from "lodash";
-import { OrdersActionTypes } from "../actions/order";
+import { OrdersActionsTypes } from "../actions/order";
 
 const init = {
   loading: true,
@@ -28,23 +28,43 @@ function handleUpdate({state, action}) {
 
 export default function(state = init, action) {
   switch (action.type) {
-    case OrdersActionTypes.ADD_ORDER:
+    case OrdersActionsTypes.ADD_ORDER:
       return {...state};
-    case OrdersActionTypes.ADD_ORDER_SUCCESS:
+    case OrdersActionsTypes.ADD_ORDER_SUCCESS:
       return {...state};
-    case OrdersActionTypes.ADD_ORDER_ERROR:
+    case OrdersActionsTypes.ADD_ORDER_ERROR:
       return {...state};
-    case OrdersActionTypes.SEND_CONFIRM_EMAIL:
+    case OrdersActionsTypes.SEND_CONFIRM_EMAIL:
       return {...state};
-    case OrdersActionTypes.SEND_CONFIRM_EMAIL_SUCCESS:
+    case OrdersActionsTypes.SEND_CONFIRM_EMAIL_SUCCESS:
       return {...state};
-    case OrdersActionTypes.SEND_CONFIRM_EMAIL_ERROR:
+    case OrdersActionsTypes.SEND_CONFIRM_EMAIL_ERROR:
       return {...state};
-    case OrdersActionTypes.CONFIRM_ORDER:
+    case OrdersActionsTypes.CONFIRM_ORDER:
       return {...state};
-    case OrdersActionTypes.CONFIRM_ORDER_SUCCESS:
+    case OrdersActionsTypes.CONFIRM_ORDER_SUCCESS:
       return {...state};
-    case OrdersActionTypes.CONFIRM_ORDER_ERROR:
+    case OrdersActionsTypes.CONFIRM_ORDER_ERROR:
+      return {...state};
+    case OrdersActionsTypes.GET_HISTORY_ORDER:
+      return {...state};
+    case OrdersActionsTypes.GET_HISTORY_ORDER_SUCCESS:
+      return {
+        ...state,
+        loadingDetail: false,
+        detail: action.payload,
+      };
+    case OrdersActionsTypes.GET_HISTORY_ORDER_ERROR:
+      return {...state};
+    case OrdersActionsTypes.GET_PRODUCT_ORDER:
+      return {...state};
+    case OrdersActionsTypes.GET_PRODUCT_ORDER_SUCCESS:
+      return {
+        ...state,
+        loadingDetail: false,
+        productOrder: action.payload,
+      };
+    case OrdersActionsTypes.GET_PRODUCT_ORDER_ERROR:
       return {...state};
     default:
       return state;
