@@ -77,8 +77,7 @@ const uploadImageMobile = async(req, res, next) => {
             imaged3.save()
             product.image.push(imaged3._id)
         })
-        await product.save()
-        console.log(product)
+        await product.save();
         return res.status(200).json({ message: 'success' })
 
     } catch (error) {
@@ -88,9 +87,48 @@ const uploadImageMobile = async(req, res, next) => {
 
 const getAllProduct = async(req, res, next) => {
     try {
-        const products = await Product.find()
-            .populate({ path: 'bigimage', select: 'public_url' })
-            .populate({ path: 'image', select: 'public_url' });
+        let condition = {}
+        if (req.query.keyword != undefined && req.query.keyword != "") {
+            regex = /[]/
+            let keyword = req.query.keyword;
+            keyword = keyword.replace(regex, "")
+            condition.name = { $regex: '.*' + keyword + '.*' };
+        }
+        if (req.query.brand != undefined && req.query.brand != "") {
+            if (Validator.isValidObjId(req.query.brand)) {
+                condition.brand = req.query.brand
+            }
+        }
+        if (req.query.category != undefined && req.query.category != "") {
+            if (Validator.isValidObjId(req.query.category)) {
+                condition.category = req.query.category
+            }
+        }
+        if (req.query.color != undefined && req.query.color != "") {
+            if (Validator.isValidObjId(req.query.color)) {
+                const mobile = await Mobile.find({ "color": req.query.color })
+
+                const listID = [];
+
+                mobile.forEach(async(element) => {
+                    listID.push(element._id);
+                });
+
+                condition["detail_info.mobile"] = listID;
+            }
+        }
+        console.log(condition)
+        let products;
+        if (req.query.color != undefined && req.query.color != "") {
+            products = await Product.find(condition)
+                .populate({ path: 'bigimage', select: 'public_url' })
+                .populate({ path: 'image', select: 'public_url' })
+                .populate('detail_info.mobile');
+        } else {
+            products = await Product.find(condition)
+                .populate({ path: 'bigimage', select: 'public_url' })
+                .populate({ path: 'image', select: 'public_url' });
+        }
         return res.status(200).json({ success: true, code: 200, message: '', products: products })
     } catch (error) {
         return next(error)
@@ -114,16 +152,16 @@ const getAllProductByColor = async(req, res, next) => {
     try {
         const { IDColor } = req.params
         if (!Validator.isValidObjId(IDColor)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
-        const mobile = await Mobile.find({ "color": IDColor })
-            .populate({ path: 'bigimage', select: 'public_url' })
-            .populate({ path: 'image', select: 'public_url' });;
+        const mobile = await Mobile.find({ "color": IDColor });
 
         const listID = [];
 
         mobile.forEach(async(element) => {
             listID.push(element._id);
         });
-        const products = await Product.find({ "detail_info.mobile": listID });
+        const products = await Product.find({ "detail_info.mobile": listID })
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });;;
         return res.status(200).json({ success: true, code: 200, message: 'success', products })
     } catch (error) {
         return next(error)
@@ -143,11 +181,22 @@ const getAllProductByCategory = async(req, res, next) => {
         return next(error)
     }
 }
+const searchProduct = async(req, res, next) => {
+    try {
+        const products = await Product.find()
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });
+        return res.status(200).json({ success: true, code: 200, message: '', products: products })
+    } catch (error) {
+        return next(error)
+    }
+}
 
 module.exports = {
     uploadImageMobile,
     getAllProduct,
     getAllProductByBrand,
     getAllProductByCategory,
-    getAllProductByColor
+    getAllProductByColor,
+    searchProduct
 }
