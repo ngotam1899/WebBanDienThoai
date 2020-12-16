@@ -108,7 +108,7 @@ class ProductList extends Component {
                     'image':
                     (item) => (
                       <td>
-                        <img src={ this.setImage(item.bigimage) } style={{width:'10vw'}}/>
+                        <img src={ this.setImage(item.bigimage) } style={{width:'10vw'}} alt=""/>
                       </td>
                     ),
                     'brand': (item) => (

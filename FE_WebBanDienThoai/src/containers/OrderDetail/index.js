@@ -3,25 +3,25 @@ import OrdersActions from '../../redux/actions/order'
 import {connect} from 'react-redux';
 
 class OrderDetail extends Component {
-  /* componentDidMount(){
-    const {onGetProductsOrder, orderItem} = this.props;
-    onGetProductsOrder(orderItem.order_list);
-  } */
+  confirmOrder(id) {
+    const {onSendConfirmEmail} = this.props;
+    onSendConfirmEmail(id);
+  }
 
   render() {
-    const {id} = this.props;
+    const {orderItem} = this.props;
     return (
-      <div class="modal fade" id="myModal" role="dialog">
+      <div show="true" className="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
-          <div class="modal-content">
+          {orderItem && <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Thông tin đơn hàng {id}</h5>
+              <h5 class="modal-title">Thông tin đơn hàng {orderItem._id}</h5>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            {/* <div class="modal-body">
+            <div class="modal-body">
               <div className="form-group">
                 <label>Ngày tạo đơn:</label>
-                <input type="date" className="form-control" name="createdAt" value={orderItem.createdAt} disabled/>
+                <input type="text" className="form-control" name="createdAt" value={Date(orderItem.createdAt)} disabled/>
               </div>
               <div className="form-group">
                 <label>Tổng hóa đơn: (VND)</label>
@@ -29,11 +29,18 @@ class OrderDetail extends Component {
               </div>
               <div className="form-group">
                 <label>Tình trạng đơn:</label>
-                <input type="text" className="form-control" name="status" value={orderItem.status} disabled/>
+                <input type="text" className="form-control" name="status" value={orderItem.status===true ? 'Đã giao hàng' : 'Chưa giao hàng'} disabled/>
               </div>
               <div className="form-group">
                 <label>Tình trạng hàng:</label>
-                <input type="text" className="form-control" name="confirmed" value={orderItem.confirmed} disabled/>
+                <div className="row">
+                  <div className={orderItem.confirmed===true ? "col-12": "col-9"}>
+                    <input type="text" className="form-control" name="confirmed" value={ orderItem.confirmed===true ? 'Đã xác nhận đơn hàng' : 'Chưa xác nhận'} disabled/>
+                  </div>
+                  <div className={orderItem.confirmed===true ? "" : "col-3"}>
+                    <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>Confirm</button>
+                  </div>
+                </div>
               </div>
               <div className="form-group">
                 <label>Thành phần:</label>
@@ -42,13 +49,13 @@ class OrderDetail extends Component {
                   <div className="card my-1" key={index}>
                     <div className="row no-gutters">
                         <div className="col-sm-3">
-                          <img className="card-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8qsQ-YCSGjX4F6bb-ZOwMQ2StLq0kmL7a0Q&usqp=CAU" alt="Suresh Dasari Card"/>
+                          <img className="card-img" src={item.image} alt={item.name} />
                         </div>
                         <div className="col-sm-5 align-self-center">
-                          <p className="text-dark m-0">Suresh Dasari</p>
+                          <p className="text-dark m-0">{item.name}</p>
                         </div>
                         <div className="col-sm-4 align-self-center">
-                          <p className="m-0">4563521 VND x {item.quantity}</p>
+                          <p className="m-0">{item.price} VND x {item.quantity}</p>
                         </div>
                     </div>
                   </div>
@@ -71,8 +78,8 @@ class OrderDetail extends Component {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>*/}
-          </div> 
+            </div>
+          </div> }
         </div>
       </div>
     );
@@ -87,8 +94,8 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps =(dispatch)=> {
   return {
-		onGetProductsOrder : (payload) =>{
-			dispatch(OrdersActions.onGetProductsOrder(payload))
+		onSendConfirmEmail : (id) =>{
+			dispatch(OrdersActions.onSendConfirmEmail(id))
     },
 	}
 };

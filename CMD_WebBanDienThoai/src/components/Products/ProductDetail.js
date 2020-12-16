@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './product.css'
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 
 class ProductDetail extends Component {
@@ -15,7 +16,7 @@ class ProductDetail extends Component {
       brand: product ? product.brand : null,
       bigimage: product ? product.bigimage : null,
       image: product ? product.image : [],
-      mobile: product ? product.detail_info.mobile : {
+      mobileDes: product ? product.detail_info.mobile : {
         display: "",
         revolution: "",
         widescreen: "",
@@ -48,30 +49,37 @@ class ProductDetail extends Component {
     var target = event.target;
     var name = target.name;
     var value = target.value;
-    this.setState({
-      mobile: {
-        [name]: value
+    //1. Tạo 1 copy của state mobile cũ
+    this.setState(prevState => ({
+      mobileDes: {                   // object that we want to update
+        ...prevState.mobile,    // keep all other key-value pairs
+        [name]: value       // update the value of specific key
       }
-    })
+  }))
   }
 
   onSubmit = (data, _id) => {
     const { onSubmit, product } = this.props;
-    const { id, name, price, amount, warrently, category, brand, bigimage, image, mobile } = this.state;
-    console.log("description", mobile);
+    const { id, name, price, amount, warrently, category, brand, bigimage, image, mobileDes } = this.state;
+    console.log("description", mobileDes);
     _id = id;
     if (_id) {
-      data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info: { mobile: product.detail_info.mobile._id } }
+      data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info:
+        { mobile: {
+            _id: product.detail_info.mobile._id,
+            ...mobileDes
+          }
+        } }
       onSubmit(data, _id);
     }
     else {
-      data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info: { mobile: null } }
+      data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info: mobileDes }
       onSubmit(data);
     }
   }
 
   render() {
-    const { name, price, amount, warrently, category, brand, bigimage, image, mobile } = this.state;
+    const { name, price, amount, warrently, category, brand, bigimage, image, mobileDes } = this.state;
     const { large, onClose, setImage, listCategories, listBrands, product } = this.props;
     return (
       <CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -122,19 +130,47 @@ class ProductDetail extends Component {
                     })}
                   </select>
                 </div>
-                <div className="form-group">
-                  <img src={setImage(bigimage)} style={{ border: '1px solid', width: '100%' }}></img>
-                  <input type="file" className="form-control" name="image" />
+                {bigimage ? <div className="form-group img-thumbnail3">
+                  <img src={setImage(bigimage)} style={{ border: '1px solid', width: '100%' }} alt=""></img>
+                  <div className="file btn btn-lg btn-primary">
+                    Change Photo
+                    <input type="file" name="image" id="fileInput"
+                    value=""/>
+                  </div>
                 </div>
+                : <div className="form-group img-thumbnail3">
+                  <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" style={{ border: '1px solid', width: '100%' }}></img>
+                  <div className="file btn btn-lg btn-primary">
+                    Change Photo
+                    <input type="file" name="image" id="fileInput"
+                    value=""/>
+                  </div>
+                </div>}
                 <div className="form-group">
                   <div className="row">
                     {image && image.map((item, index) => {
                       return (
-                        <div className="col-4" key={index}>
-                          <img src={setImage(item)} className="w-100" style={{ border: '1px solid' }}></img>
+                        <div className="col-3" key={index}>
+                          <div className=" img-thumbnail2">
+                            <img src={setImage(item)} className="w-100" style={{ border: '1px solid' }} alt=""></img>
+                            <div className="btn btn-lg btn-primary img-des">
+                              Delete Photo
+                              <input type="button" name="image"/>
+                            </div>
+                          </div>
                         </div>
                       )
                     })}
+                    <div className="col-3">
+                      <div className=" img-thumbnail2">
+                        <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" className="w-100" style={{ border: '1px solid' }}></img>
+                        <div className="btn btn-lg btn-primary img-des">
+                          Add Photo
+                          <input type="file" name="image" id="fileInput"
+                          value=""/>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </form>
@@ -143,74 +179,74 @@ class ProductDetail extends Component {
               <div class="card text-white mb-3" >
                 <div class="card-header bg-primary">Chi tiết sản phẩm</div>
                 <div class="card-body text-dark">
-                {mobile &&
+                {mobileDes &&
                 <> <div className="form-group">
                     <label>Display:</label>
-                    <input type="text" className="form-control" name="display" value={mobile.display} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="display" value={mobileDes.display} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Revolution:</label>
-                    <input type="text" className="form-control" name="revolution" value={mobile.revolution} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="revolution" value={mobileDes.revolution} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Wide screen:</label>
-                    <input type="text" className="form-control" name="widescreen" value={mobile.widescreen} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="widescreen" value={mobileDes.widescreen} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Operation:</label>
-                    <input type="text" className="form-control" name="operation" value={mobile.operation} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="operation" value={mobileDes.operation} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Camera trước:</label>
-                    <input type="text" className="form-control" name="camera1" value={mobile.camera1} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="camera1" value={mobileDes.camera1} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Camera sau:</label>
-                    <input type="text" className="form-control" name="camera2" value={mobile.camera2} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="camera2" value={mobileDes.camera2} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>CPU:</label>
-                    <input type="text" className="form-control" name="cpu" value={mobile.cpu} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="cpu" value={mobileDes.cpu} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>RAM:</label>
-                    <input type="text" className="form-control" name="ram" value={mobile.ram} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="ram" value={mobileDes.ram} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Memory:</label>
-                    <input type="text" className="form-control" name="memory" value={mobile.memory} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="memory" value={mobileDes.memory} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Microcard:</label>
-                    <input type="text" className="form-control" name="microcard" value={mobile.microcard} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="microcard" value={mobileDes.microcard} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>SIM:</label>
-                    <input type="text" className="form-control" name="sim" value={mobile.sim} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="sim" value={mobileDes.sim} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Network:</label>
-                    <input type="text" className="form-control" name="network" value={mobile.network} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="network" value={mobileDes.network} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Battery:</label>
-                    <input type="text" className="form-control" name="pin" value={mobile.pin} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="pin" value={mobileDes.pin} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Quick charging:</label>
-                    <input type="text" className="form-control" name="quickcharging" value={mobile.quickcharging} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="quickcharging" value={mobileDes.quickcharging} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Weight:</label>
-                    <input type="text" className="form-control" name="weight" value={mobile.weight} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="weight" value={mobileDes.weight} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Thick:</label>
-                    <input type="text" className="form-control" name="thick" value={mobile.thick} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="thick" value={mobileDes.thick} onChange={this.onChangeMobile}/>
                   </div>
                   <div className="form-group">
                     <label>Color:</label>
-                    <input type="text" className="form-control" name="color" value={mobile.color} onChange={this.onChangeMobile}/>
+                    <input type="text" className="form-control" name="color" value={mobileDes.color} onChange={this.onChangeMobile}/>
                   </div> </>}
                 </div>
               </div>

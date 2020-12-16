@@ -36,21 +36,6 @@ export const deleteProduct  = (productId) =>{
     return axiosService.delete(`${API_ENDPOINT_AUTH}${url_phone}/${productId}`);
 }
 
-// http://localhost:3000/products/displays  METHOD = GET
-export const getAllDisplays = () =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/displays`);
-}
-
-// http://localhost:3000/products/revolutions  METHOD = GET
-export const getAllRevolutions = () =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/revolutions`);
-}
-
-// http://localhost:3000/products/widescreens  METHOD = GET
-export const getAllWidescreens = () =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/widescreens`);
-}
-
 // http://localhost:3000/products/operations  METHOD = GET
 export const getAllOperations = () =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/operations`);
