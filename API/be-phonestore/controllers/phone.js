@@ -167,6 +167,8 @@ const getproduct = async(req, res, next) => {
         const { IDProduct } = req.params
 
         const product = await Product.findById(IDProduct).populate('detail_info.mobile')
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });
 
         return res.status(200).json({ success: true, code: 200, message: '', product })
     } catch (error) {
@@ -176,6 +178,8 @@ const getproduct = async(req, res, next) => {
 const getAllMobile = async(req, res, next) => {
     try {
         const product = await Product.find().where('detail_info.mobile').ne(null)
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });
 
         return res.status(200).json({ success: true, code: 200, message: '', product })
     } catch (error) {
@@ -224,7 +228,9 @@ const getAllProductByBrand = async(req, res, next) => {
     try {
         const { IDBrand } = req.params
         if (!Validator.isValidObjId(IDBrand)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
-        const products = await Product.find({ "brand": IDBrand }).where('detail_info.mobile').ne(null);
+        const products = await Product.find({ "brand": IDBrand }).where('detail_info.mobile').ne(null)
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });
 
         return res.status(200).json({ success: true, code: 200, message: 'success', products })
     } catch (error) {
@@ -243,7 +249,9 @@ const getAllProductByColor = async(req, res, next) => {
         mobile.forEach(async(element) => {
             listID.push(element._id);
         });
-        const products = await Product.find({ "detail_info.mobile": listID }).where('detail_info.mobile').ne(null);
+        const products = await Product.find({ "detail_info.mobile": listID }).where('detail_info.mobile').ne(null)
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });
         return res.status(200).json({ success: true, code: 200, message: 'success', products })
     } catch (error) {
         return next(error)
@@ -254,7 +262,9 @@ const getAllProductByCategory = async(req, res, next) => {
     try {
         const { IDCategory } = req.params
         if (!Validator.isValidObjId(IDCategory)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
-        const products = await Product.find({ "category": IDCategory }).where('detail_info.mobile').ne(null);
+        const products = await Product.find({ "category": IDCategory }).where('detail_info.mobile').ne(null)
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });
 
         return res.status(200).json({ success: true, code: 200, message: 'success', products: products })
     } catch (error) {

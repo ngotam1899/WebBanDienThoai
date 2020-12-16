@@ -88,7 +88,9 @@ const uploadImageMobile = async(req, res, next) => {
 
 const getAllProduct = async(req, res, next) => {
     try {
-        const products = await Product.find({})
+        const products = await Product.find()
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });
         return res.status(200).json({ success: true, code: 200, message: '', products: products })
     } catch (error) {
         return next(error)
@@ -98,7 +100,9 @@ const getAllProductByBrand = async(req, res, next) => {
     try {
         const { IDBrand } = req.params
         if (!Validator.isValidObjId(IDBrand)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
-        const products = await Product.find({ "brand": IDBrand });
+        const products = await Product.find({ "brand": IDBrand })
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });;
 
         return res.status(200).json({ success: true, code: 200, message: 'success', products })
     } catch (error) {
@@ -110,7 +114,9 @@ const getAllProductByColor = async(req, res, next) => {
     try {
         const { IDColor } = req.params
         if (!Validator.isValidObjId(IDColor)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
-        const mobile = await Mobile.find({ "color": IDColor });
+        const mobile = await Mobile.find({ "color": IDColor })
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });;
 
         const listID = [];
 
@@ -128,7 +134,9 @@ const getAllProductByCategory = async(req, res, next) => {
     try {
         const { IDCategory } = req.params
         if (!Validator.isValidObjId(IDCategory)) return res.status(200).json({ success: false, code: 400, message: 'check link again!' })
-        const products = await Product.find({ "category": IDCategory });
+        const products = await Product.find({ "category": IDCategory })
+            .populate({ path: 'bigimage', select: 'public_url' })
+            .populate({ path: 'image', select: 'public_url' });;
 
         return res.status(200).json({ success: true, code: 200, message: 'success', products: products })
     } catch (error) {
