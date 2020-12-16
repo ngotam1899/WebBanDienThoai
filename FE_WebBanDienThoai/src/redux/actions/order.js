@@ -15,9 +15,9 @@ export const OrdersActionsTypes = {
   GET_HISTORY_ORDER_SUCCESS: "GET_HISTORY_ORDER_SUCCESS",
   GET_HISTORY_ORDER_ERROR: "GET_HISTORY_ORDER_ERROR",
 
-  GET_PRODUCT_ORDER: "GET_PRODUCT_ORDER",
-  GET_PRODUCT_ORDER_SUCCESS: "GET_PRODUCT_ORDER_SUCCESS",
-  GET_PRODUCT_ORDER_ERROR: "GET_PRODUCT_ORDER_ERROR",
+  GET_DETAIL: "GET_DETAIL",
+  GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
+  GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
 };
 
 Object.keys(OrdersActionsTypes).forEach((key) => {
@@ -26,19 +26,20 @@ Object.keys(OrdersActionsTypes).forEach((key) => {
   ] = `ORDER_${OrdersActionsTypes[key]}`;
 });
 
-const onGetProductsOrder = (payload) =>({
-  type: OrdersActionsTypes.GET_PRODUCT_ORDER, 
-  payload
-});
-const onGetProductsOrderSuccess = (data) => ({
-  type: OrdersActionsTypes.GET_PRODUCT_ORDER_SUCCESS,
-  payload: data
-});
-const onGetProductsOrderError = (error) => ({
-  type: OrdersActionsTypes.GET_PRODUCT_ORDER_ERROR,
-  payload: error
+const onGetDetail = (id) => ({
+  type: OrdersActionsTypes.GET_DETAIL,
+  id,
 });
 
+const onGetDetailSuccess = (detail) => ({
+  type: OrdersActionsTypes.GET_DETAIL_SUCCESS,
+  payload: detail,
+});
+
+const onGetDetailError = (error) => ({
+  type: OrdersActionsTypes.GET_DETAIL_ERROR,
+  payload: error,
+});
 
 const onCreateAnOrder = (payload) => ({
   type: OrdersActionsTypes.ADD_ORDER, 
@@ -108,9 +109,9 @@ const OrdersActions = {
   onGetHistoryOrderSuccess,
   onGetHistoryOrderError,
 
-  onGetProductsOrder,
-  onGetProductsOrderSuccess,
-  onGetProductsOrderError,
+  onGetDetail,
+  onGetDetailSuccess,
+  onGetDetailError,
 };
 
 export default OrdersActions;

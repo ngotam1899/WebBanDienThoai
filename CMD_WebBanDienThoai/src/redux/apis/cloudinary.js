@@ -22,3 +22,12 @@ export const getAllImages = (params = {}) =>{
 /* export const updateProduct  = (data, productId) =>{
     return axiosService.put(`${API_ENDPOINT}${url}/${productId}`, data);
 } */
+
+// http://localhost:3000/products/image  METHOD = POST
+export const addProductImage = (data) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);
+};
+// http://localhost:3000/products/image/:id  METHOD = GET
+export const getProductImage  = (productId) =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${productId}`);
+}

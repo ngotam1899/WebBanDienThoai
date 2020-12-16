@@ -135,7 +135,7 @@ class Header extends Component {
                     <MenuLink label="Trang chủ" to="/" activeOnlyWhenExact={true} />
                     {listCategories && listCategories.map((category, index)=>{
                       return (
-                        <MenuLink key={index} label={category.name} to={`/products/${category._id}`} activeOnlyWhenExact={true} />
+                        <MenuLink key={index} label={category.name} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
                       )
                     })}
                   </ul>

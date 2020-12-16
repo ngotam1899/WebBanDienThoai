@@ -1,0 +1,32 @@
+.img-thumbnail3 img{
+  height: 100%;
+  width: auto;
+}
+.img-thumbnail3 .file {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border: none;
+  top: -50px;
+  border-radius: 0;
+  font-size: 1vw;
+  background: #212529b8;
+}
+.img-thumbnail3 .file input, .img-thumbnail2 .img-des input {
+  position: absolute;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+
+.img-thumbnail2 .img-des {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  left: 0;
+  top: -50px;
+  border: none;
+  border-radius: 0;
+  font-size: 0.6vw;
+  background: #212529b8;
+}

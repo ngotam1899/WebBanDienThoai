@@ -1,4 +1,4 @@
-import { get, omit, cloneDeep } from "lodash";
+import { get, /*  cloneDeep */ } from "lodash";
 import { ProductsActionTypes } from "../actions/products";
 
 const init = {
@@ -7,7 +7,7 @@ const init = {
   processing: false,
 };
 
-function handleUpdate({state, action}) {
+/* function handleUpdate({state, action}) {
   const list = cloneDeep(state.list);
   const detailData = get(action, "payload.data");
   const index = list.findIndex(i => i.id === detailData.id);
@@ -24,7 +24,7 @@ function handleUpdate({state, action}) {
       data: { ...state.detail.data, ...detailData },
     },
   };
-}
+} */
 
 export default function(state = init, action) {
   switch (action.type) {

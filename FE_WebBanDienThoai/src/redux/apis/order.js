@@ -6,6 +6,11 @@ import queryString from 'query-string';
 
 const url = '/orders';
 
+// http://localhost:3000/orders/:id  METHOD = GET
+export const getDetailOrder  = (orderId) =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${orderId}`);
+}
+
 // http://localhost:3000/orders  METHOD = POST
 export const addOrder = (data) =>{
   return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);

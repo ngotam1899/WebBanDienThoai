@@ -92,7 +92,7 @@ class ProductDetail extends Component {
             <div className="col-12 col-lg-6">
 							<form>
 								<div className="form-group">
-                  <img src={setImage(bigimage)} style={{border: '1px solid'}}></img>
+                  <img src={setImage(bigimage)} style={{border: '1px solid'}} alt=""></img>
                   <input type="file" className="form-control" name="image"/>
 								</div>
                 <div className="form-group">
@@ -100,7 +100,7 @@ class ProductDetail extends Component {
                   {image && image.map((item, index) => {
                     return (
                       <div className="col-4" key={index}>
-                      <img src={setImage(item)} className="w-100" style={{border: '1px solid'}}></img>
+                      <img src={setImage(item)} className="w-100" style={{border: '1px solid'}} alt=""></img>
                       </div>
                     )
                   })}

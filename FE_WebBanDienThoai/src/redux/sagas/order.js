@@ -1,9 +1,7 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
-import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { addOrder, sendConfirmEmail, confirmOrder, orderHistory } from "../apis/order";
-import { getDetailProduct } from "../apis/products";
+import { addOrder, sendConfirmEmail, confirmOrder, orderHistory, getDetailOrder } from "../apis/order";
 /* function* handleGetList({ payload }) {
   try {
     yield delay(500)
@@ -15,15 +13,25 @@ import { getDetailProduct } from "../apis/products";
   }
 } */
 
-function* handleGetProductsOrder({ payload }) {
-  console.log("payload order", payload);
+function* handleGetDetail({id}) {
   try {
-    /* const result = yield call(getAllProducts, payload);
-    const data = get(result, "data");*/
-    var data = [];
-    yield put(OrdersActions.onGetProductsOrderSuccess(data)); 
+    const result = yield call(getDetailOrder, id);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    yield put(OrdersActions.onGetDetailSuccess(data.order));
   } catch (error) {
-    yield put(OrdersActions.onGetProductsOrderError(error));
+    yield put(OrdersActions.onGetDetailError(error));
+  }
+}
+
+function* handleReConfirm({ payload }) {
+  try {
+    const result = yield call(sendConfirmEmail, payload);
+    const data = get(result, "data", {});
+    if (data.message !== "success") throw data;
+    yield put(OrdersActions.onSendConfirmEmailSuccess(data));
+  } catch (error) {
+    yield put(OrdersActions.onSendConfirmEmailError(error));
   }
 }
 
@@ -121,8 +129,8 @@ function* handleHistoryOrder({ payload}) {
   yield takeEvery(ProductsActionsTypes.GET_LIST, handleGetList);
 }
 */
-export function* watchGetProductOrder() {
-  yield takeEvery(OrdersActionsTypes.GET_PRODUCT_ORDER, handleGetProductsOrder);
+export function* watchGetDetail() {
+  yield takeEvery(OrdersActionsTypes.GET_DETAIL, handleGetDetail);
 }
 export function* watchCreate() {
   yield takeEvery(OrdersActionsTypes.ADD_ORDER, handleCreate);
@@ -134,6 +142,9 @@ export function* watchConfirmOrder() {
 export function* watchHistoryOrder() {
   yield takeEvery(OrdersActionsTypes.GET_HISTORY_ORDER, handleHistoryOrder);
 }
+export function* watchReConfirm() {
+  yield takeEvery(OrdersActionsTypes.SEND_CONFIRM_EMAIL, handleReConfirm);
+}
 /* export function* watchUpdateUserImage() {
   yield takeEvery(UsersActionsTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
 } */
@@ -144,10 +155,11 @@ export function* watchHistoryOrder() {
 export default function* rootSaga() {
   yield all([
     /* fork(watchGetList),*/
-    fork(watchGetProductOrder),
+    fork(watchGetDetail),
     fork(watchCreate),
     fork(watchConfirmOrder),
     fork(watchHistoryOrder),
+    fork(watchReConfirm),
     /* fork(watchUpdateUserImage), */
     /* fork(watchDelete), */
   ]);

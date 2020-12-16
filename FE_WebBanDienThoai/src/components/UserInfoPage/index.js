@@ -58,15 +58,14 @@ class UserInfoPage extends Component {
         //setErrMsg('something went wrong!');
     };
   };
-
   getInfoOrder = (id) => {
-    
+    const {onGetDetail} = this.props;
+    onGetDetail(id);
   }
 
   render() {
-    const {authInfo, avatar, orderList} = this.props;
+    const {authInfo, avatar, orderList, orderItem} = this.props;
     const {previewSource, fileInputState} = this.state;
-    console.log("orderList", orderList)
     return (
       <div class="bg-user-info py-4">
         <div class="container emp-profile">
@@ -178,25 +177,24 @@ class UserInfoPage extends Component {
     </tr>
   </thead>
   {orderList && <tbody>
-    {orderList.map((orderItem, index) => {
+    {orderList.map((item, index) => {
       return (
         <>
         <tr key={index}>
           <th scope="row">{index}</th>
-          <td>{orderItem.createdAt}</td>
-          <td>{orderItem.status !== false ? <span class="badge badge-success">Đã thanh toán</span>
+          <td>{item.createdAt}</td>
+          <td>{item.status !== false ? <span class="badge badge-success">Đã thanh toán</span>
           : <span class="badge badge-danger">Chưa giao hàng</span>}</td>
-          <td>{orderItem.total_price} VND</td>
-          <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" onClick={() => {this.getInfoOrder(orderItem._id)}}>Chi tiết</button>
+          <td>{item.total_price} VND</td>
+          <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" onClick={() => {this.getInfoOrder(item._id)}}>Chi tiết</button>
           </td>
-          
         </tr>
         </>
       )
     })}
   </tbody>}
-  {/* <OrderDetail id={orderItem._id}/> */}
 </table>
+
   
                   </div>
                 </div>
@@ -212,6 +210,7 @@ class UserInfoPage extends Component {
               </div>
           </form>}
         </div>
+        {orderItem ? <OrderDetail orderItem={orderItem}/> : <OrderDetail/>}
       </div>
     );
   }
@@ -221,7 +220,8 @@ const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
     avatar: state.user.avatar,
-    orderList: state.order.detail
+    orderList: state.order.list,
+    orderItem: state.order.detail,
   }
 }
 
@@ -233,7 +233,9 @@ const mapDispatchToProps =(dispatch)=> {
     onGetHistoryOrder : (id) =>{
 			dispatch(OrdersActions.onGetHistoryOrder(id))
     },
-    
+    onGetDetail : (id) =>{
+			dispatch(OrdersActions.onGetDetail(id))
+    },
 	}
 };
 

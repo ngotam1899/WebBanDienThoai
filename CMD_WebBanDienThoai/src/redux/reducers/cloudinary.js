@@ -1,4 +1,4 @@
-import { get, omit, cloneDeep } from "lodash";
+import { get,  cloneDeep } from "lodash";
 import { ImagesActionTypes } from "../actions/cloudinary";
 
 const init = {

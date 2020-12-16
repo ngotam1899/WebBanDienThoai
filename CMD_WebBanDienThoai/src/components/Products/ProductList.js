@@ -15,7 +15,6 @@ import ProductsActions from "../../redux/actions/products";
 import ImagesActions from "../../redux/actions/cloudinary";
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
-import DisplayActions from "../../redux/actions/display";
 
 const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { width: '15%'} }]
 
@@ -27,13 +26,11 @@ class ProductList extends Component {
     }
   }
   componentDidMount() {
-    const { onGetList, onClearState,onGetListImage, onGetListBrand, onGetListCategory, onGetListDisplay } = this.props;
+    const { onGetList, onClearState,onGetListImage, onGetListBrand, onGetListCategory} = this.props;
     onClearState();
-    onGetListDisplay();
     onGetListImage();
     onGetListBrand();
     onGetListCategory();
-
     onGetList();
   }
 
@@ -89,7 +86,7 @@ class ProductList extends Component {
 
   render () {
     const {large} = this.state;
-    const {listProducts, productDetail, listCategories, listBrands, listImages, onClearDetail, listDisplay} = this.props;
+    const {listProducts, productDetail, listCategories, listBrands, listImages, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -105,7 +102,7 @@ class ProductList extends Component {
                 </CButton>
               </CCardHeader>
 
-              {listImages && listBrands && listCategories && listDisplay && <CCardBody>
+              {listImages && listBrands && listCategories && <CCardBody>
                 <CDataTable
                   items={listProducts}
                   fields={fields}
@@ -118,7 +115,7 @@ class ProductList extends Component {
                     'image':
                     (item) => (
                       <td>
-                        <img src={ this.setImage(item.bigimage) } style={{width:'10vw'}}/>
+                        <img src={ this.setImage(item.bigimage) } style={{width:'10vw'}} alt={item.name} />
                       </td>
                     ),
                     'brand': (item) => (
@@ -146,12 +143,10 @@ class ProductList extends Component {
                 />
                 {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                listDisplay={listDisplay}
                 onSubmit={this.onSubmit}/>}
 
                 {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                listDisplay={listDisplay}
                 onSubmit={this.onSubmit}/>}
               </CCardBody>}
             </CCard>
@@ -169,7 +164,6 @@ const mapStateToProps = (state) => {
     listImages: state.cloudinary.list,
     listBrands: state.brands.list,
     listCategories: state.categories.list,
-    listDisplay: state.display.list,
   }
 }
 
@@ -204,9 +198,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     onDelete: (id) =>{
       dispatch(ProductsActions.onDelete({id}))
-    },
-    onGetListDisplay: () => {
-      dispatch(DisplayActions.onGetList())
     },
   }
 }
