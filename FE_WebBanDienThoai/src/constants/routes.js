@@ -19,10 +19,10 @@ const routes = [
 		main: () => <HomePage />
 	},
 	{
-		path: '/products/dien-thoai',
+		path: '/products/:categoryID',
 		exact: true,
 		name: "Product Page",
-		main: () => <ProductPage />
+		main: ({match}) => <ProductPage match={match} key={match.params.categoryID} />
 	},
 	{
 		path: '/carts',

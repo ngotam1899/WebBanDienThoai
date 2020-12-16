@@ -7,7 +7,7 @@ import queryString from 'query-string';
 const url = '/products/image';
 // http://localhost:3000/products/image/:id  METHOD = GET
 export const getImage  = (imageId) =>{
-  return axiosService.get(`${API_ENDPOINT}${url}/${imageId}`);
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${imageId}`);
 }
 // http://localhost:3000/products/image  METHOD = GET
 export const getAllImages = (params = {}) =>{
@@ -15,7 +15,7 @@ export const getAllImages = (params = {}) =>{
   if(Object.keys(params).length>0){
       queryParams = `?${queryString.stringify(params)}`;
   }
-  return axiosService.get(`${API_ENDPOINT}${url}${queryParams}`);
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
 };
 
 // http://localhost:3000/users/image  METHOD = POST

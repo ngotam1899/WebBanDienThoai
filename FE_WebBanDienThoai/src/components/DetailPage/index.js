@@ -59,9 +59,9 @@ class DetailPage extends Component {
             <div className="col-md-8">
               <div className="product-content-right">
                 <div className="product-breadcroumb">
-                  <a href="">Home</a>
-                  <a href="">{product && this.setCategory(product.category)}</a>
-                  <a href="">{product && product.name}</a>
+                  <a href="/#/">Home</a>
+                  <a href="#">{product && this.setCategory(product.category)}</a>
+                  <a href="#">{product && product.name}</a>
                 </div>
 
                 {product && <div className="row">

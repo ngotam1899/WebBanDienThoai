@@ -1,5 +1,5 @@
 import { get, omit, cloneDeep } from "lodash";
-import { ProductsActionTypes } from "../actions/products";
+import { ColorActionTypes } from "../actions/color";
 
 const init = {
   loading: true,
@@ -28,97 +28,78 @@ function handleUpdate({state, action}) {
 
 export default function(state = init, action) {
   switch (action.type) {
-    case ProductsActionTypes.CLEAR_DETAIL:
+    case ColorActionTypes.CLEAR_DETAIL:
       return {
         ...state,
         detail: null,
         loadingDetail: true,
       };
 
-    case ProductsActionTypes.CLEAR_STATE:
+    case ColorActionTypes.CLEAR_STATE:
       return {
         ...init,
       };
 
-    case ProductsActionTypes.GET_LIST:
+    case ColorActionTypes.GET_LIST:
       return {
         ...state,
         loading: true,
       };
-
-    case ProductsActionTypes.GET_LIST_ERROR:
+    case ColorActionTypes.GET_LIST_ERROR:
       return {
         ...state,
          loading: false,
         /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
       };
 
-    case ProductsActionTypes.GET_LIST_SUCCESS:
+    case ColorActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
         loading: false,
         list: get(action, "payload", []),
       };
-    case ProductsActionTypes.GET_LIST_BY_CAT:
-      return {
-        ...state,
-        loading: true,
-      };
 
-    case ProductsActionTypes.GET_LIST_BY_CAT_ERROR:
-      return {
-        ...state,
-          loading: false,
-        /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
-      };
-
-    case ProductsActionTypes.GET_LIST_BY_CAT_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        list: get(action, "payload", []),
-      };
-    case ProductsActionTypes.GET_DETAIL:
+    case ColorActionTypes.GET_DETAIL:
       return {
         ...state,
         loadingDetail: true,
         detail: null,
       };
 
-    case ProductsActionTypes.GET_DETAIL_SUCCESS:
+    case ColorActionTypes.GET_DETAIL_SUCCESS:
       return {
         ...state,
         loadingDetail: false,
         detail: action.payload,
       };
 
-    case ProductsActionTypes.GET_DETAIL_ERROR:
+    case ColorActionTypes.GET_DETAIL_ERROR:
       return {
         ...state,
         loadingDetail: false,
         detail: action.payload,
       };
 
-    case ProductsActionTypes.CREATE:
-    case ProductsActionTypes.UPDATE:
-    case ProductsActionTypes.DELETE:
+    case ColorActionTypes.CREATE:
+    case ColorActionTypes.UPDATE:
+    case ColorActionTypes.DELETE:
       return {
         ...state,
         processing: true,
       };
 
-    case ProductsActionTypes.CREATE_ERROR:
-    case ProductsActionTypes.UPDATE_ERROR:
-    case ProductsActionTypes.DELETE_ERROR:
+    case ColorActionTypes.CREATE_ERROR:
+    case ColorActionTypes.UPDATE_ERROR:
+    case ColorActionTypes.DELETE_ERROR:
       return {
         ...state,
         processing: false,
       };
-    case ProductsActionTypes.UPDATE_SUCCESS:
+    case ColorActionTypes.UPDATE_SUCCESS:
       return handleUpdate({state, action});
 
-    case ProductsActionTypes.CREATE_SUCCESS:
-    case ProductsActionTypes.DELETE_SUCCESS:
+    case ColorActionTypes.CREATE_SUCCESS:
+    case ColorActionTypes.DELETE_SUCCESS:
       return {
         ...state,
         processing: false,

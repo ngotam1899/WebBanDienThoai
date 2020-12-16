@@ -5,7 +5,9 @@ import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
+// @Actions
 import AuthorizationActions from '../../redux/actions/auth'
+import CategoryActions from "../../redux/actions/categories";
 
 class Header extends Component {
   constructor(props) {
@@ -16,9 +18,10 @@ class Header extends Component {
     }
   }
   componentDidMount(){
-    const {onGetProfile} = this.props;
+    const {onGetProfile, onGetListCategory} = this.props;
     const token = localStorage.getItem('AUTH_USER')
     onGetProfile(null,token);
+    onGetListCategory();
   }
 
   componentWillReceiveProps(props) {
@@ -55,7 +58,7 @@ class Header extends Component {
       )
     }
     const {total, totalPrice}=this.state;
-    const {userInfo, isLogin} = this.props;
+    const {userInfo, isLogin, listCategories} = this.props;
     return (
       <>
         <div className="header-area">
@@ -130,10 +133,11 @@ class Header extends Component {
                 <div className="collapse navbar-collapse" id="collapsibleNavId">
                   <ul className="navbar-nav mr-auto mt-lg-0">
                     <MenuLink label="Trang chủ" to="/" activeOnlyWhenExact={true} />
-                    <MenuLink label="Điện thoại" to="/products/dien-thoai" activeOnlyWhenExact={true} />
-                    <li className="nav-item">
-                      <a className="nav-link px-3" href="#">Phụ kiện</a>
-                    </li>
+                    {listCategories && listCategories.map((category, index)=>{
+                      return (
+                        <MenuLink key={index} label={category.name} to={`/products/${category._id}`} activeOnlyWhenExact={true} />
+                      )
+                    })}
                   </ul>
                 </div>
               </nav>
@@ -149,7 +153,8 @@ const mapStateToProps = (state) =>{
   return {
     cart: state.cart,
     userInfo: state.auth.detail,
-    isLogin: state.auth.loggedIn
+    isLogin: state.auth.loggedIn,
+    listCategories: state.categories.list
   }
 }
 
@@ -160,7 +165,10 @@ const mapDispatchToProps =(dispatch)=> {
     },
     onLogout : ()=>{
       dispatch(AuthorizationActions.onLogout())
-    }
+    },
+    onGetListCategory: () => {
+      dispatch(CategoryActions.onGetList())
+    },
 	}
 };
 

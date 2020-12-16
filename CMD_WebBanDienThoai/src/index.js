@@ -5,7 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-
+import GlobalLoading from './components/GlobalLoading'
 import { icons } from './assets/icons'
 
 import { Provider } from 'react-redux'
@@ -17,6 +17,7 @@ React.icons = icons
 
 ReactDOM.render(
   <Provider store={store}>
+    <GlobalLoading/>
     <App/>
   </Provider>,
   document.getElementById('root')

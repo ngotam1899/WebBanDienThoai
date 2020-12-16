@@ -33,7 +33,7 @@ class CheckoutPage extends Component {
   componentWillReceiveProps(props) {
     var total = 0;
     var totalPrice = 0;
-    var { cart } = this.props;
+    var { cart } = props;
     for (var i = 0; i < cart.length; i++) {
       total = total + cart[i].quantity
       totalPrice = totalPrice + cart[i].quantity * cart[i].product.price

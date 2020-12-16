@@ -2,9 +2,10 @@ import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
 import { getAllProducts, getDetailProduct, addProduct,updateProduct, deleteProduct } from "../apis/products";
-
+import UIActions from "../actions/ui";
 
 function* handleGetList({ payload }) {
+  yield put(UIActions.showLoading());
   try {
     yield delay(1000)
     const result = yield call(getAllProducts, payload);
@@ -13,6 +14,7 @@ function* handleGetList({ payload }) {
   } catch (error) {
     yield put(ProductsActions.onGetListError(error));
   }
+  yield put(UIActions.hideLoading());
 }
 
 function* handleGetDetail({ filters, id }) {

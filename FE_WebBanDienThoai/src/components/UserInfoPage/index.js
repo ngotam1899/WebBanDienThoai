@@ -59,6 +59,10 @@ class UserInfoPage extends Component {
     };
   };
 
+  getInfoOrder = (id) => {
+    
+  }
+
   render() {
     const {authInfo, avatar, orderList} = this.props;
     const {previewSource, fileInputState} = this.state;
@@ -183,15 +187,15 @@ class UserInfoPage extends Component {
           <td>{orderItem.status !== false ? <span class="badge badge-success">Đã thanh toán</span>
           : <span class="badge badge-danger">Chưa giao hàng</span>}</td>
           <td>{orderItem.total_price} VND</td>
-          <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Chi tiết</button>
-          <div class="modal fade" id="myModal" role="dialog">
-          <OrderDetail id={orderItem._id}/>
-        </div></td>
+          <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" onClick={() => {this.getInfoOrder(orderItem._id)}}>Chi tiết</button>
+          </td>
+          
         </tr>
         </>
       )
     })}
   </tbody>}
+  {/* <OrderDetail id={orderItem._id}/> */}
 </table>
   
                   </div>
@@ -229,6 +233,7 @@ const mapDispatchToProps =(dispatch)=> {
     onGetHistoryOrder : (id) =>{
 			dispatch(OrdersActions.onGetHistoryOrder(id))
     },
+    
 	}
 };
 
