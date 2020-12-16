@@ -1,16 +1,19 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
+import UIActions from "../actions/ui";
 import CategoryActions, { CategoryActionTypes } from "../actions/categories";
 import { getAllCategories } from "../apis/categories";
 
 function* handleGetList({ payload }) {
+  yield put(UIActions.showLoading());
   try {
     const result = yield call(getAllCategories, payload);
     const data = get(result, "data");
-    yield put(CategoryActions.onGetListSuccess(data.categorys.categorys));
+    yield put(CategoryActions.onGetListSuccess(data.categorys));
   } catch (error) {
     yield put(CategoryActions.onGetListError(error));
   }
+  yield put(UIActions.hideLoading());
 }
 
 /**

@@ -7,7 +7,9 @@ import brands from "./brands";
 import categories from "./categories";
 import user from "./user";
 import order from "./order";
+import color from "./color";
+import ui from "./ui";
 
 export default combineReducers({
-  products,cart, cloudinary, auth, brands, categories, user, order
+  products,cart, cloudinary, auth, brands, categories, user, order, color, ui,
 });

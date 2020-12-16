@@ -1,44 +1,15 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
-import UIActions from "../actions/ui";
-import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct, getAllProductsByCat } from "../apis/products";
+import ColorActions, { ColorActionTypes } from "../actions/color";
+import { getAllColors } from "../apis/color";
 
 function* handleGetList({ payload }) {
-  yield put(UIActions.showLoading());
   try {
-    yield delay(500);
-    const result = yield call(getAllProducts, payload);
+    const result = yield call(getAllColors, payload);
     const data = get(result, "data");
-    if (data.code !== 200) throw data;
-    yield put(ProductsActions.onGetListSuccess(data.product));
+    yield put(ColorActions.onGetListSuccess(data.colors));
   } catch (error) {
-    yield put(ProductsActions.onGetListError(error));
-  }
-  yield put(UIActions.hideLoading());
-}
-
-function* handleGetListByCat({ payload }) {
-  yield put(UIActions.showLoading());
-  try {
-    yield delay(500);
-    const result = yield call(getAllProductsByCat, payload);
-    const data = get(result, "data");
-    if (data.code !== 200) throw data;
-    yield put(ProductsActions.onGetListByCatSuccess(data.products));
-  } catch (error) {
-    yield put(ProductsActions.onGetListByCatError(error));
-  }
-  yield put(UIActions.hideLoading());
-}
-
-function* handleGetDetail({ filters, id }) {
-  try {
-    const result = yield call(getDetailProduct, id);
-    const data = get(result, "data", {});
-    yield put(ProductsActions.onGetDetailSuccess(data.product));
-  } catch (error) {
-    yield put(ProductsActions.onGetDetailError(error));
+    yield put(ColorActions.onGetListError(error));
   }
 }
 
@@ -73,7 +44,7 @@ function* handleGetDetail({ filters, id }) {
  * update
  */
 /* function* handleUpdate({ payload, filters, callback, merchant_id }) {
-  
+
   try {
     const result = yield call(EcommerceApi.Product.update, payload);
     const data = get(result, "data", {});
@@ -82,7 +53,7 @@ function* handleGetDetail({ filters, id }) {
     if (callback) {
       callback();
     }
-    
+
     const detailResult = yield call(EcommerceApi.Product.getDetail, payload.id);
     yield put(ProductsActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(ProductsActions.onGetList(filters));
@@ -124,19 +95,13 @@ function* handleGetDetail({ filters, id }) {
 /**
  *
  */
+
 export function* watchGetList() {
-  yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
+  yield takeEvery(ColorActionTypes.GET_LIST, handleGetList);
 }
 
-export function* watchGetListByCat() {
-  yield takeEvery(ProductsActionTypes.GET_LIST_BY_CAT, handleGetListByCat);
-}
-
-export function* watchGetDetail() {
-  yield takeEvery(ProductsActionTypes.GET_DETAIL, handleGetDetail);
-}
-
-/* export function* watchCreate() {
+/*
+export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
 }
 export function* watchUpdate() {
@@ -149,9 +114,8 @@ export function* watchDelete() {
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
-    fork(watchGetListByCat),
-    fork(watchGetDetail),
-    /* fork(watchCreate),
+    /* fork(watchGetDetail),
+    fork(watchCreate),
     fork(watchUpdate),
     fork(watchDelete), */
   ]);

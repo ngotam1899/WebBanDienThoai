@@ -78,7 +78,7 @@ class LoginPage extends Component {
 						<form action="index.html">
 							<img src="img/avatar.svg" alt="" />
 							<h2 className="title">Welcome to</h2>
-							<img className="pb-4" src={assets("brand.png")}></img>
+							<img className="pb-4" src={assets("brand.png")} alt=""></img>
 							<div className="input-div one">
 								<div className="i">
 									<i className="fas fa-user" />

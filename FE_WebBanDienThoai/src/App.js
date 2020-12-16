@@ -7,6 +7,7 @@ import RegisterPage from './components/RegisterPage';
 
 import { Provider } from "react-redux";
 import configureStore from "./redux/store";
+import GlobalLoading from './containers/GlobalLoading';
 
 const store = configureStore();
 
@@ -14,6 +15,7 @@ class App extends Component {
  render() {
   return (
     <Provider store={store}>
+      <GlobalLoading/>
       <BrowserRouter>
         <Switch>
           <Route path="/" component={Main} exact/>

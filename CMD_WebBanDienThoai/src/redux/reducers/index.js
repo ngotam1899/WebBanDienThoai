@@ -4,7 +4,8 @@ import cloudinary from "./cloudinary";
 import brands from "./brands";
 import categories from "./categories";
 import display from "./display";
+import ui from "./ui";
 
 export default combineReducers({
-  products, cloudinary, brands, categories, display
+  products, cloudinary, brands, categories, display, ui,
 });

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { assets } from '../../constants/assetsImage';
 import {Link} from 'react-router-dom'
-import {CLOUDINARY_IMAGE} from '../../constants'
 
 class ProductItem extends Component {
 	onAddToCart = (product) =>{
@@ -13,7 +11,7 @@ class ProductItem extends Component {
     const {product, setImage} = this.props;
 		return (
 			<div className="col-md-3 col-sm-6">
-				<div className="single-shop-product">
+				<div className="single-shop-product text-center">
 					<div className="product-upper">
 						<Link to={`/products/dien-thoai/${product.pathseo}/${product._id}`}><img src={setImage(product.bigimage)} alt="" /></Link>
 					</div>
