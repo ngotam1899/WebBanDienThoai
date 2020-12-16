@@ -4,6 +4,9 @@ const Schema = mongoose.Schema
 const CategorySchema = new Schema({
     name: {
         type: String
+    },
+    pathseo: {
+        type: String
     }
 })
 

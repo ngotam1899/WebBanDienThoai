@@ -184,9 +184,21 @@ const userGetOrder = async(req, res, next) => {
         return next(error)
     }
 }
+const getAnOrder = async(req, res, next) => {
+    try {
+        const { IDOrder } = req.params;
+        const isValid = await Validator.isValidObjId(IDOrder);
+        if (!isValid) return res.status(200).json({ success: false, code: 400, message: 'ID is not correctly' });
+        const order = await Order.findById(IDOrder)
+        return res.status(200).json({ success: true, code: 200, message: '', order: order })
+    } catch (error) {
+        return next(error)
+    }
+}
 
 module.exports = {
     getAllOrder,
+    getAnOrder,
     addOrder,
     addOrderItem,
     requestSendEmail,
