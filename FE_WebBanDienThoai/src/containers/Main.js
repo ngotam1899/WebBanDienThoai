@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Provider } from "react-redux";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import React, { Component } from 'react';
+import { HashRouter } from "react-router-dom";
 import Header from './Header';
 import Footer from './Footer';
 import MainRouters from '../components/MainRouters';

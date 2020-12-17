@@ -22,7 +22,7 @@ const routes = [
 		path: '/products/:pathseo/:categoryID',
 		exact: true,
 		name: "Product Page",
-		main: ({match}) => <ProductPage match={match} key={match.params.categoryID} />
+		main: ({match, history, location}) => <ProductPage match={match} key={match.params.categoryID} history={history} location={location} />
 	},
 	{
 		path: '/carts',

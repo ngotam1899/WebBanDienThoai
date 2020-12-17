@@ -4,9 +4,11 @@ import './styles.css'
 //@Components
 import OrderDetail from '../../containers/OrderDetail';
 import UserDetail from '../../containers/UserDetail';
+import ChangePassword from '../../containers/ChangePassword';
 //@Actions
 import UsersActions from '../../redux/actions/user'
 import OrdersActions from '../../redux/actions/order'
+
 
 class UserInfoPage extends Component {
   constructor(props) {
@@ -202,7 +204,8 @@ class UserInfoPage extends Component {
             
               </div>
               <div class="col-md-2">
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#infoModal">Edit profile</button>
+                <button type="button" class="btn btn-info mr-1 mr-md-0 mb-0 mb-md-1" data-toggle="modal" data-target="#infoModal">Edit profile</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwdModal">Change password</button>
               </div>
             </div>
             <div class="row">
@@ -212,6 +215,7 @@ class UserInfoPage extends Component {
         </div>
         {orderItem ? <OrderDetail orderItem={orderItem}/> : <OrderDetail/>}
         {authInfo && <UserDetail userInfo={authInfo}/>}
+        <ChangePassword/>
       </div>
     );
   }

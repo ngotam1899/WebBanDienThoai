@@ -2,32 +2,17 @@ import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import UIActions from "../actions/ui";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct, getAllProductsByCat } from "../apis/products";
+import { getAllProducts, getDetailProduct } from "../apis/products";
 
 function* handleGetList({ payload }) {
   yield put(UIActions.showLoading());
   try {
-    yield delay(500);
     const result = yield call(getAllProducts, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(ProductsActions.onGetListSuccess(data.product));
+    yield put(ProductsActions.onGetListSuccess(data.products));
   } catch (error) {
     yield put(ProductsActions.onGetListError(error));
-  }
-  yield put(UIActions.hideLoading());
-}
-
-function* handleGetListByCat({ payload }) {
-  yield put(UIActions.showLoading());
-  try {
-    yield delay(500);
-    const result = yield call(getAllProductsByCat, payload);
-    const data = get(result, "data");
-    if (data.code !== 200) throw data;
-    yield put(ProductsActions.onGetListByCatSuccess(data.products));
-  } catch (error) {
-    yield put(ProductsActions.onGetListByCatError(error));
   }
   yield put(UIActions.hideLoading());
 }
@@ -127,11 +112,6 @@ function* handleGetDetail({ filters, id }) {
 export function* watchGetList() {
   yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
 }
-
-export function* watchGetListByCat() {
-  yield takeEvery(ProductsActionTypes.GET_LIST_BY_CAT, handleGetListByCat);
-}
-
 export function* watchGetDetail() {
   yield takeEvery(ProductsActionTypes.GET_DETAIL, handleGetDetail);
 }
@@ -149,7 +129,6 @@ export function* watchDelete() {
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
-    fork(watchGetListByCat),
     fork(watchGetDetail),
     /* fork(watchCreate),
     fork(watchUpdate),

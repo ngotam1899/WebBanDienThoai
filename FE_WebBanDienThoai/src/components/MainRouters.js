@@ -1,30 +1,22 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import MyLoadable from "../utils/MyLoadable";
+import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
 
 import routes from '../constants/routes';
-/* const IndexRoutes = MyLoadable({
-  loader: () => import("./HomePage"),
-});
-const ProductRoutes = MyLoadable({
-    loader: () => import("./ProductPage"),
-  }); */
 
 const renderRoute = (routes) => {
-  var result = null;
-    if(routes.length > 0){
-      result = routes.map((route, index) => {
-        return (
-          <Route key={index} path={route.path} component={route.main} exact={route.exact}/>
-      )});
-    }
-    return result;
+	var result = null;
+	if (routes.length > 0) {
+		result = routes.map((route, index) => {
+			return <Route key={index} path={route.path} component={route.main} exact={route.exact} />;
+		});
+	}
+	return result;
+};
+
+class MainRoutes extends Component {
+	render() {
+		return <Switch>{renderRoute(routes)}</Switch>;
+	}
 }
 
-export default function MainRoutes() {
-  return (
-        <Switch>
-          {renderRoute(routes)}
-        </Switch>
-  );
-}
+export default MainRoutes;

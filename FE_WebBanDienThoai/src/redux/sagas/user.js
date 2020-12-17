@@ -2,8 +2,8 @@ import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import UsersActions, { UsersActionTypes } from "../actions/user";
 import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
-import { addUserImage, getUserImage } from "../apis/cloudinary";
-import { updateUserInfo, getUser } from "../apis/user";
+import { addUserImage } from "../apis/cloudinary";
+import { updateUserInfo, getUser, changePassword } from "../apis/user";
 
 /* function* handleGetList({ payload }) {
   try {
@@ -56,9 +56,6 @@ function* handleUpdateUserImage({payload}) {
     //2. Update user info
     const detailResult = yield call(updateUserInfo,{"image":data.image._id}, payload.id);
     yield put(UsersActions.onUpdateUserImageSuccess(get(detailResult, "data")));
-    //3. Get user info
-    
-    
   } catch (error) {
     console.log(error);
     yield put(UsersActions.onUpdateUserImageError(error));
@@ -75,6 +72,18 @@ function* handleUpdate( {payload} ) {
   } catch (error) {
     console.log(error);
     yield put(UsersActions.onUpdateError(error));
+  }
+}
+
+function* handleChangePassword( {payload} ) {
+  try {
+    console.log(payload);
+    const result = yield call(changePassword, payload);
+    const data = get(result, "data", {});
+    yield put(UsersActions.onChangePasswordSuccess(data.message));
+  } catch (error) {
+    console.log(error);
+    yield put(UsersActions.onChangePasswordError(error));
   }
 }
 
@@ -120,6 +129,9 @@ export function* watchUpdateUserImage() {
 export function* watchUpdate() {
   yield takeEvery(UsersActionTypes.UPDATE, handleUpdate);
 }
+export function* watchChangePassword() {
+  yield takeEvery(UsersActionTypes.CHANGE_PASSWORD, handleChangePassword);
+}
 /* export function* watchDelete() {
   yield takeEvery(ProductsActionTypes.DELETE, handleDelete);
 } */
@@ -128,6 +140,7 @@ export default function* rootSaga() {
   yield all([
     /* fork(watchGetList),*/
     /*fork(watchCreate), */
+    fork(watchChangePassword),
     fork(watchUpdate),
     fork(watchUpdateUserImage),
     /* fork(watchDelete), */

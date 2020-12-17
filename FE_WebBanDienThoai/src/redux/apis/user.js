@@ -2,7 +2,6 @@
 //Module Product
 import axiosService from '../../utils/AxiosService';
 import {API_ENDPOINT_AUTH} from '../../constants/index';
-import queryString from 'query-string';
 
 const url = '/users';
 
@@ -14,4 +13,9 @@ export const getUser  = (userId) =>{
 // http://localhost:3000/users/:id METHOD= PUT
 export const updateUserInfo = (data, userId) =>{
   return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${userId}`, data);
+};
+
+// http://localhost:3000/users/change-pwd METHOD = POST
+export const changePassword = (data) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}/change-pwd`, data);
 };

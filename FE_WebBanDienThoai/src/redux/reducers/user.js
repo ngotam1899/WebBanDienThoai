@@ -80,7 +80,23 @@ export default function(state = init, action) {
     case UsersActionTypes.UPDATE_SUCCESS:
       return {
         ...state,
+        processing: false,
         detail: action.payload,
+      };
+    case UsersActionTypes.CHANGE_PASSWORD:
+      return {
+        ...state,
+        processing: true,
+      };
+    case UsersActionTypes.CHANGE_PASSWORD_ERROR:
+      return {
+        ...state,
+        processing: false,
+      };
+    case UsersActionTypes.CHANGE_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        processing: false,
       };
     default:
       return state;

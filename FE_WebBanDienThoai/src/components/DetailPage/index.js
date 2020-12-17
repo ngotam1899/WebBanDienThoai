@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { assets } from '../../constants/assetsImage';
 import {connect} from 'react-redux';
 import { get } from "lodash";
 import ProductsActions from '../../redux/actions/products'

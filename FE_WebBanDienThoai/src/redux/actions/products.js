@@ -3,10 +3,6 @@ export const ProductsActionTypes = {
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
 
-  GET_LIST_BY_CAT: "GET_LIST_BY_CAT",
-  GET_LIST_BY_CAT_SUCCESS: "GET_LIST_BY_CAT_SUCCESS",
-  GET_LIST_BY_CAT_ERROR: "GET_LIST_BY_CAT_ERROR",
-
   GET_DETAIL: "GET_DETAIL",
   GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
   GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
@@ -57,21 +53,6 @@ const onGetListSuccess = (payload) => ({
 
 const onGetListError = (error) => ({
   type: ProductsActionTypes.GET_LIST_ERROR,
-  payload: error,
-});
-
-const onGetListByCat = (id) => ({
-  type: ProductsActionTypes.GET_LIST_BY_CAT,
-  payload: id,
-});
-
-const onGetListByCatSuccess = (payload) => ({
-  type: ProductsActionTypes.GET_LIST_BY_CAT_SUCCESS,
-  payload,
-});
-
-const onGetListByCatError = (error) => ({
-  type: ProductsActionTypes.GET_LIST_BY_CAT_ERROR,
   payload: error,
 });
 
@@ -187,10 +168,6 @@ const ProductsActions = {
   onGetList,
   onGetListSuccess,
   onGetListError,
-
-  onGetListByCat,
-  onGetListByCatSuccess,
-  onGetListByCatError,
 
   onGetDetail,
   onGetDetailSuccess,

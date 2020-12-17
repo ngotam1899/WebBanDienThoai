@@ -25,15 +25,7 @@ class UserDetail extends Component {
     })
   }
 
-  updateProfile() {
-    const {onUpdate, userInfo} = this.props;
-    const {firstname, lastname, phonenumber, address, email} = this.state;
-    const data = {firstname, lastname, phonenumber, address, email}
-    onUpdate(userInfo._id, data);
-  }
-
   render() {
-    const {userInfo} = this.props;
     const {firstname, lastname, phonenumber, address, email} = this.state;
     return (  
       <div show="true" className="modal fade" id="infoModal" role="dialog">
@@ -69,7 +61,7 @@ class UserDetail extends Component {
               <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.updateProfile()}>Lưu thay đổi</button>
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
-          </div> }
+          </div> 
         </div>
       </div>
     );

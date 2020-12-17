@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { ListCountry } from '../../constants/common';
-import { get } from "lodash";
-import { assets } from '../../constants/assetsImage';
 import {connect} from 'react-redux';
 import Search from '../../containers/Search';
 import CartItem from '../../containers/CartItem'
@@ -38,8 +36,8 @@ class CartPage extends Component {
   }
 
   render() {
-    var {cart, onDeleteProductInCart, onUpdateProductInCart, listImages, cart} = this.props;
-    var {total, totalPrice} = this.state;
+    var {cart, onDeleteProductInCart, onUpdateProductInCart} = this.props;
+    var {totalPrice} = this.state;
     return (<>
       <div className="product-big-title-area">
         <div className="container">

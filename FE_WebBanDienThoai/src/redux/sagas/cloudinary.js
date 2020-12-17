@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import ImagesActions, { ImagesActionTypes } from "../actions/cloudinary";
-import { getImage, getAllImages, addUserImage } from "../apis/cloudinary";
+import { getImage, getAllImages } from "../apis/cloudinary";
 
 function* handleGetList({ payload }) {
   try {

@@ -14,6 +14,10 @@ export const UsersActionTypes = {
   UPDATE: "UPDATE",
   UPDATE_SUCCESS: "UPDATE_SUCCESS",
   UPDATE_ERROR: "UPDATE_ERROR",
+
+  CHANGE_PASSWORD: "CHANGE_PASSWORD",
+  CHANGE_PASSWORD_SUCCESS: "CHANGE_PASSWORD_SUCCESS",
+  CHANGE_PASSWORD_ERROR: "CHANGE_PASSWORD_ERROR",
 };
 
 Object.keys(UsersActionTypes).forEach((key) => {
@@ -80,6 +84,21 @@ const onUpdateError = (error) => ({
   payload: error,
 });
 
+const onChangePassword = (data) => ({
+  type: UsersActionTypes.CHANGE_PASSWORD,
+  payload: data,
+});
+
+const onChangePasswordSuccess = (detail) => ({
+  type: UsersActionTypes.CHANGE_PASSWORD_SUCCESS,
+  payload: detail,
+});
+
+const onChangePasswordError = (error) => ({
+  type: UsersActionTypes.CHANGE_PASSWORD_ERROR,
+  payload: error,
+});
+
 const UsersAction = {
   onUpdateUserImage,
   onUpdateUserImageSuccess,
@@ -96,6 +115,10 @@ const UsersAction = {
   onUpdate,
   onUpdateSuccess,
   onUpdateError,
+
+  onChangePassword,
+  onChangePasswordSuccess,
+  onChangePasswordError,
 };
 
 export default UsersAction;

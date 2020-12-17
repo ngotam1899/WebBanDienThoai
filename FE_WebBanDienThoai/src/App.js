@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import Main from './containers/Main'
 import LoginPage from './components/LoginPage';
@@ -18,9 +18,10 @@ class App extends Component {
       <GlobalLoading/>
       <BrowserRouter>
         <Switch>
-          <Route path="/" component={Main} exact/>
-          <Route path="/user/dang-nhap" component={({history}) => <LoginPage history={history} />} exact/>
-          <Route path="/user/dang-ky" component={RegisterPage} exact/>
+          <Route path="/" name="Trang chủ" component={Main} exact/>
+          <Route path="/user/dang-nhap" name="Trang đăng nhập" component={({history}) => <LoginPage history={history} />} exact/>
+          <Route path="/user/dang-ky" name="Trang đăng ký" component={RegisterPage} exact/>
+          <Redirect to="/" />
         </Switch>
       </BrowserRouter>
     </Provider>

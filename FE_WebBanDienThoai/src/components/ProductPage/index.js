@@ -1,30 +1,96 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { get } from "lodash";
+import qs from "query-string";
 import './styles.css';
+// @Function
+import getFilterParams from "../../utils/getFilterParams";
 // @Components
 import ProductItem from "../../containers/ProductItem"
 // @Actions
 import ProductsSelectors from "../../redux/selectors/products";
 import ProductsActions from "../../redux/actions/products";
-import ImagesActions from "../../redux/actions/cloudinary";
 import BrandActions from "../../redux/actions/brands";
 import ColorActions from "../../redux/actions/color";
 
 class ProductPage extends Component {
-  componentDidMount() {
-    const { onGetListByCat, onGetListImage, onGetListColor, onGetListBrand, match } = this.props;
-    onGetListImage();
-    onGetListColor();
-    onGetListBrand();
-    onGetListByCat(match.params.categoryID);
+  constructor(props) {
+    const {match} = props;
+    super(props);
+    this.state = {
+      keyword: "",
+      filter: {
+        /* limit: 10,
+        page: 1, */
+        category: match.params.categoryID ? match.params.categoryID : null
+      },
+    }
   }
 
-  onSetProducts = (id) =>{
-    console.log(id);
-  } 
+  onChange = (event) =>{
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
+  }
+  
+  //??
+  componentWillMount() {
+    const { onGetList, onGetListColor, onGetListBrand, location } = this.props;
+    const { filter } = this.state;
+    onGetListColor();
+    onGetListBrand();
+    const filters = getFilterParams(location.search);
+    var params = {
+      ...filter,
+      ...filters
+    };
+    onGetList(params);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      const filters = getFilterParams(this.props.location.search);
+      const { filter } = this.state;
+      var params = {
+        ...filter,
+        ...filters
+      };
+      this.props.onGetList(params);
+    }
+  }
+
+  // Sort with brands
+  onSetBrand = (value) => {
+    this.handleUpdateFilter({ brand: value });
+  }
+
+  // Sort with colors
+  onSetColor = (value) => {
+    this.handleUpdateFilter({ color: value });
+  }
+
+  // Button search
+  searchKeyWorld = (e) => {
+    const {keyword} = this.state;
+    this.handleUpdateFilter({ keyword});
+  }
+
+  // Chuyển router (thêm vào params) 
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
 
   render() {
+    const {keyword} = this.state;
     const { listProducts, onAddProductToCart,listColor, listBrand } = this.props;
     return (
       <>
@@ -35,10 +101,10 @@ class ProductPage extends Component {
                 <div className="product-bit-title text-center">
                     <div className="row my-5 justify-content-center">
                       <div className="col-md-6 col-9">
-                        <input type="text" className="w-100"></input>
+                        <input type="text" className="w-100" name="keyword" value={keyword} onChange={this.onChange}></input>
                       </div>
                       <div className="col-md-2 col-3">
-                        <button className="btn btn-danger w-100 h-100">Tìm kiếm</button>
+                        <button className="btn btn-danger w-100 h-100" onClick={() => this.searchKeyWorld()}>Tìm kiếm</button>
                       </div>
                     </div>
                 </div>
@@ -60,13 +126,13 @@ class ProductPage extends Component {
                       <div className="card-body">
                         <form>
                           <div className="radio">
-                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetProducts(null)}/>Tất cả</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(null)}/>Tất cả</label>
                           </div>
                           {listBrand && 
                           listBrand.map((brand, index) =>{
                           return(
                           <div className="radio" key={index}>
-                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetProducts(brand._id)}/>{brand.name}</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(brand._id)}/>{brand.name}</label>
                           </div>
                           )})}
                         </form>
@@ -79,12 +145,12 @@ class ProductPage extends Component {
                       <div className="card-body">
                         <form>
                           <div className="radio">
-                            <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetProducts(null)}/>Tất cả</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(null)}/>Tất cả</label>
                           </div>
                           {listColor && listColor.map((color, index) =>{
                             return (
                             <div className="radio" key={index}>
-                              <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetProducts(color._id)}/>{color.color}</label>
+                              <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(color._id)}/>{color.color}</label>
                             </div>
                             )
                           })}
@@ -148,14 +214,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetListByCat: (id) => {
-      dispatch(ProductsActions.onGetListByCat(id))
+    onGetList: (params) => {
+      dispatch(ProductsActions.onGetList(params))
     },
     onAddProductToCart: (product) => {
       dispatch(ProductsActions.onAddProductToCart(product, 1));
-    },
-    onGetListImage: () => {
-      dispatch(ImagesActions.onGetList())
     },
     onGetListBrand: () => {
       dispatch(BrandActions.onGetList())

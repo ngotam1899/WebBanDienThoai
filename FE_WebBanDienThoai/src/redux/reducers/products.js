@@ -59,25 +59,6 @@ export default function(state = init, action) {
         loading: false,
         list: get(action, "payload", []),
       };
-    case ProductsActionTypes.GET_LIST_BY_CAT:
-      return {
-        ...state,
-        loading: true,
-      };
-
-    case ProductsActionTypes.GET_LIST_BY_CAT_ERROR:
-      return {
-        ...state,
-          loading: false,
-        /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
-      };
-
-    case ProductsActionTypes.GET_LIST_BY_CAT_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        list: get(action, "payload", []),
-      };
     case ProductsActionTypes.GET_DETAIL:
       return {
         ...state,

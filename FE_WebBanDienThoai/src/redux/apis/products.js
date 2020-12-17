@@ -12,12 +12,7 @@ export const getAllProducts = (params = {}) =>{
     if(Object.keys(params).length>0){
         queryParams = `?${queryString.stringify(params)}`;
     }
-    return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
-};
-
-// http://localhost:3000/products/follow-category/:categoryID  METHOD = GET
-export const getAllProductsByCat = (categoryID) =>{
-    return axiosService.get(`${API_ENDPOINT_AUTH}/products/follow-category/${categoryID}`);
+    return axiosService.get(`${API_ENDPOINT_AUTH}/products/${queryParams}`);
 };
 
 // http://localhost:3000/products/:id  METHOD = GET
