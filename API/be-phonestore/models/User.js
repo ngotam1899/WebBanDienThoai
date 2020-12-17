@@ -37,7 +37,7 @@ const UserSchema = new Schema({
     role: {
         type: String
     },
-    devide_code: {
+    token: {
         type: String
     }
 }, {

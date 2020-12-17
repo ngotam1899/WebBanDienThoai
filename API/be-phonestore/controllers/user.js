@@ -8,7 +8,8 @@ const os = require('os')
 const nodemailer = require('nodemailer')
 
 const JWT = require('jsonwebtoken')
-const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config')
+const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config');
+const { use } = require('passport');
 const hashString = async(textString) => {
     const salt = await bcrypts.genSalt(15);
     return await bcrypts.hash(textString, salt)
@@ -29,6 +30,12 @@ const transporter = nodemailer.createTransport({
 
 const logOut = async(req, res, next) => {
     headers = req.headers
+    headers.authorization = headers.authorization.replace('Bear ', '');
+    JWT.verify(headers.authorization.trim(), JWT_SECRET, async(err, decodeToken) => {
+        const user = await User.findById(decodeToken.sub);
+        user.token = '';
+        await user.save();
+    })
     return res.status(200).json({ success: true, message: 'logout success', code: 200 })
 }
 
@@ -39,12 +46,35 @@ const signIn = async(req, res, next) => {
     }
 
     const token = 'Bearer ' + service.encodedToken(req.user._id, '6h')
+
+    const user = req.user;
+    user.token = token;
+    await user.save()
         /*res.setHeader('Devide_code', req.user.devide_code)*/
     res.setHeader('Authorization', token)
 
     return res.status(200).json({ success: true, code: 200, message: '', user: req.user })
 }
+const changePassword = async(req, res, next) => {
+    try {
+        const { password, new_password } = req.body;
+        if (!password) return res.status(200).json({ success: false, code: 400, message: 'Pls insert old pwd' });
+        if (!new_password) return res.status(200).json({ success: false, code: 400, message: 'Pls insert new pwd' });
+        if (password == new_password) res.status(200).json({ success: false, code: 400, message: 'New pwd is incorrectly' });
 
+        const user = await User.findById(req.user._id);
+        const result = await user.isSignin(password);
+        if (!result) return res.status(200).json({ success: false, code: 400, message: 'Old pwd is incorrect' });
+        else {
+            user.password = await hashString(new_password);
+            await user.save();
+
+            return res.status(200).json({ success: true, code: 200, message: 'Password change' });
+        }
+    } catch (error) {
+        next(error)
+    }
+}
 const activeAccount = async(req, res, next) => {
     try {
         const { tokenUser } = req.params
@@ -184,5 +214,6 @@ module.exports = {
     logOut,
     returnUserByToken,
     activeAccount,
-    deleteUser
+    deleteUser,
+    changePassword
 }
