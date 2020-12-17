@@ -49,7 +49,7 @@ class OrderDetail extends Component {
                   <div className="card my-1" key={index}>
                     <div className="row no-gutters">
                         <div className="col-sm-3">
-                          <img className="card-img" src={item.image} alt={item.name} />
+                          <img className="card-img" src={item.image ? item.image : "http://www.pha.gov.pk/img/img-02.jpg"} alt={item.name} />
                         </div>
                         <div className="col-sm-5 align-self-center">
                           <p className="text-dark m-0">{item.name}</p>
@@ -88,7 +88,6 @@ class OrderDetail extends Component {
 
 const mapStateToProps = (state) =>{
   return {
-    product: state.products.detail,
   }
 }
 

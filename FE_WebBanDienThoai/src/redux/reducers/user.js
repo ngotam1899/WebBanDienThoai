@@ -1,4 +1,4 @@
-import { get, omit, cloneDeep } from "lodash";
+import { get, cloneDeep } from "lodash";
 import { UsersActionTypes } from "../actions/user";
 
 const init = {
@@ -66,6 +66,21 @@ export default function(state = init, action) {
       return {
         ...state,
         avatar: null
+      };
+    case UsersActionTypes.UPDATE:
+      return {
+        ...state,
+        processing: true,
+      };
+    case UsersActionTypes.UPDATE_ERROR:
+      return {
+        ...state,
+        processing: false,
+      };
+    case UsersActionTypes.UPDATE_SUCCESS:
+      return {
+        ...state,
+        detail: action.payload,
       };
     default:
       return state;

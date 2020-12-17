@@ -14,7 +14,7 @@ class CartItem extends Component {
   }
 
   render() {
-    var {cart, setImage} = this.props;
+    var {cart} = this.props;
     var {product} = cart;
     var {quantity} = cart;
     return (
@@ -26,7 +26,7 @@ class CartItem extends Component {
 
         <td className="product-thumbnail">
           <a href="single-product.html"><img width="145" height="145" alt="poster_1_up"
-            className="shop_thumbnail" src={setImage(product.bigimage)} /></a>
+            className="shop_thumbnail" src={product.bigimage ? product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"} /></a>
         </td>
 
         <td className="product-name">

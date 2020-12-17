@@ -19,19 +19,13 @@ class ProductPage extends Component {
     onGetListBrand();
     onGetListByCat(match.params.categoryID);
   }
-  
-  setImage = (image) => {
-    const {listImages} = this.props;
-    const img = listImages.find(obj => obj._id === image);
-    return get(img, "public_url");
-  }
 
   onSetProducts = (id) =>{
     console.log(id);
-  }
+  } 
 
   render() {
-    const { listProducts, onAddProductToCart, listImages, listColor, listBrand } = this.props;
+    const { listProducts, onAddProductToCart,listColor, listBrand } = this.props;
     return (
       <>
         <div className="product-big-title-area">
@@ -102,11 +96,10 @@ class ProductPage extends Component {
               </div>
               <div className="col-md-9 col-12">
                 <div className="row">
-                  {listImages && listProducts.map((product, index) => {
+                  {listProducts.map((product, index) => {
                     return (
                         <ProductItem product={product} key={index} 
-                        onAddProductToCart={onAddProductToCart}
-                        setImage={this.setImage} />
+                        onAddProductToCart={onAddProductToCart} />
                       )
                   })}
                 </div>

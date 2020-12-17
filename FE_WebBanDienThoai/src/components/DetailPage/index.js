@@ -3,7 +3,6 @@ import { assets } from '../../constants/assetsImage';
 import {connect} from 'react-redux';
 import { get } from "lodash";
 import ProductsActions from '../../redux/actions/products'
-import ImagesActions from "../../redux/actions/cloudinary";
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
 import Search from '../../containers/Search';
@@ -11,18 +10,10 @@ import './styles.css';
 
 class DetailPage extends Component {
   componentDidMount(){
-    
-    const {match, onGetDetailProduct, onGetListImage, onGetListBrand, onGetListCategory} = this.props;
-    onGetListImage();
+    const {match, onGetDetailProduct, onGetListBrand, onGetListCategory} = this.props;
     onGetListBrand();
     onGetListCategory();
     onGetDetailProduct(match.params.productID);
-  }
-
-  setImage = (image) => {
-    const {listImages} = this.props;
-    const img = listImages.find(obj => obj._id === image);
-    return get(img, "public_url");
   }
 
   setBrand = (brand) =>{
@@ -68,15 +59,19 @@ class DetailPage extends Component {
                   <div className="col-sm-6">
                     <div className="product-images">
                       <div className="product-main-img">
-                        <img src={this.setImage(product.bigimage)} alt="" />
+                        <img src={product.bigimage ? product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"} alt="" />
                       </div>
-
-                      {product.image && product.image.map((img, index) =>{
+                      <div className="row">
+                        {product.image && product.image.map((img, index) =>{
                         return (
-                          <div className="product-gallery">
-                            <img key={index} src={this.setImage(img)} alt="" />
+                          <div className="col-4" key={index}>
+                            <div className="product-gallery">
+                              <img key={index} src={img.public_url ? img.public_url : "http://www.pha.gov.pk/img/img-02.jpg"} alt="" />
+                            </div>
                           </div>
                         )})}
+                      </div>
+                      
                     </div>
                   </div>
 
@@ -204,71 +199,9 @@ class DetailPage extends Component {
                           </div>
                         </div>
                       </div>
-
-
-
                     </div>
                   </div>
                 </div>}
-
-
-                <div className="related-products-wrapper">
-                  <h2 className="related-products-title">Related Products</h2>
-                  <div className="related-products-carousel">
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="single-product">
-                          <div className="product-f-image text-center">
-                            <img src={assets("products/product-1.jpg")} alt="" />
-                            <div className="product-hover">
-                              <a href="" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                              <a href="" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                            </div>
-                          </div>
-
-                          <h2><a href="">Sony Smart TV - 2015</a></h2>
-
-                          <div className="product-carousel-price">
-                            <ins>$700.00</ins> <del>$100.00</del>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-4">
-                        <div className="single-product">
-                          <div className="product-f-image text-center">
-                            <img src={assets("products/product-2.jpg")} alt="" />
-                            <div className="product-hover">
-                              <a href="" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                              <a href="" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                            </div>
-                          </div>
-
-                          <h2><a href="">Apple new mac book 2015 March :P</a></h2>
-                          <div className="product-carousel-price">
-                            <ins>$899.00</ins> <del>$999.00</del>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-4">
-                        <div className="single-product">
-                          <div className="product-f-image text-center">
-                            <img src={assets("products/product-3.jpg")} alt="" />
-                            <div className="product-hover">
-                              <a href="" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                              <a href="" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                            </div>
-                          </div>
-
-                          <h2><a href="">Apple new i phone 6</a></h2>
-
-                          <div className="product-carousel-price">
-                            <ins>$400.00</ins> <del>$425.00</del>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -282,7 +215,6 @@ class DetailPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     product: state.products.detail,
-    listImages: state.cloudinary.list,
     listBrands: state.brands.list,
     listCategories: state.categories.list,
   }
@@ -290,9 +222,6 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    onGetListImage: () => {
-      dispatch(ImagesActions.onGetList())
-    },
     onGetDetailProduct: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
     },

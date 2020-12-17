@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import './styles.css'
 //@Components
 import OrderDetail from '../../containers/OrderDetail';
-
+import UserDetail from '../../containers/UserDetail';
 //@Actions
 import UsersActions from '../../redux/actions/user'
 import OrdersActions from '../../redux/actions/order'
@@ -202,7 +202,7 @@ class UserInfoPage extends Component {
             
               </div>
               <div class="col-md-2">
-                <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile" />
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#infoModal">Edit profile</button>
               </div>
             </div>
             <div class="row">
@@ -211,6 +211,7 @@ class UserInfoPage extends Component {
           </form>}
         </div>
         {orderItem ? <OrderDetail orderItem={orderItem}/> : <OrderDetail/>}
+        {authInfo && <UserDetail userInfo={authInfo}/>}
       </div>
     );
   }
