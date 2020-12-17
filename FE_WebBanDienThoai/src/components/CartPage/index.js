@@ -6,7 +6,6 @@ import {connect} from 'react-redux';
 import Search from '../../containers/Search';
 import CartItem from '../../containers/CartItem'
 import ProductsActions from '../../redux/actions/products'
-import ImagesActions from "../../redux/actions/cloudinary";
 import './styles.css';
 
 class CartPage extends Component {
@@ -16,11 +15,6 @@ class CartPage extends Component {
       total: 0,
       totalPrice: 0
     }
-  }
-
-  componentWillMount() {
-    const { onGetListImage } = this.props;
-    onGetListImage();
   }
 
   componentWillReceiveProps(props){
@@ -41,12 +35,6 @@ class CartPage extends Component {
     console.log("checked")
     const {history} = this.props;
     history.push('/carts/checkout')
-  }
-
-  setImage = (image) => {
-    const {listImages} = this.props;
-    const img = listImages.find(obj => obj._id === image);
-    return get(img, "public_url");
   }
 
   render() {
@@ -86,11 +74,11 @@ class CartPage extends Component {
                           <th className="product-subtotal">Total</th>
                         </tr>
                       </thead>
-                      {listImages && <tbody>
+                      <tbody>
                         {cart.map((item, index) =>{
                           return (
                             <CartItem key={index} cart={item} onDeleteProductInCart={onDeleteProductInCart}
-                            onUpdateProductInCart={onUpdateProductInCart} setImage={this.setImage} setTotal={this.setTotal}/>
+                            onUpdateProductInCart={onUpdateProductInCart}  setTotal={this.setTotal}/>
                           )
                         })}
                         <tr>
@@ -106,7 +94,7 @@ class CartPage extends Component {
                           </td>
                           
                         </tr>
-                      </tbody>}
+                      </tbody>
                     </table>
                   </form>
 
@@ -186,7 +174,6 @@ class CartPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     cart: state.cart,
-    listImages: state.cloudinary.list,
   }
 }
 
@@ -197,9 +184,6 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onUpdateProductInCart: (product, quantity) => {
       dispatch(ProductsActions.onUpdateProductInCart(product, quantity))
-    },
-    onGetListImage: () => {
-      dispatch(ImagesActions.onGetList())
     },
   }
 }

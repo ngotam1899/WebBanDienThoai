@@ -10,6 +10,10 @@ export const UsersActionTypes = {
   GET_USER_IMAGE: "GET_USER_IMAGE",
   GET_USER_IMAGE_SUCCESS: "GET_USER_IMAGE_SUCCESS",
   GET_USER_IMAGE_ERROR: "GET_USER_IMAGE_ERROR",
+
+  UPDATE: "UPDATE",
+  UPDATE_SUCCESS: "UPDATE_SUCCESS",
+  UPDATE_ERROR: "UPDATE_ERROR",
 };
 
 Object.keys(UsersActionTypes).forEach((key) => {
@@ -61,6 +65,21 @@ const onGetUserImageError = (error) => ({
   payload: error
 });
 
+const onUpdate = ({id, params }) => ({
+  type: UsersActionTypes.UPDATE,
+  payload: { id, params },
+});
+
+const onUpdateSuccess = (detail) => ({
+  type: UsersActionTypes.UPDATE_SUCCESS,
+  payload: detail,
+});
+
+const onUpdateError = (error) => ({
+  type: UsersActionTypes.UPDATE_ERROR,
+  payload: error,
+});
+
 const UsersAction = {
   onUpdateUserImage,
   onUpdateUserImageSuccess,
@@ -73,6 +92,10 @@ const UsersAction = {
   onGetUserImage,
   onGetUserImageSuccess,
   onGetUserImageError,
+
+  onUpdate,
+  onUpdateSuccess,
+  onUpdateError,
 };
 
 export default UsersAction;

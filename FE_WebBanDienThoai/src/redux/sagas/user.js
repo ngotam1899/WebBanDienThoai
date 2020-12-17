@@ -1,6 +1,7 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import UsersActions, { UsersActionTypes } from "../actions/user";
+import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
 import { addUserImage, getUserImage } from "../apis/cloudinary";
 import { updateUserInfo, getUser } from "../apis/user";
 
@@ -64,6 +65,19 @@ function* handleUpdateUserImage({payload}) {
   }
 }
 
+function* handleUpdate( {payload} ) {
+  try {
+    const result = yield call(updateUserInfo, payload.params, payload.id);
+    const data = get(result, "data", {});
+    const detailResult = yield call(getUser, payload.id);
+    yield put(UsersActions.onUpdateSuccess(detailResult.data.user));
+    yield put(AuthorizationActions.onGetProfile());
+  } catch (error) {
+    console.log(error);
+    yield put(UsersActions.onUpdateError(error));
+  }
+}
+
 /**
  *
  * delete
@@ -103,6 +117,9 @@ export function* watchCreate() {
 export function* watchUpdateUserImage() {
   yield takeEvery(UsersActionTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
 }
+export function* watchUpdate() {
+  yield takeEvery(UsersActionTypes.UPDATE, handleUpdate);
+}
 /* export function* watchDelete() {
   yield takeEvery(ProductsActionTypes.DELETE, handleDelete);
 } */
@@ -111,6 +128,7 @@ export default function* rootSaga() {
   yield all([
     /* fork(watchGetList),*/
     /*fork(watchCreate), */
+    fork(watchUpdate),
     fork(watchUpdateUserImage),
     /* fork(watchDelete), */
   ]);
