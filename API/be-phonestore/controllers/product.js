@@ -5,6 +5,7 @@ const cloudinary = require('cloudinary')
 const Mobile = require('../models/Mobile')
 const createError = require('http-errors')
 const Product = require('../models/Product')
+const { query } = require('express')
     /* const slp = require('sleep') */
 
 const uploadImageMobile = async(req, res, next) => {
@@ -92,7 +93,6 @@ const getAllProduct = async(req, res, next) => {
         if (req.query.keyword != undefined && req.query.keyword != "") {
             let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
             condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
-            console.log(condition)
         }
         if (req.query.brand != undefined && req.query.brand != "") {
             if (Validator.isValidObjId(req.query.brand)) {
@@ -117,6 +117,22 @@ const getAllProduct = async(req, res, next) => {
                 condition["detail_info.mobile"] = listID;
             }
         }
+        //  condition["$options"] = { limit: 1 }
+        let limit = 5;
+        let page = 0;
+
+        if (req.query.limit != undefined && req.query.limit != "") {
+            const number_limit = parseInt(req.query.limit);
+            if (number_limit && number_limit > 0) {
+                limit = number_limit;
+            }
+        }
+        if (req.query.page != undefined && req.query.page != "") {
+            const number_page = parseInt(req.query.page);
+            if (number_page && number_page > 0) {
+                page = number_page;
+            }
+        }
         let products;
         if (req.query.color != undefined && req.query.color != "") {
             products = await Product.find(condition)
@@ -126,9 +142,10 @@ const getAllProduct = async(req, res, next) => {
         } else {
             products = await Product.find(condition)
                 .populate({ path: 'bigimage', select: 'public_url' })
-                .populate({ path: 'image', select: 'public_url' });
+                .populate({ path: 'image', select: 'public_url' })
+                .limit(limit).skip(limit * page);
         }
-        return res.status(200).json({ success: true, code: 200, message: '', products: products })
+        return res.status(200).json({ success: true, code: 200, message: '', page: page, limit: limit, products: products })
     } catch (error) {
         return next(error)
     }
