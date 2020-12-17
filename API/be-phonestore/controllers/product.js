@@ -87,12 +87,12 @@ const uploadImageMobile = async(req, res, next) => {
 
 const getAllProduct = async(req, res, next) => {
     try {
+        //let regex = /^[a-zA-Z0-9& ]*$/;
         let condition = {}
         if (req.query.keyword != undefined && req.query.keyword != "") {
-            regex = /[]/
-            let keyword = req.query.keyword;
-            keyword = keyword.replace(regex, "")
-            condition.name = { $regex: '.*' + keyword + '.*' };
+            let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+            condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
+            console.log(condition)
         }
         if (req.query.brand != undefined && req.query.brand != "") {
             if (Validator.isValidObjId(req.query.brand)) {
@@ -117,7 +117,6 @@ const getAllProduct = async(req, res, next) => {
                 condition["detail_info.mobile"] = listID;
             }
         }
-        console.log(condition)
         let products;
         if (req.query.color != undefined && req.query.color != "") {
             products = await Product.find(condition)
