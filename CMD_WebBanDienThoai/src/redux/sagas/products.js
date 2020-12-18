@@ -1,7 +1,9 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
+import ImagesActions, { ImagesActionTypes } from "../actions/cloudinary";
 import { getAllProducts, getDetailProduct, addProduct,updateProduct, deleteProduct } from "../apis/products";
+import { addProductThumbnailImage} from "../apis/cloudinary";
 import UIActions from "../actions/ui";
 
 function* handleGetList({ payload }) {
@@ -48,13 +50,31 @@ function* handleCreate( {payload} ) {
  */
 function* handleUpdate( {payload} ) {
   try {
-    const result = yield call(updateProduct, payload.params, payload.id);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    const detailResult = yield call(getDetailProduct, payload.id);
-    console.log("detailProduct",payload.id);
-    yield put(ProductsActions.onUpdateSuccess(get(detailResult, "data.product")));
-    yield put(ProductsActions.onGetList());
+    // 1. Update product thumbnail image
+    if(payload.params.bigimage){
+      const imgResult = yield call(addProductThumbnailImage, payload.params.bigimage);
+      console.log("imgResult.image._id", imgResult.data.images[0]._id)
+      const iResult = yield call(updateProduct,
+      {
+        "bigimage":imgResult.data.images[0]._id,
+        "detail_info": {
+          "mobile": {}
+        }
+      }
+      , payload.id);
+      console.log("iResult", iResult)
+      yield put(ImagesActions.onUpdateThumbnailImageSuccess(get(iResult, "data")));
+    }
+    // 2. Update order info
+    else {
+      const result = yield call(updateProduct, payload.params, payload.id);
+      const data = get(result, "data", {});
+      if (data.code !== 200) throw data;
+      const detailResult = yield call(getDetailProduct, payload.id);
+      console.log("detailProduct",payload.id);
+      yield put(ProductsActions.onUpdateSuccess(get(detailResult, "data.product")));
+      yield put(ProductsActions.onGetList());
+    }
   } catch (error) {
     console.log(error);
     yield put(ProductsActions.onUpdateError(error));

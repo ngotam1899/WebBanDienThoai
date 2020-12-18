@@ -12,7 +12,6 @@ import {
 } from '@coreui/react'
 import ProductDetail from './ProductDetail'
 import ProductsActions from "../../redux/actions/products";
-import ImagesActions from "../../redux/actions/cloudinary";
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
 
@@ -26,9 +25,8 @@ class ProductList extends Component {
     }
   }
   componentDidMount() {
-    const { onGetList, onClearState,onGetListImage, onGetListBrand, onGetListCategory} = this.props;
+    const { onGetList, onClearState, onGetListBrand, onGetListCategory} = this.props;
     onClearState();
-    onGetListImage();
     onGetListBrand();
     onGetListCategory();
     onGetList();
@@ -72,12 +70,6 @@ class ProductList extends Component {
     onDelete(_id);
   }
 
-  setImage = (image) => {
-    const {listImages} = this.props;
-    const img = listImages.find(obj => obj._id === image);
-    return get(img, "public_url");
-  }
-
   setBrand = (brand) =>{
     const {listBrands} = this.props;
     const brandName = listBrands.find(obj => obj._id === brand);
@@ -86,7 +78,7 @@ class ProductList extends Component {
 
   render () {
     const {large} = this.state;
-    const {listProducts, productDetail, listCategories, listBrands, listImages, onClearDetail} = this.props;
+    const {listProducts, productDetail, listCategories, listBrands, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -102,7 +94,7 @@ class ProductList extends Component {
                 </CButton>
               </CCardHeader>
 
-              {listImages && listBrands && listCategories && <CCardBody>
+              {listBrands && listCategories && <CCardBody>
                 <CDataTable
                   items={listProducts}
                   fields={fields}
@@ -115,7 +107,7 @@ class ProductList extends Component {
                     'image':
                     (item) => (
                       <td>
-                        <img src={ this.setImage(item.bigimage) } style={{width:'10vw'}} alt={item.name} />
+                        <img src={ item.bigimage ? item.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg" } style={{width:'10vw'}} alt={item.name} />
                       </td>
                     ),
                     'brand': (item) => (
@@ -142,11 +134,11 @@ class ProductList extends Component {
                   }}
                 />
                 {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
+                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
 
                 {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
+                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
               </CCardBody>}
             </CCard>
@@ -161,7 +153,6 @@ const mapStateToProps = (state) => {
   return {
     listProducts: state.products.list,
     productDetail: state.products.detail,
-    listImages: state.cloudinary.list,
     listBrands: state.brands.list,
     listCategories: state.categories.list,
   }
@@ -174,9 +165,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     onGetDetail: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
-    },
-    onGetListImage: () => {
-      dispatch(ImagesActions.onGetList())
     },
     onGetListBrand: () => {
       dispatch(BrandActions.onGetList())
