@@ -22,13 +22,22 @@ const UserSchema = new Schema({
     },
     email: {
         type: String,
-        required: true,
         unique: true,
         lowercase: true
     },
     password: {
+        type: String
+    },
+    auth_google_id: {
+        type: String
+    },
+    auth_facebook_id: {
+        type: String
+    },
+    auth_type: {
         type: String,
-        required: true
+        enum: ['local', 'google', 'facebook'],
+        default: 'local'
     },
     confirmed: {
         type: Boolean,

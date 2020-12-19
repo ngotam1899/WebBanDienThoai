@@ -24,6 +24,8 @@
         "nodemon": "^2.0.6",
         "os": "^0.1.1",
         "passport": "^0.4.1",
+        "passport-facebook-token": "^4.0.0",
+        "passport-google-plus-token": "^2.1.0",
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0"
     },

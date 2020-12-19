@@ -14,7 +14,6 @@ const hashString = async(textString) => {
     const salt = await bcrypts.genSalt(15);
     return await bcrypts.hash(textString, salt)
 }
-
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     service: 'gmail',
@@ -28,6 +27,29 @@ const transporter = nodemailer.createTransport({
     }
 })
 
+const authGoogle = async(req, res, next) => {
+    const user = req.user;
+    const token = 'Bearer ' + service.encodedToken(req.user._id, '6h');
+    user.token = token;
+    user.save();
+    await user.populate('image').execPopulate();
+
+    res.setHeader('authorization', token)
+    return res.status(200).json({ success: true, code: 200, message: '', user: user });
+}
+
+const authFacebook = async(req, res, next) => {
+    try {
+        const user = req.user;
+        const token = 'Bearer ' + service.encodedToken(user._id, '6h');
+        res.setHeader('authorization', token)
+        await user.populate('image').execPopulate();
+        return res.status(200).json({ success: true, code: 200, message: '', user: user });
+    } catch (error) {
+        next(error)
+    }
+
+}
 const logOut = async(req, res, next) => {
     headers = req.headers
     headers.authorization = headers.authorization.replace('Bear ', '');
@@ -204,6 +226,8 @@ const deleteUser = async(req, res, next) => {
 }
 
 module.exports = {
+    authGoogle,
+    authFacebook,
     getAllUser,
     getUser,
     newUser,
