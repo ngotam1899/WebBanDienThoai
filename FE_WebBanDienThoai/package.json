@@ -19,6 +19,7 @@
     "query-string": "^6.13.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-image-gallery": "^1.0.8",
     "react-loadable": "^5.5.0",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
@@ -28,7 +29,7 @@
     "reselect": "^4.0.0"
   },
   "scripts": {
-    "dev": "SET PORT=5000 && react-scripts start",
+    "dev": "set PORT=5000 &&react-scripts start",
     "start": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { ListCountry } from '../../constants/common';
-import Search from '../../containers/Search';
 import {connect} from 'react-redux';
+import { assets } from '../../constants/assetsImage';
+// @Actions
 import OrdersActions from '../../redux/actions/order'
+// @Components
+import Search from '../../containers/Search';
+import Paypal from './Paypal';
 
 import './styles.css'
 
@@ -18,7 +21,8 @@ class CheckoutPage extends Component {
       shipping_phone: '',
       order_comments: '',
       total: 0,
-      totalPrice: 0
+      totalPrice: 0,
+      payment_method: 0,
     }
   }
   onChange = (event) =>{
@@ -86,7 +90,7 @@ class CheckoutPage extends Component {
   }
 
   render() {
-    const {shipToDifferentAddress, shipping_phone, shipping_address, shipping_city, shipping_first_name, shipping_last_name, order_comments} = this.state;
+    const {shipToDifferentAddress, shipping_phone, shipping_address, shipping_city, shipping_first_name, shipping_last_name, order_comments, payment_method, totalPrice, total} = this.state;
     const {authInfo} = this.props;
     return (
       <>
@@ -306,32 +310,29 @@ class CheckoutPage extends Component {
                           <tbody>
                             <tr className="cart_item">
                               <td className="product-name">
-                                Ship Your Idea <strong className="product-quantity">× 1</strong> </td>
+                              Ship Your Idea <strong className="product-quantity">× {total}</strong> </td>
                               <td className="product-total">
-                                <span className="amount">£15.00</span> </td>
+                              <span className="amount">$ {totalPrice}</span> </td>
                             </tr>
                           </tbody>
                           <tfoot>
 
                             <tr className="cart-subtotal">
                               <th>Cart Subtotal</th>
-                              <td><span className="amount">£15.00</span>
+                              <td><span className="amount">$ {totalPrice}</span>
                               </td>
                             </tr>
 
                             <tr className="shipping">
                               <th>Shipping and Handling</th>
-                              <td>
-
-                                Free Shipping
-                                                    <input type="hidden" className="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]" />
+                              <td>Free Shipping<input type="hidden" className="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]" />
                               </td>
                             </tr>
 
 
                             <tr className="order-total">
                               <th>Order Total</th>
-                              <td><strong><span className="amount">£15.00</span></strong> </td>
+                              <td><strong><span className="amount">$ {totalPrice}</span></strong> </td>
                             </tr>
 
                           </tfoot>
@@ -341,12 +342,17 @@ class CheckoutPage extends Component {
                         <div id="payment">
                           <ul className="payment_methods methods">
                             <li className="payment_method_paypal">
-                              <input type="radio" data-order_button_text="Proceed to PayPal" value="paypal" name="payment_method" className="input-radio" id="payment_method_paypal" />
-                              <label for="payment_method_paypal">PayPal <img alt="PayPal Acceptance Mark" src="https://www.paypalobjects.com/webstatic/mktg/Logo/AM_mc_vs_ms_ae_UK.png" />
+                                <input type="radio" value={0} name="payment_method" className="input-radio" id="payment_method_cod" onChange={this.onChange}/>
+                                <label for="payment_method_cod">COD (Thanh toán trực tiếp tại nhà) <img alt="Thanh toán tại nhà" src={ assets('cod.svg')}  />
+                                </label>
+                              </li>
+                            <li className="payment_method_paypal">
+                              <input type="radio" value={1} name="payment_method" className="input-radio" id="payment_method_paypal" onChange={this.onChange}/>
+                              <label for="payment_method_paypal">PayPal <img alt="Thanh toán bằng Paypal" src="https://www.paypalobjects.com/webstatic/mktg/Logo/AM_mc_vs_ms_ae_UK.png" />
                               </label>
                             </li>
                           </ul>
-
+                          { payment_method == 1 && <Paypal totalPrice={totalPrice}/> }
                           <div className="form-row place-order">
                             <input type="button" data-value="PLACE ORDER" value="Place order" id="place_order" name="woocommerce_checkout_place_order" className="button alt" onClick={() => this.placeOrder()}/>
                           </div>

@@ -104,6 +104,12 @@ export default function(state = init, action) {
         ...state,
         processing: false,
       };
+    case ImagesActionTypes.UPDATE_THUMBNAIL_IMAGE:
+      return {...state};
+    case ImagesActionTypes.UPDATE_THUMBNAIL_IMAGE_SUCCESS:
+      return {...state};
+    case ImagesActionTypes.UPDATE_THUMBNAIL_IMAGE_ERROR:
+      return {...state};
     default:
       return state;
   }
