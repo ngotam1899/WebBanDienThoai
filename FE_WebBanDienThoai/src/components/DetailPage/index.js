@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { get } from "lodash";
+// @Actions
 import ProductsActions from '../../redux/actions/products'
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
-import Search from '../../containers/Search';
+// @Components
+import ImageGalleries from './ImageGalleries';
 import './styles.css';
 
 class DetailPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      quantity: 1
+    }
+  }
+
   componentDidMount(){
     const {match, onGetDetailProduct, onGetListBrand, onGetListCategory} = this.props;
     onGetListBrand();
@@ -27,8 +36,22 @@ class DetailPage extends Component {
     return get(categoryName, "name");
   }
 
+  onUpdateQuantity = (product, quantity) => {
+    var {onUpdateProductInCart} = this.props;
+    this.setState({quantity})
+    if(quantity > 0){
+      onUpdateProductInCart(product, quantity);
+    }
+  }
+
+  onAddToCart = (product, quantity) =>{
+		var {onAddProductToCart} = this.props;
+		onAddProductToCart(product, quantity);
+	}
+
   render() {
     const {product} = this.props;
+    const {quantity} = this.state;
     return (<>
       <div className="product-big-title-area">
         <div className="container">
@@ -45,8 +68,7 @@ class DetailPage extends Component {
         <div className="zigzag-bottom"></div>
         <div className="container">
           <div className="row">
-            <Search />
-            <div className="col-md-8">
+            <div className="col-md-12">
               <div className="product-content-right">
                 <div className="product-breadcroumb">
                   <a href="/#/">Home</a>
@@ -55,26 +77,13 @@ class DetailPage extends Component {
                 </div>
 
                 {product && <div className="row">
-                  <div className="col-sm-6">
-                    <div className="product-images">
-                      <div className="product-main-img">
-                        <img src={product.bigimage ? product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"} alt="" />
-                      </div>
-                      <div className="row">
-                        {product.image && product.image.map((img, index) =>{
-                        return (
-                          <div className="col-4" key={index}>
-                            <div className="product-gallery">
-                              <img key={index} src={img.public_url ? img.public_url : "http://www.pha.gov.pk/img/img-02.jpg"} alt="" />
-                            </div>
-                          </div>
-                        )})}
-                      </div>
-                      
-                    </div>
+                  
+
+                  <div className="col-sm-5">
+                    {product.image && <ImageGalleries imageDetail={product.image}/> }
                   </div>
 
-                  <div className="col-sm-6">
+                  <div className="col-sm-7">
                     <div className="product-inner">
                       <h2 className="product-name">{product.name}</h2>
                       <div className="product-inner-price">
@@ -83,9 +92,14 @@ class DetailPage extends Component {
 
                       <form action="" className="cart">
                         <div className="quantity">
-                          <input type="number" size="4" className="input-text qty text" title="Qty" value="1" name="quantity" min="1" step="1" />
+                          <div className="quantity buttons_added">
+                            <input type="button" className="minus" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
+                            <input type="number" size="4" className="input-text qty text" title="Qty" value={quantity} min="1"
+                              step="1" />
+                            <input type="button" className="plus" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
+                          </div>
                         </div>
-                        <button className="add_to_cart_button" type="submit">Add to cart</button>
+                        <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>Add to cart</button>
                       </form>
 
                       <div className="product-inner-category">
@@ -229,6 +243,12 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onGetListCategory: () => {
       dispatch(CategoryActions.onGetList())
+    },
+    onUpdateProductInCart: (product, quantity) => {
+      dispatch(ProductsActions.onUpdateProductInCart(product, quantity))
+    },
+    onAddProductToCart: (product, quantity) => {
+      dispatch(ProductsActions.onAddProductToCart(product, quantity));
     },
   }
 }

@@ -50,6 +50,7 @@ function* handleCreate( {payload} ) {
  */
 function* handleUpdate( {payload} ) {
   try {
+    console.log("type", payload.params)
     // 1. Update product thumbnail image
     if(payload.params.bigimage){
       const imgResult = yield call(addProductThumbnailImage, payload.params.bigimage);

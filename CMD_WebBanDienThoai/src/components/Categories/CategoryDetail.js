@@ -5,7 +5,6 @@ class ProductDetail extends Component {
   constructor(props){
     super(props);
     const {product} = props;
-    console.log("product",product);
     this.state = {
       id: product ? product.id : '',
       name: product ? product.name : '',

@@ -21,6 +21,10 @@ class ProductDetail extends Component {
       previewSource: '',
       selectedFile: '',
       fileInputState: '',
+      // @Product list images
+      previewList: [],
+      selectedList: [],
+      fileInputList: [],
       // @Product Details
       mobileDes: product ? product.detail_info.mobile : {
         display: "",
@@ -72,6 +76,20 @@ class ProductDetail extends Component {
       fileInputState: e.target.value
     })
   }
+
+  handleListInputChange = (e) =>{
+    const file = e.target.files[0];
+    const {selectedList, fileInputList} = this.state;
+    // 1. Hiển thị ảnh vừa thêm
+    this.previewList(file);
+    selectedList.push(file);
+    fileInputList.push(e.target.value)
+    this.setState({
+      selectedList,
+      fileInputList
+    })
+  }
+
   // Hàm xử lý file - set hiển thị ảnh mới thêm vào state previewSource
   previewFile = (file) => {
     const reader = new FileReader();
@@ -83,24 +101,16 @@ class ProductDetail extends Component {
     };
   };
 
-  // Khi nhấn nút submit ảnh
-  handleSubmitFile = (e) => {
-    e.preventDefault();
-    const {selectedFile} = this.state;
-    const {onUpdateUserImage, authInfo} = this.props;
-    // phải có đoạn check có tồn tại selectedFile hay không
-    if (!selectedFile) return;
+  // Hàm xử lý file - set hiển thị ảnh mới thêm vào state previewSource
+  previewList = (file) => {
     const reader = new FileReader();
-    reader.readAsDataURL(selectedFile);
-    // mã hóa ảnh thành base64EncodedImage
+    const {previewList} = this.state;
+    reader.readAsDataURL(file);
     reader.onloadend = () => {
-      const formData = new FormData();
-      formData.append('image',selectedFile);
-      onUpdateUserImage(authInfo._id, formData);
-    };
-    reader.onerror = () => {
-        console.error('AHHHHHHHH!!');
-        //setErrMsg('something went wrong!');
+      previewList.push(reader.result)
+      this.setState({
+        previewList,
+      });
     };
   };
 
@@ -114,12 +124,14 @@ class ProductDetail extends Component {
         ...prevState.mobile,    // keep all other key-value pairs
         [name]: value       // update the value of specific key
       }
-  }))
+    }))
   }
+
 
   onSubmit = (data, _id) => {
     const { onSubmit, product } = this.props;
-    const { selectedFile, id, name, price, amount, warrently, category, brand, bigimage, image, mobileDes } = this.state;
+    const { selectedFile, selectedList, id, name, price, amount, warrently, category, brand, bigimage, image, mobileDes } = this.state;
+    console.log("listimage", image)
     // @Xử lý ảnh trước khi lưu
     // phải có đoạn check có tồn tại selectedFile hay không
     if (!selectedFile) return;
@@ -152,7 +164,7 @@ class ProductDetail extends Component {
   }
 
   render() {
-    const { name, price, amount, warrently, category, brand, bigimage, image, mobileDes, previewSource, fileInputState } = this.state;
+    const { name, price, amount, warrently, category, brand, bigimage, image, mobileDes, previewSource, fileInputState, previewList, fileInputList } = this.state;
     const { large, onClose,  listCategories, listBrands, product } = this.props;
     return (
       <CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -245,13 +257,28 @@ class ProductDetail extends Component {
                         </div>
                       )
                     })}
+                    {previewList[0] && <>
+                      {previewList.map((item, index)=>{
+                        return (
+                          <div className="col-3" key={index}>
+                            <div className="img-thumbnail2">
+                              <img src={item} alt="" className="w-100"/>
+                              <div className="btn btn-lg btn-primary img-des">
+                                Change Photo
+                                <input type="file" name="image" id="fileInput"
+                                value="" />
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </>}
                     <div className="col-3">
                       <div className=" img-thumbnail2">
                         <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" className="w-100" style={{ border: '1px solid' }}></img>
                         <div className="btn btn-lg btn-primary img-des">
                           Add Photo
-                          <input type="file" name="image" id="fileInput"
-                          value=""/>
+                          <input type="file" onChange={this.handleListInputChange} className="w-100 h-100"/>
                         </div>
                       </div>
                     </div>
