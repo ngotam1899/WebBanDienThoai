@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import ImagesActions, { ImagesActionTypes } from "../actions/cloudinary";
+import ImagesActions from "../actions/cloudinary";
 import { getAllProducts, getDetailProduct, addProduct,updateProduct, deleteProduct } from "../apis/products";
 import { addProductThumbnailImage} from "../apis/cloudinary";
 import UIActions from "../actions/ui";
@@ -48,37 +48,55 @@ function* handleCreate( {payload} ) {
  *
  * update
  */
-function* handleUpdate( {payload} ) {
+function* handleUpdateImage( {payload} ) {
+  const {name, price, amount, pathseo, warrently, category, detail_info} = payload.params;
+  console.log("payload",payload)
   try {
-    console.log("type", payload.params)
-    // 1. Update product thumbnail image
-    if(payload.params.bigimage){
-      const imgResult = yield call(addProductThumbnailImage, payload.params.bigimage);
-      console.log("imgResult.image._id", imgResult.data.images[0]._id)
-      const iResult = yield call(updateProduct,
-      {
-        "bigimage":imgResult.data.images[0]._id,
-        "detail_info": {
-          "mobile": {}
-        }
-      }
-      , payload.id);
-      console.log("iResult", iResult)
-      yield put(ImagesActions.onUpdateThumbnailImageSuccess(get(iResult, "data")));
+    // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
+    if(payload.params.bigimage._id === undefined && payload.formData){
+      var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
+      var image = yield call(addProductThumbnailImage, payload.formData);
+      var imageArray = image.data.images.map((item)=>{
+        return item._id
+      })
+      var result = yield call(updateProduct,
+      { name, price, amount, pathseo, warrently, category, detail_info,
+        "bigimage":bigimage.data.images[0]._id,
+        "image": payload.params.image.concat(imageArray)
+      }, payload.id);
+      yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
-    // 2. Update order info
-    else {
-      const result = yield call(updateProduct, payload.params, payload.id);
-      const data = get(result, "data", {});
-      if (data.code !== 200) throw data;
-      const detailResult = yield call(getDetailProduct, payload.id);
-      console.log("detailProduct",payload.id);
-      yield put(ProductsActions.onUpdateSuccess(get(detailResult, "data.product")));
-      yield put(ProductsActions.onGetList());
+    // 2. TH2: Nếu bigimge mới
+    else if(payload.params.bigimage._id === undefined){
+      var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
+      var result = yield call(updateProduct,
+        { name, price, amount, pathseo, warrently, category, detail_info,
+          "bigimage":bigimage.data.images[0]._id
+        }, payload.id);
+      yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
+    }
+    // 3. TH3: Nếu image mới
+    else if(payload.formData){
+      var image = yield call(addProductThumbnailImage, payload.formData);
+      var imageArray = image.data.images.map((item)=>{
+        return item._id
+      })
+      var result = yield call(updateProduct,
+      { name, price, amount, pathseo, warrently, category, detail_info,
+        "image": payload.params.image.concat(imageArray)
+      }, payload.id);
+      yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
+    }
+    else{
+      var result = yield call(updateProduct,
+      { name, price, amount, pathseo, warrently, category, detail_info,
+        "image": payload.params.image
+      }, payload.id);
+      yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
   } catch (error) {
     console.log(error);
-    yield put(ProductsActions.onUpdateError(error));
+    yield put(ProductsActions.onUpdateImageError(error));
   }
 }
 
@@ -114,8 +132,8 @@ export function* watchGetList() {
 export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
 }
-export function* watchUpdate() {
-  yield takeEvery(ProductsActionTypes.UPDATE, handleUpdate);
+export function* watchUpdateImage() {
+  yield takeEvery(ProductsActionTypes.UPDATE_IMAGE, handleUpdateImage);
 }
 export function* watchDelete() {
   yield takeEvery(ProductsActionTypes.DELETE, handleDelete);
@@ -126,7 +144,7 @@ export default function* rootSaga() {
     fork(watchGetList),
     fork(watchGetDetail),
     fork(watchCreate),
-    fork(watchUpdate),
+    fork(watchUpdateImage),
     fork(watchDelete),
   ]);
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './product.css'
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+import { connect } from "react-redux";
+import ProductsActions from "../../redux/actions/products";
 
 class ProductDetail extends Component {
   constructor(props) {
@@ -10,12 +12,12 @@ class ProductDetail extends Component {
       // @Product Info
       id: product ? product._id : '',
       name: product ? product.name : '',
-      price: product ? product.price : null,
-      amount: product ? product.amount : null,
-      warrently: product ? product.warrently : null,
-      category: product ? product.category : null,
-      brand: product ? product.brand : null,
-      bigimage: product ? product.bigimage : null,
+      price: product ? product.price : '',
+      amount: product ? product.amount : '',
+      warrently: product ? product.warrently : '',
+      category: product ? product.category : '',
+      brand: product ? product.brand : '',
+      bigimage: product ? product.bigimage : '',
       image: product ? product.image : [],
       // @Product Image
       previewSource: '',
@@ -64,6 +66,17 @@ class ProductDetail extends Component {
     image.splice(deleteIndex, 1);
     this.setState({
       image,
+    })
+  }
+
+  deletePreview = (item) =>{
+    const {previewList} = this.state;
+    // Vị trí trong mảng có image cần xóa
+    var deleteIndex = previewList.indexOf(previewList.find( img => img === item ))
+    // Tạo mảng mới không có phần tử muốn xóa
+    previewList.splice(deleteIndex, 1);
+    this.setState({
+      previewList,
     })
   }
 
@@ -121,50 +134,95 @@ class ProductDetail extends Component {
     //1. Tạo 1 copy của state mobile cũ
     this.setState(prevState => ({
       mobileDes: {                   // object that we want to update
-        ...prevState.mobile,    // keep all other key-value pairs
+        ...prevState.mobileDes,    // keep all other key-value pairs
         [name]: value       // update the value of specific key
       }
     }))
   }
 
-
-  onSubmit = (data, _id) => {
-    const { onSubmit, product } = this.props;
-    const { selectedFile, selectedList, id, name, price, amount, warrently, category, brand, bigimage, image, mobileDes } = this.state;
-    console.log("listimage", image)
+  onSubmitImage = async() => {
+    const { selectedFile, selectedList, id} = this.state;
+    // @Condition cloudinary là FormData()
     // @Xử lý ảnh trước khi lưu
-    // phải có đoạn check có tồn tại selectedFile hay không
-    if (!selectedFile) return;
-    const reader = new FileReader();
-    reader.readAsDataURL(selectedFile);
-    // mã hóa ảnh thành FormData
-    reader.onloadend = () => {
-      const formData = new FormData();
-      formData.append('image',selectedFile);
-      // @Xử lý các thông tin khác
-      _id = id;
-      if (_id) {
-        data = { name, price, amount, warrently, category, brand, bigimage: formData ? formData : bigimage, image, detail_info:
-          { mobile: {
-              _id: product.detail_info.mobile._id,
-              ...mobileDes,
-            }
-          } }
-        onSubmit(data, _id);
+    // Nếu có import thumbnail mới thì
+    if(selectedFile && selectedList.length !== 0)
+    {
+      var formData1 = new FormData();
+      formData1.append('image',selectedFile);
+      await this.setState({
+        bigimage: formData1
+      })
+      var formData2 = new FormData();
+      for (var i = 0; i < selectedList.length; i++){
+        formData2.append('image',selectedList[i]);
       }
-      else {
-        data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info: mobileDes }
-        onSubmit(data);
+      this.onCallback(id, formData2);
+    }
+    else if(selectedFile){
+      // 1. Lưu cloudinary
+      // eslint-disable-next-line
+      var reader = new FileReader();
+      reader.readAsDataURL(selectedFile);
+      // 2. Lưu state dạng FormData
+      reader.onloadend = () => {
+        // eslint-disable-next-line
+        var formData1 = new FormData();
+        formData1.append('image',selectedFile);
+        this.setState({
+          bigimage: formData1
+        })
+        this.onCallback(id);
+      };
+      reader.onerror = () => {
+        console.error('Lỗi không thêm mới được Thumbnail product');
+      };
+    }
+    else if(selectedList.length !== 0){
+      // 1. Lưu cloudinary
+      // eslint-disable-next-line
+      var formData2 = new FormData();
+      for (var i = 0; i < selectedList.length; i++){
+        formData2.append('image',selectedList[i]);
       }
-    };
-    reader.onerror = () => {
-      console.error('AHHHHHHHH!!');
-    };
+      this.onCallback(id, formData2);
+    }
+    else {
+      this.onCallback(id, null);
+    }
+    // @Xử lý các thông tin khác
+    // 3. Update data
 
   }
 
+  onCallback = (id, formData) => {
+    console.log(this.state.mobileDes);
+    const { onCreate, onUpdateImage, product } = this.props;
+    const { name, price, amount, warrently, category, brand, bigimage, image, mobileDes } = this.state;
+    if (id) {
+      // eslint-disable-next-line
+      var data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info:
+        { mobile: {
+            _id: product.detail_info.mobile._id,
+            ...mobileDes,
+          }
+        }
+      }
+      onUpdateImage(id, data, formData);
+    }
+    else {
+      // 4. Create data
+      // eslint-disable-next-line
+      var data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info:
+        { mobile: { ...mobileDes } }
+      }
+      onCreate(data, formData);
+    }
+  }
+
+
+
   render() {
-    const { name, price, amount, warrently, category, brand, bigimage, image, mobileDes, previewSource, fileInputState, previewList, fileInputList } = this.state;
+    const { name, price, amount, warrently, category, brand, bigimage, image, mobileDes, previewSource, fileInputState, previewList } = this.state;
     const { large, onClose,  listCategories, listBrands, product } = this.props;
     return (
       <CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -264,9 +322,8 @@ class ProductDetail extends Component {
                             <div className="img-thumbnail2">
                               <img src={item} alt="" className="w-100"/>
                               <div className="btn btn-lg btn-primary img-des">
-                                Change Photo
-                                <input type="file" name="image" id="fileInput"
-                                value="" />
+                                Delete Photo
+                                <input type="button" name="image" className="w-100 h-100" onClick={() => this.deletePreview(item)}/>
                               </div>
                             </div>
                           </div>
@@ -287,9 +344,9 @@ class ProductDetail extends Component {
               </form>
             </div>
             <div className="col-12 col-lg-6">
-              <div class="card text-white mb-3" >
-                <div class="card-header bg-primary">Chi tiết sản phẩm</div>
-                <div class="card-body text-dark">
+              <div className="card text-white mb-3" >
+                <div className="card-header bg-primary">Chi tiết sản phẩm</div>
+                <div className="card-body text-dark">
                 {mobileDes &&
                 <> <div className="form-group">
                     <label>Display:</label>
@@ -365,8 +422,8 @@ class ProductDetail extends Component {
 					</div>
 				</CModalBody>
       <CModalFooter>
-        <CButton color="primary" onClick={() => this.onSubmit(!large)}>
-          Save
+        <CButton color="success" onClick={() => this.onSubmitImage(!large)}>
+          Lưu ảnh
 					</CButton>{' '}
         <CButton color="secondary" onClick={() => onClose(!large)}>
           Cancel
@@ -376,5 +433,24 @@ class ProductDetail extends Component {
 		);
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    listProducts: state.products.list,
+    productDetail: state.products.detail,
+    listBrands: state.brands.list,
+    listCategories: state.categories.list,
+  }
+}
 
-export default ProductDetail;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreate: (data, formData) =>{
+      dispatch(ProductsActions.onCreate(data, formData))
+    },
+    onUpdateImage: (id, params, formData) =>{
+      dispatch(ProductsActions.onUpdateImage({id, params, formData}))
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);

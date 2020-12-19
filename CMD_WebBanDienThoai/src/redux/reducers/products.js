@@ -81,7 +81,8 @@ export default function(state = init, action) {
       };
 
     case ProductsActionTypes.CREATE:
-    case ProductsActionTypes.UPDATE:
+    case ProductsActionTypes.UPDATE_IMAGE:
+    case ProductsActionTypes.UPDATE_INFO:
     case ProductsActionTypes.DELETE:
       return {
         ...state,
@@ -89,13 +90,15 @@ export default function(state = init, action) {
       };
 
     case ProductsActionTypes.CREATE_ERROR:
-    case ProductsActionTypes.UPDATE_ERROR:
+    case ProductsActionTypes.UPDATE_IMAGE_ERROR:
+    case ProductsActionTypes.UPDATE_INFO_ERROR:
     case ProductsActionTypes.DELETE_ERROR:
       return {
         ...state,
         processing: false,
       };
-    case ProductsActionTypes.UPDATE_SUCCESS:
+    case ProductsActionTypes.UPDATE_IMAGE_SUCCESS:
+    case ProductsActionTypes.UPDATE_INFO_SUCCESS:
       //return handleUpdate({state, action});
       return {
         ...state,

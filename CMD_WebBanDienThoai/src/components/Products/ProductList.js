@@ -55,16 +55,6 @@ class ProductList extends Component {
     onClearDetail();
   }
 
-  onSubmit = (data, _id) =>{
-    const { onCreate, onUpdate } = this.props;
-    if(!_id){
-      onCreate(data);
-    }
-    else {
-      onUpdate(_id, data);
-    }
-  }
-
   onDelete = (_id)=>{
     const {onDelete} = this.props;
     onDelete(_id);
@@ -134,12 +124,10 @@ class ProductList extends Component {
                   }}
                 />
                 {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
-                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
+                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}/>}
 
                 {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
-                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
+                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}/>}
               </CCardBody>}
             </CCard>
           </CCol>
@@ -177,12 +165,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     onClearDetail: () =>{
       dispatch(ProductsActions.onClearDetail())
-    },
-    onCreate: (data) =>{
-      dispatch(ProductsActions.onCreate(data))
-    },
-    onUpdate: (id, params) =>{
-      dispatch(ProductsActions.onUpdate({id, params}))
     },
     onDelete: (id) =>{
       dispatch(ProductsActions.onDelete({id}))

@@ -11,9 +11,13 @@ export const ProductsActionTypes = {
   CREATE_SUCCESS: "CREATE_SUCCESS",
   CREATE_ERROR: "CREATE_ERROR",
 
-  UPDATE: "UPDATE",
-  UPDATE_SUCCESS: "UPDATE_SUCCESS",
-  UPDATE_ERROR: "UPDATE_ERROR",
+  UPDATE_IMAGE: "UPDATE_IMAGE",
+  UPDATE_IMAGE_SUCCESS: "UPDATE_IMAGE_SUCCESS",
+  UPDATE_IMAGE_ERROR: "UPDATE_IMAGE_ERROR",
+
+  UPDATE_INFO: "UPDATE_INFO",
+  UPDATE_INFO_SUCCESS: "UPDATE_INFO_SUCCESS",
+  UPDATE_INFO_ERROR: "UPDATE_INFO_ERROR",
 
   DELETE: "DELETE",
   DELETE_SUCCESS: "DELETE_SUCCESS",
@@ -79,9 +83,9 @@ const onGetDetailError = (error) => ({
  *
  * create
  */
-const onCreate = (params) => ({
+const onCreate = (params, formData) => ({
   type: ProductsActionTypes.CREATE,
-  payload: params,
+  payload: params, formData
 });
 
 const onCreateSuccess = (detail) => ({
@@ -98,21 +102,35 @@ const onCreateError = (error) => ({
  *
  * update
  */
-const onUpdate = ({ id, params }) => ({
-  type: ProductsActionTypes.UPDATE,
-  payload: { id, params },
+const onUpdateImage = ({ id, params, formData }) => ({
+  type: ProductsActionTypes.UPDATE_IMAGE,
+  payload: { id, params, formData },
 });
 
-const onUpdateSuccess = (detail) => ({
-  type: ProductsActionTypes.UPDATE_SUCCESS,
+const onUpdateImageSuccess = (detail) => ({
+  type: ProductsActionTypes.UPDATE_IMAGE_SUCCESS,
   payload: detail,
 });
 
-const onUpdateError = (error) => ({
-  type: ProductsActionTypes.UPDATE_ERROR,
+const onUpdateImageError = (error) => ({
+  type: ProductsActionTypes.UPDATE_IMAGE_ERROR,
   payload: error,
 });
 
+const onUpdateInfo = ({ id, params }) => ({
+  type: ProductsActionTypes.UPDATE_INFO,
+  payload: { id, params },
+});
+
+const onUpdateInfoSuccess = (detail) => ({
+  type: ProductsActionTypes.UPDATE_INFO_SUCCESS,
+  payload: detail
+});
+
+const onUpdateInfoError = (error) => ({
+  type: ProductsActionTypes.UPDATE_INFO_ERROR,
+  payload: error,
+});
 /**
  *
  * delete
@@ -171,9 +189,13 @@ const ProductsActions = {
   onCreateSuccess,
   onCreateError,
 
-  onUpdate,
-  onUpdateSuccess,
-  onUpdateError,
+  onUpdateImage,
+  onUpdateImageSuccess,
+  onUpdateImageError,
+
+  onUpdateInfo,
+  onUpdateInfoSuccess,
+  onUpdateInfoError,
 
   onDelete,
   onDeleteSuccess,
