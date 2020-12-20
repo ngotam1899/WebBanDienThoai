@@ -43,6 +43,8 @@ const authFacebook = async(req, res, next) => {
         const user = req.user;
         const token = 'Bearer ' + service.encodedToken(user._id, '6h');
         res.setHeader('authorization', token)
+        user.token = token;
+        await user.save();
         await user.populate('image').execPopulate();
         return res.status(200).json({ success: true, code: 200, message: '', user: user });
     } catch (error) {
