@@ -3,8 +3,14 @@ import React, { Component } from 'react';
 import './loginStyles.css'
 import { assets } from '../../constants/assetsImage';
 import { connect } from "react-redux";
-//dispatch action
+// @Actions
 import AuthorizationActions from '../../redux/actions/auth'
+// @Components
+import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { GOOGLE_ID, FACEBOOK_ID } from '../../constants'
 
 class LoginPage extends Component {
 	constructor(props) {
@@ -65,6 +71,14 @@ class LoginPage extends Component {
 		});
 	}
 
+	responseGoogle = (response) => {
+    console.log("res",response.accessToken);
+  }
+
+  responseFacebook = (response) => {
+    console.log("res",response.accessToken);
+  }
+
 	render() {
 		const {email, password} = this.state;
 		return (
@@ -107,6 +121,28 @@ class LoginPage extends Component {
 									<input type="submit" className="btn" value="Register"/>
 									</form>
 								</div>
+								<div classNameName="col-12 col-sm-6">
+									<GoogleLogin
+									clientId={GOOGLE_ID}
+									buttonText="Login"
+									onSuccess={this.responseGoogle}
+									onFailure={this.responseGoogle}
+									render={renderProps => (
+										<button onClick={renderProps.onClick} disabled={renderProps.disabled} className="btn-danger mr-3"><FontAwesomeIcon icon={faGoogle} className="mr-1"/>Login with Google</button>
+									)}
+									/>
+								</div>
+								<div classNameName="col-12 col-sm-6">
+										<FacebookLogin
+										appId={FACEBOOK_ID}
+										autoLoad={false}
+										callback={this.responseFacebook}
+										render={renderProps => (
+											<button onClick={renderProps.onClick}  className="btn-primary"><FontAwesomeIcon icon={faFacebookF} className="mr-1"/>Login with Facebook</button>
+										)}
+									/>
+								</div>
+								
 								
 							</div>
 						</form>

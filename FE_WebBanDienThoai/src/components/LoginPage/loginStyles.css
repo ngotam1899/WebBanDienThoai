@@ -172,7 +172,9 @@
 .login-content a:hover{
 	color: #38d39f;
 }
-
+.login-content input[type="submit"]{
+	text-transform: none;
+}
 .login-content .btn, .register-content .btn{
 	display: block;
 	width: 100%;
@@ -185,7 +187,38 @@
 	font-size: 1.2rem;
 	color: #fff;
 	font-family: 'Poppins', sans-serif;
-	text-transform: uppercase;
+	margin: 1rem 0;
+	cursor: pointer;
+	transition: .5s;
+}
+.login-content .btn-primary{
+	display: block;
+	width: 100%;
+	height: 50px;
+	border-radius: 25px;
+	outline: none;
+	border: none;
+	background-image: linear-gradient(to right, #4b73c9, #204cc7, #003cff);
+	background-size: 200%;
+	font-size: 1.2rem;
+	color: #fff;
+	font-family: 'Poppins', sans-serif;
+	margin: 1rem 0;
+	cursor: pointer;
+	transition: .5s;
+}
+.login-content .btn-danger{
+	display: block;
+	width: 100%;
+	height: 50px;
+	border-radius: 25px;
+	outline: none;
+	border: none;
+	background-image: linear-gradient(to right, #dd6a55, #d64521, #ff0000);
+	background-size: 200%;
+	font-size: 1.2rem;
+	color: #fff;
+	font-family: 'Poppins', sans-serif;
 	margin: 1rem 0;
 	cursor: pointer;
 	transition: .5s;

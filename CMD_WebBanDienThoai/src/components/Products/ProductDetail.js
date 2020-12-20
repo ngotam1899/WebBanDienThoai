@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
 import './product.css'
+import changeToSlug from '../../utils/ChangeToSlug'
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 import { connect } from "react-redux";
 import ProductsActions from "../../redux/actions/products";
+import OperationActions from "../../redux/actions/operations";
+import ColorActions from "../../redux/actions/color";
 
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
-    const { product } = props;
+    const { product, listCategories, listBrands, listColor } = props;
     this.state = {
       // @Product Info
       id: product ? product._id : '',
       name: product ? product.name : '',
       price: product ? product.price : '',
+      pathseo: product ? product.pathseo : '',
       amount: product ? product.amount : '',
       warrently: product ? product.warrently : '',
-      category: product ? product.category : '',
-      brand: product ? product.brand : '',
+      category: product ? product.category : listCategories[0]._id,
+      brand: product ? product.brand : listBrands[0]._id,
       bigimage: product ? product.bigimage : '',
       image: product ? product.image : [],
       // @Product Image
@@ -49,6 +53,13 @@ class ProductDetail extends Component {
       }
     }
   }
+
+  componentWillMount(){
+    const {onGetListOperation, onGetListColor} = this.props;
+    onGetListOperation();
+    onGetListColor();
+  }
+
   onChange = (event) => {
     var target = event.target;
     var name = target.name;
@@ -191,16 +202,15 @@ class ProductDetail extends Component {
     }
     // @Xử lý các thông tin khác
     // 3. Update data
-
   }
 
   onCallback = (id, formData) => {
     console.log(this.state.mobileDes);
     const { onCreate, onUpdateImage, product } = this.props;
-    const { name, price, amount, warrently, category, brand, bigimage, image, mobileDes } = this.state;
+    const { name, price, amount, warrently, category, brand, bigimage, image, pathseo, mobileDes } = this.state;
     if (id) {
       // eslint-disable-next-line
-      var data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info:
+      var data = { name, price, amount, warrently, category, brand, bigimage, image, pathseo, detail_info:
         { mobile: {
             _id: product.detail_info.mobile._id,
             ...mobileDes,
@@ -212,9 +222,7 @@ class ProductDetail extends Component {
     else {
       // 4. Create data
       // eslint-disable-next-line
-      var data = { name, price, amount, warrently, category, brand, bigimage, image, detail_info:
-        { mobile: { ...mobileDes } }
-      }
+      var data = { name, price, amount, warrently, category, brand, bigimage, pathseo, image, detail_info: { ...mobileDes } }
       onCreate(data, formData);
     }
   }
@@ -222,8 +230,8 @@ class ProductDetail extends Component {
 
 
   render() {
-    const { name, price, amount, warrently, category, brand, bigimage, image, mobileDes, previewSource, fileInputState, previewList } = this.state;
-    const { large, onClose,  listCategories, listBrands, product } = this.props;
+    const { name, price, amount, pathseo, warrently, category, brand, bigimage, image, mobileDes, previewSource, fileInputState, previewList } = this.state;
+    const { large, onClose,  listCategories, listBrands, listOperations,listColor, product } = this.props;
     return (
       <CModal show={large} onClose={() => onClose(!large)} size="lg">
         <CModalHeader closeButton>
@@ -240,6 +248,10 @@ class ProductDetail extends Component {
                 <div className="form-group">
                   <label>Giá bán lẻ (VND):</label>
                   <input type="number" className="form-control" name="price" value={price} onChange={this.onChange} />
+                </div>
+                <div className="form-group">
+                  <label>Slug:</label>
+                  <input type="text" className="form-control" name="pathseo" value={pathseo ? pathseo : changeToSlug(name)} onChange={this.onChange} />
                 </div>
                 <div className="form-group">
                   <label>Số lượng (chiếc):</label>
@@ -362,7 +374,16 @@ class ProductDetail extends Component {
                   </div>
                   <div className="form-group">
                     <label>Operation:</label>
-                    <input type="text" className="form-control" name="operation" value={mobileDes.operation} onChange={this.onChangeMobile}/>
+                    {listOperations && <select className="form-control" required="required" name="operation"
+                    value={mobileDes.operation}
+                    onChange={this.onChangeMobile}>
+                      <option key={-1} value="">Chọn 1 operation</option>
+                    {listOperations.map((operation, index) => {
+                      return (
+                        <option key={index} value={operation._id}>{operation.operation}</option>
+                      )
+                    })}
+                    </select>}
                   </div>
                   <div className="form-group">
                     <label>Camera trước:</label>
@@ -414,7 +435,16 @@ class ProductDetail extends Component {
                   </div>
                   <div className="form-group">
                     <label>Color:</label>
-                    <input type="text" className="form-control" name="color" value={mobileDes.color} onChange={this.onChangeMobile}/>
+                    {listColor && <select className="form-control" required="required" name="color"
+                    value={mobileDes.color}
+                    onChange={this.onChangeMobile}>
+                      <option key={-1} value="">Chọn 1 màu</option>
+                    {listColor.map((color, index) => {
+                      return (
+                        <option key={index} value={color._id}>{color.color}</option>
+                      )
+                    })}
+                    </select>}
                   </div> </>}
                 </div>
               </div>
@@ -435,20 +465,27 @@ class ProductDetail extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    listProducts: state.products.list,
     productDetail: state.products.detail,
     listBrands: state.brands.list,
     listCategories: state.categories.list,
+    listOperations: state.operations.list,
+    listColor: state.color.list,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (data, formData) =>{
-      dispatch(ProductsActions.onCreate(data, formData))
+    onCreate: (params, formData) =>{
+      dispatch(ProductsActions.onCreate({params, formData}))
     },
     onUpdateImage: (id, params, formData) =>{
       dispatch(ProductsActions.onUpdateImage({id, params, formData}))
+    },
+    onGetListColor: () =>{
+      dispatch(ColorActions.onGetList())
+    },
+    onGetListOperation: () =>{
+      dispatch(OperationActions.onGetList())
     },
   }
 }

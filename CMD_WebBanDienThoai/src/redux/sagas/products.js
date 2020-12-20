@@ -34,10 +34,48 @@ function* handleGetDetail({ filters, id }) {
  * create
  */
 function* handleCreate( {payload} ) {
+  const {name, price, amount, pathseo, warrently, brand, category, detail_info} = payload.params;
+  console.log(payload);
   try {
-    const result = yield call(addProduct, payload);
-    const data = get(result, "data", {});
-    yield put(ProductsActions.onCreateSuccess(data));
+    // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
+    if(payload.params.bigimage && payload.formData){
+      var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
+      var image = yield call(addProductThumbnailImage, payload.formData);
+      var imageArray = image.data.images.map((item)=>{
+        return item._id
+      })
+      var result = yield call(addProduct,
+      { name, price, amount, pathseo, warrently, category, brand, detail_info,
+        "bigimage":bigimage.data.images[0]._id,
+        "image": imageArray
+      });
+      yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
+    }
+    // 2. TH2: Nếu bigimge mới
+    else if(payload.params.bigimage){
+      var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
+      var result = yield call(addProduct,
+        { name, price, amount, pathseo, warrently, category, detail_info, brand,
+          "bigimage":bigimage.data.images[0]._id
+        });
+      yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
+    }
+    // 3. TH3: Nếu image mới
+    else if(payload.formData){
+      var image = yield call(addProductThumbnailImage, payload.formData);
+      var imageArray = image.data.images.map((item)=>{
+        return item._id
+      })
+      var result = yield call(addProduct,
+      { name, price, amount, pathseo, warrently, category, detail_info, brand,
+        "image": imageArray
+      });
+      yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
+    }
+    else{
+      var result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, detail_info, brand });
+      yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
+    }
     yield put(ProductsActions.onGetList());
   } catch (error) {
     yield put(ProductsActions.onCreateError(error));
@@ -49,8 +87,7 @@ function* handleCreate( {payload} ) {
  * update
  */
 function* handleUpdateImage( {payload} ) {
-  const {name, price, amount, pathseo, warrently, category, detail_info} = payload.params;
-  console.log("payload",payload)
+  const {name, price, amount, pathseo, warrently, brand, category, detail_info} = payload.params;
   try {
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
     if(payload.params.bigimage._id === undefined && payload.formData){
@@ -60,7 +97,7 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, detail_info,
+      { name, price, amount, pathseo, warrently, category, brand, detail_info,
         "bigimage":bigimage.data.images[0]._id,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
@@ -70,7 +107,7 @@ function* handleUpdateImage( {payload} ) {
     else if(payload.params.bigimage._id === undefined){
       var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
       var result = yield call(updateProduct,
-        { name, price, amount, pathseo, warrently, category, detail_info,
+        { name, price, amount, pathseo, warrently, category, detail_info, brand,
           "bigimage":bigimage.data.images[0]._id
         }, payload.id);
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
@@ -82,18 +119,19 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, detail_info,
+      { name, price, amount, pathseo, warrently, category, detail_info, brand,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     else{
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, detail_info,
+      { name, price, amount, pathseo, warrently, category, detail_info, brand,
         "image": payload.params.image
       }, payload.id);
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
+    yield put(ProductsActions.onGetList());
   } catch (error) {
     console.log(error);
     yield put(ProductsActions.onUpdateImageError(error));
