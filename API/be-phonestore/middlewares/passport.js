@@ -54,12 +54,15 @@ passport.use(new FacebookTokenStrategy({
     clientSecret: FacebookSecret
 }, async(accessToken, refreshToken, profile, done) => {
     try {
-        const user = await User.findOne({
+        let user = await User.findOne({
             auth_facebook_id: profile.id,
             auth_type: 'facebook'
         });
         if (user) {
             done(null, user);
+        } else if (profile.emails[0].value != "") {
+            let user = await User.find({ email: profile.emails[0].value });
+            if (user) done(null, user);
         } else {
             const image = new Image_User({
                 name: profile.displayName,
@@ -80,7 +83,6 @@ passport.use(new FacebookTokenStrategy({
             await newUser.save();
             done(null, newUser);
         }
-
     } catch (error) {
         done(error, false)
     }
