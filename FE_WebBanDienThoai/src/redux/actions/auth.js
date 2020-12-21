@@ -4,6 +4,14 @@ export const AuthorizationActionTypes = {
   LOGIN_SUCCESS : "LOGIN_SUCCESS",
   LOGIN_ERROR : "LOGIN_ERROR",
 
+  LOGIN_FACEBOOK : "LOGIN_FACEBOOK",
+  LOGIN_FACEBOOK_SUCCESS : "LOGIN_FACEBOOK_SUCCESS",
+  LOGIN_FACEBOOK_ERROR : "LOGIN_FACEBOOK_ERROR",
+
+  LOGIN_GOOGLE : "LOGIN_GOOGLE",
+  LOGIN_GOOGLE_SUCCESS : "LOGIN_GOOGLE_SUCCESS",
+  LOGIN_GOOGLE_ERROR : "LOGIN_GOOGLE_ERROR",
+
   REGISTER : "REGISTER",
   REGISTER_SUCCESS : "REGISTER_SUCCESS",
   REGISTER_ERROR : "REGISTER_ERROR",
@@ -37,6 +45,39 @@ const onLoginError = (error) => ({
   payload: error,
 });
 
+/**
+ *
+ * @param {token} payload
+ */
+const onLoginFacebook = (payload) => ({
+  type: AuthorizationActionTypes.LOGIN_FACEBOOK,
+  payload,
+});
+
+const onLoginFacebookSuccess = (payload) => ({
+  type: AuthorizationActionTypes.LOGIN_FACEBOOK_SUCCESS,
+  payload,
+});
+
+const onLoginFacebookError = (error) => ({
+  type: AuthorizationActionTypes.LOGIN_FACEBOOK_ERROR,
+  payload: error,
+});
+
+const onLoginGoogle = (payload) => ({
+  type: AuthorizationActionTypes.LOGIN_GOOGLE,
+  payload,
+});
+
+const onLoginGoogleSuccess = (payload) => ({
+  type: AuthorizationActionTypes.LOGIN_GOOGLE_SUCCESS,
+  payload,
+});
+
+const onLoginGoogleError = (error) => ({
+  type: AuthorizationActionTypes.LOGIN_GOOGLE_ERROR,
+  payload: error,
+});
 
 const onRegister = (payload) => ({
   type: AuthorizationActionTypes.REGISTER,
@@ -88,6 +129,14 @@ const AuthorizationActions = {
   onLogin,
   onLoginSuccess,
   onLoginError,
+
+  onLoginFacebook,
+  onLoginFacebookSuccess,
+  onLoginFacebookError,
+
+  onLoginGoogle,
+  onLoginGoogleSuccess,
+  onLoginGoogleError,
 
   onRegister,
   onRegisterSuccess,

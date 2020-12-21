@@ -15,10 +15,6 @@ export const ProductsActionTypes = {
   UPDATE_IMAGE_SUCCESS: "UPDATE_IMAGE_SUCCESS",
   UPDATE_IMAGE_ERROR: "UPDATE_IMAGE_ERROR",
 
-  UPDATE_INFO: "UPDATE_INFO",
-  UPDATE_INFO_SUCCESS: "UPDATE_INFO_SUCCESS",
-  UPDATE_INFO_ERROR: "UPDATE_INFO_ERROR",
-
   DELETE: "DELETE",
   DELETE_SUCCESS: "DELETE_SUCCESS",
   DELETE_ERROR: "DELETE_ERROR",
@@ -83,9 +79,9 @@ const onGetDetailError = (error) => ({
  *
  * create
  */
-const onCreate = (params, formData) => ({
+const onCreate = ({params, formData}) => ({
   type: ProductsActionTypes.CREATE,
-  payload: params, formData
+  payload: {params, formData}
 });
 
 const onCreateSuccess = (detail) => ({
@@ -117,20 +113,6 @@ const onUpdateImageError = (error) => ({
   payload: error,
 });
 
-const onUpdateInfo = ({ id, params }) => ({
-  type: ProductsActionTypes.UPDATE_INFO,
-  payload: { id, params },
-});
-
-const onUpdateInfoSuccess = (detail) => ({
-  type: ProductsActionTypes.UPDATE_INFO_SUCCESS,
-  payload: detail
-});
-
-const onUpdateInfoError = (error) => ({
-  type: ProductsActionTypes.UPDATE_INFO_ERROR,
-  payload: error,
-});
 /**
  *
  * delete
@@ -192,10 +174,6 @@ const ProductsActions = {
   onUpdateImage,
   onUpdateImageSuccess,
   onUpdateImageError,
-
-  onUpdateInfo,
-  onUpdateInfoSuccess,
-  onUpdateInfoError,
 
   onDelete,
   onDeleteSuccess,

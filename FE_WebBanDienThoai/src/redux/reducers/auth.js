@@ -34,6 +34,36 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         loggedIn: false,
       };
+    case AuthorizationActionTypes.LOGIN_FACEBOOK:
+      return {
+        ...state,
+        loggedIn: false,
+      };
+    case AuthorizationActionTypes.LOGIN_FACEBOOK_SUCCESS:
+      return {  
+        ...state,
+        loggedIn: true,
+      };
+    case AuthorizationActionTypes.LOGIN_FACEBOOK_ERROR:
+      return {
+        ...state,
+        loggedIn: false,
+      };
+    case AuthorizationActionTypes.LOGIN_GOOGLE:
+      return {
+        ...state,
+        loggedIn: false,
+      };
+    case AuthorizationActionTypes.LOGIN_GOOGLE_SUCCESS:
+      return {  
+        ...state,
+        loggedIn: true,
+      };
+    case AuthorizationActionTypes.LOGIN_GOOGLE_ERROR:
+      return {
+        ...state,
+        loggedIn: false,
+      };
     case AuthorizationActionTypes.LOGOUT:
       return {
         ...state,

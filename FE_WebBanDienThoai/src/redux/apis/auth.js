@@ -23,3 +23,13 @@ export const activateAccount = (token) =>{
 export const getProfile = (data) =>{
   return axiosService.post(`${API_ENDPOINT_AUTH}${url}/api/auth/profile`, data);
 };
+
+//5. Đăng nhập với Gooogle http://localhost:3000/users/auth/google
+export const loginGoogle = (token) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}/auth/google`, token);
+};
+
+//6. Đăng nhập với Facebook http://localhost:3000/users/auth/facebook
+export const loginFacebook = (token) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}/auth/facebook`, token);
+};

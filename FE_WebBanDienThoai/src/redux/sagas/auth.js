@@ -3,7 +3,7 @@ import { get } from "lodash";
 import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
 import OrdersActions, { OrdersActionTypes } from "../actions/order";
 import UsersActions, { UsersActionTypes } from "../actions/user";
-import { registerAccount, loginAccount, activateAccount, getProfile } from "../apis/auth";
+import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, } from "../apis/auth";
 import {orderHistory } from "../apis/order";
 import { getUserImage } from "../apis/cloudinary";
 import { message } from "antd";
@@ -26,6 +26,19 @@ function* handleRegister({ payload }) {
 function* handleLogin({ payload }) {
   try {
     const result = yield call(loginAccount, payload);
+    const data = get(result, "data", {});
+    localStorage.setItem('AUTH_USER', result.headers.authorization);
+    yield put(AuthorizationActions.onLoginSuccess(data.user));
+  } catch (error) {
+    console.log(error);
+    yield put(AuthorizationActions.onLoginError(error));
+  }
+}
+
+function* handleLoginFacebook({ payload }) {
+  console.log(payload);
+  try {
+    const result = yield call(loginFacebook, payload);
     const data = get(result, "data", {});
     localStorage.setItem('AUTH_USER', result.headers.authorization);
     yield put(AuthorizationActions.onLoginSuccess(data.user));

@@ -34,12 +34,10 @@ export default function(state = init, action) {
         detail: null,
         loadingDetail: true,
       };
-
     case BrandActionTypes.CLEAR_STATE:
       return {
         ...init,
       };
-
     case BrandActionTypes.GET_LIST:
       return {
         ...state,
@@ -51,58 +49,11 @@ export default function(state = init, action) {
          loading: false,
         /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
       };
-
     case BrandActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
         loading: false,
         list: get(action, "payload", []),
-      };
-
-    case BrandActionTypes.GET_DETAIL:
-      return {
-        ...state,
-        loadingDetail: true,
-        detail: null,
-      };
-
-    case BrandActionTypes.GET_DETAIL_SUCCESS:
-      return {
-        ...state,
-        loadingDetail: false,
-        detail: action.payload,
-      };
-
-    case BrandActionTypes.GET_DETAIL_ERROR:
-      return {
-        ...state,
-        loadingDetail: false,
-        detail: action.payload,
-      };
-
-    case BrandActionTypes.CREATE:
-    case BrandActionTypes.UPDATE:
-    case BrandActionTypes.DELETE:
-      return {
-        ...state,
-        processing: true,
-      };
-
-    case BrandActionTypes.CREATE_ERROR:
-    case BrandActionTypes.UPDATE_ERROR:
-    case BrandActionTypes.DELETE_ERROR:
-      return {
-        ...state,
-        processing: false,
-      };
-    case BrandActionTypes.UPDATE_SUCCESS:
-      return handleUpdate({state, action});
-
-    case BrandActionTypes.CREATE_SUCCESS:
-    case BrandActionTypes.DELETE_SUCCESS:
-      return {
-        ...state,
-        processing: false,
       };
     default:
       return state;

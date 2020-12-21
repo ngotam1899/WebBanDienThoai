@@ -3,9 +3,11 @@ import products from "./products";
 import cloudinary from "./cloudinary";
 import brands from "./brands";
 import categories from "./categories";
+import operations from "./operations";
+import color from "./color";
 
 export default function* rootSaga(getState) {
   yield all([
-    cloudinary(), brands(), categories(), products(),
+    cloudinary(), brands(), categories(), products(), color(), operations(),
   ]);
 }
