@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import {Link} from 'react-router-dom'
+// @Functions
+import tryConvert from '../../utils/changeMoney'
 
 class ProductItem extends Component {
 	onAddToCart = (product) =>{
@@ -8,7 +11,7 @@ class ProductItem extends Component {
 	}
 
 	render() {
-    const {product} = this.props;
+    const {product, currency} = this.props;
 		return (
 			<div className="col-md-3 col-sm-6">
 				<div className="single-shop-product text-center">
@@ -19,7 +22,8 @@ class ProductItem extends Component {
 						<Link to={`/products/dien-thoai/${product.pathseo}/${product._id}`}>{product.name}</Link>
 					</h2>
 					<div className="product-carousel-price">
-            <ins>$ {product.price}</ins> <del>${product.price + 100}</del>
+            <ins>{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</ins> <br/>
+						<del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del>
 					</div>
 					<div className="product-option-shop">
 						<button
@@ -35,4 +39,16 @@ class ProductItem extends Component {
 	}
 }
 
-export default ProductItem;
+const mapStateToProps = (state) =>{
+  return {
+    currency: state.currency,
+  }
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps) (ProductItem);

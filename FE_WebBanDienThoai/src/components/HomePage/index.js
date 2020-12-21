@@ -57,7 +57,7 @@ class HomePage extends Component {
     
     <div className="maincontent-area">
         <div className="zigzag-bottom"></div>
-        <div className="container">
+        {/* <div className="container">
             <div className="row">
                 <div className="col-md-12">
                     <div className="latest-product">
@@ -136,7 +136,7 @@ class HomePage extends Component {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> */}
     </div> 
     
     <div className="brands-area">
@@ -161,7 +161,7 @@ class HomePage extends Component {
         </div>
     </div>
     
-    <div className="product-widget-area">
+    {/* <div className="product-widget-area">
         <div className="zigzag-bottom"></div>
         <div className="container">
             <div className="row">
@@ -310,8 +310,8 @@ class HomePage extends Component {
                     </div>
                 </div>
             </div>
-        </div>
-    </div> 
+        </div> 
+      </div> */}
             </>
         );
     }

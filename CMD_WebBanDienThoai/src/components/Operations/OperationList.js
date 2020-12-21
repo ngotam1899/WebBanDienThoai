@@ -10,12 +10,12 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import CategoryDetail from './CategoryDetail'
-import CategoryActions from "../../redux/actions/categories";
+import OperationDetail from './OperationDetail'
+import OperationActions from "../../redux/actions/operations";
 
-const fields = ['name','slug', { key: 'actions', _style: { width: '15%'} }]
+const fields = ['name', { key: 'actions', _style: { width: '15%'} }]
 
-class CategoryList extends Component {
+class ProductList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,14 +63,14 @@ class CategoryList extends Component {
 
   render () {
     const {large} = this.state;
-    const {listCategories} = this.props;
+    const {listOperations} = this.props;
     return (
       <>
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                <h5 className="float-left my-2">Danh sách category</h5>
+                <h5 className="float-left my-2">Danh sách hệ điều hành</h5>
                 <CButton
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
@@ -81,7 +81,7 @@ class CategoryList extends Component {
 
               <CCardBody>
                 <CDataTable
-                  items={listCategories}
+                  items={listOperations}
                   fields={fields}
                   hover
                   striped
@@ -89,8 +89,8 @@ class CategoryList extends Component {
                   itemsPerPage={10}
                   pagination
                   scopedSlots = {{
-                    'slug': (item) => (
-                      <td>{item.pathseo}</td>
+                    'name': (item) => (
+                      <td>{item.operation}</td>
                     ),
                     'actions':
                     (item)=>(
@@ -112,11 +112,11 @@ class CategoryList extends Component {
                       </td>)
                   }}
                 />
-                {/* {(productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
+                {/* {(productDetail && large) && <OperationDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
 
-                {(!productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
+                {(!productDetail && large) && <OperationDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>} */}
               </CCardBody>
@@ -130,22 +130,22 @@ class CategoryList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listCategories: state.categories.list,
+    listOperations: state.operations.list,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetList: () => {
-      dispatch(CategoryActions.onGetList())
+      dispatch(OperationActions.onGetList())
     },
     onClearState: () =>{
-      dispatch(CategoryActions.onClearState())
+      dispatch(OperationActions.onClearState())
     },
     onClearDetail: () =>{
-      dispatch(CategoryActions.onClearDetail())
+      dispatch(OperationActions.onClearDetail())
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CategoryList)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductList)

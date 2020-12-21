@@ -110,6 +110,21 @@ export default [
         name: 'Danh sách loại sản phẩm',
         to: '/products/category-manage',
       },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách màu',
+        to: '/products/color-manage',
+      },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách hệ điều hành',
+        to: '/products/operation-manage',
+      },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách thương hiệu',
+        to: '/products/brand-manage',
+      },
       /* {
         _tag: 'CSidebarNavItem',
         name: 'Tabs',
@@ -122,18 +137,18 @@ export default [
       }, */
     ],
   },
-  /* {
+  {
     _tag: 'CSidebarNavDropdown',
-    name: 'Buttons',
-    route: '/buttons',
+    name: 'Quản lý người dùng',
+    route: '/users',
     icon: 'cil-cursor',
     _children: [
       {
         _tag: 'CSidebarNavItem',
-        name: 'Buttons',
-        to: '/buttons/buttons',
+        name: 'Danh sách người dùng',
+        to: '/users/user-manage',
       },
-      {
+      /*{
         _tag: 'CSidebarNavItem',
         name: 'Brand buttons',
         to: '/buttons/brand-buttons',
@@ -147,10 +162,10 @@ export default [
         _tag: 'CSidebarNavItem',
         name: 'Dropdowns',
         to: '/buttons/button-dropdowns',
-      }
+      }*/
     ],
   },
-  {
+  /*{
     _tag: 'CSidebarNavItem',
     name: 'Charts',
     to: '/charts',
@@ -199,11 +214,11 @@ export default [
         name: 'Badges',
         to: '/notifications/badges',
       },*/
-      {
+      /* {
         _tag: 'CSidebarNavItem',
         name: 'Modal',
         to: '/notifications/modals',
-      },
+      }, */
       /*{
         _tag: 'CSidebarNavItem',
         name: 'Toaster',

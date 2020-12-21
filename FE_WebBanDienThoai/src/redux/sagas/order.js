@@ -44,7 +44,7 @@ function* handleCreate({ payload }) {
   try {
     const result = yield call(addOrder, payload);
     const data = get(result, "data", {});
-    if (data.code !== 201 || data.code !== 200) throw data;
+    if (data.code !== 201) throw data;
     yield put(OrdersActions.onCreateAnOrderSuccess(data));
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));

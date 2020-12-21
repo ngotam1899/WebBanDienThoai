@@ -5,9 +5,13 @@ import { get } from "lodash";
 import ProductsActions from '../../redux/actions/products'
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
+import OperationActions from "../../redux/actions/operations";
+import ColorActions from "../../redux/actions/color";
 // @Components
 import ImageGalleries from './ImageGalleries';
 import './styles.css';
+// @Functions
+import tryConvert from '../../utils/changeMoney'
 
 class DetailPage extends Component {
   constructor(props) {
@@ -18,9 +22,11 @@ class DetailPage extends Component {
   }
 
   componentDidMount(){
-    const {match, onGetDetailProduct, onGetListBrand, onGetListCategory} = this.props;
+    const {match, onGetDetailProduct, onGetListBrand, onGetListCategory, onGetListColor, onGetListOperation} = this.props;
     onGetListBrand();
     onGetListCategory();
+    onGetListColor();
+    onGetListOperation();
     onGetDetailProduct(match.params.productID);
   }
 
@@ -36,10 +42,22 @@ class DetailPage extends Component {
     return get(categoryName, "name");
   }
 
+  setColor = (color) =>{
+    const {listColor} = this.props;
+    const colorName = listColor.find(obj => obj._id === color);
+    return get(colorName, "color");
+  }
+
+  setOperation = (operation) =>{
+    const {listOperations} = this.props;
+    const operationName = listOperations.find(obj => obj._id === operation);
+    return get(operationName, "operation");
+  }
+
   onUpdateQuantity = (product, quantity) => {
     var {onUpdateProductInCart} = this.props;
-    this.setState({quantity})
     if(quantity > 0){
+      this.setState({quantity})
       onUpdateProductInCart(product, quantity);
     }
   }
@@ -50,7 +68,7 @@ class DetailPage extends Component {
 	}
 
   render() {
-    const {product} = this.props;
+    const {product, currency} = this.props;
     const {quantity} = this.state;
     return (<>
       <div className="product-big-title-area">
@@ -87,14 +105,15 @@ class DetailPage extends Component {
                     <div className="product-inner">
                       <h2 className="product-name">{product.name}</h2>
                       <div className="product-inner-price">
-                        <ins>${product.price}</ins> <del>$100.00</del>
+                        <ins>{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</ins> 
+                        <del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del>
                       </div>
 
                       <form action="" className="cart">
                         <div className="quantity">
                           <div className="quantity buttons_added">
                             <input type="button" className="minus" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
-                            <input type="number" size="4" className="input-text qty text" title="Qty" value={quantity} min="1"
+                            <input type="number" size="4" className="input-text qty text" title="Qty" value={quantity} min="0"
                               step="1" />
                             <input type="button" className="plus" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
                           </div>
@@ -105,7 +124,7 @@ class DetailPage extends Component {
                       <div className="product-inner-category">
                         <p className="m-0">Category: <a href="">{this.setCategory(product.category)}</a></p>
                         <p className="m-0">Brand: <a href="">{this.setBrand(product.brand)}</a></p>
-                        <p>Color: <a href="">{product.detail_info.mobile.color}</a></p>
+                        <p>Color: <a href="">{this.setColor(product.detail_info.mobile.color)}</a></p>
                       </div>
 
                       <ul className="nav nav-tabs">
@@ -137,7 +156,7 @@ class DetailPage extends Component {
                                 </tr>
                                 <tr>
                                   <td scope="row">Operation</td>
-                                  <td>{product.detail_info.mobile.operation}</td>
+                                  <td>{this.setOperation(product.detail_info.mobile.operation)}</td>
                                 </tr>
                                 <tr>
                                   <td scope="row">Camera 1</td>
@@ -230,6 +249,9 @@ const mapStateToProps = (state) =>{
     product: state.products.detail,
     listBrands: state.brands.list,
     listCategories: state.categories.list,
+    listColor: state.color.list,
+    listOperations: state.operations.list,
+    currency: state.currency,
   }
 }
 
@@ -243,6 +265,12 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onGetListCategory: () => {
       dispatch(CategoryActions.onGetList())
+    },
+    onGetListColor: () => {
+      dispatch(ColorActions.onGetList())
+    },
+    onGetListOperation: () => {
+      dispatch(OperationActions.onGetList())
     },
     onUpdateProductInCart: (product, quantity) => {
       dispatch(ProductsActions.onUpdateProductInCart(product, quantity))

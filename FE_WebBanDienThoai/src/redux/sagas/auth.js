@@ -36,15 +36,28 @@ function* handleLogin({ payload }) {
 }
 
 function* handleLoginFacebook({ payload }) {
-  console.log(payload);
   try {
-    const result = yield call(loginFacebook, payload);
+    const result = yield call(loginFacebook, {"access_token" :payload});
     const data = get(result, "data", {});
     localStorage.setItem('AUTH_USER', result.headers.authorization);
-    yield put(AuthorizationActions.onLoginSuccess(data.user));
+    yield put(AuthorizationActions.onLoginFacebookSuccess(data.user));
   } catch (error) {
     console.log(error);
-    yield put(AuthorizationActions.onLoginError(error));
+    yield put(AuthorizationActions.onLoginFacebookError(error));
+  }
+}
+
+function* handleLoginGoogle({ payload }) {
+  console.log(payload);
+  try {
+    
+    const result = yield call(loginGoogle, {"access_token":payload});
+    const data = get(result, "data", {});
+    localStorage.setItem('AUTH_USER', result.headers.authorization);
+    yield put(AuthorizationActions.onLoginGoogleSuccess(data.user));
+  } catch (error) {
+    console.log(error);
+    yield put(AuthorizationActions.onLoginGoogleError(error));
   }
 }
 
@@ -150,6 +163,12 @@ export function* watchRegister() {
 export function* watchLogin() {
   yield takeEvery(AuthorizationActionTypes.LOGIN, handleLogin);
 }
+export function* watchLoginFacebook() {
+  yield takeEvery(AuthorizationActionTypes.LOGIN_FACEBOOK, handleLoginFacebook);
+}
+export function* watchLoginGoogle() {
+  yield takeEvery(AuthorizationActionTypes.LOGIN_GOOGLE, handleLoginGoogle);
+}
 
 export function* watchActivateAccount() {
   yield takeEvery(AuthorizationActionTypes.ACTIVATE_ACCOUNT, handleActiveAccount);
@@ -171,6 +190,8 @@ export default function* rootSaga() {
     fork(watchGetDetail), */
     fork(watchRegister),
     fork(watchLogin),
+    fork(watchLoginFacebook),
+    fork(watchLoginGoogle),
     fork(watchActivateAccount),
     fork(watchGetProfile),
     /* fork(watchUpdate),

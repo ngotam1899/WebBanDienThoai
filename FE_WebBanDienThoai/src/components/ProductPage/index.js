@@ -19,8 +19,8 @@ class ProductPage extends Component {
     this.state = {
       keyword: "",
       filter: {
-        /* limit: 10,
-        page: 1, */
+        limit: 10,
+        page: 0,
         category: match.params.categoryID ? match.params.categoryID : null
       },
     }

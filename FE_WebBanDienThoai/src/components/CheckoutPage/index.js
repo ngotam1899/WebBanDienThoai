@@ -6,6 +6,8 @@ import OrdersActions from '../../redux/actions/order'
 // @Components
 import Search from '../../containers/Search';
 import Paypal from './Paypal';
+// @Functions
+import tryConvert from '../../utils/changeMoney'
 
 import './styles.css'
 
@@ -33,6 +35,21 @@ class CheckoutPage extends Component {
       [name]:  value
     })
   }
+
+  componentWillMount() {
+    var total = 0;
+    var totalPrice = 0;
+    var { cart } = this.props;
+    for (var i = 0; i < cart.length; i++) {
+      total = total + cart[i].quantity
+      totalPrice = totalPrice + cart[i].quantity * cart[i].product.price
+    }
+    this.setState({
+      total,
+      totalPrice
+    })
+  }
+  
 
   componentWillReceiveProps(props) {
     var total = 0;
@@ -91,7 +108,7 @@ class CheckoutPage extends Component {
 
   render() {
     const {shipToDifferentAddress, shipping_phone, shipping_address, shipping_city, shipping_first_name, shipping_last_name, order_comments, payment_method, totalPrice, total} = this.state;
-    const {authInfo} = this.props;
+    const {authInfo, currency} = this.props;
     return (
       <>
         <div className="product-big-title-area">
@@ -312,14 +329,14 @@ class CheckoutPage extends Component {
                               <td className="product-name">
                               Ship Your Idea <strong className="product-quantity">× {total}</strong> </td>
                               <td className="product-total">
-                              <span className="amount">$ {totalPrice}</span> </td>
+                              <span className="amount">{currency=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2)} {currency}</span> </td>
                             </tr>
                           </tbody>
                           <tfoot>
 
                             <tr className="cart-subtotal">
                               <th>Cart Subtotal</th>
-                              <td><span className="amount">$ {totalPrice}</span>
+                              <td><span className="amount">{currency=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2)} {currency}</span>
                               </td>
                             </tr>
 
@@ -332,7 +349,7 @@ class CheckoutPage extends Component {
 
                             <tr className="order-total">
                               <th>Order Total</th>
-                              <td><strong><span className="amount">$ {totalPrice}</span></strong> </td>
+                              <td><strong><span className="amount">{currency=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2)} {currency}</span></strong> </td>
                             </tr>
 
                           </tfoot>
@@ -352,7 +369,7 @@ class CheckoutPage extends Component {
                               </label>
                             </li>
                           </ul>
-                          { payment_method == 1 && <Paypal totalPrice={totalPrice}/> }
+                          { payment_method == 1 && <Paypal totalPrice={parseFloat(tryConvert(totalPrice, "USD", false)).toFixed(2)}/> }
                           <div className="form-row place-order">
                             <input type="button" data-value="PLACE ORDER" value="Place order" id="place_order" name="woocommerce_checkout_place_order" className="button alt" onClick={() => this.placeOrder()}/>
                           </div>
@@ -376,6 +393,7 @@ const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
     cart: state.cart,
+    currency: state.currency,
   }
 }
 

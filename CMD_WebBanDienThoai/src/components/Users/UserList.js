@@ -10,12 +10,12 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import CategoryDetail from './CategoryDetail'
-import CategoryActions from "../../redux/actions/categories";
+import UserDetail from './UserDetail'
+import UsersActions from "../../redux/actions/user";
 
-const fields = ['name','slug', { key: 'actions', _style: { width: '15%'} }]
+const fields = ['first name', 'last name','phone','address','email',{ key: 'actions', _style: { width: '15%'} }]
 
-class CategoryList extends Component {
+class UserList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +34,7 @@ class CategoryList extends Component {
     })
   }
 
-  onUpdate = (large, item) =>{
+  onDetail = (large, item) =>{
     const { onGetDetail } = this.props;
     this.setState({
       large
@@ -51,37 +51,21 @@ class CategoryList extends Component {
     onClearDetail();
   }
 
-  onSubmit = (data, _id) =>{
-    const { onCreate, onUpdate } = this.props;
-    if(_id === ''){
-      onCreate(data);
-    }
-    else {
-      onUpdate(_id, data);
-    }
-  }
-
   render () {
     const {large} = this.state;
-    const {listCategories} = this.props;
+    const {listUser, userDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                <h5 className="float-left my-2">Danh sách category</h5>
-                <CButton
-                  onClick={() => this.setLarge(!large)}
-                  className="mb-1 float-right"
-                  color="success"
-                > Thêm loại sản phẩm
-                </CButton>
+                <h5 className="float-left my-2">Danh sách người dùng</h5>
               </CCardHeader>
 
               <CCardBody>
                 <CDataTable
-                  items={listCategories}
+                  items={listUser}
                   fields={fields}
                   hover
                   striped
@@ -89,14 +73,26 @@ class CategoryList extends Component {
                   itemsPerPage={10}
                   pagination
                   scopedSlots = {{
-                    'slug': (item) => (
-                      <td>{item.pathseo}</td>
+                    'first name': (item) => (
+                      <td>{item.firstname}</td>
+                    ),
+                    'last name': (item) => (
+                      <td>{item.lastname}</td>
+                    ),
+                    'phone': (item) => (
+                      <td>{item.phonenumber}</td>
+                    ),
+                    'address': (item) => (
+                      <td>{item.address}</td>
+                    ),
+                    'email': (item) => (
+                      <td>{item.email}</td>
                     ),
                     'actions':
                     (item)=>(
                       <td>
                         <CButton
-                          onClick={() => this.onUpdate(!large, item._id)}
+                          onClick={() => this.onDetail(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"
                           color="warning"
                         >
@@ -112,13 +108,11 @@ class CategoryList extends Component {
                       </td>)
                   }}
                 />
-                {/* {(productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
+                {(userDetail && large) && <UserDetail large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
 
-                {(!productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>} */}
+                {(!userDetail && large) && <UserDetail large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
+                onSubmit={this.onSubmit}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -130,22 +124,23 @@ class CategoryList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listCategories: state.categories.list,
+    listUser: state.user.list,
+    userDetail: state.user.detail,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetList: () => {
-      dispatch(CategoryActions.onGetList())
+      dispatch(UsersActions.onGetList())
     },
     onClearState: () =>{
-      dispatch(CategoryActions.onClearState())
+      dispatch(UsersActions.onClearState())
     },
     onClearDetail: () =>{
-      dispatch(CategoryActions.onClearDetail())
+      dispatch(UsersActions.onClearDetail())
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CategoryList)
+export default connect(mapStateToProps, mapDispatchToProps)(UserList)

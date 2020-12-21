@@ -5,23 +5,36 @@ import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
+import tryConvert from '../../utils/changeMoney'
+
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth'
 import CategoryActions from "../../redux/actions/categories";
+import ProductsActions from '../../redux/actions/products'
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
       total: 0,
-      totalPrice: 0
+      totalPrice: 0,
+      currencyCode: "VND",
     }
+    this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
   componentDidMount(){
     const {onGetProfile, onGetListCategory} = this.props;
     const token = localStorage.getItem('AUTH_USER')
     onGetProfile(null,token);
     onGetListCategory();
+  }
+
+  handleChangeCurrency(event) {
+    const {onChangeCurrency} = this.props;
+    this.setState({
+      currencyCode: event.target.value
+    })
+    onChangeCurrency(event.target.value);
   }
 
   componentWillReceiveProps(props) {
@@ -57,8 +70,12 @@ class Header extends Component {
         }} />
       )
     }
-    const {total, totalPrice}=this.state;
+    const {total, totalPrice, currencyCode}=this.state;
     const {userInfo, isLogin, listCategories} = this.props;
+    const notVND = currencyCode=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2);
+    
+    /* console.log("currencyCode",currencyCode)
+    console.log("currencyCode",notVND) */
     return (
       <>
         <div className="header-area">
@@ -67,12 +84,13 @@ class Header extends Component {
               <div className="col-md-8">
                 <div className="user-menu">
                   <ul>
-                    {userInfo && <li><a href="/#/account/detail"><FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}</a></li>}
-                    <li><a href="/#/carts"><i className="fa fa-heart"></i> My Cart</a></li>
-                    <li><a href="/#/carts/checkout"><i className="fa fa-user"></i> Checkout</a></li>
+                    {userInfo && <><li><a href="/#/account/detail"><FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}</a></li>
+                    <li><a href="/#/carts"><i className="fa fa-luggage-cart"></i> My Cart</a></li>
+                    <li><a href="/#/carts/checkout"><i className="fa fa-credit-card"></i> Checkout</a></li></>}
                     {isLogin===false
-                    ? <li><a href="/user/dang-nhap"><i className="fa fa-user"></i> Login</a></li>
-                    : <li><button type="button" className="btn-logout" style={{'outline': 'none'}} onClick={() => this.setLogout()}><i className="fa fa-user"></i> Logout</button></li>}
+                    ? <><li><a href="/user/dang-nhap"><i className="fa fa-sign-in-alt"></i> Login</a></li>
+                      <li><a href="/user/dang-ky"><i className="fa fa-user-plus"></i> Signup</a></li></>
+                    : <li><button type="button" className="btn-logout" style={{'outline': 'none'}} onClick={() => this.setLogout()}><i className="fa fa-sign-out-alt"></i> Logout</button></li>}
                   </ul>
                 </div>
               </div>
@@ -81,14 +99,14 @@ class Header extends Component {
                 <div className="header-right">
                   <ul className="list-inline ">
                     <li className="dropdown dropdown-small">
-                      <a data-toggle="dropdown" data-hover="dropdown" className="dropdown-toggle" href="#"><span className="key">currency :</span><span className="value">USD </span><b className="caret"></b></a>
-                      <ul className="dropdown-menu">
-                        <li><a href="#">USD</a></li>
-                        <li><a href="#">INR</a></li>
-                        <li><a href="#">GBP</a></li>
-                      </ul>
+                    <select className="select-box" onChange={this.handleChangeCurrency}>
+                      <option value="VND">Việt Nam đồng - VND</option>
+                      <option value="USD">Đô la Mỹ - USD</option>
+                      <option value="CNY">Nhân dân tệ TQ - CNY</option>
+                      <option value="EUR">Đồng Euro - EUR</option>
+                      <option value="JPY">Đồng Yên Nhật - JPY</option>
+                    </select>
                     </li>
-
                     <li className="dropdown dropdown-small">
                       <a data-toggle="dropdown" data-hover="dropdown" className="dropdown-toggle" href="#"><span className="key">language :</span><span className="value">English </span><b className="caret"></b></a>
                       <ul className="dropdown-menu">
@@ -115,7 +133,7 @@ class Header extends Component {
 
               <div className="col-sm-6 col-md-7 col-lg-8 col-xl-9">
                 <div className="shopping-item">
-                  <Link to="/carts">Cart - <span className="cart-amunt">$ {totalPrice}</span> <i className="fa fa-shopping-cart"></i> <span className="product-count">{total}</span></Link>
+                  <Link to="/carts">Cart - <span className="cart-amunt">{notVND} {currencyCode}</span> <i className="fa fa-shopping-cart"></i> <span className="product-count">{total}</span></Link>
                 </div>
               </div>
             </div>
@@ -168,6 +186,9 @@ const mapDispatchToProps =(dispatch)=> {
     },
     onGetListCategory: () => {
       dispatch(CategoryActions.onGetList())
+    },
+    onChangeCurrency: (unit) => {
+      dispatch(ProductsActions.onChangeCurrency(unit));
     },
 	}
 };

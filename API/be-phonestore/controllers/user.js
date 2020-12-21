@@ -147,7 +147,7 @@ const secret = async(req, res, next) => {
 }
 const sendEmail = (email) => {
     const token = service.encodedToken(email, '1h');
-    const url = "http://localhost:4000/#/account/active/" + token;
+    const url = "https://localhost:5000/#/account/active/" + token;
     const at = {
         from: '"noreply@be-phonestore.herokuapp.com" <noreply@be-phonestore.herokuapp.com/>',
         to: email,

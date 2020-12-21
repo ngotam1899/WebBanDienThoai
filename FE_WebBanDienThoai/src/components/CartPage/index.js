@@ -5,6 +5,8 @@ import Search from '../../containers/Search';
 import CartItem from '../../containers/CartItem'
 import ProductsActions from '../../redux/actions/products'
 import './styles.css';
+// @Functions
+import tryConvert from '../../utils/changeMoney'
 
 class CartPage extends Component {
   constructor(props) {
@@ -13,6 +15,20 @@ class CartPage extends Component {
       total: 0,
       totalPrice: 0
     }
+  }
+
+  componentWillMount() {
+    var total = 0;
+    var totalPrice = 0;
+    var { cart } = this.props;
+    for (var i = 0; i < cart.length; i++) {
+      total = total + cart[i].quantity
+      totalPrice = totalPrice + cart[i].quantity * cart[i].product.price
+    }
+    this.setState({
+      total,
+      totalPrice
+    })
   }
 
   componentWillReceiveProps(props){
@@ -36,7 +52,7 @@ class CartPage extends Component {
   }
 
   render() {
-    var {cart, onDeleteProductInCart, onUpdateProductInCart} = this.props;
+    var {cart, onDeleteProductInCart, onUpdateProductInCart, currency, userInfo} = this.props;
     var {totalPrice} = this.state;
     return (<>
       <div className="product-big-title-area">
@@ -75,8 +91,8 @@ class CartPage extends Component {
                       <tbody>
                         {cart.map((item, index) =>{
                           return (
-                            <CartItem key={index} cart={item} onDeleteProductInCart={onDeleteProductInCart}
-                            onUpdateProductInCart={onUpdateProductInCart}  setTotal={this.setTotal}/>
+                            <CartItem key={index} cart={item} onDeleteProductInCart={onDeleteProductInCart} currency={currency}
+                            onUpdateProductInCart={onUpdateProductInCart} setTotal={this.setTotal}/>
                           )
                         })}
                         <tr>
@@ -88,7 +104,7 @@ class CartPage extends Component {
                               <input type="submit" value="Apply Coupon" name="apply_coupon" className="button" />
                             </div>
                             <input type="submit" value="Update Cart" name="update_cart" className="button" />
-                            <button className="checkout-button button alt wc-forward" onClick={() => this.checkoutOrder()}>CHECKOUT</button>
+                            {userInfo && <button className="checkout-button button alt wc-forward" onClick={() => this.checkoutOrder()}>CHECKOUT</button>}
                           </td>
                           
                         </tr>
@@ -106,7 +122,7 @@ class CartPage extends Component {
                           <tbody>
                             <tr className="cart-subtotal">
                               <th>Cart Subtotal</th>
-                              <td><span className="amount">$ {cart && totalPrice}</span></td>
+                              <td><span className="amount">{cart ? currency ==="VND" ? totalPrice : tryConvert(totalPrice, currency, false) : 0} {currency}</span></td>
                             </tr>
 
                             <tr className="shipping">
@@ -116,7 +132,7 @@ class CartPage extends Component {
 
                             <tr className="order-total">
                               <th>Order Total</th>
-                              <td><strong><span className="amount">$ {cart && totalPrice}</span></strong> </td>
+                              <td><strong><span className="amount">{cart ? currency ==="VND" ? totalPrice : tryConvert(totalPrice, currency, false) : 0} {currency}</span></strong> </td>
                             </tr>
                           </tbody>
                         </table>
@@ -172,6 +188,8 @@ class CartPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     cart: state.cart,
+    currency: state.currency,
+    userInfo: state.auth.detail,
   }
 }
 

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 
-class CategoryDetail extends Component {
+class OperationDetail extends Component {
   constructor(props){
     super(props);
     const {product} = props;
     this.state = {
       id: product ? product.id : '',
       name: product ? product.name : '',
-      pathseo: product ? product.pathseo :'',
     }
   }
   onChange = (event) =>{
@@ -22,19 +21,19 @@ class CategoryDetail extends Component {
 
   onSubmit = (data, _id) =>{
     const {onSubmit} = this.props;
-    const {id, name, pathseo} = this.state;
-    data = {name, pathseo}
+    const {id, name} = this.state;
+    data = {name}
     _id = id;
     onSubmit(data, _id);
   }
 
 	render() {
-    const {name, pathseo} = this.state;
-    const { large, onClose, product} = this.props;
+    const {name } = this.state;
+    const { large, onClose, operation} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
-        <CModalTitle>{product ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}</CModalTitle>
+        <CModalTitle>{operation ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}</CModalTitle>
 				</CModalHeader>
 				<CModalBody>
 					<div className="row">
@@ -43,10 +42,6 @@ class CategoryDetail extends Component {
 								<div className="form-group">
 									<label>Tên loại sản phẩm:</label>
                   <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
-								</div>
-								<div className="form-group">
-									<label>Slug:</label>
-                  <input type="text" className="form-control" name="pathseo" value={pathseo} onChange={this.onChange}/>
 								</div>
               </form>
             </div>
@@ -65,4 +60,4 @@ class CategoryDetail extends Component {
 	}
 }
 
-export default CategoryDetail;
+export default OperationDetail;

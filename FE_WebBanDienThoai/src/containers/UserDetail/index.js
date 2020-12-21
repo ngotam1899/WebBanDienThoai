@@ -16,6 +16,13 @@ class UserDetail extends Component {
     }
   }
 
+  updateProfile =()=>{
+    const {userInfo, onUpdate} = this.props;
+    const {firstname, lastname, phonenumber, address, email, password} = this.state;
+    var data = {firstname, lastname, phonenumber, address, email, password}
+    onUpdate(userInfo._id, data);
+  }
+
   onChange = (event) => {
     var target = event.target;
     var name = target.name;

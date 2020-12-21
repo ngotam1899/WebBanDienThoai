@@ -29,6 +29,9 @@ class LoginPage extends Component {
 			onLogin(data);
 		}
 	}
+	onSubmit = (event) =>{
+    event.preventDefault();
+  }
 
 	onChange = (event) =>{
     var target=event.target;
@@ -72,11 +75,14 @@ class LoginPage extends Component {
 	}
 
 	responseGoogle = (response) => {
-    console.log("res",response.accessToken);
+		const {onLoginGoogle} = this.props;
+		console.log(response);
+		onLoginGoogle(response.accessToken);
   }
 
   responseFacebook = (response) => {
-    console.log("res",response.accessToken);
+		const {onLoginFacebook} = this.props;
+		onLoginFacebook(response.accessToken);
   }
 
 	render() {
@@ -89,7 +95,7 @@ class LoginPage extends Component {
 						<img src={ assets("bg.svg")} alt="" />
 					</div>
 					<div className="login-content">
-						<form action="index.html">
+						<form>
 							<img src="img/avatar.svg" alt="" />
 							<h2 className="title">Welcome to</h2>
 							<img className="pb-4" src={assets("brand.png")} alt=""></img>
@@ -117,10 +123,11 @@ class LoginPage extends Component {
 									<input className="btn" value="Login" onClick={()=> this.onLogin()}/>
 								</div>
 								<div classNameName="col-12 col-sm-6">
-									<form action="/user/dang-ky" method="get">
-									<input type="submit" className="btn" value="Register"/>
+									<form action="/user/dang-ky">
+										<input type="submit" className="btn" value="Register"/>
 									</form>
 								</div>
+								<form onSubmit={this.onSubmit}>
 								<div classNameName="col-12 col-sm-6">
 									<GoogleLogin
 									clientId={GOOGLE_ID}
@@ -133,17 +140,16 @@ class LoginPage extends Component {
 									/>
 								</div>
 								<div classNameName="col-12 col-sm-6">
-										<FacebookLogin
-										appId={FACEBOOK_ID}
-										autoLoad={false}
-										callback={this.responseFacebook}
-										render={renderProps => (
+									<FacebookLogin
+									appId={FACEBOOK_ID}
+									autoLoad={false}
+									callback={this.responseFacebook}
+									render={renderProps => (
 											<button onClick={renderProps.onClick}  className="btn-primary"><FontAwesomeIcon icon={faFacebookF} className="mr-1"/>Login with Facebook</button>
 										)}
 									/>
 								</div>
-								
-								
+								</form>
 							</div>
 						</form>
 					</div>
@@ -164,6 +170,12 @@ const mapDispatchToProps =(dispatch)=> {
 		onLogin : (data) =>{
 			dispatch(AuthorizationActions.onLogin(data))
 		},
+		onLoginFacebook : (token) =>{
+			dispatch(AuthorizationActions.onLoginFacebook(token))
+		},
+		onLoginGoogle : (token) =>{
+			dispatch(AuthorizationActions.onLoginGoogle(token))
+		}
 	}
 };
 
