@@ -37,11 +37,19 @@ const deleteOperation = async(req, res, next) => {
         const result = await Operation.findByIdAndDelete(IDColor);
         if (result) return res.status(200).json({ success: true, code: 200, message: '' })
     }
-
+}
+const getDetailOperation = async(req, res, next) => {
+    const { IDOperation } = req.params;
+    const isValid = await Validator.isValidObjId(IDOperation);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id operation is not correctly' }) } else {
+        const result = await Operation.findById(IDOperation);
+        return res.status(200).json({ success: true, code: 200, message: '', category: result })
+    }
 }
 
 module.exports = {
     getAllOperation,
+    getDetailOperation,
     addOperation,
     updateOperation,
     deleteOperation

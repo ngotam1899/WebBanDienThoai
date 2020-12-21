@@ -37,12 +37,21 @@ const deleteColor = async(req, res, next) => {
         const result = await Color.findByIdAndDelete(IDColor);
         if (result) return res.status(200).json({ success: true, code: 200, message: '' })
     }
+}
 
+const getDetailColor = async(req, res, next) => {
+    const { IDColor } = req.params;
+    const isValid = await Validator.isValidObjId(IDColor);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id Brand is not correctly' }) } else {
+        const result = await Color.findById(IDColor);
+        return res.status(200).json({ success: true, code: 200, message: '', category: result })
+    }
 }
 
 module.exports = {
     getAllColor,
     addColor,
     updateColor,
-    deleteColor
+    deleteColor,
+    getDetailColor
 }

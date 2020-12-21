@@ -23,6 +23,7 @@ router.route('/brands')
     .get(brandController.getAllBrand)
     .post(brandController.addBrand)
 router.route('/brands/:IDBrand')
+    .get(brandController.getDetailBrand)
     .put(brandController.updateBrand)
     .delete(brandController.deleteBrand)
 
@@ -33,7 +34,7 @@ router.route('/categorys')
 router.route('/categorys/:IDCategory')
     .put(categoryController.updateCategory)
     .delete(categoryController.deleteCategory)
-router.route('/categorys/detail/:IDCategory')
+router.route('/categorys/:IDCategory')
     .get(categoryController.getDetailCategory)
 
 
@@ -60,6 +61,7 @@ router.route('/colors')
 router.route('/colors/:IDColor')
     .put(colorController.updateColor)
     .delete(colorController.deleteColor)
+    .get(colorController.getDetailColor)
 
 //Region CPU
 router.route('/cpus')
@@ -82,6 +84,7 @@ router.route('/operations')
     .get(operationController.getAllOperation)
     .post(operationController.addOperation)
 router.route('/operations/:IDOperation')
+    .get(operationController.getDetailOperation)
     .put(operationController.updateOperation)
     .delete(operationController.deleteOperation)
 

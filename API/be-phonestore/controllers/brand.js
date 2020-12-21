@@ -41,10 +41,19 @@ const deleteBrand = async(req, res, next) => {
     }
 
 }
+const getDetailBrand = async(req, res, next) => {
+    const { IDBrand } = req.params;
+    const isValid = await Validator.isValidObjId(IDBrand);
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id Brand is not correctly' }) } else {
+        const result = await Brand.findById(IDBrand);
+        return res.status(200).json({ success: true, code: 200, message: '', category: result })
+    }
+}
 
 module.exports = {
     getAllBrand,
     addBrand,
     updateBrand,
-    deleteBrand
+    deleteBrand,
+    getDetailBrand
 }
