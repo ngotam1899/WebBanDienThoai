@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import Main from './containers/Main'
@@ -8,13 +8,14 @@ import RegisterPage from './components/RegisterPage';
 import { Provider } from "react-redux";
 import configureStore from "./redux/store";
 import GlobalLoading from './containers/GlobalLoading';
-
+import './i18n'
 const store = configureStore();
 
 class App extends Component {
  render() {
   return (
     <Provider store={store}>
+      <Suspense fallback={null}>
       <GlobalLoading/>
       <BrowserRouter>
         <Switch>
@@ -24,6 +25,7 @@ class App extends Component {
           <Redirect to="/" />
         </Switch>
       </BrowserRouter>
+      </Suspense>
     </Provider>
   );
  }

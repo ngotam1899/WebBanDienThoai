@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import {compose} from 'redux';
+import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 import './styles.css';
 // @Function
@@ -91,7 +93,7 @@ class ProductPage extends Component {
 
   render() {
     const {keyword} = this.state;
-    const { listProducts, onAddProductToCart,listColor, listBrand } = this.props;
+    const { listProducts, onAddProductToCart,listColor, listBrand, t } = this.props;
     return (
       <>
         <div className="product-big-title-area">
@@ -104,7 +106,7 @@ class ProductPage extends Component {
                         <input type="text" className="w-100" name="keyword" value={keyword} onChange={this.onChange}></input>
                       </div>
                       <div className="col-md-2 col-3">
-                        <button className="btn btn-danger w-100 h-100" onClick={() => this.searchKeyWorld()}>Tìm kiếm</button>
+                        <button className="btn btn-danger w-100 h-100" onClick={() => this.searchKeyWorld()}>{t('shop.search.button')}</button>
                       </div>
                     </div>
                 </div>
@@ -122,11 +124,11 @@ class ProductPage extends Component {
                 <div className="row">
                   <div className="col-6 col-md-12 ">
                     <div className="card bg-light mb-3">
-                      <div className="card-header bg-info text-white"><h5 className="m-0">Brands</h5></div>
+                      <div className="card-header bg-info text-white"><h5 className="m-0">{t('shop.brand.card')}</h5></div>
                       <div className="card-body">
                         <form>
                           <div className="radio">
-                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(null)}/>Tất cả</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(null)}/>{t('shop.all.radio-button')}</label>
                           </div>
                           {listBrand && 
                           listBrand.map((brand, index) =>{
@@ -141,11 +143,11 @@ class ProductPage extends Component {
                   </div>
                   <div className="col-6 col-md-12 ">
                     <div className="card bg-light mb-3">
-                      <div className="card-header bg-info text-white"><h5 className="m-0">Colors</h5></div>
+                      <div className="card-header bg-info text-white"><h5 className="m-0">{t('shop.color.card')}</h5></div>
                       <div className="card-body">
                         <form>
                           <div className="radio">
-                            <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(null)}/>Tất cả</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(null)}/>{t('shop.all.radio-button')}</label>
                           </div>
                           {listColor && listColor.map((color, index) =>{
                             return (
@@ -229,4 +231,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+
+export default compose(
+  withConnect,
+  withTranslation()
+)(ProductPage);

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {compose} from 'redux';
+import { withTranslation } from 'react-i18next'
 import { get } from "lodash";
 // @Actions
 import ProductsActions from '../../redux/actions/products'
@@ -68,7 +70,7 @@ class DetailPage extends Component {
 	}
 
   render() {
-    const {product, currency} = this.props;
+    const {product, currency, t} = this.props;
     const {quantity} = this.state;
     return (<>
       <div className="product-big-title-area">
@@ -76,7 +78,7 @@ class DetailPage extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="product-bit-title text-center">
-                <h2>Shop</h2>
+                <h2>{t('detail.shop.title')}</h2>
               </div>
             </div> 
           </div>
@@ -89,8 +91,8 @@ class DetailPage extends Component {
             <div className="col-md-12">
               <div className="product-content-right">
                 <div className="product-breadcroumb">
-                  <a href="/#/">Home</a>
-                  <a href="#">{product && this.setCategory(product.category)}</a>
+                  <a href="/#/">{t('header.home.menu')}</a>
+                  <a href="/#/">{product && this.setCategory(product.category)}</a>
                   <a href="#">{product && product.name}</a>
                 </div>
 
@@ -112,27 +114,27 @@ class DetailPage extends Component {
                       <form action="" className="cart">
                         <div className="quantity">
                           <div className="quantity buttons_added">
-                            <input type="button" className="minus" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
+                            <input type="button" className="minus h-100" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
                             <input type="number" size="4" className="input-text qty text" title="Qty" value={quantity} min="0"
                               step="1" />
-                            <input type="button" className="plus" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
+                            <input type="button" className="plus h-100" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
                           </div>
                         </div>
-                        <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>Add to cart</button>
+                        <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
                       </form>
 
                       <div className="product-inner-category">
-                        <p className="m-0">Category: <a href="">{this.setCategory(product.category)}</a></p>
-                        <p className="m-0">Brand: <a href="">{this.setBrand(product.brand)}</a></p>
-                        <p>Color: <a href="">{this.setColor(product.detail_info.mobile.color)}</a></p>
+                        <p className="mt-1 mb-0">{t('detail.category.label')}: <a href="">{this.setCategory(product.category)}</a></p>
+                        <p className="mt-1 mb-0">{t('detail.brand.label')}: <a href="">{this.setBrand(product.brand)}</a></p>
+                        <p className="mt-1">{t('detail.color.label')}: <a href="">{this.setColor(product.detail_info.mobile.color)}</a></p>
                       </div>
 
                       <ul className="nav nav-tabs">
                         <li className="nav-item">
-                          <a className="nav-link active" data-toggle="tab" href="#description">Description</a>
+                          <a className="nav-link active" data-toggle="tab" href="#description">{t('detail.description.select')}</a>
                         </li>
                         <li className="nav-item">
-                          <a className="nav-link" data-toggle="tab" href="#review">Reviews</a>
+                          <a className="nav-link" data-toggle="tab" href="#review">{t('detail.review.select')}</a>
                         </li>
                       </ul>
 
@@ -143,67 +145,63 @@ class DetailPage extends Component {
                             <thead class="thead-inverse">
                               <tbody>
                                 <tr>
-                                  <td scope="row">Display</td>
+                                  <td scope="row">{t('detail.mobile.display')}</td>
                                   <td>{product.detail_info.mobile.display}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Revolution</td>
-                                  <td>{product.detail_info.mobile.revolution}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">Widescreen</td>
+                                  <td scope="row">{t('detail.mobile.widescreen')}</td>
                                   <td>{product.detail_info.mobile.widescreen}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Operation</td>
+                                  <td scope="row">{t('detail.mobile.operation')}</td>
                                   <td>{this.setOperation(product.detail_info.mobile.operation)}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Camera 1</td>
+                                  <td scope="row">{t('detail.mobile.camera1')}</td>
                                   <td>{product.detail_info.mobile.camera1}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Camera 2</td>
+                                  <td scope="row">{t('detail.mobile.camera2')}</td>
                                   <td>{product.detail_info.mobile.camera2}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">CPU</td>
+                                  <td scope="row">{t('detail.mobile.cpu')}</td>
                                   <td>{product.detail_info.mobile.cpu}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">RAM</td>
+                                  <td scope="row">{t('detail.mobile.ram')}</td>
                                   <td>{product.detail_info.mobile.ram} GB</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Memory</td>
+                                  <td scope="row">{t('detail.mobile.memory')}</td>
                                   <td>{product.detail_info.mobile.memory} GB</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Microcard</td>
+                                  <td scope="row">{t('detail.mobile.microcard')}</td>
                                   <td>{product.detail_info.mobile.microcard}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Sim</td>
+                                  <td scope="row">{t('detail.mobile.sim')}</td>
                                   <td>{product.detail_info.mobile.sim}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Network</td>
+                                  <td scope="row">{t('detail.mobile.network')}</td>
                                   <td>{product.detail_info.mobile.network}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Pin</td>
+                                  <td scope="row">{t('detail.mobile.pin')}</td>
                                   <td>{product.detail_info.mobile.pin}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Quick Charging</td>
+                                  <td scope="row">{t('detail.mobile.quickcharging')}</td>
                                   <td>{product.detail_info.mobile.quickcharging}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Weight</td>
+                                  <td scope="row">{t('detail.mobile.weight')}</td>
                                   <td>{product.detail_info.mobile.weight}</td>
                                 </tr>
                                 <tr>
-                                  <td scope="row">Thick</td>
+                                  <td scope="row">{t('detail.mobile.thick')}</td>
                                   <td>{product.detail_info.mobile.thick}</td>
                                 </tr>
                               </tbody>
@@ -213,11 +211,10 @@ class DetailPage extends Component {
                         <div className="tab-pane container fade" id="review">
                           <br />
                           <div className="submit-review">
-                            <p><label>Name</label> <input name="name" type="text" /></p>
+                            <p><label>{t('detail.name.label')}</label> <input name="name" type="text" /></p>
                             <p><label>Email</label> <input name="email" type="email" /></p>
                             <div className="rating-chooser">
-                              <p className="m-0">Your rating</p>
-
+                              <p className="m-0">{t('detail.rating.label')}</p>
                               <div className="rating-wrap-post">
                                 <i className="fa fa-star"></i>
                                 <i className="fa fa-star"></i>
@@ -226,8 +223,8 @@ class DetailPage extends Component {
                                 <i className="fa fa-star"></i>
                               </div>
                             </div>
-                            <p><label>Your review</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
-                            <p><input type="submit" value="Submit" /></p>
+                            <p><label>{t('detail.review.label')}</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
+                            <p><input type="submit" value={t('detail.submit.button')} /></p>
                           </div>
                         </div>
                       </div>
@@ -281,5 +278,9 @@ const mapDispatchToProps = (dispatch, props) => {
   }
 }
 
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default connect(mapStateToProps, mapDispatchToProps) (DetailPage);
+export default compose(
+  withConnect,
+  withTranslation()
+)(DetailPage);

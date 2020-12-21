@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom'
+import {compose} from 'redux';
+import { withTranslation } from 'react-i18next'
 // @Functions
 import tryConvert from '../../utils/changeMoney'
 
@@ -11,7 +13,7 @@ class ProductItem extends Component {
 	}
 
 	render() {
-    const {product, currency} = this.props;
+    const {product, currency, t} = this.props;
 		return (
 			<div className="col-md-3 col-sm-6">
 				<div className="single-shop-product text-center">
@@ -30,7 +32,7 @@ class ProductItem extends Component {
 							className="add_to_cart_button"
 							onClick ={ () => this.onAddToCart(product)}
 						>
-							Add to cart
+							{t('shop.add-to-cart.button')}
 						</button>
 					</div>
 				</div>
@@ -51,4 +53,9 @@ const mapDispatchToProps = (dispatch, props) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps) (ProductItem);
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+
+export default compose(
+  withConnect,
+  withTranslation()
+)(ProductItem);

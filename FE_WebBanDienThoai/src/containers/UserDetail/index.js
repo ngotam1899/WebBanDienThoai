@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {compose} from 'redux';
+import { withTranslation } from 'react-i18next'
 // @Actions
 import UsersActions from '../../redux/actions/user'
 
@@ -34,29 +36,30 @@ class UserDetail extends Component {
 
   render() {
     const {firstname, lastname, phonenumber, address, email} = this.state;
+    const {t} = this.props;
     return (  
       <div show="true" className="modal fade" id="infoModal" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Thông tin khách hàng</h5>
+              <h5 class="modal-title">{t('user.info.card')}</h5>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
               <div className="form-group">
-                <label>First name:</label>
+                <label>{t('checkout.firstname.input')}:</label>
                 <input type="text" className="form-control" name="firstname" value={firstname} onChange={this.onChange}/>
               </div>
               <div className="form-group">
-                <label>Last name: </label>
+                <label>{t('checkout.lastname.input')}: </label>
                 <input type="text" className="form-control" name="lastname" value={lastname} onChange={this.onChange}/>
               </div>
               <div className="form-group">
-                <label>Số điện thoại: </label>
+                <label>{t('checkout.phone.input')}i: </label>
                 <input type="number" className="form-control" name="phonenumber" value={phonenumber} onChange={this.onChange}/>
               </div>
               <div className="form-group">
-                <label>Địa chỉ: </label>
+                <label>{t('checkout.address.input')}: </label>
                 <input type="text" className="form-control" name="address" value={address} onChange={this.onChange}/>
               </div>
               <div className="form-group">
@@ -65,8 +68,8 @@ class UserDetail extends Component {
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.updateProfile()}>Lưu thay đổi</button>
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.updateProfile()}>{t('user.save-change.button')}</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> 
         </div>
@@ -89,5 +92,9 @@ const mapDispatchToProps =(dispatch)=> {
 	}
 };
 
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default connect(mapStateToProps, mapDispatchToProps) (UserDetail);
+export default compose(
+  withConnect,
+  withTranslation()
+)(UserDetail);
