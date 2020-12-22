@@ -16,9 +16,7 @@ router.route('/authentication/activate/:tokenUser')
 router.route('/signin')
     .post(passport.authenticate('local', { session: false }), userController.signIn)
 router.route('/auth/google')
-    .post(passport.authenticate('google', {
-        scope: ['profile', 'email']
-    }), userController.authGoogle)
+    .post(passport.authenticate('google-token', { session: false }), userController.authGoogle)
 router.route('/auth/facebook')
     .post(passport.authenticate('facebook-token', { session: false }), userController.authFacebook)
 router.route('/signup')

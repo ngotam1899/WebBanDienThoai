@@ -2,7 +2,7 @@ const passport = require('passport')
 const JwtStrategy = require('passport-jwt').Strategy
 const { ExtractJwt } = require('passport-jwt')
 const LocalStrategy = require('passport-local').Strategy
-const GoogleTokenStrategy = require('passport-google-oauth').OAuth2Strategy
+const GoogleTokenStrategy = require('passport-google-token').Strategy
 const FacebookTokenStrategy = require('passport-facebook-token')
 const { JWT_SECRET, GoogleID, GoogleSecret, FacebookID, FacebookSecret } = require('../configs/config')
 
@@ -62,7 +62,12 @@ passport.use(new FacebookTokenStrategy({
             done(null, user);
         } else if (profile.emails[0].value != "") {
             let user = await User.find({ email: profile.emails[0].value });
-            if (user) done(null, user);
+            if (user) {
+                user.auth_facebook_id = profile.id;
+                user.auth_type = 'facebook';
+                await user.save()
+                done(null, user);
+            }
         } else {
             const image = new Image_User({
                 name: profile.displayName,
@@ -91,40 +96,47 @@ passport.use(new FacebookTokenStrategy({
 //passport Google
 passport.use(new GoogleTokenStrategy({
         clientID: GoogleID,
-        clientSecret: GoogleSecret,
+        clientSecret: GoogleSecret
     },
-    function(accessToken, refreshToken, profile, cb) {
-        console.log('ada')
-        console.log(profile)
-        cb(null, true)
-    }
-));
-/*
-    const user = await User.findOne({
+    async(accessToken, refreshToken, profile, done) => {
+        try {
+            const user = await User.findOne({
                 auth_google_id: profile.id,
                 auth_type: 'google'
             });
             if (user) {
                 done(null, user);
             } else {
-                const image = new Image_User({
-                    name: profile.displayName,
-                    public_url: profile.photos[0].value
-                })
+                const user = await User.findOne({ email: profile.emails[0].value });
+                if (user) {
+                    user.auth_google_id = profile.id;
+                    user.auth_type = 'google'
+                    await user.save();
+                    done(null, user);
+                } else {
+                    const image = new Image_User({
+                        name: profile.displayName,
+                        public_url: profile._json.picture
+                    })
 
-                await image.save();
+                    await image.save();
 
-                const newUser = new User({
-                    firstname: profile.name.givenName,
-                    lastname: profile.name.familyName,
-                    image: image._id,
-                    email: profile.emails[0].value,
-                    auth_google_id: profile.id,
-                    auth_type: 'google',
-                    confirmed: true,
-                    role: '1'
-                });
-                await newUser.save();
-                done(null, newUser);
+                    const newUser = new User({
+                        firstname: profile.name.givenName,
+                        lastname: profile.name.familyName,
+                        image: image._id,
+                        email: profile.emails[0].value,
+                        auth_google_id: profile.id,
+                        auth_type: 'google',
+                        confirmed: true,
+                        role: '1'
+                    });
+                    await newUser.save();
+                    done(null, newUser);
+                }
             }
-    */
+        } catch (error) {
+            done(error, false)
+        }
+    }
+));
