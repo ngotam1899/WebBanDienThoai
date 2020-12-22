@@ -25,9 +25,12 @@
         "os": "^0.1.1",
         "passport": "^0.4.1",
         "passport-facebook-token": "^4.0.0",
+        "passport-google-oauth": "^2.0.0",
+        "passport-google-oauth20": "^2.0.0",
         "passport-google-plus-token": "^2.1.0",
         "passport-jwt": "^4.0.0",
-        "passport-local": "^1.0.0"
+        "passport-local": "^1.0.0",
+        "passport-token-google2": "^0.1.4"
     },
     "devDependencies": {
         "morgan": "^1.10.0"

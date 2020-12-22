@@ -45,6 +45,15 @@ const OrderSchema = new Schema({
     note: {
         type: String
     },
+    is_paid: {
+        type: Boolean,
+        default: false
+    },
+    payment_method: {
+        type: String,
+        enum: ['local', 'paypal'],
+        default: 'local'
+    },
     status: {
         type: Boolean,
         default: false

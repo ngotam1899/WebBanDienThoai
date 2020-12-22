@@ -4,6 +4,7 @@ const cors = require('cors')
 
 const express = require('express');
 const cloudinary = require('cloudinary').v2
+const passport = require('passport')
     //const logger = require('morgan');
 
 const routerUser = require('./routes/user')
@@ -64,6 +65,8 @@ app.use(function(req, res, next) {
     next();
 });
 app.use(bodyParser.json())
+
+app.use(passport.initialize())
 
 //Routes
 app.use('/users', routerUser)

@@ -24,6 +24,10 @@ const transporter = nodemailer.createTransport({
         type: 'login',
         user: EMAIL_NAME,
         pass: PASS
+    },
+    tls: {
+        // do not fail on invalid certs
+        rejectUnauthorized: false
     }
 })
 
@@ -147,7 +151,7 @@ const secret = async(req, res, next) => {
 }
 const sendEmail = (email) => {
     const token = service.encodedToken(email, '1h');
-    const url = "http://localhost:4000/#/account/active/" + token;
+    const url = "http://localhost:5000/#/account/active/" + token;
     const at = {
         from: '"noreply@be-phonestore.herokuapp.com" <noreply@be-phonestore.herokuapp.com/>',
         to: email,
