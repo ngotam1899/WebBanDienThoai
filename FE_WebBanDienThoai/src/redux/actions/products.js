@@ -25,6 +25,8 @@ export const ProductsActionTypes = {
   ADD_PRODUCT_TO_CART: "ADD_PRODUCT_TO_CART",
   UPDATE_PRODUCT_CART: "UPDATE_PRODUCT_CART",
   DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
+
+  CHANGE_CURRENCY: "CHANGE_CURRENCY",
 };
 
 Object.keys(ProductsActionTypes).forEach((key) => {
@@ -147,18 +149,22 @@ const onAddProductToCart = (product, quantity) =>({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
   product, quantity
 })
-
 const onDeleteProductInCart = (product) =>{
   return {
     type: ProductsActionTypes.DELETE_PRODUCT_CART,
     product
   }
 }
-
 const onUpdateProductInCart = (product, quantity) =>{
   return {
     type: ProductsActionTypes.UPDATE_PRODUCT_CART,
     product, quantity
+  }
+}
+const onChangeCurrency = (unit) =>{
+  return {
+    type: ProductsActionTypes.CHANGE_CURRENCY,
+    payload: unit
   }
 }
 const ProductsActions = {
@@ -188,6 +194,7 @@ const ProductsActions = {
   onAddProductToCart,
   onDeleteProductInCart,
   onUpdateProductInCart,
+  onChangeCurrency,
 };
 
 export default ProductsActions;

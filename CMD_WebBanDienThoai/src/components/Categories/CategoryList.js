@@ -11,13 +11,11 @@ import {
   CRow,
 } from '@coreui/react'
 import CategoryDetail from './CategoryDetail'
-import ImagesActions from "../../redux/actions/cloudinary";
-import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
 
-const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { width: '15%'} }]
+const fields = ['name','slug', { key: 'actions', _style: { width: '15%'} }]
 
-class ProductList extends Component {
+class CategoryList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,11 +23,9 @@ class ProductList extends Component {
     }
   }
   componentDidMount() {
-    const { onClearState,onGetListImage, onGetListBrand, onGetListCategory } = this.props;
+    const { onClearState, onGetList } = this.props;
     onClearState();
-    onGetListImage();
-    onGetListBrand();
-    onGetListCategory();
+    onGetList();
   }
 
   setLarge = (large) => {
@@ -65,21 +61,9 @@ class ProductList extends Component {
     }
   }
 
-  setImage = (image) => {
-    const {listImages} = this.props;
-    const img = listImages.find(obj => obj._id === image);
-    return get(img, "public_url");
-  }
-
-  setBrand = (brand) =>{
-    const {listBrands} = this.props;
-    const brandName = listBrands.find(obj => obj._id === brand);
-    return get(brandName, "name");
-  }
-
   render () {
     const {large} = this.state;
-    const {listProducts, productDetail, listCategories, listBrands, listImages, onClearDetail} = this.props;
+    const {listCategories} = this.props;
     return (
       <>
         <CRow>
@@ -91,13 +75,13 @@ class ProductList extends Component {
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
                   color="success"
-                > Thêm sản phẩm
+                > Thêm loại sản phẩm
                 </CButton>
               </CCardHeader>
 
-              {listImages && listBrands && listCategories && <CCardBody>
+              <CCardBody>
                 <CDataTable
-                  items={listProducts}
+                  items={listCategories}
                   fields={fields}
                   hover
                   striped
@@ -105,14 +89,8 @@ class ProductList extends Component {
                   itemsPerPage={10}
                   pagination
                   scopedSlots = {{
-                    'image':
-                    (item) => (
-                      <td>
-                        <img src={ this.setImage(item.bigimage) } style={{width:'10vw'}} alt=""/>
-                      </td>
-                    ),
-                    'brand': (item) => (
-                      <td>{this.setBrand(item.brand)}</td>
+                    'slug': (item) => (
+                      <td>{item.pathseo}</td>
                     ),
                     'actions':
                     (item)=>(
@@ -134,14 +112,14 @@ class ProductList extends Component {
                       </td>)
                   }}
                 />
-                {(productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
+                {/* {(productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
 
                 {(!productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
                 setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
-              </CCardBody>}
+                onSubmit={this.onSubmit}/>} */}
+              </CCardBody>
             </CCard>
           </CCol>
         </CRow>
@@ -152,23 +130,13 @@ class ProductList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listProducts: state.products.list,
-    productDetail: state.products.detail,
-    listImages: state.cloudinary.list,
-    listBrands: state.brands.list,
     listCategories: state.categories.list,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetListImage: () => {
-      dispatch(ImagesActions.onGetList())
-    },
-    onGetListBrand: () => {
-      dispatch(BrandActions.onGetList())
-    },
-    onGetListCategory: () => {
+    onGetList: () => {
       dispatch(CategoryActions.onGetList())
     },
     onClearState: () =>{
@@ -180,4 +148,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductList)
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryList)

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import OrdersActions from '../../redux/actions/order'
 import {connect} from 'react-redux';
+import {compose} from 'redux';
+import { withTranslation } from 'react-i18next'
 
 class OrderDetail extends Component {
   confirmOrder(id) {
@@ -9,30 +11,30 @@ class OrderDetail extends Component {
   }
 
   render() {
-    const {orderItem} = this.props;
+    const {orderItem, t} = this.props;
     return (
       <div show="true" className="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
           {orderItem && <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Thông tin đơn hàng {orderItem._id}</h5>
+              <h5 class="modal-title">{t('user.info-bill.card')} {orderItem._id}</h5>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
               <div className="form-group">
-                <label>Ngày tạo đơn:</label>
+                <label>{t('user.date.input')}:</label>
                 <input type="text" className="form-control" name="createdAt" value={Date(orderItem.createdAt)} disabled/>
               </div>
               <div className="form-group">
-                <label>Tổng hóa đơn: (VND)</label>
+                <label>{t('user.total.input')}: (VND)</label>
                 <input type="number" className="form-control" name="total_price" value={orderItem.total_price} disabled/>
               </div>
               <div className="form-group">
-                <label>Tình trạng đơn:</label>
+                <label>{t('user.status.label')}:</label>
                 <input type="text" className="form-control" name="status" value={orderItem.status===true ? 'Đã giao hàng' : 'Chưa giao hàng'} disabled/>
               </div>
               <div className="form-group">
-                <label>Tình trạng hàng:</label>
+                <label>{t('user.confirm.label')}:</label>
                 <div className="row">
                   <div className={orderItem.confirmed===true ? "col-12": "col-9"}>
                     <input type="text" className="form-control" name="confirmed" value={ orderItem.confirmed===true ? 'Đã xác nhận đơn hàng' : 'Chưa xác nhận'} disabled/>
@@ -43,7 +45,7 @@ class OrderDetail extends Component {
                 </div>
               </div>
               <div className="form-group">
-                <label>Thành phần:</label>
+                <label>{t('user.item.list')}:</label>
                 {orderItem.order_list.map((item, index) =>{
                   return (
                   <div className="card my-1" key={index}>
@@ -64,20 +66,20 @@ class OrderDetail extends Component {
                 }
               </div>
               <div className="form-group">
-                <label>Số điện thoại người nhận:</label>
+                <label>{t('user.phone.order')}:</label>
                 <input type="number" className="form-control" name="shipping_phonenumber" value={orderItem.shipping_phonenumber} disabled/>
               </div>
               <div className="form-group">
-                <label>Địa chỉ nhận:</label>
+                <label>{t('user.address.order')}:</label>
                 <input type="text" className="form-control" name="shipping_address" value={orderItem.shipping_address} disabled/>
               </div>
               <div className="form-group">
-                <label>Email xác nhận:</label>
+                <label>{t('user.email.order')}:</label>
                 <input type="email" className="form-control" name="email" value={orderItem.email} disabled/>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }
         </div>
@@ -99,5 +101,9 @@ const mapDispatchToProps =(dispatch)=> {
 	}
 };
 
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default connect(mapStateToProps, mapDispatchToProps) (OrderDetail);
+export default compose(
+  withConnect,
+  withTranslation()
+)(OrderDetail);

@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import './styles.css';
 import { assets } from '../../constants/assetsImage';
+import { withTranslation } from 'react-i18next'
 
 class HomePage extends Component {
+    
     render() {
+        const {t} = this.props;
         return (
             <>
                <div className="slider-area">
@@ -16,7 +19,7 @@ class HomePage extends Component {
 								iPhone <span className="primary">6 <strong>Plus</strong></span>
 							</h2>
 							<h4 className="caption subtitle">Dual SIM</h4>
-							<a className="caption button-radius" href="#"><span className="icon"></span>Shop now</a>
+							<a className="caption button-radius" href="#"><span className="icon"></span>{t('home.shop.button')}</a>
 						</div>
 					</li>
 				</ul>
@@ -30,25 +33,25 @@ class HomePage extends Component {
                 <div className="col-md-3 col-sm-6">
                     <div className="single-promo promo1">
                         <i className="fa fa-sync-alt"></i>
-                        <p>30 Days return</p>
+                        <p>{t('home.feature.1')}</p>
                     </div>
                 </div>
                 <div className="col-md-3 col-sm-6">
                     <div className="single-promo promo2">
                         <i className="fa fa-truck"></i>
-                        <p>Free shipping</p>
+                        <p>{t('cart.free-ship')}</p>
                     </div>
                 </div>
                 <div className="col-md-3 col-sm-6">
                     <div className="single-promo promo3">
                         <i className="fa fa-lock"></i>
-                        <p>Secure payments</p>
+                        <p>{t('home.feature.3')}</p>
                     </div>
                 </div>
                 <div className="col-md-3 col-sm-6">
                     <div className="single-promo promo4">
                         <i className="fa fa-gift"></i>
-                        <p>New products</p>
+                        <p>{t('home.feature.4')}</p>
                     </div>
                 </div>
             </div>
@@ -57,7 +60,7 @@ class HomePage extends Component {
     
     <div className="maincontent-area">
         <div className="zigzag-bottom"></div>
-        <div className="container">
+        {/* <div className="container">
             <div className="row">
                 <div className="col-md-12">
                     <div className="latest-product">
@@ -136,7 +139,7 @@ class HomePage extends Component {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> */}
     </div> 
     
     <div className="brands-area">
@@ -161,7 +164,7 @@ class HomePage extends Component {
         </div>
     </div>
     
-    <div className="product-widget-area">
+    {/* <div className="product-widget-area">
         <div className="zigzag-bottom"></div>
         <div className="container">
             <div className="row">
@@ -310,11 +313,11 @@ class HomePage extends Component {
                     </div>
                 </div>
             </div>
-        </div>
-    </div> 
+        </div> 
+      </div> */}
             </>
         );
     }
 }
 
-export default HomePage;
+export default withTranslation() (HomePage);

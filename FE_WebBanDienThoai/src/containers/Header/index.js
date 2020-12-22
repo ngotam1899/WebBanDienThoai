@@ -1,27 +1,47 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom'
 import {connect} from 'react-redux';
+import {compose} from 'redux';
 import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
+import tryConvert from '../../utils/changeMoney'
+import { withTranslation } from 'react-i18next'
+
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth'
 import CategoryActions from "../../redux/actions/categories";
+import ProductsActions from '../../redux/actions/products'
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
       total: 0,
-      totalPrice: 0
+      totalPrice: 0,
+      currencyCode: "VND",
     }
+    this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
+  
   componentDidMount(){
     const {onGetProfile, onGetListCategory} = this.props;
     const token = localStorage.getItem('AUTH_USER')
     onGetProfile(null,token);
     onGetListCategory();
+  }
+
+  handleChangeCurrency = (event) => {
+    const {onChangeCurrency} = this.props;
+    this.setState({
+      currencyCode: event.target.value
+    })
+    onChangeCurrency(event.target.value);
+  }
+
+  changeLanguage = (event) => {
+    this.props.i18n.changeLanguage(event.target.value)
   }
 
   componentWillReceiveProps(props) {
@@ -43,6 +63,7 @@ class Header extends Component {
     localStorage.removeItem('AUTH_USER')
     onLogout()
   }
+  
 
   render() {
     const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
@@ -57,8 +78,10 @@ class Header extends Component {
         }} />
       )
     }
-    const {total, totalPrice}=this.state;
-    const {userInfo, isLogin, listCategories} = this.props;
+    const {total, totalPrice, currencyCode}=this.state;
+    const {userInfo, isLogin, listCategories, t} = this.props;
+    const notVND = currencyCode=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2);
+    
     return (
       <>
         <div className="header-area">
@@ -67,12 +90,16 @@ class Header extends Component {
               <div className="col-md-8">
                 <div className="user-menu">
                   <ul>
-                    {userInfo && <li><a href="/#/account/detail"><FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}</a></li>}
-                    <li><a href="/#/carts"><i className="fa fa-heart"></i> My Cart</a></li>
-                    <li><a href="/#/carts/checkout"><i className="fa fa-user"></i> Checkout</a></li>
+                    {userInfo && <>
+                      <li><a href="/#/account/detail"><FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}</a></li>
+                      <li><a href="/#/carts"><i className="fa fa-luggage-cart"></i> {t('header.mycart.button')}</a></li>
+                      <li><a href="/#/carts/checkout"><i className="fa fa-credit-card"></i> {t('header.checkout.button')}</a></li></>}
                     {isLogin===false
-                    ? <li><a href="/user/dang-nhap"><i className="fa fa-user"></i> Login</a></li>
-                    : <li><button type="button" className="btn-logout" style={{'outline': 'none'}} onClick={() => this.setLogout()}><i className="fa fa-user"></i> Logout</button></li>}
+                    ? <>
+                        <li><a href="/user/dang-nhap"><i className="fa fa-sign-in-alt"></i> {t('header.login.button')}</a></li>
+                        <li><a href="/user/dang-ky"><i className="fa fa-user-plus"></i> {t('header.signup.button')}</a></li>
+                      </>
+                    : <li><button type="button" className="btn-logout" style={{'outline': 'none'}} onClick={() => this.setLogout()}><i className="fa fa-sign-out-alt"></i> {t('header.logout.button')}</button></li>}
                   </ul>
                 </div>
               </div>
@@ -81,21 +108,19 @@ class Header extends Component {
                 <div className="header-right">
                   <ul className="list-inline ">
                     <li className="dropdown dropdown-small">
-                      <a data-toggle="dropdown" data-hover="dropdown" className="dropdown-toggle" href="#"><span className="key">currency :</span><span className="value">USD </span><b className="caret"></b></a>
-                      <ul className="dropdown-menu">
-                        <li><a href="#">USD</a></li>
-                        <li><a href="#">INR</a></li>
-                        <li><a href="#">GBP</a></li>
-                      </ul>
+                    <select className="select-box" onChange={this.handleChangeCurrency}>
+                      <option value="VND">{t('header.vnd.select')}</option>
+                      <option value="USD">{t('header.usd.select')}</option>
+                      <option value="CNY">{t('header.cny.select')}</option>
+                      <option value="EUR">{t('header.eur.select')}</option>
+                      <option value="JPY">{t('header.jpy.select')}</option>
+                    </select>
                     </li>
-
                     <li className="dropdown dropdown-small">
-                      <a data-toggle="dropdown" data-hover="dropdown" className="dropdown-toggle" href="#"><span className="key">language :</span><span className="value">English </span><b className="caret"></b></a>
-                      <ul className="dropdown-menu">
-                        <li><a href="#">English</a></li>
-                        <li><a href="#">French</a></li>
-                        <li><a href="#">German</a></li>
-                      </ul>
+                    <select className="select-box" onChange={this.changeLanguage}>
+                      <option value="en" name="language">{t('header.english.select')}</option>
+                      <option value="vn" name="language">{t('header.vietnamese.select')}</option>
+                    </select>
                     </li>
                   </ul>
                 </div>
@@ -115,7 +140,7 @@ class Header extends Component {
 
               <div className="col-sm-6 col-md-7 col-lg-8 col-xl-9">
                 <div className="shopping-item">
-                  <Link to="/carts">Cart - <span className="cart-amunt">$ {totalPrice}</span> <i className="fa fa-shopping-cart"></i> <span className="product-count">{total}</span></Link>
+                  <Link to="/carts">{t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> <i className="fa fa-shopping-cart"></i><span className="product-count">{total}</span></Link>
                 </div>
               </div>
             </div>
@@ -132,7 +157,7 @@ class Header extends Component {
                 </button>
                 <div className="collapse navbar-collapse" id="collapsibleNavId">
                   <ul className="navbar-nav mr-auto mt-lg-0">
-                    <MenuLink label="Trang chủ" to="/" activeOnlyWhenExact={true} />
+                    <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true} />
                     {listCategories && listCategories.map((category, index)=>{
                       return (
                         <MenuLink key={index} label={category.name} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
@@ -169,8 +194,14 @@ const mapDispatchToProps =(dispatch)=> {
     onGetListCategory: () => {
       dispatch(CategoryActions.onGetList())
     },
+    onChangeCurrency: (unit) => {
+      dispatch(ProductsActions.onChangeCurrency(unit));
+    },
 	}
 };
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-
-export default connect(mapStateToProps, mapDispatchToProps) (Header);
+export default compose(
+  withConnect,
+  withTranslation()
+)(Header);

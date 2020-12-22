@@ -6,12 +6,23 @@ export const BrandActionTypes = {
   GET_DETAIL: "GET_DETAIL",
   GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
   GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
+
+  CLEAR_DETAIL: "CLEAR_DETAIL",
+  CLEAR_STATE: "CLEAR_STATE",
 };
 
 Object.keys(BrandActionTypes).forEach((key) => {
   BrandActionTypes[
     key
   ] = `BRAND_${BrandActionTypes[key]}`;
+});
+
+const onClearDetail = () => ({
+  type: BrandActionTypes.CLEAR_DETAIL,
+});
+
+const onClearState = () => ({
+  type: BrandActionTypes.CLEAR_STATE,
 });
 
 const onGetList = (payload) => ({
@@ -50,6 +61,9 @@ const BrandActions = {
   onGetDetail,
   onGetDetailSuccess,
   onGetDetailError,
+
+  onClearDetail,
+  onClearState,
 };
 
 export default BrandActions;

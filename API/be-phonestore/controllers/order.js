@@ -114,7 +114,7 @@ const requestSendEmail = async(req, res, next) => {
 }
 const sendEmail = async(email, IDOrder) => {
     const token = service.encodedToken(IDOrder, '1h');
-    const url = "http://localhost:4000/#/order/active/" + token;
+    const url = "https://localhost:5000/#/order/active/" + token;
     const at = {
         from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
         to: email,

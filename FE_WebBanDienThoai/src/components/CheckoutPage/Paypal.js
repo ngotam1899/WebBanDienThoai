@@ -8,6 +8,7 @@ export default function Paypal({totalPrice}) {
   useEffect(() => {
     window.paypal.Buttons({
         createOrder: (data, actions, err) => {
+          console.log(totalPrice);
           return actions.order.create({
             intent: "CAPTURE",
             purchase_units: [

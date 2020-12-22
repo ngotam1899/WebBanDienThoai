@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+// @Functions
+import tryConvert from '../../utils/changeMoney'
 
 class CartItem extends Component {
   onUpdateQuantity = (product, quantity) => {
@@ -14,7 +16,7 @@ class CartItem extends Component {
   }
 
   render() {
-    var {cart} = this.props;
+    var {cart, currency} = this.props;
     var {product} = cart;
     var {quantity} = cart;
     return (
@@ -34,7 +36,8 @@ class CartItem extends Component {
         </td>
 
         <td className="product-price">
-          <span className="amount">{product.price}</span>
+          <span className="amount">{currency ==="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)}</span>
+          
         </td>
 
         <td className="product-quantity">
@@ -47,7 +50,8 @@ class CartItem extends Component {
         </td>
 
         <td className="product-subtotal">
-          <span className="amount">{quantity*product.price}</span>
+          <span className="amount">{currency ==="VND" ? quantity*product.price : parseFloat(quantity*tryConvert(product.price, currency, false)).toFixed(2)}</span>
+          
         </td>
       </tr>
     </>

@@ -29,10 +29,14 @@ class RegisterPage extends Component {
 	}
 	
 	onRegister(data){
-		const {firstname, lastname, phonenumber, address, email, password} = this.state;
+		const {firstname, lastname, phonenumber, address, email, password, confirmPassword} = this.state;
 		const {onRegister} = this.props;
 		data = {firstname, lastname, phonenumber, address, email, password};
-		onRegister(data);
+		if(password === confirmPassword){
+			onRegister(data);
+		}else{
+			console.log("confirmPassword sai")
+		}
 	}
 
 	componentDidMount(){ 
@@ -143,8 +147,18 @@ class RegisterPage extends Component {
 										</div>
                     </div>
 										<div className="row">
-											<div className="col-12">
+											<div className="col-md-3 col-12">
+												<form className="p-0" action="/user/dang-nhap">
+													<input type="submit" className="btn" value="Login"/>
+												</form>
+											</div>
+											<div className="col-md-6 col-12">
 												<input className="btn" value="Register" onClick={() => this.onRegister()}/>
+											</div>
+											<div className="col-md-3 col-12">
+												<form className="p-0" action="/">
+													<input type="submit" className="btn" value="Home"/>
+												</form>
 											</div>
 										</div>
 									</form>

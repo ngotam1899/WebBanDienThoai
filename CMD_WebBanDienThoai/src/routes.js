@@ -1,6 +1,11 @@
 import React from 'react';
 const ProductList = React.lazy(() => import('./components/Products/ProductList'));
 const CategoryList = React.lazy(() => import('./components/Categories/CategoryList'));
+const BrandList = React.lazy(() => import('./components/Brands/BrandList'));
+const ColorList = React.lazy(() => import('./components/Colors/ColorList'));
+const OperationList = React.lazy(() => import('./components/Operations/OperationList'));
+const UserList = React.lazy(() => import('./components/Users/UserList'));
+
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
 const Toaster = React.lazy(() => import('./views/notifications/toaster/Toaster'));
 
@@ -43,7 +48,13 @@ const User = React.lazy(() => import('./views/users/User'));
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/products/product-manage', name: 'Product List', component: ProductList },
-  { path: '/products/category-manage', name: 'Product List', component: CategoryList },
+  { path: '/products/category-manage', name: 'Category List', component: CategoryList },
+  { path: '/products/brand-manage', name: 'Brand List', component: BrandList },
+  { path: '/products/color-manage', name: 'Color List', component: ColorList },
+  { path: '/products/operation-manage', name: 'Operation List', component: OperationList },
+
+  { path: '/users/user-manage', name: 'User List', component: UserList },
+
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },

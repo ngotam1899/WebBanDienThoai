@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {compose} from 'redux';
+import { withTranslation } from 'react-i18next'
 import './styles.css'
 //@Components
 import OrderDetail from '../../containers/OrderDetail';
@@ -66,7 +68,7 @@ class UserInfoPage extends Component {
   }
 
   render() {
-    const {authInfo, avatar, orderList, orderItem} = this.props;
+    const {authInfo, avatar, orderList, orderItem, t} = this.props;
     const {previewSource, fileInputState} = this.state;
     return (
       <div class="bg-user-info py-4">
@@ -82,7 +84,7 @@ class UserInfoPage extends Component {
                     ) : <img src={avatar} alt="" />
                   }
                     <div class="file btn btn-lg btn-primary">
-                      Change Photo
+                    {t('user.file.input')}
                       <input type="file" name="image" id="fileInput"
                       value={fileInputState}
                       onChange={this.handleFileInputChange} />
@@ -95,7 +97,7 @@ class UserInfoPage extends Component {
                     ) : <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" />
                   }
                     <div class="file btn btn-lg btn-primary">
-                      Change Photo
+                    {t('user.file.input')}
                       <input type="file" name="image" id="fileInput"
                       value={fileInputState}
                       onChange={this.handleFileInputChange} />
@@ -104,7 +106,7 @@ class UserInfoPage extends Component {
                 }
                 <div className="row justify-content-center">
                 <button className="btn mt-2" type="submit" onClick={this.handleSubmitFile}>
-                    Lưu ảnh
+                {t('user.file-save.button')}
                   </button>
                 </div>
               </form>
@@ -116,10 +118,10 @@ class UserInfoPage extends Component {
                   <p class="proile-rating">RANKINGS : <span>8/10</span></p>
                   <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{t('user.info.menu')}</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
+                      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">{t('user.history.menu')}</a>
                     </li>
                   </ul>
                 </div>
@@ -128,7 +130,7 @@ class UserInfoPage extends Component {
                   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="row">
                       <div class="col-md-3">
-                        <label>Address</label>
+                        <label>{t('checkout.address.input')}</label>
                       </div>
                       <div class="col-md-9">
                         <p>{authInfo.address}</p>
@@ -136,7 +138,7 @@ class UserInfoPage extends Component {
                     </div>
                     <div class="row">
                       <div class="col-md-3">
-                        <label>First name</label>
+                        <label>{t('checkout.firstname.input')}</label>
                       </div>
                       <div class="col-md-9">
                         <p>{authInfo.firstname}</p>
@@ -144,7 +146,7 @@ class UserInfoPage extends Component {
                     </div>
                     <div class="row">
                       <div class="col-md-3">
-                        <label>Last name</label>
+                        <label>{t('checkout.lastname.input')}</label>
                       </div>
                       <div class="col-md-9">
                         <p>{authInfo.lastname}</p>
@@ -160,7 +162,7 @@ class UserInfoPage extends Component {
                     </div>
                     <div class="row">
                       <div class="col-md-3">
-                        <label>Phone</label>
+                        <label>{t('checkout.phone.input')}</label>
                       </div>
                       <div class="col-md-9">
                         <p>{authInfo.phonenumber}</p>
@@ -172,10 +174,10 @@ class UserInfoPage extends Component {
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Ngày tạo đơn</th>
-      <th scope="col">Tình trạng</th>
-      <th scope="col">Thành tiền</th>
-      <th scope="col">Chi tiết</th>
+      <th scope="col">{t('user.date.input')}</th>
+      <th scope="col">{t('user.status.input')}</th>
+      <th scope="col">{t('cart.total.table')}</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   {orderList && <tbody>
@@ -185,8 +187,8 @@ class UserInfoPage extends Component {
         <tr key={index}>
           <th scope="row">{index}</th>
           <td>{item.createdAt}</td>
-          <td>{item.status !== false ? <span class="badge badge-success">Đã thanh toán</span>
-          : <span class="badge badge-danger">Chưa giao hàng</span>}</td>
+          <td>{item.status !== false ? <span class="badge badge-success">{t('user.status.true')}</span>
+          : <span class="badge badge-danger">{t('user.status.false')}</span>}</td>
           <td>{item.total_price} VND</td>
           <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" onClick={() => {this.getInfoOrder(item._id)}}>Chi tiết</button>
           </td>
@@ -204,8 +206,8 @@ class UserInfoPage extends Component {
             
               </div>
               <div class="col-md-2">
-                <button type="button" class="btn btn-info mr-1 mr-md-0 mb-0 mb-md-1" data-toggle="modal" data-target="#infoModal">Edit profile</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwdModal">Change password</button>
+                <button type="button" class="btn btn-info mr-1 mr-md-0 mb-0 mb-md-1" data-toggle="modal" data-target="#infoModal">{t('user.edit-profile.button')}</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwdModal">{t('user.change-password.button')}</button>
               </div>
             </div>
             <div class="row">
@@ -245,4 +247,9 @@ const mapDispatchToProps =(dispatch)=> {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps) (UserInfoPage);
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+
+export default compose(
+  withConnect,
+  withTranslation()
+)(UserInfoPage);
