@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+import { connect } from "react-redux";
+// @Actions
+import CategoryActions from "../../redux/actions/categories";
 
 class CategoryDetail extends Component {
   constructor(props){
     super(props);
-    const {product} = props;
+    const {category} = props;
     this.state = {
-      id: product ? product.id : '',
-      name: product ? product.name : '',
-      pathseo: product ? product.pathseo :'',
+      id: category ? category._id : '',
+      name: category ? category.name : '',
+      name_en: category ? category.name_en : '',
+      pathseo: category ? category.pathseo :'',
     }
   }
   onChange = (event) =>{
@@ -20,21 +24,26 @@ class CategoryDetail extends Component {
     })
   }
 
-  onSubmit = (data, _id) =>{
-    const {onSubmit} = this.props;
-    const {id, name, pathseo} = this.state;
-    data = {name, pathseo}
-    _id = id;
-    onSubmit(data, _id);
+  onSubmit = () =>{
+    const {id, name, pathseo, name_en} = this.state;
+    const {onUpdate, onCreate} = this.props;
+    var data = {name, pathseo, name_en}
+    if (id) {
+      onUpdate(id, data);
+    }
+    else {
+      // 4. Create data
+      onCreate(data);
+    }
   }
 
 	render() {
-    const {name, pathseo} = this.state;
-    const { large, onClose, product} = this.props;
+    const {name, pathseo, name_en} = this.state;
+    const { large, onClose, category} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
-        <CModalTitle>{product ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}</CModalTitle>
+        <CModalTitle>{category ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}</CModalTitle>
 				</CModalHeader>
 				<CModalBody>
 					<div className="row">
@@ -47,6 +56,10 @@ class CategoryDetail extends Component {
 								<div className="form-group">
 									<label>Slug:</label>
                   <input type="text" className="form-control" name="pathseo" value={pathseo} onChange={this.onChange}/>
+								</div>
+                <div className="form-group">
+									<label>Tên loại sản phẩm (English):</label>
+                  <input type="text" className="form-control" name="name_en" value={name_en} onChange={this.onChange}/>
 								</div>
               </form>
             </div>
@@ -65,4 +78,25 @@ class CategoryDetail extends Component {
 	}
 }
 
-export default CategoryDetail;
+const mapStateToProps = (state) => {
+  return {
+    productDetail: state.products.detail,
+    listBrands: state.brands.list,
+    listCategories: state.categories.list,
+    listOperations: state.operations.list,
+    listColor: state.color.list,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreate: (params) =>{
+      dispatch(CategoryActions.onCreate({params}))
+    },
+    onUpdate: (id, params) =>{
+      dispatch(CategoryActions.onUpdate({id, params}))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryDetail);

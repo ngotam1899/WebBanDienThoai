@@ -25,6 +25,7 @@
   "detail.brand.label": "Brand",
   "detail.color.label":"Color",
   "detail.description.select": "Description",
+  "detail.comment.select": "Comments",
   "detail.review.select": "Review",
   "detail.mobile.display": "Display",
   "detail.mobile.widescreen": "Widescreen",
@@ -110,6 +111,7 @@
   "user.phone.order": "Phone of receiver",
   "user.address.order": "Address of receiver",
   "user.email.order": "Email of receiver",
+  "user.delete.button": "Discard the order",
 
   "home.feature.1":"30 Days return",
   "home.feature.3":"Secure payments",

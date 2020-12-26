@@ -15,8 +15,21 @@ import './styles.css'
 
 class CheckoutPage extends Component {
   constructor(props) {
+    //1. Lấy cartItem từ LocalStorage
+    const cartItem = JSON.parse(localStorage.getItem("CART"))
+    //2. Chuyển đổi thành mảng ứng với đầu vào req
+    if(cartItem){
+      var items = cartItem.map((item) => {
+        var dataItem = {
+          product: item.product._id, 
+          quantity: item.quantity
+        }
+        return dataItem;
+      })
+    }
     super(props);
     this.state = {
+      order_list: cartItem ? items : [],
       shipToDifferentAddress: false,
       shipping_first_name: '',
       shipping_last_name: '',
@@ -26,7 +39,7 @@ class CheckoutPage extends Component {
       order_comments: '',
       total: 0,
       totalPrice: 0,
-      payment_method: 0,
+      payment_method: "local",
     }
   }
   onChange = (event) =>{
@@ -38,7 +51,7 @@ class CheckoutPage extends Component {
     })
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     var total = 0;
     var totalPrice = 0;
     var { cart } = this.props;
@@ -53,7 +66,7 @@ class CheckoutPage extends Component {
   }
   
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     var total = 0;
     var totalPrice = 0;
     var { cart } = props;
@@ -69,36 +82,34 @@ class CheckoutPage extends Component {
   
   placeOrder(){
     const {onCreateAnOrder, authInfo} = this.props;
-    const {shipToDifferentAddress, order_comments, total, totalPrice, shipping_phone, shipping_address} = this.state;
-    //1. Lấy cartItem từ LocalStorage
-    const cartItem = JSON.parse(localStorage.getItem("CART"))
-    //2. Chuyển đổi thành mảng ứng với đầu vào req
-    var items = cartItem.map((item) => {
-      var dataItem = {
-        product: item.product._id, 
-        quantity: item.quantity
-      }
-      return dataItem;
-    })
+    const {shipToDifferentAddress, order_comments, total, totalPrice, shipping_phone, shipping_address, payment_method, order_list} = this.state;
+    var data = {};
     //3. Truyền thông tin order vào body req
-    var data = {
-      order_list: items,
-      total_price: totalPrice,
-      total_quantity: total,
-      shipping_phonenumber: authInfo.phonenumber,
-      email: authInfo.email,
-      shipping_address: authInfo.address,
-      note: order_comments
-    }
-    if(shipToDifferentAddress){
+    
+    if(shipToDifferentAddress === true){
       data = {
-        order_list: items,
+        order_list,
         total_price: totalPrice,
         total_quantity: total,
         shipping_phonenumber: shipping_phone,
         email: authInfo.email,
         shipping_address: shipping_address,
-        note: order_comments
+        note: order_comments,
+        payment_method,
+        is_paid: false
+      }
+    }
+    else {
+      data = {
+        order_list,
+        total_price: totalPrice,
+        total_quantity: total,
+        shipping_phonenumber: authInfo.phonenumber,
+        email: authInfo.email,
+        shipping_address: authInfo.address,
+        payment_method,
+        note: order_comments,
+        is_paid: false
       }
     }
     onCreateAnOrder(data);
@@ -109,8 +120,8 @@ class CheckoutPage extends Component {
   }
 
   render() {
-    const {shipToDifferentAddress, shipping_phone, shipping_address, shipping_city, shipping_first_name, shipping_last_name, order_comments, payment_method, totalPrice, total} = this.state;
-    const {authInfo, currency, t} = this.props;
+    const {shipToDifferentAddress, shipping_phone, shipping_address, shipping_first_name, shipping_last_name, order_comments, payment_method, totalPrice, total, order_list} = this.state;
+    const {authInfo, currency, t, onCreateAnOrder} = this.props;
     return (
       <>
         <div className="product-big-title-area">
@@ -134,38 +145,38 @@ class CheckoutPage extends Component {
               <div className="col-md-8">
                 <div className="product-content-right">
                   <div className="woocommerce">
-                    <form enctype="multipart/form-data" action="#" className="checkout" method="post" name="checkout">
+                    <form className="checkout" name="checkout">
                       <div id="customer_details" className="row">
                         <div className="col-6">
                           <div className="woocommerce-billing-fields">
                             <h3>{t('checkout.billing.label')}</h3>
                             { authInfo && <>
                             <p id="billing_first_name_field" className="form-row form-row-first validate-required">
-                              <label className="" for="billing_first_name">{t('checkout.firstname.input')} <abbr title="required" className="required">*</abbr>
+                              <label className="" htmlFor="billing_first_name">{t('checkout.firstname.input')} <abbr title="required" className="required" >*</abbr>
                               </label>
-                              <input type="text" value={authInfo.firstname} placeholder="" id="billing_first_name" name="billing_first_name" className="input-text " />
+                              <input type="text" value={authInfo.firstname} placeholder="" id="billing_first_name" name="billing_first_name" className="input-text" readOnly disabled/>
                             </p>
                             <p id="billing_last_name_field" className="form-row form-row-last validate-required">
-                              <label className="" for="billing_last_name">{t('checkout.lastname.input')} <abbr title="required" className="required">*</abbr>
+                              <label className="" htmlFor="billing_last_name">{t('checkout.lastname.input')} <abbr title="required" className="required">*</abbr>
                               </label>
-                              <input type="text" value={authInfo.lastname} placeholder="" id="billing_last_name" name="billing_last_name" className="input-text " />
+                              <input type="text" value={authInfo.lastname} placeholder="" id="billing_last_name" name="billing_last_name" className="input-text " readOnly disabled/>
                             </p>
                             <div className="clear"></div>
                             <p id="billing_address_1_field" className="form-row form-row-wide address-field validate-required">
-                              <label className="" for="billing_address_1">{t('checkout.address.input')} <abbr title="required" className="required">*</abbr>
+                              <label className="" htmlFor="billing_address_1">{t('checkout.address.input')} <abbr title="required" className="required">*</abbr>
                               </label>
-                              <input type="text" value={authInfo.address} placeholder="Street address" id="billing_address_1" name="billing_address_1" className="input-text " />
+                              <input type="text" value={authInfo.address} placeholder="Street address" id="billing_address_1" name="billing_address_1" className="input-text " readOnly disabled/>
                             </p>
                             <div className="clear"></div>
                             <p id="billing_email_field" className="form-row form-row-first validate-required validate-email">
-                              <label className="" for="billing_email">Email <abbr title="required" className="required">*</abbr>
+                              <label className="" htmlFor="billing_email">Email <abbr title="required" className="required">*</abbr>
                               </label>
-                              <input type="text" value={authInfo.email} placeholder="" id="billing_email" name="billing_email" className="input-text " />
+                              <input type="text" value={authInfo.email} placeholder="" id="billing_email" name="billing_email" className="input-text " readOnly disabled/>
                             </p>
                             <p id="billing_phone_field" className="form-row form-row-last validate-required validate-phone">
-                              <label className="" for="billing_phone">{t('checkout.phone.input')} <abbr title="required" className="required">*</abbr>
+                              <label className="" htmlFor="billing_phone">{t('checkout.phone.input')} <abbr title="required" className="required">*</abbr>
                               </label>
-                              <input type="text" value={authInfo.phonenumber} placeholder="" id="billing_phone" name="billing_phone" className="input-text " />
+                              <input type="text" value={authInfo.phonenumber} placeholder="" id="billing_phone" name="billing_phone" className="input-text " readOnly disabled/>
                             </p>
                             <div className="clear"></div> </>}
                           </div>
@@ -173,42 +184,42 @@ class CheckoutPage extends Component {
                         <div className="col-6">
                           <div className="woocommerce-shipping-fields">
                             <h3 id="ship-to-different-address">
-                              <label className="checkbox" for="ship-to-different-address-checkbox">{t('checkout.shipping.label')}</label>
+                              <label className="checkbox" htmlFor="ship-to-different-address-checkbox">{t('checkout.shipping.label')}</label>
                               <input type="checkbox" value={shipToDifferentAddress} name="ship_to_different_address" onChange={()=>this.shipDifferentAddress(!shipToDifferentAddress)} className="input-checkbox" id="ship-to-different-address-checkbox" />
                             </h3>
                             {shipToDifferentAddress && <div className="shipping_address" style={{ display: 'block' }}>
                               <p id="shipping_first_name_field" className="form-row form-row-first validate-required">
-                                <label className="" for="shipping_first_name">{t('checkout.firstname.input')} <abbr title="required" className="required">*</abbr>
+                                <label className="" htmlFor="shipping_first_name">{t('checkout.firstname.input')} <abbr title="required" className="required">*</abbr>
                                 </label>
-                                <input type="text" value={shipping_first_name} placeholder="" id="shipping_first_name" name="shipping_first_name" className="input-text " onChange={this.onChange}/>
+                                <input type="text" value={shipping_first_name} placeholder="" id="shipping_first_name" name="shipping_first_name" className="input-text " onChange={this.onChange} />
                               </p>
                               <p id="shipping_last_name_field" className="form-row form-row-last validate-required">
-                                <label className="" for="shipping_last_name">{t('checkout.lastname.input')} <abbr title="required" className="required">*</abbr>
+                                <label className="" htmlFor="shipping_last_name">{t('checkout.lastname.input')} <abbr title="required" className="required">*</abbr>
                                 </label>
-                                <input type="text" value={shipping_last_name} placeholder="" id="shipping_last_name" name="shipping_last_name" className="input-text " onChange={this.onChange}/>
+                                <input type="text" value={shipping_last_name} placeholder="" id="shipping_last_name" name="shipping_last_name" className="input-text " onChange={this.onChange} />
                               </p>
                               <div className="clear"></div>
                               <p id="shipping_address_1_field" className="form-row form-row-wide address-field validate-required">
-                                <label className="" for="shipping_address">{t('checkout.address.input')} <abbr title="required" className="required">*</abbr>
+                                <label className="" htmlFor="shipping_address">{t('checkout.address.input')} <abbr title="required" className="required">*</abbr>
                                 </label>
-                                <input type="text" value={shipping_address} placeholder="Street address" id="shipping_address" name="shipping_address" className="input-text " onChange={this.onChange}/>
+                                <input type="text" value={shipping_address} placeholder="Street address" id="shipping_address" name="shipping_address" className="input-text " onChange={this.onChange} />
                               </p>
                               <p id="shipping_phone_field" className="form-row form-row-last validate-required validate-phone">
-                                <label className="" for="shipping_phone">{t('checkout.phone.input')} <abbr title="required" className="required">*</abbr>
+                                <label className="" htmlFor="shipping_phone">{t('checkout.phone.input')} <abbr title="required" className="required">*</abbr>
                                 </label>
-                                <input type="text" value={shipping_phone} placeholder="" id="shipping_phone" name="shipping_phone" className="input-text " onChange={this.onChange}/>
+                                <input type="text" value={shipping_phone} placeholder="" id="shipping_phone" name="shipping_phone" className="input-text " onChange={this.onChange} />
                               </p>
                               <div className="clear"></div>
                             </div>}
                             <p id="order_comments_field" className="form-row notes">
-                              <label className="" for="order_comments">{t('checkout.note.input')}</label>
+                              <label className="" htmlFor="order_comments">{t('checkout.note.input')}</label>
                               <textarea cols="5" rows="2" placeholder={t('checkout.node.placeholder')} id="order_comments" className="input-text " name="order_comments" value={order_comments} onChange={this.onChange}></textarea>
                             </p>
                           </div>
                         </div>
                       </div>
                       <h3 id="order_review_heading">{t('checkout.order.title')}</h3>
-                      <div id="order_review" style={{ position: 'relative' }}>
+                      {authInfo && <div id="order_review" style={{ position: 'relative' }}>
                         <table className="shop_table">
                           <thead>
                             <tr>
@@ -227,7 +238,7 @@ class CheckoutPage extends Component {
                           <tfoot>
                             <tr className="cart-subtotal">
                               <th>{t('cart.cart-sub.table')}</th>
-                              <td><span className="amount">{currency=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2)} {currency}</span>
+                              <td><span className="amount">0 {currency}</span>
                               </td>
                             </tr>
                             <tr className="shipping">
@@ -241,26 +252,28 @@ class CheckoutPage extends Component {
                             </tr>
                           </tfoot>
                         </table>
-                        <div id="payment">
+                        {(authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
                           <ul className="payment_methods methods">
                             <li className="payment_method_paypal">
-                                <input type="radio" value={0} name="payment_method" className="input-radio" id="payment_method_cod" onChange={this.onChange}/>
-                                <label for="payment_method_cod">{t('checkout.cod.button')} <img alt="Thanh toán tại nhà" src={ assets('cod.svg')}  />
+                                <input type="radio" value="local" name="payment_method" className="input-radio" id="payment_method_cod" onChange={this.onChange} />
+                                <label htmlFor="payment_method_cod">{t('checkout.cod.button')} <img alt="Thanh toán tại nhà" src={ assets('cod.svg')}  />
                                 </label>
                               </li>
                             <li className="payment_method_paypal">
-                              <input type="radio" value={1} name="payment_method" className="input-radio" id="payment_method_paypal" onChange={this.onChange}/>
-                              <label for="payment_method_paypal">PayPal <img alt="Thanh toán bằng Paypal" src="https://www.paypalobjects.com/webstatic/mktg/Logo/AM_mc_vs_ms_ae_UK.png" />
+                              <input type="radio" value="paypal" name="payment_method" className="input-radio" id="payment_method_paypal" onChange={this.onChange}/>
+                              <label htmlFor="payment_method_paypal">PayPal <img alt="Thanh toán bằng Paypal" src="https://www.paypalobjects.com/webstatic/mktg/Logo/AM_mc_vs_ms_ae_UK.png" />
                               </label>
                             </li>
                           </ul>
-                          { payment_method == 1 && <Paypal totalPrice={parseFloat(tryConvert(totalPrice, "USD", false)).toFixed(2)}/> }
-                          <div className="form-row place-order">
+                          { payment_method == "paypal" && <Paypal total_price={parseFloat(tryConvert(totalPrice, "USD", false)).toFixed(2)} onCreateAnOrder={onCreateAnOrder} 
+                          shipToDifferentAddress={shipToDifferentAddress}
+                          shipping_address={shipping_address} shipping_phone={shipping_phone} authInfo={authInfo} total={total} order_list={order_list} note={order_comments} /> }
+                          { payment_method == "local" && <div className="form-row place-order">
                             <input type="button" data-value="PLACE ORDER" value={t('checkout.order.button')} id="place_order" name="woocommerce_checkout_place_order" className="button alt" onClick={() => this.placeOrder()}/>
-                          </div>
+                          </div>}
                           <div className="clear"></div>
-                        </div>
-                      </div>
+                        </div>}
+                      </div>}
                     </form>
                   </div>
                 </div>

@@ -25,6 +25,7 @@
   "detail.brand.label": "Tên thương hiệu",
   "detail.color.label":"Màu sắc",
   "detail.description.select": "Xem mô tả",
+  "detail.comment.select": "Bình luận",
   "detail.review.select": "Gửi đánh giá",
   "detail.mobile.display": "Chất liệu màn hình",
   "detail.mobile.widescreen": "Độ rộng",
@@ -110,6 +111,7 @@
   "user.phone.order": "Điện thoại của người nhận",
   "user.address.order": "Địa chỉ của người nhận",
   "user.email.order": "Email của người nhận",
+  "user.delete.button": "Hủy đơn hàng",
 
   "home.feature.1":"30 ngày đổi trả",
   "home.feature.3":"Thanh toán bảo mật",

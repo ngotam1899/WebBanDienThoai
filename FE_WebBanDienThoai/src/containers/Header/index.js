@@ -44,7 +44,7 @@ class Header extends Component {
     this.props.i18n.changeLanguage(event.target.value)
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     var total = 0;
     var totalPrice = 0;
     var { cart } = this.props;
@@ -72,7 +72,7 @@ class Header extends Component {
           var active = match ? ' active' : 'nav-item';
           return (
             <li className={`nav-item ${active}`}>
-              <Link exact={activeOnlyWhenExact} className="nav-link px-3" to={to}>{label}</Link>
+              <Link exact={`${activeOnlyWhenExact}`} className="nav-link px-3" to={to}>{label}</Link>
             </li>
           )
         }} />

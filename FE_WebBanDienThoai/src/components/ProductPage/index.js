@@ -8,6 +8,7 @@ import './styles.css';
 import getFilterParams from "../../utils/getFilterParams";
 // @Components
 import ProductItem from "../../containers/ProductItem"
+import Pagination from "react-js-pagination";
 // @Actions
 import ProductsSelectors from "../../redux/selectors/products";
 import ProductsActions from "../../redux/actions/products";
@@ -16,12 +17,13 @@ import ColorActions from "../../redux/actions/color";
 
 class ProductPage extends Component {
   constructor(props) {
-    const {match} = props;
+    const {match, location} = props;
+    const filter = getFilterParams(location.search);
     super(props);
     this.state = {
-      keyword: "",
+      keyword: filter.keyword ===null ? "" : filter.keyword,
       filter: {
-        limit: 10,
+        limit: 4,
         page: 0,
         category: match.params.categoryID ? match.params.categoryID : null
       },
@@ -36,9 +38,13 @@ class ProductPage extends Component {
       [name]:  value
     })
   }
+
+  setPage = (value) =>{
+    this.handleUpdateFilter({ page: value });
+  }
   
   //??
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { onGetList, onGetListColor, onGetListBrand, location } = this.props;
     const { filter } = this.state;
     onGetListColor();
@@ -91,9 +97,14 @@ class ProductPage extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
   render() {
     const {keyword} = this.state;
-    const { listProducts, onAddProductToCart,listColor, listBrand, t } = this.props;
+    const { listProducts, onAddProductToCart,listColor, listBrand, t, location, total } = this.props;
+    const filter = getFilterParams(location.search);
     return (
       <>
         <div className="product-big-title-area">
@@ -128,13 +139,15 @@ class ProductPage extends Component {
                       <div className="card-body">
                         <form>
                           <div className="radio">
-                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(null)}/>{t('shop.all.radio-button')}</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(null)} 
+                            checked={(filter.brand === null || filter.brand === undefined) && "checked"}/>{t('shop.all.radio-button')}</label>
                           </div>
                           {listBrand && 
                           listBrand.map((brand, index) =>{
                           return(
                           <div className="radio" key={index}>
-                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(brand._id)}/>{brand.name}</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(brand._id)} 
+                            checked={filter.brand === brand._id && "checked"}/>{brand.name}</label>
                           </div>
                           )})}
                         </form>
@@ -147,12 +160,14 @@ class ProductPage extends Component {
                       <div className="card-body">
                         <form>
                           <div className="radio">
-                            <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(null)}/>{t('shop.all.radio-button')}</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(null)}
+                            checked={(filter.color === null || filter.brand === undefined) && "checked"}/>{t('shop.all.radio-button')}</label>
                           </div>
                           {listColor && listColor.map((color, index) =>{
                             return (
                             <div className="radio" key={index}>
-                              <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(color._id)}/>{color.color}</label>
+                              <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(color._id)}
+                              checked={filter.color === color._id && "checked"}/>{color.color}</label>
                             </div>
                             )
                           })}
@@ -177,25 +192,20 @@ class ProductPage extends Component {
             <div className="row">
               <div className="col-md-12">
                 <div className="product-pagination text-center">
-                  <nav>
-                    <ul className="pagination">
-                      <li>
-                        <a href="#" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                        </a>
-                      </li>
-                      <li><a href="#">1</a></li>
-                      <li><a href="#">2</a></li>
-                      <li><a href="#">3</a></li>
-                      <li><a href="#">4</a></li>
-                      <li><a href="#">5</a></li>
-                      <li>
-                        <a href="#" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
+                <nav className="float-right">
+                <Pagination
+                  activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                  itemsCountPerPage={4}
+                  totalItemsCount={total}
+                  pageRangeDisplayed={3}
+                  linkClass="page-link"
+                  itemClass="page-item"
+                  prevPageText="Previous"
+                  nextPageText="Next"
+                  hideFirstLastPages="true"
+                  onChange={this.handlePageChange.bind(this)}
+                />
+                </nav>
                 </div>
               </div>
             </div>
@@ -211,6 +221,7 @@ const mapStateToProps = (state) => {
     listImages: state.cloudinary.list,
     listColor: state.color.list,
     listBrand: state.brands.list,
+    total: state.products.total,
   }
 }
 

@@ -1,31 +1,57 @@
 import React, { useRef, useEffect } from "react";
 import {useDispatch} from "react-redux";
 
-export default function Paypal({totalPrice}) {
+export default function Paypal({total_price,total, onCreateAnOrder, order_list, note, authInfo, shipping_first_name, shipping_last_name, shipping_address, shipping_phone, shipToDifferentAddress}) {
   const paypal = useRef();
   const dispatch = useDispatch();
 
   useEffect(() => {
     window.paypal.Buttons({
         createOrder: (data, actions, err) => {
-          console.log(totalPrice);
           return actions.order.create({
             intent: "CAPTURE",
             purchase_units: [
               {
-                description: "Cool looking table",
+                description: "Tell Me Payment",
                 amount: {
                   currency_code: "USD",
-                  value: totalPrice,
+                  value: total_price,
                 },
               },
             ],
           });
         },
         onApprove: async (data, actions) => {
+          //const { onCreateAnOrder, items, note, authInfo, shipping_first_name, shipping_last_name, shipping_address, shipping_phone, shipToDifferentAddress} = this.props;
+          // Nếu thành công thì set payment_method = paypal, isPaid = true
+          if(shipToDifferentAddress === true) {
+            data = {
+              order_list,
+              total_price,
+              total_quantity: total,
+              shipping_phonenumber: shipping_phone,
+              email: authInfo.email,
+              shipping_address,
+              note,
+              payment_method: "paypal",
+              is_paid: true
+            }
+          }
+          else{
+            data = {
+              order_list,
+              total_price,
+              total_quantity: total,
+              shipping_phonenumber: authInfo.phonenumber,
+              email: authInfo.email,
+              shipping_address: authInfo.address,
+              payment_method: "paypal",
+              note,
+              is_paid: true
+            }
+          }
+          onCreateAnOrder(data);
           const order = await actions.order.capture();
-          // Nếu thành công thì set payment = 1 (Paypal), isPaid = true
-          console.log(order);
         },
         onError: (err) => {
           console.log(err);

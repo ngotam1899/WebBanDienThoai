@@ -19,7 +19,7 @@ class CartPage extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     var total = 0;
     var totalPrice = 0;
     var { cart } = this.props;
@@ -33,7 +33,7 @@ class CartPage extends Component {
     })
   }
 
-  componentWillReceiveProps(props){
+  UNSAFE_componentWillReceiveProps(props){
     var total = 0;
     var totalPrice=0;
     var {cart} = this.props;
@@ -79,7 +79,7 @@ class CartPage extends Component {
               <div className="product-content-right">
                 <div className="woocommerce">
                   <form>
-                    <table cellspacing="0" className="shop_table cart">
+                    <table cellSpacing="0" className="shop_table cart">
                       <thead>
                         <tr>
                           <th className="product-remove">&nbsp;</th>
@@ -98,7 +98,7 @@ class CartPage extends Component {
                           )
                         })}
                         <tr>
-                          <td className="actions" colspan="6">
+                          <td className="actions" colSpan="6">
                             <div className="coupon">
                               <label for="coupon_code">Coupon:</label>
                               <input type="text" placeholder={t('cart.coupon-code.input')} value="" id="coupon_code" className="input-text"
@@ -106,7 +106,7 @@ class CartPage extends Component {
                               <input type="submit" value={t('cart.apply.button')} name="apply_coupon" className="button" />
                             </div>
                             <input type="submit" value={t('cart.update.button')} name="update_cart" className="button" />
-                            {userInfo && <button className="checkout-button button alt wc-forward" onClick={() => this.checkoutOrder()}>{t('cart.checkout.button')}</button>}
+                            {userInfo && cart[0] && <button className="checkout-button button alt wc-forward" onClick={() => this.checkoutOrder()}>{t('cart.checkout.button')}</button>}
                           </td>
                           
                         </tr>
@@ -120,7 +120,7 @@ class CartPage extends Component {
                       <div className="cart_totals ">
                         <h2>{t('cart.cart-total.label')}</h2>
 
-                        <table cellspacing="0">
+                        <table cellSpacing="0">
                           <tbody>
                             <tr className="cart-subtotal">
                               <th>{t('cart.cart-sub.table')}</th>
@@ -128,7 +128,7 @@ class CartPage extends Component {
                             </tr>
 
                             <tr className="shipping">
-                              <th>{t('cart.ship.table"')}</th>
+                              <th>{t('cart.ship.table')}</th>
                               <td>{t('cart.free-ship')}</td>
                             </tr>
 

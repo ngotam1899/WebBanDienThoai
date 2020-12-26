@@ -3,9 +3,6 @@ import {connect} from 'react-redux';
 import OrdersActions from '../../redux/actions/order'
 
 class ActiveOrder extends Component {
-  componentWillMount(){
-    localStorage.removeItem("CART")
-  }
   componentDidMount(){
     const {match, onConfirmOrder} = this.props;
     onConfirmOrder(match.params.token)

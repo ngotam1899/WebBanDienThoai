@@ -48,7 +48,6 @@ class ImageGalleries extends Component {
   _getStaticImages() {
     let images = [];
     const {imageDetail} = this.props;
-    console.log("imageDetail",imageDetail)
     if(imageDetail.length === 0){
       images.push({
         original: "http://www.pha.gov.pk/img/img-02.jpg" ,

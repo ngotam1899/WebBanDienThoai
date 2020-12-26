@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 import { get } from "lodash";
+import {LOCAL} from '../../constants/index';
 // @Actions
 import ProductsActions from '../../redux/actions/products'
 import BrandActions from "../../redux/actions/brands";
@@ -22,7 +23,9 @@ class DetailPage extends Component {
       quantity: 1
     }
   }
-
+  componentDidUpdate() {
+    FB.XFBML.parse();
+  }
   componentDidMount(){
     const {match, onGetDetailProduct, onGetListBrand, onGetListCategory, onGetListColor, onGetListOperation} = this.props;
     onGetListBrand();
@@ -70,7 +73,7 @@ class DetailPage extends Component {
 	}
 
   render() {
-    const {product, currency, t} = this.props;
+    const {product, currency, t, listColor, listOperations} = this.props;
     const {quantity} = this.state;
     return (<>
       <div className="product-big-title-area">
@@ -92,13 +95,10 @@ class DetailPage extends Component {
               <div className="product-content-right">
                 <div className="product-breadcroumb">
                   <a href="/#/">{t('header.home.menu')}</a>
-                  <a href="/#/">{product && this.setCategory(product.category)}</a>
+                  <a href="/#/">{product && listColor && this.setCategory(product.category)}</a>
                   <a href="#">{product && product.name}</a>
                 </div>
-
                 {product && <div className="row">
-                  
-
                   <div className="col-sm-5">
                     {product.image && <ImageGalleries imageDetail={product.image}/> }
                   </div>
@@ -136,13 +136,16 @@ class DetailPage extends Component {
                         <li className="nav-item">
                           <a className="nav-link" data-toggle="tab" href="#review">{t('detail.review.select')}</a>
                         </li>
+                        <li className="nav-item">
+                          <a className="nav-link" data-toggle="tab" href="#fbComment">{t('detail.comment.select')}</a>
+                        </li>
                       </ul>
 
                       <div className="tab-content">
                         <div className="tab-pane container active" id="description">
                           <br />
-                          <table  class="table table-inverse table-responsive">
-                            <thead class="thead-inverse">
+                          <table className="table table-inverse table-responsive">
+                            <thead className="thead-inverse">
                               <tbody>
                                 <tr>
                                   <td scope="row">{t('detail.mobile.display')}</td>
@@ -154,7 +157,7 @@ class DetailPage extends Component {
                                 </tr>
                                 <tr>
                                   <td scope="row">{t('detail.mobile.operation')}</td>
-                                  <td>{this.setOperation(product.detail_info.mobile.operation)}</td>
+                                  <td>{listOperations && this.setOperation(product.detail_info.mobile.operation)}</td>
                                 </tr>
                                 <tr>
                                   <td scope="row">{t('detail.mobile.camera1')}</td>
@@ -226,6 +229,9 @@ class DetailPage extends Component {
                             <p><label>{t('detail.review.label')}</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
                             <p><input type="submit" value={t('detail.submit.button')} /></p>
                           </div>
+                        </div>
+                        <div className="tab-pane container fade" id="fbComment">
+                          <div className="fb-comments" data-href={`${LOCAL}/#/products/dien-thoai/${product.pathseo}/${product._id}`} data-width="600" data-numposts="5"></div>
                         </div>
                       </div>
                     </div>

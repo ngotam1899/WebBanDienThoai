@@ -15,6 +15,7 @@ class UserDetail extends Component {
       image: user ? user.image : '',
     }
   }
+
   onChange = (event) =>{
     var target=event.target;
     var name=target.name;

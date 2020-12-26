@@ -10,10 +10,14 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
+// @Components
 import ProductDetail from './ProductDetail'
+// @Actions
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
+// @Function
+import getFilterParams from "../../utils/getFilterParams";
 
 const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { width: '15%'} }]
 
@@ -76,6 +80,14 @@ class ProductList extends Component {
             <CCard>
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách sản phẩm</h5>
+                <form>
+                <div className="input-group mb-3">
+                  <input type="text" className="form-control" placeholder="Search"/>
+                  <div className="input-group-append">
+                    <button className="btn btn-primary" type="submit">Search</button>
+                  </div>
+                </div>
+              </form>
                 <CButton
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"

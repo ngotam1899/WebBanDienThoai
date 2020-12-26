@@ -71,133 +71,133 @@ class UserInfoPage extends Component {
     const {authInfo, avatar, orderList, orderItem, t} = this.props;
     const {previewSource, fileInputState} = this.state;
     return (
-      <div class="bg-user-info py-4">
-        <div class="container emp-profile">
-          {authInfo && <form method="post">
-            <div class="row">
-              <div class="col-md-4">
-              <form onSubmit={this.handleSubmitFile} className="form">
-                {avatar ? <div class="profile-img">
-                  {
-                    previewSource ? (
-                      <img src={previewSource} alt=""/>
-                    ) : <img src={avatar} alt="" />
-                  }
-                    <div class="file btn btn-lg btn-primary">
-                    {t('user.file.input')}
-                      <input type="file" name="image" id="fileInput"
-                      value={fileInputState}
-                      onChange={this.handleFileInputChange} />
+      <div className="bg-user-info py-4">
+        <div className="container emp-profile">
+          {authInfo && <>
+            <div className="row">
+              <div className="col-md-4">
+                <form onSubmit={this.handleSubmitFile} className="form">
+                  {avatar ? <div className="profile-img">
+                    {
+                      previewSource ? (
+                        <img src={previewSource} alt=""/>
+                      ) : <img src={avatar} alt="" />
+                    }
+                      <div className="file btn btn-lg btn-primary">
+                      {t('user.file.input')}
+                        <input type="file" name="image" id="fileInput"
+                        value={fileInputState}
+                        onChange={this.handleFileInputChange} />
+                      </div>
                     </div>
-                  </div>
-                  : <div class="profile-img">
-                  {
-                    previewSource ? (
-                      <img src={previewSource} alt=""/>
-                    ) : <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" />
-                  }
-                    <div class="file btn btn-lg btn-primary">
-                    {t('user.file.input')}
-                      <input type="file" name="image" id="fileInput"
-                      value={fileInputState}
-                      onChange={this.handleFileInputChange} />
+                    : <div className="profile-img">
+                    {
+                      previewSource ? (
+                        <img src={previewSource} alt=""/>
+                      ) : <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" />
+                    }
+                      <div className="file btn btn-lg btn-primary">
+                      {t('user.file.input')}
+                        <input type="file" name="image" id="fileInput"
+                        value={fileInputState}
+                        onChange={this.handleFileInputChange} />
+                      </div>
                     </div>
+                  }
+                  <div className="row justify-content-center">
+                  <button className="btn mt-2" type="submit" onClick={this.handleSubmitFile}>
+                  {t('user.file-save.button')}
+                    </button>
                   </div>
-                }
-                <div className="row justify-content-center">
-                <button className="btn mt-2" type="submit" onClick={this.handleSubmitFile}>
-                {t('user.file-save.button')}
-                  </button>
-                </div>
-              </form>
+                </form>
               </div>
 
-              <div class="col-md-6">
-                <div class="profile-head">
+              <div className="col-md-6">
+                <div className="profile-head">
                   <h5>{authInfo.firstname} {authInfo.lastname}</h5>
-                  <p class="proile-rating">RANKINGS : <span>8/10</span></p>
-                  <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{t('user.info.menu')}</a>
+                  <p className="proile-rating">RANKINGS : <span>8/10</span></p>
+                  <ul className="nav nav-tabs" id="myTab" role="tablist">
+                    <li className="nav-item">
+                      <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{t('user.info.menu')}</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">{t('user.history.menu')}</a>
+                    <li className="nav-item">
+                      <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">{t('user.history.menu')}</a>
                     </li>
                   </ul>
                 </div>
-                <div class="col">
-                <div class="tab-content profile-tab" id="myTabContent">
-                  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <div class="row">
-                      <div class="col-md-3">
+                <div className="col">
+                <div className="tab-content profile-tab" id="myTabContent">
+                  <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div className="row">
+                      <div className="col-md-3">
                         <label>{t('checkout.address.input')}</label>
                       </div>
-                      <div class="col-md-9">
+                      <div className="col-md-9">
                         <p>{authInfo.address}</p>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-3">
+                    <div className="row">
+                      <div className="col-md-3">
                         <label>{t('checkout.firstname.input')}</label>
                       </div>
-                      <div class="col-md-9">
+                      <div className="col-md-9">
                         <p>{authInfo.firstname}</p>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-3">
+                    <div className="row">
+                      <div className="col-md-3">
                         <label>{t('checkout.lastname.input')}</label>
                       </div>
-                      <div class="col-md-9">
+                      <div className="col-md-9">
                         <p>{authInfo.lastname}</p>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-3">
+                    <div className="row">
+                      <div className="col-md-3">
                         <label>Email</label>
                       </div>
-                      <div class="col-md-9">
+                      <div className="col-md-9">
                         <p>{authInfo.email}</p>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-3">
+                    <div className="row">
+                      <div className="col-md-3">
                         <label>{t('checkout.phone.input')}</label>
                       </div>
-                      <div class="col-md-9">
+                      <div className="col-md-9">
                         <p>{authInfo.phonenumber}</p>
                       </div>
                     </div>
                   </div>
-                  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                  <table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">{t('user.date.input')}</th>
-      <th scope="col">{t('user.status.input')}</th>
-      <th scope="col">{t('cart.total.table')}</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  {orderList && <tbody>
-    {orderList.map((item, index) => {
-      return (
-        <>
-        <tr key={index}>
-          <th scope="row">{index}</th>
-          <td>{item.createdAt}</td>
-          <td>{item.status !== false ? <span class="badge badge-success">{t('user.status.true')}</span>
-          : <span class="badge badge-danger">{t('user.status.false')}</span>}</td>
-          <td>{item.total_price} VND</td>
-          <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" onClick={() => {this.getInfoOrder(item._id)}}>Chi tiết</button>
-          </td>
-        </tr>
-        </>
-      )
-    })}
-  </tbody>}
-</table>
+                  <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                  <table className="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{t('user.date.input')}</th>
+                        <th scope="col">{t('user.status.input')}</th>
+                        <th scope="col">{t('cart.total.table')}</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    {orderList && <tbody>
+                      {orderList.map((item, index) => {
+                        return (
+                          <>
+                          <tr key={index}>
+                            <th scope="row">{index}</th>
+                            <td>{item.createdAt}</td>
+                            <td>{item.status !== false ? <span className="badge badge-success">{t('user.status.true')}</span>
+                            : <span className="badge badge-danger">{t('user.status.false')}</span>}</td>
+                            <td>{item.total_price} VND</td>
+                            <td><button type="button" className="btn btn-info" data-toggle="modal" data-target="#myModal" onClick={() => {this.getInfoOrder(item._id)}}>Chi tiết</button>
+                            </td>
+                          </tr>
+                          </>
+                        )
+                      })}
+                    </tbody>}
+                    </table>
 
   
                   </div>
@@ -205,15 +205,15 @@ class UserInfoPage extends Component {
               </div>
             
               </div>
-              <div class="col-md-2">
-                <button type="button" class="btn btn-info mr-1 mr-md-0 mb-0 mb-md-1" data-toggle="modal" data-target="#infoModal">{t('user.edit-profile.button')}</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwdModal">{t('user.change-password.button')}</button>
+              <div className="col-md-2">
+                <button type="button" className="btn btn-info mr-1 mr-md-0 mb-0 mb-md-1" data-toggle="modal" data-target="#infoModal">{t('user.edit-profile.button')}</button>
+                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#passwdModal">{t('user.change-password.button')}</button>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-4"></div>
+            <div className="row">
+              <div className="col-md-4"></div>
               </div>
-          </form>}
+          </>}
         </div>
         {orderItem ? <OrderDetail orderItem={orderItem}/> : <OrderDetail/>}
         {authInfo && <UserDetail userInfo={authInfo}/>}

@@ -55,7 +55,7 @@ class UserDetail extends Component {
                 <input type="text" className="form-control" name="lastname" value={lastname} onChange={this.onChange}/>
               </div>
               <div className="form-group">
-                <label>{t('checkout.phone.input')}i: </label>
+                <label>{t('checkout.phone.input')}: </label>
                 <input type="number" className="form-control" name="phonenumber" value={phonenumber} onChange={this.onChange}/>
               </div>
               <div className="form-group">
