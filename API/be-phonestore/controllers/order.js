@@ -49,7 +49,8 @@ const addOrder = async(req, res, next) => {
         order.total_quantity = total_quantity;
         if (payment_method == 'paypal') {
             order.is_paid = true;
-            order.payment_method = 'paypal'
+            order.payment_method = 'paypal';
+            order.confirmed = true;
         }
         if (order_list) {
             for (let item of order_list) {
@@ -203,13 +204,27 @@ const findOrderByPhone = async(req, res, next) => {
     const order = await Order.find({ shipping_phonenumber: phone });
     return res.status(200).json({ success: true, code: 200, message: '', order: order })
 }
+const deleteOrder = async(req, res, next) => {
+    const { IDOrder } = req.params;
+    let is_valid = await Validator.isValidObjId(IDOrder);
+    if (!is_valid) return res.status(200).json({ success: false, code: 400, message: 'id is not correctly' })
 
+    let result = await Order.findByIdAndDelete(IDOrder);
+    if (result) {
+        return res.status(200).json({ success: true, code: 200, message: 'removed' })
+    } else {
+        return res.status(200).json({ success: false, code: 400, message: 'id is not correctly' })
+
+    }
+
+}
 module.exports = {
     getAllOrder,
     getAnOrder,
     addOrder,
     addOrderItem,
     requestSendEmail,
+    deleteOrder,
     confirmOrder,
     finishOrder,
     userGetOrder,

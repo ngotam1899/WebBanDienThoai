@@ -4,6 +4,9 @@ const Schema = mongoose.Schema
 const ColorSchema = new Schema({
     color: {
         type: String
+    },
+    color_en: {
+        type: String
     }
 })
 
