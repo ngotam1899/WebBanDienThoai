@@ -8,6 +8,8 @@ const passport = require('passport')
 
 router.route('/')
     .get(orderController.getAllOrder)
+router.route('/')
+    .get(orderController.findOrderByPhone)
     .post(passport.authenticate('jwt', { session: false }), orderController.addOrder)
 router.route('/:IDOrder')
     .get(orderController.getAnOrder)

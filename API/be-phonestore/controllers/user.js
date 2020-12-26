@@ -231,6 +231,11 @@ const deleteUser = async(req, res, next) => {
     }
 }
 
+const findUserByPhone = async(req, res, next) => {
+    const phone = req.query.phone;
+    const user = await User.findOne({ phonenumber: phone });
+    return res.status(200).json({ success: true, code: 200, message: '', user: user })
+}
 module.exports = {
     authGoogle,
     authFacebook,
@@ -245,5 +250,6 @@ module.exports = {
     returnUserByToken,
     activeAccount,
     deleteUser,
-    changePassword
+    changePassword,
+    findUserByPhone
 }

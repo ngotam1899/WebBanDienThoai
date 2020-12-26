@@ -138,14 +138,20 @@ const getAllProduct = async(req, res, next) => {
             products = await Product.find(condition)
                 .populate({ path: 'bigimage', select: 'public_url' })
                 .populate({ path: 'image', select: 'public_url' })
-                .populate('detail_info.mobile');
+                .populate('detail_info.mobile')
+                .sort({ name: "asc" })
+                .limit(limit)
+                .skip(limit * page);
         } else {
             products = await Product.find(condition)
                 .populate({ path: 'bigimage', select: 'public_url' })
                 .populate({ path: 'image', select: 'public_url' })
-                .limit(limit).skip(limit * page);
+                .sort({ name: "asc" })
+                .limit(limit)
+                .skip(limit * page);
         }
-        return res.status(200).json({ success: true, code: 200, message: '', page: page, limit: limit, products: products })
+        let count = await Product.countDocuments(condition);
+        return res.status(200).json({ success: true, code: 200, message: '', page: page, limit: limit, total: count, products: products })
     } catch (error) {
         return next(error)
     }

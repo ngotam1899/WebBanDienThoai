@@ -9,6 +9,8 @@ require('../middlewares/passport')
 
 router.route('/')
     .get(userController.getAllUser)
+router.route('/find')
+    .get(userController.findUserByPhone)
 router.route('/api/auth/profile')
     .post(passport.authenticate('jwt', { session: false }), userController.returnUserByToken)
 router.route('/authentication/activate/:tokenUser')

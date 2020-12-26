@@ -33,7 +33,7 @@ const getAllOrder = async(req, res, next) => {
 }
 const addOrder = async(req, res, next) => {
     try {
-        const { shipping_phonenumber, email, shipping_address, note, total_price, total_quantity, order_list } = req.body;
+        const { shipping_phonenumber, payment_method, email, shipping_address, note, total_price, total_quantity, order_list } = req.body;
         const userID = req.user._id;
         const order = new Order();
         if (!shipping_phonenumber) return res.status(200).json({ success: false, code: 400, massage: 'Phone Number is required' });
@@ -47,7 +47,10 @@ const addOrder = async(req, res, next) => {
         order.total_price = total_price;
         if (!total_quantity) return res.status(200).json({ success: false, code: 400, message: 'Total Quantity is required' })
         order.total_quantity = total_quantity;
-
+        if (payment_method == 'paypal') {
+            order.is_paid = true;
+            order.payment_method = 'paypal'
+        }
         if (order_list) {
             for (let item of order_list) {
                 let productFound = await Product.findById(item.product);
@@ -195,6 +198,11 @@ const getAnOrder = async(req, res, next) => {
         return next(error)
     }
 }
+const findOrderByPhone = async(req, res, next) => {
+    const phone = req.query.phone;
+    const order = await Order.find({ shipping_phonenumber: phone });
+    return res.status(200).json({ success: true, code: 200, message: '', order: order })
+}
 
 module.exports = {
     getAllOrder,
@@ -204,5 +212,6 @@ module.exports = {
     requestSendEmail,
     confirmOrder,
     finishOrder,
-    userGetOrder
+    userGetOrder,
+    findOrderByPhone
 }
