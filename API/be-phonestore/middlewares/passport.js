@@ -61,7 +61,7 @@ passport.use(new FacebookTokenStrategy({
         if (user) {
             done(null, user);
         } else if (profile.emails[0].value != "") {
-            let user = await User.find({ email: profile.emails[0].value });
+            let user = await User.findOne({ email: profile.emails[0].value });
             if (user) {
                 user.auth_facebook_id = profile.id;
                 user.auth_type = 'facebook';
