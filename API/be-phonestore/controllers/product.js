@@ -133,20 +133,27 @@ const getAllProduct = async(req, res, next) => {
                 page = number_page;
             }
         }
+        let sort;
+        if (req.query.sort != undefined) {
+            sort = req.query.sort == "price" ? { price: 1 } : { name: 'asc' };
+        }
+
+        //  condition["$orderby"] = sort;
+        //  console.log(condition)
         let products;
         if (req.query.color != undefined && req.query.color != "") {
             products = await Product.find(condition)
                 .populate({ path: 'bigimage', select: 'public_url' })
                 .populate({ path: 'image', select: 'public_url' })
                 .populate('detail_info.mobile')
-                .sort({ name: "asc" })
+                .sort(sort)
                 .limit(limit)
                 .skip(limit * page);
         } else {
             products = await Product.find(condition)
                 .populate({ path: 'bigimage', select: 'public_url' })
                 .populate({ path: 'image', select: 'public_url' })
-                .sort({ name: "asc" })
+                .sort(sort)
                 .limit(limit)
                 .skip(limit * page);
         }
