@@ -133,11 +133,16 @@ const getAllProduct = async(req, res, next) => {
                 page = number_page;
             }
         }
-        let sort;
-        if (req.query.sort != undefined) {
-            sort = req.query.sort == "price" ? { price: 1 } : { name: 'asc' };
+        let sort = {}
+        if (req.query.sort_n != undefined) {
+            sort['name'] = req.query.sort_n == '1' ? 1 : -1;
         }
 
+        if (req.query.sort_p != undefined) {
+            sort['price'] = req.query.sort_p == '1' ? 1 : -1;
+        }
+
+        console.log(sort);
         //  condition["$orderby"] = sort;
         //  console.log(condition)
         let products;
