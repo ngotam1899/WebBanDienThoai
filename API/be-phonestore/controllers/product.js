@@ -134,15 +134,17 @@ const getAllProduct = async(req, res, next) => {
             }
         }
         let sort = {}
-        if (req.query.sort_n != undefined) {
+        if (req.query.sort_n != undefined && req.query.sort_n != '0') {
             sort['name'] = req.query.sort_n == '1' ? 1 : -1;
         }
 
-        if (req.query.sort_p != undefined) {
+        if (req.query.sort_p != undefined && req.query.sort_p != '0') {
             sort['price'] = req.query.sort_p == '1' ? 1 : -1;
         }
 
-        console.log(sort);
+        if (req.query.min_p != undefined || req.query.max_p != undefined) {
+            condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 }
+        }
         //  condition["$orderby"] = sort;
         //  console.log(condition)
         let products;
