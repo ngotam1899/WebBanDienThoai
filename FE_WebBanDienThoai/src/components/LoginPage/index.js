@@ -16,8 +16,8 @@ class LoginPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: null,
-			password: null,
+			email: '',
+			password: '',
 		}
 	}
 
@@ -48,7 +48,7 @@ class LoginPage extends Component {
 		console.log("history", history)
 	}
 
-	componentWillReceiveProps(props){
+	UNSAFE_componentWillReceiveProps(props){
 		const {loggedIn,history} = props;
 		if(loggedIn && loggedIn===true){
 			history.push('/');
@@ -76,11 +76,11 @@ class LoginPage extends Component {
 
 	responseGoogle = (response) => {
 		const {onLoginGoogle} = this.props;
-		console.log(response);
 		onLoginGoogle(response.accessToken);
   }
 
   responseFacebook = (response) => {
+		console.log(response);
 		const {onLoginFacebook} = this.props;
 		onLoginFacebook(response.accessToken);
   }

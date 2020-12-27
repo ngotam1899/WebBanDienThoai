@@ -34,6 +34,11 @@ class CategoryList extends Component {
     })
   }
 
+  onDelete = (_id)=>{
+    const {onDelete} = this.props;
+    onDelete(_id);
+  }
+
   onUpdate = (large, item) =>{
     const { onGetDetail } = this.props;
     this.setState({
@@ -51,19 +56,9 @@ class CategoryList extends Component {
     onClearDetail();
   }
 
-  onSubmit = (data, _id) =>{
-    const { onCreate, onUpdate } = this.props;
-    if(_id === ''){
-      onCreate(data);
-    }
-    else {
-      onUpdate(_id, data);
-    }
-  }
-
   render () {
     const {large} = this.state;
-    const {listCategories} = this.props;
+    const {listCategories, categoryDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -103,7 +98,7 @@ class CategoryList extends Component {
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.setLarge(!large)}
+                          onClick={() => this.onDelete(item._id)}
                           className="mr-1"
                           color="danger"
                         >
@@ -112,13 +107,10 @@ class CategoryList extends Component {
                       </td>)
                   }}
                 />
-                {/* {(productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
-
-                {(!productDetail && large) && <CategoryDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>} */}
+                {(categoryDetail && large) && <CategoryDetail large={large} category={categoryDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}/>}
+                {(!categoryDetail && large) && <CategoryDetail large={large} category={categoryDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -131,6 +123,7 @@ class CategoryList extends Component {
 const mapStateToProps = (state) => {
   return {
     listCategories: state.categories.list,
+    categoryDetail: state.categories.detail,
   }
 }
 
@@ -144,6 +137,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     onClearDetail: () =>{
       dispatch(CategoryActions.onClearDetail())
+    },
+    onGetDetail: (id) => {
+      dispatch(CategoryActions.onGetDetail(id))
+    },
+    onDelete: (id) =>{
+      dispatch(CategoryActions.onDelete({id}))
     },
   }
 }

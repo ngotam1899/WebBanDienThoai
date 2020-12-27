@@ -42,10 +42,10 @@ class CartItem extends Component {
 
         <td className="product-quantity">
           <div className="quantity buttons_added">
-            <input type="button" className="minus" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
+            <input type="button" className="minus h-100" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
             <input type="number" size="4" className="input-text qty text" title="Qty" value={quantity} min="0"
               step="1" />
-            <input type="button" className="plus" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
+            <input type="button" className="plus h-100" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
           </div>
         </td>
 

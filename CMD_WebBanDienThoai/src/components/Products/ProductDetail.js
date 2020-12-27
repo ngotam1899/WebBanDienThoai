@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import './product.css'
-import changeToSlug from '../../utils/ChangeToSlug'
-import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 import { connect } from "react-redux";
+// @Functions
+import changeToSlug from '../../utils/ChangeToSlug'
+// @ComponentS
+import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+// @Actions
 import ProductsActions from "../../redux/actions/products";
 import OperationActions from "../../redux/actions/operations";
 import ColorActions from "../../redux/actions/color";
@@ -205,7 +208,6 @@ class ProductDetail extends Component {
   }
 
   onCallback = (id, formData) => {
-    console.log(this.state.mobileDes);
     const { onCreate, onUpdateImage, product } = this.props;
     const { name, price, amount, warrently, category, brand, bigimage, image, pathseo, mobileDes } = this.state;
     if (id) {
@@ -226,8 +228,6 @@ class ProductDetail extends Component {
       onCreate(data, formData);
     }
   }
-
-
 
   render() {
     const { name, price, amount, pathseo, warrently, category, brand, bigimage, image, mobileDes, previewSource, fileInputState, previewList } = this.state;

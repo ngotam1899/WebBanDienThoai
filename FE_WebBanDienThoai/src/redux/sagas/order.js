@@ -48,6 +48,7 @@ function* handleCreate({ payload }) {
     yield put(OrdersActions.onCreateAnOrderSuccess(data));
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
+    localStorage.removeItem("CART")
   } catch (error) {
     yield put(OrdersActions.onCreateAnOrderError(error));
   }

@@ -53,15 +53,15 @@ const onGetListError = (error) => ({
 });
 
 const onGetDetail = (id) => ({
-  type: CategoryActionTypes.GET_AN_IMAGE,
+  type: CategoryActionTypes.GET_DETAIL,
   id
 });
-const onGetDetailSuccess = (image) => ({
-  type: CategoryActionTypes.GET_AN_IMAGE_SUCCESS,
-  payload: image
+const onGetDetailSuccess = (data) => ({
+  type: CategoryActionTypes.GET_DETAIL_SUCCESS,
+  payload: data
 });
 const onGetDetailError = (error) => ({
-  type: CategoryActionTypes.GET_AN_IMAGE_ERROR,
+  type: CategoryActionTypes.GET_DETAIL_ERROR,
   payload: error
 });
 
@@ -103,11 +103,9 @@ const onUpdateError = (error) => ({
  *
  * delete
  */
-const onDelete = ({ id, filters, callback }) => ({
+const onDelete = ({ id }) => ({
   type: CategoryActionTypes.DELETE,
   id,
-  filters,
-  callback,
 });
 
 const onDeleteSuccess = (detail) => ({

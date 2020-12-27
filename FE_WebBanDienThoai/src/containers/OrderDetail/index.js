@@ -33,17 +33,26 @@ class OrderDetail extends Component {
                 <label>{t('user.status.label')}:</label>
                 <input type="text" className="form-control" name="status" value={orderItem.status===true ? 'Đã giao hàng' : 'Chưa giao hàng'} disabled/>
               </div>
-              <div className="form-group">
+              {orderItem.payment_method==="local" 
+              ? <div className="form-group">
                 <label>{t('user.confirm.label')}:</label>
                 <div className="row">
                   <div className={orderItem.confirmed===true ? "col-12": "col-9"}>
                     <input type="text" className="form-control" name="confirmed" value={ orderItem.confirmed===true ? 'Đã xác nhận đơn hàng' : 'Chưa xác nhận'} disabled/>
                   </div>
-                  <div className={orderItem.confirmed===true ? "" : "col-3"}>
+                  <div className={orderItem.confirmed===true ? "d-none" : "col-3"}>
                     <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>Confirm</button>
                   </div>
                 </div>
               </div>
+              : <div className="form-group">
+              <label>Tình trạng thanh toán:</label>
+              <div className="row">
+                <div className="col-12">
+                  <input type="text" className="form-control" name="is_paid" value={ orderItem.is_paid===true ? 'Đã thanh toán đơn' : 'Chưa thanh toán đơn'} disabled/>
+                </div>
+              </div>
+            </div>}
               <div className="form-group">
                 <label>{t('user.item.list')}:</label>
                 {orderItem.order_list.map((item, index) =>{
@@ -79,6 +88,7 @@ class OrderDetail extends Component {
               </div>
             </div>
             <div class="modal-footer">
+              <button type="button" class="btn btn-danger">{t('user.delete.button')}</button>
               <button type="button" class="btn btn-default" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }

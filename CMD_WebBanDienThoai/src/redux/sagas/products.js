@@ -35,7 +35,6 @@ function* handleGetDetail({ filters, id }) {
  */
 function* handleCreate( {payload} ) {
   const {name, price, amount, pathseo, warrently, brand, category, detail_info} = payload.params;
-  console.log(payload);
   try {
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
     if(payload.params.bigimage && payload.formData){
