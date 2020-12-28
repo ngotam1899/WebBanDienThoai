@@ -18,10 +18,10 @@ class ProductItem extends Component {
 			<div className="col-md-3 col-6">
 				<div className="single-shop-product text-center">
 					<div className="product-upper">
-						<Link to={`/products/dien-thoai/${product.pathseo}/${product._id}`}><img src={product.bigimage ? product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"} alt="" /></Link>
+						<Link to={`/product/${product.pathseo}/${product._id}`}><img src={product.bigimage ? product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"} alt="" /></Link>
 					</div>
 					<h2>
-						<Link to={`/products/dien-thoai/${product.pathseo}/${product._id}`}>{product.name}</Link>
+						<Link to={`/product/${product.pathseo}/${product._id}`}>{product.name}</Link>
 					</h2>
 					<div className="product-carousel-price">
             <ins>{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</ins> <br/>

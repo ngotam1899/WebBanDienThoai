@@ -1,4 +1,5 @@
 import { AuthorizationActionTypes } from "../actions/auth";
+import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const INITIAL_STATE = {
   loading: true,
@@ -25,11 +26,14 @@ export default function(state = INITIAL_STATE, action) {
         loggedIn: false,
       };
     case AuthorizationActionTypes.LOGIN_SUCCESS:
+      toastSuccess('Đăng nhập thành công');
       return {  
         ...state,
         loggedIn: true,
       };
     case AuthorizationActionTypes.LOGIN_ERROR:
+      const { message } = action.payload;
+      toastError(message);
       return {
         ...state,
         loggedIn: false,

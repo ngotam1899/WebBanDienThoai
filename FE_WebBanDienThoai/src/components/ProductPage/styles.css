@@ -45,3 +45,7 @@ select {border: none;}
   width: 100%;
   z-index: 99;
 }
+
+.w-40{
+  width:40%
+}

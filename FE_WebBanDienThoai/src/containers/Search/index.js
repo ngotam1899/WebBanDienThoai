@@ -3,6 +3,7 @@ import './styles.css';
 import { withTranslation } from 'react-i18next'
 import {connect} from 'react-redux';
 import {compose} from 'redux';
+import {Link} from 'react-router-dom'
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 
@@ -14,17 +15,22 @@ class Search extends Component {
 		}
 	}
 
-	UNSAFE_componentWillMount() {
-		const { onGetList } = this.props;
-		onGetList();
+	handleFilter = (event) => {
+		var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
+    const { keyword } = this.state;
+    const { onFilter } = this.props;
+    onFilter(keyword);
 	}
-
-	handleFilter = e => {
-    const { value } = e.target;
-    const { taskActionCreators } = this.props;
-    const { filterTask } = taskActionCreators;
-    filterTask(value);
-  };
+	
+	onAddToCart = (product) =>{
+		const { onAddProductToCart } = this.props;
+		onAddProductToCart(product);
+	}
 
 	render() {
 		const {keyword} = this.state;
@@ -34,28 +40,30 @@ class Search extends Component {
 				<div className="single-sidebar mb-0">
 					<h2 className="sidebar-title">{t('search.label')}</h2>
 					<form>
-						<input className="mb-0" type="text" value={keyword} onChange={this.handleChange} placeholder={t('search.placeholder.input')} />
+						<input className="mb-0" type="text" value={keyword} name="keyword" onChange={this.handleFilter} placeholder={t('search.placeholder.input')} />
 					</form>
 				</div>
-				{listProducts && listProducts.map((product, index) =>{
+				<div className="card">
+				{listProducts && keyword && listProducts.map((product, index) =>{
 					return (
-					<div className="card" key={index}>
-						<div className="row">
+						<>
+						<div className="row" key={index}>
 							<div className="col-3 my-auto">
-								<img className="w-100" src={product.bigimage.public_url}></img>
+								<Link to={`/product/${product.pathseo}/${product._id}`}><img className="w-100" src={product.bigimage.public_url}></img></Link>
 							</div>
 							<div className="col-6">
 								<p className="mb-0">{product.name}</p>
 								<p className="mb-0">{product.price} VND</p>
 							</div>
 							<div className="col-3 my-auto">
-								<button className="btn btn-success"><i className="fa fa-cart-plus"></i></button>
+								<button className="btn btn-success" onClick ={ () => this.onAddToCart(product)}><i className="fa fa-cart-plus"></i></button>
 							</div>
 						</div>
 						<div class="border-bottom"></div>
-					</div>
+						</>
 					)
 				})}
+				</div>
 			</div>
 		);
 	}
@@ -69,8 +77,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetList: (params) => {
-      dispatch(ProductsActions.onGetList(params))
+		onFilter: (keyword) => {
+      dispatch(ProductsActions.onFilter(keyword))
+		},
+		onAddProductToCart: (product) => {
+      dispatch(ProductsActions.onAddProductToCart(product, 1));
     },
   }
 }

@@ -22,11 +22,14 @@ class ProductPage extends Component {
     super(props);
     this.state = {
       keyword: filter.keyword ===null ? "" : filter.keyword,
+      min_p: filter.min_p ===null ? "" : filter.min_p,
+      max_p: filter.max_p ===null ? "" : filter.max_p,
       filter: {
         limit: 4,
         page: 0,
         category: match.params.categoryID ? match.params.categoryID : null
       },
+
     }
   }
 
@@ -85,6 +88,12 @@ class ProductPage extends Component {
     this.handleUpdateFilter({ keyword});
   }
 
+  // Change distance price
+  distancePrice = (e) => {
+    const {min_p, max_p} = this.state;
+    this.handleUpdateFilter({ min_p, max_p});
+  }
+
   // Sort name
   /* handleChangeSortName = (event) =>{
     this.handleUpdateFilter({ sort_n: event.target.value });
@@ -113,7 +122,7 @@ class ProductPage extends Component {
   }
 
   render() {
-    const {keyword} = this.state;
+    const {keyword, min_p, max_p} = this.state;
     const { listProducts, onAddProductToCart,listColor, listBrand, t, location, total } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -124,11 +133,13 @@ class ProductPage extends Component {
               <div className="col-md-12">
                 <div className="product-bit-title text-center">
                     <div className="row my-5 justify-content-center">
-                      <div className="col-md-6 col-9">
-                        <input type="text" className="w-100" name="keyword" value={keyword} onChange={this.onChange}></input>
-                      </div>
-                      <div className="col-md-2 col-3">
-                        <button className="btn btn-danger w-100 h-100" onClick={() => this.searchKeyWorld()}>{t('shop.search.button')}</button>
+                      <div className="col-8">
+                        <div className="row input-group">
+                          <input type="text" className="form-control" name="keyword" value={keyword} onChange={this.onChange}></input>
+                          <div className="input-group-append">
+                            <button className="btn btn-danger h-100" onClick={() => this.searchKeyWorld()}>{t('shop.search.button')}</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                 </div>
@@ -190,28 +201,55 @@ class ProductPage extends Component {
               </div>
               <div className="col-md-9 col-12">
                 <div className="row">
-                  <div className="col-12">
-                  <div className="card border-info mb-3 w-100">
-                    <div class="row no-gutters">
-                      <div class="col-sm-3">
-                        <div className="card-header h-100 text-info mb-0"><h5 className="card-title mb-0">Sắp xếp sản phẩm</h5></div>
-                      </div>
-                      <div class="col-sm-9">
-                        <div class="card-body py-md-3 py-2 px-4">
-                          {/* <select className="mr-3" onChange={this.handleChangeSortName}>
-                            <option key={-1} value="0">Tên sản phẩm</option>
-                            <option value="-1">Tên: Từ A - Z</option>
-                            <option value="1">Tên: Từ Z - A</option>
-                          </select> */}
-                          <select value={filter.sort_p} className="" onChange={this.handleChangeSortPrice}>
-                            <option key={-1} value="0">Giá sản phẩm</option>
-                            <option value="-1">Giá: Từ thấp - cao</option>
-                            <option value="1">Giá: Từ cao - thấp</option>
-                          </select>
+                  <div className="col-6 col-md-5">
+                    <div className="card border-info mb-3 w-100">
+                      <div className="row no-gutters">
+                        <div className="col-sm-5">
+                          <div className="card-header h-100 text-info mb-0"><h5 className="card-title mb-0">Sắp xếp</h5></div>
+                        </div>
+                        <div className="col-sm-5">
+                          <div className="card-body py-md-3 py-2 px-3 px-md-2">
+                            {/* <select className="mr-3" onChange={this.handleChangeSortName}>
+                              <option key={-1} value="0">Tên sản phẩm</option>
+                              <option value="-1">Tên: Từ A - Z</option>
+                              <option value="1">Tên: Từ Z - A</option>
+                            </select> */}
+                            <select value={filter.sort_p} className="" onChange={this.handleChangeSortPrice}>
+                              <option key={-1} value="0">Giá sản phẩm</option>
+                              <option value="1">Giá: Từ thấp - cao</option>
+                              <option value="-1">Giá: Từ cao - thấp</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                  <div className="col-md-7 col-6">
+                    <div className="card border-info mb-3 w-100">
+                      <div className="row no-gutters">
+                        <div className="col-sm-4">
+                          <div className="card-header h-100 text-info mb-0"><h5 className="card-title mb-0">Khoảng giá</h5></div>
+                        </div>
+                        <div className="col-sm-8 d-md-block d-none">
+                          <div className="card-body py-md-2 py-0">
+                            <div className="row input-group mx-auto">
+                              <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder="Từ" className="form-control w-40"></input>
+                              <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder="đến" className="form-control w-40"></input>
+                              <div class="input-group-append">
+                                <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-8 d-md-none d-block">
+                          <div className="card-body py-1">
+                              <input type="number" value={min_p} name="min_p" step={100000} min={0}  onChange={this.onChange} placeholder="Từ" style={{borderBottomLeftRadius: "unset", borderBottomRightRadius: "unset"}} className="form-control"></input>
+                              <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder="đến" style={{borderRadius: "unset"}} className="form-control"></input>
+                            <button onClick={() => this.distancePrice()} className="btn btn-primary w-100" style={{borderTopLeftRadius: "unset", borderTopRightRadius: "unset"}}><i className="fa fa-search-dollar"></i> Duyệt</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="row">

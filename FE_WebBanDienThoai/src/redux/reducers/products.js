@@ -73,11 +73,11 @@ export default function(state = init, action) {
 
     case ProductsActionTypes.CREATE:
     case ProductsActionTypes.UPDATE:
+    case ProductsActionTypes.FILTER:
     case ProductsActionTypes.DELETE:
       return {
         ...state,
       };
-
     case ProductsActionTypes.CREATE_ERROR:
     case ProductsActionTypes.UPDATE_ERROR:
     case ProductsActionTypes.DELETE_ERROR:
@@ -86,7 +86,7 @@ export default function(state = init, action) {
       };
     case ProductsActionTypes.UPDATE_SUCCESS:
       return handleUpdate({state, action});
-
+    case ProductsActionTypes.FILTER_SUCCESS:
     case ProductsActionTypes.CREATE_SUCCESS:
     case ProductsActionTypes.DELETE_SUCCESS:
       return {

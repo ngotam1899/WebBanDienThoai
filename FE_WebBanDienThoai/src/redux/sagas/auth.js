@@ -6,7 +6,7 @@ import UsersActions, { UsersActionTypes } from "../actions/user";
 import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, } from "../apis/auth";
 import {orderHistory } from "../apis/order";
 import { getUserImage } from "../apis/cloudinary";
-import { message } from "antd";
+
 /**
  *
  * create

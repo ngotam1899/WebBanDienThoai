@@ -8,6 +8,8 @@ import RegisterPage from './components/RegisterPage';
 import { Provider } from "react-redux";
 import configureStore from "./redux/store";
 import GlobalLoading from './containers/GlobalLoading';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './i18n'
 const store = configureStore();
 
@@ -15,6 +17,7 @@ class App extends Component {
  render() {
   return (
     <Provider store={store}>
+      <ToastContainer/>
       <Suspense fallback={null}>
       <GlobalLoading/>
       <BrowserRouter>

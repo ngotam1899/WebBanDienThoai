@@ -17,6 +17,17 @@ function* handleGetList({ payload }) {
   yield put(UIActions.hideLoading());
 }
 
+function* handleFilter({ payload }) {
+  yield delay(1000);
+  const { keyword } = payload;
+  yield put(
+    ProductsActions.onGetList({
+      keyword,
+      limit: 4
+    }),
+  );
+}
+
 function* handleGetDetail({ filters, id }) {
   try {
     const result = yield call(getDetailProduct, id);
@@ -115,7 +126,9 @@ export function* watchGetList() {
 export function* watchGetDetail() {
   yield takeEvery(ProductsActionTypes.GET_DETAIL, handleGetDetail);
 }
-
+export function* watchFilter() {
+  yield takeEvery(ProductsActionTypes.FILTER, handleFilter);
+}
 /* export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
 }
@@ -130,6 +143,7 @@ export default function* rootSaga() {
   yield all([
     fork(watchGetList),
     fork(watchGetDetail),
+    fork(watchFilter),
     /* fork(watchCreate),
     fork(watchUpdate),
     fork(watchDelete), */

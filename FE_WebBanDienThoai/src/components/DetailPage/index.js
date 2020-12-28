@@ -231,7 +231,7 @@ class DetailPage extends Component {
                           </div>
                         </div>
                         <div className="tab-pane container fade" id="fbComment">
-                          <div className="fb-comments" data-href={`${LOCAL}/#/products/dien-thoai/${product.pathseo}/${product._id}`} data-width="600" data-numposts="5"></div>
+                          <div className="fb-comments" data-href={`${LOCAL}/#/product/${product.pathseo}/${product._id}`} data-width="600" data-numposts="5"></div>
                         </div>
                       </div>
                     </div>

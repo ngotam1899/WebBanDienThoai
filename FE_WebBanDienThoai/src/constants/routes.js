@@ -55,7 +55,7 @@ const routes = [
 		main: ({match}) => <ActiveOrder match={match}/>
 	},
 	{
-		path: '/products/dien-thoai/:pathseo/:productID',
+		path: '/product/:pathseo/:productID',
 		exact: true,
 		name: "Detail Page",
 		main: ({match}) => <DetailPage match={match} />

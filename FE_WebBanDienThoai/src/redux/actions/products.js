@@ -1,4 +1,7 @@
 export const ProductsActionTypes = {
+  FILTER: "FILTER",
+  FILTER_SUCCESS: "FILTER_SUCCESS",
+
   GET_LIST: "GET_LIST",
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
@@ -151,7 +154,25 @@ const onChangeCurrency = (unit) =>{
     payload: unit
   }
 }
+
+const onFilter = keyword => ({
+  type: ProductsActionTypes.FILTER,
+  payload: {
+    keyword,
+  },
+});
+
+const onFilterSuccess = data => ({
+  type: ProductsActionTypes.FILTER_SUCCESS,
+  payload: {
+    data,
+  },
+});
+
 const ProductsActions = {
+  onFilter,
+  onFilterSuccess,
+
   onClearDetail,
   onClearState,
   onClearCart,
