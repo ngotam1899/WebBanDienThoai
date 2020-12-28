@@ -15,10 +15,6 @@ export const ProductsActionTypes = {
   UPDATE_SUCCESS: "UPDATE_SUCCESS",
   UPDATE_ERROR: "UPDATE_ERROR",
 
-  DELETE: "DELETE",
-  DELETE_SUCCESS: "DELETE_SUCCESS",
-  DELETE_ERROR: "DELETE_ERROR",
-
   CLEAR_DETAIL: "CLEAR_DETAIL",
   CLEAR_STATE: "CLEAR_STATE",
 
@@ -26,6 +22,7 @@ export const ProductsActionTypes = {
   UPDATE_PRODUCT_CART: "UPDATE_PRODUCT_CART",
   DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
 
+  CLEAR_CART: "CLEAR_CART",
   CHANGE_CURRENCY: "CHANGE_CURRENCY",
 };
 
@@ -38,7 +35,9 @@ Object.keys(ProductsActionTypes).forEach((key) => {
 const onClearDetail = () => ({
   type: ProductsActionTypes.CLEAR_DETAIL,
 });
-
+const onClearCart = () => ({
+  type: ProductsActionTypes.CLEAR_CART,
+});
 const onClearState = () => ({
   type: ProductsActionTypes.CLEAR_STATE,
 });
@@ -123,22 +122,7 @@ const onUpdateError = (error) => ({
  *
  * delete
  */
-const onDelete = ({ id, filters, callback }) => ({
-  type: ProductsActionTypes.DELETE,
-  id,
-  filters,
-  callback,
-});
 
-const onDeleteSuccess = (detail) => ({
-  type: ProductsActionTypes.DELETE_SUCCESS,
-  payload: detail,
-});
-
-const onDeleteError = (error) => ({
-  type: ProductsActionTypes.DELETE_ERROR,
-  payload: error,
-});
 
 /**
  *
@@ -170,7 +154,8 @@ const onChangeCurrency = (unit) =>{
 const ProductsActions = {
   onClearDetail,
   onClearState,
-
+  onClearCart,
+  
   onGetList,
   onGetListSuccess,
   onGetListError,
@@ -187,14 +172,11 @@ const ProductsActions = {
   onUpdateSuccess,
   onUpdateError,
 
-  onDelete,
-  onDeleteSuccess,
-  onDeleteError,
-
   onAddProductToCart,
   onDeleteProductInCart,
   onUpdateProductInCart,
   onChangeCurrency,
+  
 };
 
 export default ProductsActions;

@@ -1,7 +1,8 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
-import { addOrder, sendConfirmEmail, confirmOrder, orderHistory, getDetailOrder } from "../apis/order";
+import ProductsActions from "../actions/products";
+import { addOrder, sendConfirmEmail, confirmOrder, orderHistory, getDetailOrder, deleteOrder } from "../apis/order";
 /* function* handleGetList({ payload }) {
   try {
     yield delay(500)
@@ -48,7 +49,10 @@ function* handleCreate({ payload }) {
     yield put(OrdersActions.onCreateAnOrderSuccess(data));
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
-    localStorage.removeItem("CART")
+    localStorage.removeItem("CART");
+    yield put(ProductsActions.onClearCart())
+    const listResult = yield call(orderHistory, data.order.user);
+    yield put(OrdersActions.onGetHistoryOrderSuccess(listResult.data.orders));
   } catch (error) {
     yield put(OrdersActions.onCreateAnOrderError(error));
   }
@@ -102,26 +106,19 @@ function* handleHistoryOrder({ payload}) {
  *
  * delete
  */
-/* function* handleDelete({ id, filters, callback, merchant_id }) {
+function* handleDelete({ payload }) {
   try {
-    const result = yield call(EcommerceApi.Product.delete, id);
+    const result = yield call(deleteOrder, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    message.success("Delete product success!");
-    if (callback) {
-      callback();
-    }
-    yield put(ProductsActions.onDeleteSuccess(data));
-    yield put(ProductsActions.onGetList(filters));
-    if(merchant_id){
-      yield put(MerchantActions.onGetListProduct({id:merchant_id}));
-    }
+    yield put(OrdersActions.onDeleteSuccess(data));
+    const listResult = yield call(orderHistory, payload.userId);
+    yield put(OrdersActions.onGetHistoryOrderSuccess(listResult.data.orders));
   } catch (error) {
     console.log(error);
-    message.error(get(error, "msg", "Error when Delete product!"));
-    yield put(ProductsActions.onDeleteError(error));
+    yield put(OrdersActions.onDeleteError(error));
   }
-} */
+}
 
 /**
  *
@@ -149,9 +146,9 @@ export function* watchReConfirm() {
 /* export function* watchUpdateUserImage() {
   yield takeEvery(UsersActionsTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
 } */
-/* export function* watchDelete() {
-  yield takeEvery(ProductsActionsTypes.DELETE, handleDelete);
-} */
+export function* watchDelete() {
+  yield takeEvery(OrdersActionsTypes.DISCARD_ORDER, handleDelete);
+}
 
 export default function* rootSaga() {
   yield all([
@@ -162,6 +159,6 @@ export default function* rootSaga() {
     fork(watchHistoryOrder),
     fork(watchReConfirm),
     /* fork(watchUpdateUserImage), */
-    /* fork(watchDelete), */
+    fork(watchDelete),
   ]);
 }

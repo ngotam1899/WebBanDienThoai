@@ -29,3 +29,8 @@ export const confirmOrder = (token) =>{
 export const orderHistory = (userId) =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${userId}/order-list`);
 }
+
+// http://localhost:3000/orders/:orderId
+export const deleteOrder = (orderId) =>{
+  return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${orderId}`);
+}

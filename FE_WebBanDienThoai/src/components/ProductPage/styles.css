@@ -38,3 +38,10 @@
     padding: 6px 25px;display: inline-block
 }
 .add_to_cart_button:hover {background-color: #222;color: #fff;text-decoration: none}
+select {border: none;}
+.search-fixed{
+  top: 0;
+  position: sticky;
+  width: 100%;
+  z-index: 99;
+}

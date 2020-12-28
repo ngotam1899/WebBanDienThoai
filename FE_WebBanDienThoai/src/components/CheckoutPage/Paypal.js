@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import {useDispatch} from "react-redux";
+// @Functions
+import tryConvert from '../../utils/changeMoney'
 
 export default function Paypal({total_price,total, onCreateAnOrder, order_list, note, authInfo, shipping_first_name, shipping_last_name, shipping_address, shipping_phone, shipToDifferentAddress}) {
   const paypal = useRef();
@@ -27,7 +29,7 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
           if(shipToDifferentAddress === true) {
             data = {
               order_list,
-              total_price,
+              total_price: parseInt(tryConvert(total_price, "USD", true)),
               total_quantity: total,
               shipping_phonenumber: shipping_phone,
               email: authInfo.email,
@@ -40,7 +42,7 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
           else{
             data = {
               order_list,
-              total_price,
+              total_price: parseInt(tryConvert(total_price, "USD", true)),
               total_quantity: total,
               shipping_phonenumber: authInfo.phonenumber,
               email: authInfo.email,

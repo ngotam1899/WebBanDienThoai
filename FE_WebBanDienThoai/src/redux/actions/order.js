@@ -3,6 +3,10 @@ export const OrdersActionsTypes = {
   ADD_ORDER_SUCCESS: "ADD_ORDER_SUCCESS",
   ADD_ORDER_ERROR: "ADD_ORDER_ERROR",
 
+  DISCARD_ORDER: "DISCARD_ORDER",
+  DISCARD_ORDER_SUCCESS: "DISCARD_ORDER_SUCCESS",
+  DISCARD_ORDER_ERROR: "DISCARD_ORDER_ERROR",
+
   SEND_CONFIRM_EMAIL: "SEND_CONFIRM_EMAIL",
   SEND_CONFIRM_EMAIL_SUCCESS: "SEND_CONFIRM_EMAIL_SUCCESS",
   SEND_CONFIRM_EMAIL_ERROR: "SEND_CONFIRM_EMAIL_ERROR",
@@ -92,6 +96,21 @@ const onGetHistoryOrderError = (error) => ({
   payload: error
 });
 
+const onDelete = ({ id, userId}) => ({
+  type: OrdersActionsTypes.DISCARD_ORDER,
+  payload: {id, userId}
+});
+
+const onDeleteSuccess = (detail) => ({
+  type: OrdersActionsTypes.DISCARD_ORDER_SUCCESS,
+  payload: detail,
+});
+
+const onDeleteError = (error) => ({
+  type: OrdersActionsTypes.DISCARD_ORDER_ERROR,
+  payload: error,
+});
+
 const OrdersActions = {
   onCreateAnOrder,
   onCreateAnOrderError,
@@ -112,6 +131,10 @@ const OrdersActions = {
   onGetDetail,
   onGetDetailSuccess,
   onGetDetailError,
+  
+  onDelete,
+  onDeleteSuccess,
+  onDeleteError,
 };
 
 export default OrdersActions;

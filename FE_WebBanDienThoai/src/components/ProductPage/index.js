@@ -85,6 +85,16 @@ class ProductPage extends Component {
     this.handleUpdateFilter({ keyword});
   }
 
+  // Sort name
+  /* handleChangeSortName = (event) =>{
+    this.handleUpdateFilter({ sort_n: event.target.value });
+  } */
+
+  // Sort price
+  handleChangeSortPrice = (event) =>{
+    this.handleUpdateFilter({ sort_p: event.target.value });
+  }
+
   // Chuyển router (thêm vào params) 
   handleUpdateFilter = (data) => {
     const {location, history} = this.props;
@@ -97,6 +107,7 @@ class ProductPage extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  // phân trang
   handlePageChange(pageNumber) {
     this.handleUpdateFilter({ page: pageNumber-1 });
   }
@@ -178,6 +189,31 @@ class ProductPage extends Component {
                 </div>
               </div>
               <div className="col-md-9 col-12">
+                <div className="row">
+                  <div className="col-12">
+                  <div className="card border-info mb-3 w-100">
+                    <div class="row no-gutters">
+                      <div class="col-sm-3">
+                        <div className="card-header h-100 text-info mb-0"><h5 className="card-title mb-0">Sắp xếp sản phẩm</h5></div>
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="card-body py-md-3 py-2 px-4">
+                          {/* <select className="mr-3" onChange={this.handleChangeSortName}>
+                            <option key={-1} value="0">Tên sản phẩm</option>
+                            <option value="-1">Tên: Từ A - Z</option>
+                            <option value="1">Tên: Từ Z - A</option>
+                          </select> */}
+                          <select value={filter.sort_p} className="" onChange={this.handleChangeSortPrice}>
+                            <option key={-1} value="0">Giá sản phẩm</option>
+                            <option value="-1">Giá: Từ thấp - cao</option>
+                            <option value="1">Giá: Từ cao - thấp</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                </div>
                 <div className="row">
                   {listProducts.map((product, index) => {
                     return (

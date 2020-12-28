@@ -21,6 +21,7 @@ class Header extends Component {
       total: 0,
       totalPrice: 0,
       currencyCode: "VND",
+      language: "en"
     }
     this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
@@ -41,6 +42,7 @@ class Header extends Component {
   }
 
   changeLanguage = (event) => {
+    this.setState({ language: event.target.value})
     this.props.i18n.changeLanguage(event.target.value)
   }
 
@@ -78,7 +80,7 @@ class Header extends Component {
         }} />
       )
     }
-    const {total, totalPrice, currencyCode}=this.state;
+    const {total, totalPrice, currencyCode, language}=this.state;
     const {userInfo, isLogin, listCategories, t} = this.props;
     const notVND = currencyCode=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2);
     
@@ -108,6 +110,7 @@ class Header extends Component {
                 <div className="header-right">
                   <ul className="list-inline ">
                     <li className="dropdown dropdown-small">
+                    <i className="fa fa-money-bill-wave"></i>
                     <select className="select-box" onChange={this.handleChangeCurrency}>
                       <option value="VND">{t('header.vnd.select')}</option>
                       <option value="USD">{t('header.usd.select')}</option>
@@ -117,6 +120,7 @@ class Header extends Component {
                     </select>
                     </li>
                     <li className="dropdown dropdown-small">
+                    <i className="fa fa-globe-europe"></i>
                     <select className="select-box" onChange={this.changeLanguage}>
                       <option value="en" name="language">{t('header.english.select')}</option>
                       <option value="vn" name="language">{t('header.vietnamese.select')}</option>
@@ -160,7 +164,7 @@ class Header extends Component {
                     <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true} />
                     {listCategories && listCategories.map((category, index)=>{
                       return (
-                        <MenuLink key={index} label={category.name} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
+                        <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
                       )
                     })}
                   </ul>

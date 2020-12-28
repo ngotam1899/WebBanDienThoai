@@ -35,6 +35,8 @@ const cart = (state = initialState, action) =>{
       }
       localStorage.setItem('CART', JSON.stringify(state));
       return [...state];
+    case ProductsActionTypes.CLEAR_CART:
+      return [];
     default : return [...state]
   }
 }

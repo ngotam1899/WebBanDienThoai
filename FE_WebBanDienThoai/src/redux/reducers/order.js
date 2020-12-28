@@ -64,6 +64,12 @@ export default function(state = init, action) {
         loadingDetail: false,
         detail: action.payload,
       };
+    case OrdersActionsTypes.DISCARD_ORDER:
+    case OrdersActionsTypes.DISCARD_ORDER_SUCCESS:
+    case OrdersActionsTypes.DISCARD_ORDER_ERROR:
+      return {
+        ...state,
+      };
     case OrdersActionsTypes.GET_DETAIL_ERROR:
       return {...state};
     default:

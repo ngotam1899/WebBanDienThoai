@@ -9,6 +9,21 @@ class HomePage extends Component {
         const {t} = this.props;
         return (
             <>
+            <div className="product-big-title-area search-fixed">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="product-bit-title text-center">
+                    <div className="row my-5 justify-content-center">
+                      <div className="col-md-6 col-9">
+                        <input type="text" className="w-100" name="keyword" placeholder="Input what you want"></input>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
                <div className="slider-area">
 			<div className="block-slider block-slider4">
 				<ul className="" id="bxslider-home4">
@@ -57,90 +72,6 @@ class HomePage extends Component {
             </div>
         </div>
     </div>
-    
-    <div className="maincontent-area">
-        <div className="zigzag-bottom"></div>
-        {/* <div className="container">
-            <div className="row">
-                <div className="col-md-12">
-                    <div className="latest-product">
-                        <h2 className="section-title">Latest Products</h2>
-                        <div className="product-carousel">
-                            <div className="row">
-                              <div className="col-3">
-                                <div className="single-product">
-                                <div className="product-f-image text-center">
-                                    <img src={ assets("products/product-1.jpg")} alt=""/>
-                                    <div className="product-hover">
-                                        <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2><a href="single-product.html">Samsung Galaxy s5- 2015</a></h2>
-                                
-                                <div className="product-carousel-price">
-                                    <ins>$700.00</ins> <del>$100.00</del>
-                                </div>
-                                </div>
-                            </div>
-                            <div className="col-3">
-                            <div className="single-product">
-                                <div className="product-f-image text-center">
-                                    <img src={ assets("products/product-2.jpg")} alt=""/>
-                                    <div className="product-hover">
-                                        <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2>Nokia Lumia 1320</h2>
-                                <div className="product-carousel-price">
-                                    <ins>$899.00</ins> <del>$999.00</del>
-                                </div> 
-                            </div>
-                            </div>
-                            <div className="col-3">
-                            <div className="single-product">
-                                <div className="product-f-image text-center">
-                                    <img src={ assets("products/product-3.jpg")} alt=""/>
-                                    <div className="product-hover">
-                                        <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2>LG Leon 2015</h2>
-
-                                <div className="product-carousel-price">
-                                    <ins>$400.00</ins> <del>$425.00</del>
-                                </div>                                 
-                            </div>
-                            </div>
-                            <div className="col-3">
-                            <div className="single-product">
-                                <div className="product-f-image text-center">
-                                    <img src={ assets("products/product-4.jpg")} alt=""/>
-                                    <div className="product-hover">
-                                        <a href="#" className="add-to-cart-link"><i className="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" className="view-details-link"><i className="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2><a href="single-product.html">Sony microsoft</a></h2>
-
-                                <div className="product-carousel-price">
-                                    <ins>$200.00</ins> <del>$225.00</del>
-                                </div>                            
-                            </div>
-                            </div>
-                           </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> */}
-    </div> 
     
     <div className="brands-area">
         <div className="zigzag-bottom"></div>

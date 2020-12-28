@@ -136,6 +136,15 @@ z-index: 999;}
     border: none;
     cursor: pointer;
 }
+
+.dropdown-small select {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    font-size: 13px;
+    padding:10px;
+}
+.dropdown-small i{color:#888}
 @media only screen and (max-width: 767px) { 
     
     .user-menu, .header-right ul.list-inline {
