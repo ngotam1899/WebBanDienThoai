@@ -15,7 +15,7 @@ function* handleRegister({ payload }) {
   try {
     const result = yield call(registerAccount, payload);
     const data = get(result, "data", {});
-    
+    if (data.code !== 201) throw data;
     yield put(AuthorizationActions.onRegisterSuccess(data));
   } catch (error) {
     console.log(error);
@@ -27,6 +27,7 @@ function* handleLogin({ payload }) {
   try {
     const result = yield call(loginAccount, payload);
     const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
     localStorage.setItem('AUTH_USER', result.headers.authorization);
     yield put(AuthorizationActions.onLoginSuccess(data.user));
   } catch (error) {
@@ -39,6 +40,7 @@ function* handleLoginFacebook({ payload }) {
   try {
     const result = yield call(loginFacebook, {"access_token" :payload});
     const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
     localStorage.setItem('AUTH_USER', result.headers.authorization);
     yield put(AuthorizationActions.onLoginFacebookSuccess(data.user));
   } catch (error) {
@@ -53,6 +55,7 @@ function* handleLoginGoogle({ payload }) {
     
     const result = yield call(loginGoogle, {"access_token":payload});
     const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
     localStorage.setItem('AUTH_USER', result.headers.authorization);
     yield put(AuthorizationActions.onLoginGoogleSuccess(data.user));
   } catch (error) {
@@ -65,6 +68,7 @@ function* handleActiveAccount({ payload}) {
   try {
     const result = yield call(activateAccount, payload);
     const data = get(result, "data", {});  
+    if (data.code !== 200) throw data;
     yield put(AuthorizationActions.onActivateAccountSuccess(data));
   } catch (error) {
     console.log(error, "Incorect or Expired link");

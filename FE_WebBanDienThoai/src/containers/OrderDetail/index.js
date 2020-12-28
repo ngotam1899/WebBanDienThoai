@@ -3,6 +3,8 @@ import OrdersActions from '../../redux/actions/order'
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 class OrderDetail extends Component {
   confirmOrder = (id) => {
@@ -13,6 +15,22 @@ class OrderDetail extends Component {
     const {onDelete} = this.props;
     onDelete(id, userId);
   }
+  submit = () => {
+    const {orderItem, t} = this.props;
+    confirmAlert({
+      title: t('user.popup.label'),
+      message: t('user.delete.question'),
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.onDiscardOrder(orderItem._id, orderItem.user)
+        },
+        {
+          label: 'No'
+        }
+      ]
+    });
+  };
 
   render() {
     const {orderItem, t} = this.props;
@@ -35,13 +53,13 @@ class OrderDetail extends Component {
               </div>
               <div className="form-group">
                 <label>{t('user.status.label')}:</label>
-                <input type="text" className="form-control" name="status" value={orderItem.status===true ? 'Đã giao hàng' : 'Chưa giao hàng'} disabled/>
+                <input type="text" className="form-control" name="status" value={orderItem.status===true ? `${t('user.status.true')}` : `${t('user.status.false')}`} disabled/>
               </div>
               <div className="form-group">
-                <label>Phương thức thanh toán:</label>
+                <label>{t('user.payment.way')}:</label>
                 <div className="row">
                   <div className="col-12">
-                    <input type="text" className="form-control" name="payment_method" value={ orderItem.payment_method === "local" ? '(COD) Thanh toán khi nhận hàng' : 'Paypal'} disabled/>
+                    <input type="text" className="form-control" name="payment_method" value={ orderItem.payment_method === "local" ? `${t('checkout.cod.button')}` : 'Paypal'} disabled/>
                   </div>
                 </div>
               </div>
@@ -51,20 +69,20 @@ class OrderDetail extends Component {
                 <label>{t('user.confirm.label')}:</label>
                 <div className="row">
                   <div className={orderItem.confirmed===true ? "col-12": "col-9"}>
-                    <input type="text" className="form-control" name="confirmed" value={ orderItem.confirmed===true ? 'Đã xác nhận đơn hàng' : 'Chưa xác nhận'} disabled/>
+                    <input type="text" className="form-control" name="confirmed" value={ orderItem.confirmed===true ? `${t('user.confirm.true')}` : `${t('user.confirm.false')}`} disabled/>
                   </div>
                   <div className={orderItem.confirmed===true ? "d-none" : "col-3"}>
-                    <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>Confirm</button>
+                    <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>{t('user.confirm.button')}</button>
                   </div>
                 </div>
               </div>
               </>
               : <>
               <div className="form-group">
-                <label>Tình trạng thanh toán:</label>
+                <label>{t('user.payment.label')}:</label>
                 <div className="row">
                   <div className="col-12">
-                    <input type="text" className="form-control" name="is_paid" value={ orderItem.is_paid===true ? 'Đã thanh toán đơn' : 'Chưa thanh toán đơn'} disabled/>
+                    <input type="text" className="form-control" name="is_paid" value={ orderItem.is_paid===true ? `${t('user.payment.true')}` : `${t('user.payment.false')}`} disabled/>
                   </div>
                 </div>
               </div>
@@ -104,7 +122,7 @@ class OrderDetail extends Component {
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal" onClick={()=> this.onDiscardOrder(orderItem._id, orderItem.user)}>{t('user.delete.button')}</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" onClick={this.submit}>{t('user.delete.button')}</button>
               <button type="button" class="btn btn-default" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }

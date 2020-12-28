@@ -9,6 +9,7 @@ function* handleGetList({ payload }) {
   try {
     const result = yield call(getAllCategories, payload);
     const data = get(result, "data");
+    if (data.code !== 200) throw data;
     yield put(CategoryActions.onGetListSuccess(data.categorys));
   } catch (error) {
     yield put(CategoryActions.onGetListError(error));

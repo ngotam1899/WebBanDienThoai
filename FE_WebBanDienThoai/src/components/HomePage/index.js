@@ -7,6 +7,8 @@ import { compose } from 'redux';
 import { Link } from 'react-router-dom'
 // @Actions
 import ProductsActions from "../../redux/actions/products";
+// @Function
+import tryConvert from '../../utils/changeMoney'
 
 class HomePage extends Component {
   constructor(props) {
@@ -34,7 +36,7 @@ class HomePage extends Component {
 
   render() {
     const { keyword } = this.state;
-    const { t, listProducts } = this.props;
+    const { t, listProducts, currency } = this.props;
     return (<>
       <div className="product-big-title-area search-fixed">
         <div className="container">
@@ -43,7 +45,7 @@ class HomePage extends Component {
               <div className="product-bit-title text-center">
                 <div className="row my-5 justify-content-center">
                   <div className="col-md-6 col-9">
-                    <input type="text" className="w-100 form-control" value={keyword} name="keyword" onChange={this.handleFilter} placeholder="Input what you want"></input>
+                    <input type="text" className="w-100 form-control" value={keyword} name="keyword" onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
                     <div style={{ position: "absolute", width: "95%" }}>
                       <div className="card">
                       {listProducts && keyword && listProducts.map((product, index) =>{
@@ -53,12 +55,12 @@ class HomePage extends Component {
                             <div className="col-3 my-auto">
                               <Link to={`/product/${product.pathseo}/${product._id}`}><img style={{height: "80px"}} src={product.bigimage.public_url}></img></Link>
                             </div>
-                            <div className="col-5 text-left my-auto">
+                            <div className="col-4 text-left my-auto">
                               <p className="mb-0">{product.name}</p>
-                              <p className="mb-0">{product.price} VND</p>
+                              <p className="mb-0">{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</p>
                             </div>
-                            <div className="col-4 my-auto">
-                              <button className="btn btn-success" onClick ={ () => this.onAddToCart(product)}><i className="fa fa-cart-plus"></i> Add to cart</button>
+                            <div className="col-5 my-auto text-right">
+                              <button className="btn btn-success mr-3" onClick ={ () => this.onAddToCart(product)}><i className="fa fa-cart-plus"></i> {t('shop.add-to-cart.button')}</button>
                             </div>
                           </div>
                           <div class="border-bottom"></div>
@@ -152,6 +154,7 @@ class HomePage extends Component {
 const mapStateToProps = (state) => {
   return {
     listProducts: state.products.list,
+    currency: state.currency,
   }
 }
 

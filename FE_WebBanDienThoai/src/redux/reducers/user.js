@@ -1,5 +1,6 @@
 import { get, cloneDeep } from "lodash";
 import { UsersActionTypes } from "../actions/user";
+import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const init = {
   loading: true,
@@ -49,8 +50,10 @@ export default function(state = init, action) {
     case UsersActionTypes.UPDATE_USER_IMAGE:
       return {...state};
     case UsersActionTypes.UPDATE_USER_IMAGE_SUCCESS:
+      toastSuccess('Cập nhật ảnh đại diện thành công');
       return {...state};
     case UsersActionTypes.UPDATE_USER_IMAGE_ERROR:
+      toastError("Lỗi ảnh");
       return {...state};
     case UsersActionTypes.GET_USER_IMAGE:
       return {
@@ -78,6 +81,7 @@ export default function(state = init, action) {
         processing: false,
       };
     case UsersActionTypes.UPDATE_SUCCESS:
+      toastSuccess('Cập nhật thông tin thành công');
       return {
         ...state,
         processing: false,
@@ -89,11 +93,14 @@ export default function(state = init, action) {
         processing: true,
       };
     case UsersActionTypes.CHANGE_PASSWORD_ERROR:
+      var { message } = action.payload;
+      toastError(message);
       return {
         ...state,
         processing: false,
       };
     case UsersActionTypes.CHANGE_PASSWORD_SUCCESS:
+      toastSuccess('Cập nhật thông tin thành công');
       return {
         ...state,
         processing: false,

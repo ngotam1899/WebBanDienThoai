@@ -1,5 +1,6 @@
 import { get, omit, cloneDeep } from "lodash";
 import { OrdersActionsTypes } from "../actions/order";
+import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const init = {
   loading: true,
@@ -31,20 +32,28 @@ export default function(state = init, action) {
     case OrdersActionsTypes.ADD_ORDER:
       return {...state};
     case OrdersActionsTypes.ADD_ORDER_SUCCESS:
+      toastSuccess("Tạo đơn hàng thành công")
       return {...state};
     case OrdersActionsTypes.ADD_ORDER_ERROR:
+      var { message } = action.payload;
+      toastError(message)
       return {...state};
     case OrdersActionsTypes.SEND_CONFIRM_EMAIL:
       return {...state};
     case OrdersActionsTypes.SEND_CONFIRM_EMAIL_SUCCESS:
+      toastSuccess("Đã gửi mã xác nhận đến mail của bạn")
       return {...state};
     case OrdersActionsTypes.SEND_CONFIRM_EMAIL_ERROR:
+      toastError("Không có dữ liệu mail")
       return {...state};
     case OrdersActionsTypes.CONFIRM_ORDER:
       return {...state};
     case OrdersActionsTypes.CONFIRM_ORDER_SUCCESS:
+      toastSuccess("Xác nhận đơn hàng thành công")
       return {...state};
     case OrdersActionsTypes.CONFIRM_ORDER_ERROR:
+      var { message } = action.payload;
+      toastError(message)
       return {...state};
     case OrdersActionsTypes.GET_HISTORY_ORDER:
       return {...state};

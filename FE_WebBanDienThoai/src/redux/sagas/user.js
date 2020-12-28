@@ -66,6 +66,7 @@ function* handleUpdate( {payload} ) {
   try {
     const result = yield call(updateUserInfo, payload.params, payload.id);
     const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
     const detailResult = yield call(getUser, payload.id);
     yield put(UsersActions.onUpdateSuccess(detailResult.data.user));
     yield put(AuthorizationActions.onGetProfile());
@@ -80,6 +81,7 @@ function* handleChangePassword( {payload} ) {
     console.log(payload);
     const result = yield call(changePassword, payload);
     const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
     yield put(UsersActions.onChangePasswordSuccess(data.message));
   } catch (error) {
     console.log(error);

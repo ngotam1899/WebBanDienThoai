@@ -29,6 +29,7 @@ function* handleReConfirm({ payload }) {
   try {
     const result = yield call(sendConfirmEmail, payload);
     const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
     if (data.message !== "success") throw data;
     yield put(OrdersActions.onSendConfirmEmailSuccess(data));
   } catch (error) {
@@ -62,9 +63,9 @@ function* handleConfirmOrder({ payload}) {
   try {
     const result = yield call(confirmOrder, payload);
     const data = get(result, "data", {});  
+    if (data.code !== 200) throw data;
     yield put(OrdersActions.onConfirmOrderSuccess(data));
   } catch (error) {
-    console.log(error, "Incorect or Expired link");
     yield put(OrdersActions.onConfirmOrderError(error));
   }
 }
@@ -73,9 +74,9 @@ function* handleHistoryOrder({ payload}) {
   try {
     const result = yield call(orderHistory, payload);
     const data = get(result, "data", {});  
+    if (data.code !== 200) throw data;
     yield put(OrdersActions.onGetHistoryOrderSuccess(data.orders));
   } catch (error) {
-    console.log(error, "Incorect or Expired link");
     yield put(OrdersActions.onGetHistoryOrderSuccess(error));
   }
 }

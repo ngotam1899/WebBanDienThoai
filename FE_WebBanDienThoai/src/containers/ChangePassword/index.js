@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
+import { toastError } from '../../utils/toastHelper';
 // @Actions
 import UsersActions from '../../redux/actions/user'
 
@@ -26,13 +27,16 @@ class ChangePassword extends Component {
 
   changePassword() {
     const {oldPassword, newPassword, confirmPassword} = this.state;
-    const {onChangePassword} = this.props
+    const {onChangePassword, t} = this.props
     const data = {
       password: oldPassword,
       new_password: newPassword,
     }
     if(newPassword === confirmPassword && newPassword!== null) {
       onChangePassword(data);
+    }
+    else{
+      toastError(t('user.password.error'))
     }
   }
 
@@ -62,7 +66,7 @@ class ChangePassword extends Component {
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.changePassword()}>{t('user.save-password.butto')}</button>
+              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.changePassword()}>{t('user.save-password.button')}</button>
               <button type="button" class="btn btn-danger" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> 

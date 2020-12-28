@@ -6,6 +6,8 @@ import {compose} from 'redux';
 import {Link} from 'react-router-dom'
 // @Actions
 import ProductsActions from "../../redux/actions/products";
+// @Function
+import tryConvert from '../../utils/changeMoney'
 
 class Search extends Component {
 	constructor(props) {
@@ -34,7 +36,7 @@ class Search extends Component {
 
 	render() {
 		const {keyword} = this.state;
-		const {t, listProducts} = this.props;
+		const {t, listProducts, currency} = this.props;
 		return (
 			<div className="col">
 				<div className="single-sidebar mb-0">
@@ -53,7 +55,7 @@ class Search extends Component {
 							</div>
 							<div className="col-6">
 								<p className="mb-0">{product.name}</p>
-								<p className="mb-0">{product.price} VND</p>
+								<p className="mb-0">{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</p>
 							</div>
 							<div className="col-3 my-auto">
 								<button className="btn btn-success" onClick ={ () => this.onAddToCart(product)}><i className="fa fa-cart-plus"></i></button>
@@ -72,6 +74,7 @@ class Search extends Component {
 const mapStateToProps = (state) => {
   return {
 		listProducts: state.products.list,
+		currency: state.currency,
   }
 }
 

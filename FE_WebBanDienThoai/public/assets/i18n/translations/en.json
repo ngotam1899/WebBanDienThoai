@@ -19,6 +19,16 @@
   "shop.color.card": "Colors",
   "shop.all.radio-button": "All",
   "shop.add-to-cart.button": "Add to cart",
+  "shop.sort.label": "Sort",
+  "shop.sort.price": "Product price",
+  "shop.sort.inc": "Price: From low to high",
+  "shop.sort.des": "Price: From high to low",
+  "shop.distance.label": "Price range",
+  "shop.distance.from": "From",
+  "shop.distance.to": "to",
+  "shop.distance.button": "Browse",
+  "shop.pagination.prev": "Previous",
+  "shop.pagination.next": "Next",
 
   "detail.shop.title":"Product detail",
   "detail.category.label":"Category",
@@ -112,9 +122,19 @@
   "user.address.order": "Address of receiver",
   "user.email.order": "Email of receiver",
   "user.delete.button": "Discard the order",
+  "user.password.error": "Please confirm your new password",
+  "user.payment.label": "Payment Status",
+  "user.payment.true": "Paid",
+  "user.payment.false": "Not paid yet",
+  "user.payment.way": "Payment method",
+  "user.confirm.button": "Confirm",
+  "user.popup.label": "Notice",
+  "user.delete.question": "Do you want to cancel your order?",
 
   "home.feature.1":"30 Days return",
   "home.feature.3":"Secure payments",
   "home.feature.4":"New products",
   "home.shop.button": "Shop now"
+
+  
 }

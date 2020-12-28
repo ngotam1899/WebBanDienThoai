@@ -45,7 +45,9 @@ select {border: none;}
   width: 100%;
   z-index: 99;
 }
-
+.product-upper{
+  height: 200px;
+}
 .w-40{
   width:40%
 }

@@ -1,4 +1,5 @@
 import { ProductsActionTypes } from "../actions/products";
+import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 // lấy những sản phẩm đã được lưu trong localStorage về
 var data = JSON.parse(localStorage.getItem('CART'));
@@ -20,6 +21,7 @@ const cart = (state = initialState, action) =>{
         });
       }
       localStorage.setItem('CART', JSON.stringify(state));
+      toastSuccess('Đã thêm vào giỏ hàng');
       return [...state];
     case ProductsActionTypes.DELETE_PRODUCT_CART:
       index = findProductInCart(state, product);
@@ -27,6 +29,7 @@ const cart = (state = initialState, action) =>{
         state.splice(index, 1);  // cắt đi từ vị trí index, cắt 1 phần tử
       }
       localStorage.setItem('CART', JSON.stringify(state));
+      toastSuccess('Đã xóa khỏi giỏ hàng');
       return [...state];
     case ProductsActionTypes.UPDATE_PRODUCT_CART:
       index = findProductInCart(state, product);

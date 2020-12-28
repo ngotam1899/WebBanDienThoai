@@ -18,7 +18,7 @@ function* handleGetList({ payload }) {
 }
 
 function* handleFilter({ payload }) {
-  yield delay(1000);
+  yield delay(2000);
   const { keyword } = payload;
   yield put(
     ProductsActions.onGetList({
