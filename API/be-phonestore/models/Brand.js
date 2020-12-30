@@ -4,6 +4,10 @@ const Schema = mongoose.Schema
 const BrandSchema = new Schema({
     name: {
         type: String
+    },
+    image: {
+        type: Schema.Types.ObjectId,
+        ref: 'Image_Brand'
     }
 })
 

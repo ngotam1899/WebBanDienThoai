@@ -1,5 +1,6 @@
 const Image_User = require('../models/Image_User')
 const Image_Pro = require('../models/Image_Pro')
+const Image_Brand = require('../models/Image_Brand');
 const cloudinary = require('cloudinary')
 const fs = require('fs')
 const Validator = require('../validators/validator')
@@ -103,6 +104,32 @@ const uploadImageUser = async(req, res, next) => {
     }
 }
 
+const uploadImageBrand = async(req, res, next) => {
+    try {
+
+        if (!req.files || Object.keys(req.files).length === 0)
+            return res.status(200).json({ success: false, code: 400, message: 'No file were uploaded' })
+        const fileimage = req.files.image
+        if (fileimage.length > 0) {
+            fileimage.forEach(element => {
+                removeTmp(element)
+            });
+            return res.status(200).json({ success: false, code: 400, message: 'Can not upload multiple file' })
+        }
+        if (Validator.isValidFile(fileimage) == false) {
+            await removeTmp(fileimage);
+            return res.status(200).json({ success: false, code: 400, message: 'The format file is incorrect!' })
+        }
+
+        const image = await upload(fileimage, Image_Brand)
+
+        return res.status(200).json({ success: true, code: 200, message: "", image: image })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 const getImage = async(req, res, next) => {
     try {
         const { IDImage } = req.params
@@ -121,6 +148,26 @@ const getImageUser = async(req, res, next) => {
 
         const image = await Image_User.findById(IDImage)
 
+        return res.status(200).json({ success: true, code: 200, message: '', image: image })
+    } catch (error) {
+        return next(error)
+    }
+}
+
+const getAImageBrand = async(req, res, next) => {
+    try {
+        const { IDImage } = req.params
+
+        const image = await Image_Brand.findById(IDImage)
+
+        return res.status(200).json({ success: true, code: 200, message: '', image: image })
+    } catch (error) {
+        return next(error)
+    }
+}
+const getAllImageBrand = async(req, res, next) => {
+    try {
+        const image = await Image_Brand.find()
         return res.status(200).json({ success: true, code: 200, message: '', image: image })
     } catch (error) {
         return next(error)
@@ -157,9 +204,12 @@ const removeTmp = async(path) => {
 module.exports = {
     getAllImg,
     getAllImgUser,
+    getAllImageBrand,
     uploadImage,
     uploadImageUser,
+    uploadImageBrand,
     deleteImage,
     getImage,
-    getImageUser
+    getImageUser,
+    getAImageBrand
 }

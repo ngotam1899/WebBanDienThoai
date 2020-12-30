@@ -2,7 +2,6 @@ const Brand = require('../models/Brand')
 
 const createError = require('http-errors')
 const Validator = require('../validators/validator')
-const { findByIdAndDelete } = require('../models/Brand')
 
 const getAllBrand = async(req, res, next) => {
     try {

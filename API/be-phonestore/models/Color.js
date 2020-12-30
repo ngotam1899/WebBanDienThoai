@@ -7,6 +7,9 @@ const ColorSchema = new Schema({
     },
     color_en: {
         type: String
+    },
+    code_color: {
+        type: String
     }
 })
 
