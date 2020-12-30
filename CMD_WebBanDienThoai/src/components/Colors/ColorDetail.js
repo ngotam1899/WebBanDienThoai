@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+import { connect } from "react-redux";
+// @Actions
+import ColorActions from "../../redux/actions/color";
 
 class ColorDetail extends Component {
   constructor(props){
     super(props);
-    const {product} = props;
+    const {color} = props;
     this.state = {
-      id: product ? product.id : '',
-      name: product ? product.name : '',
-      price: product ? product.price : null,
-      amount: product ? product.amount : null,
-      warrently: product ? product.warrently : null,
-      category: product ? product.category : null,
-      brand: product ? product.brand: null,
-      bigimage: product ? product.bigimage : null,
-      image: product ? product.image : null,
+      id: color ? color._id : '',
+      name: color ? color.color : ''
     }
   }
   onChange = (event) =>{
@@ -26,87 +22,37 @@ class ColorDetail extends Component {
     })
   }
 
-  onSubmit = (data, _id) =>{
-    const {onSubmit} = this.props;
-    const {id, name, price, amount, warrently, category, brand, bigimage, image} = this.state;
-    data = {name, price, amount, warrently, category, brand, bigimage, image}
-    _id = id;
-    onSubmit(data, _id);
+  onSubmit = () =>{
+    const {id, name} = this.state;
+    const {onUpdate, onCreate} = this.props;
+    var data = {color: name}
+    if (id) {
+      onUpdate(id, data);
+    }
+    else {
+      // 4. Create data
+      onCreate(data);
+    }
   }
 
 	render() {
-    const {name, price, amount, warrently, category, brand, bigimage, image} = this.state;
-    const { large, onClose, setImage, listCategories, listBrands, product} = this.props;
+    const {name} = this.state;
+    const { large, onClose, color} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
-        <CModalTitle>{product ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}</CModalTitle>
+        <CModalTitle>{color ? "Sửa thông tin màu" : "Thêm màu mới"}</CModalTitle>
 				</CModalHeader>
 				<CModalBody>
-					<div className="row">
+        <div className="row">
 						<div className="col-12 col-lg-6">
 							<form>
 								<div className="form-group">
-									<label>Tên sản phẩm:</label>
+									<label>Tên màu:</label>
                   <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
 								</div>
-								<div className="form-group">
-									<label>Giá bán lẻ (VND):</label>
-                  <input type="number" className="form-control" name="price" value={price} onChange={this.onChange}/>
-								</div>
-                <div className="form-group">
-									<label>Số lượng (chiếc):</label>
-                  <input type="number" className="form-control" name="amount" value={amount} onChange={this.onChange}/>
-								</div>
-                <div className="form-group">
-									<label>Thời hạn bảo hành:</label>
-                  <input type="number" className="form-control" name="warrently" value={warrently} onChange={this.onChange}/>
-								</div>
-                <div className="form-group">
-									<label>Loại sản phẩm:</label>
-                  <select className="form-control" required="required" name="category"
-                        value={category}
-                        onChange={this.onChange}>
-                    {listCategories.map((category, index) =>{
-                      return(
-                        <option key={index} value={category._id}>{category.name}</option>
-                      )
-                    })}
-                  </select>
-								</div>
-                <div className="form-group">
-									<label>Tên thương hiệu:</label>
-                  <select className="form-control" required="required" name="brand"
-                        value={brand}
-                        onChange={this.onChange}>
-                    {listBrands.map((brand, index) =>{
-                      return(
-                        <option key={index} value={brand._id}>{brand.name}</option>
-                      )
-                    })}
-                  </select>
-								</div>
-							</form>
-						</div>
-            <div className="col-12 col-lg-6">
-							<form>
-								<div className="form-group">
-                  <img src={setImage(bigimage)} style={{border: '1px solid'}} alt=""></img>
-                  <input type="file" className="form-control" name="image"/>
-								</div>
-                <div className="form-group">
-                  <div className="row">
-                  {image && image.map((item, index) => {
-                    return (
-                      <div className="col-4" key={index}>
-                      <img src={setImage(item)} className="w-100" style={{border: '1px solid'}} alt=""></img>
-                      </div>
-                    )
-                  })}
-                  </div>
-								</div>
-							</form>
-						</div>
+              </form>
+            </div>
 					</div>
 				</CModalBody>
 				<CModalFooter>
@@ -122,4 +68,20 @@ class ColorDetail extends Component {
 	}
 }
 
-export default ColorDetail;
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreate: (params) =>{
+      dispatch(ColorActions.onCreate({params}))
+    },
+    onUpdate: (id, params) =>{
+      dispatch(ColorActions.onUpdate({id, params}))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ColorDetail);

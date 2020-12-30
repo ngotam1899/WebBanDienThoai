@@ -1,6 +1,9 @@
 import React, { Component }  from 'react'
 import { get } from "lodash";
 import { connect } from "react-redux";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+// @Components
 import {
   CCard,
   CCardBody,
@@ -10,7 +13,6 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-// @Components
 import ProductDetail from './ProductDetail'
 // @Actions
 import ProductsActions from "../../redux/actions/products";
@@ -58,7 +60,21 @@ class ProductList extends Component {
     })
     onClearDetail();
   }
-
+  submit = (id) => {
+    confirmAlert({
+      title: 'Thông báo',
+      message: 'Bạn có thực sự muốn xóa product này?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.onDelete(id)
+        },
+        {
+          label: 'No'
+        }
+      ]
+    });
+  };
   onDelete = (_id)=>{
     const {onDelete} = this.props;
     onDelete(_id);
@@ -126,7 +142,7 @@ class ProductList extends Component {
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.onDelete(item._id)}
+                          onClick={() => this.submit(item._id)}
                           className="mr-1"
                           color="danger"
                         >

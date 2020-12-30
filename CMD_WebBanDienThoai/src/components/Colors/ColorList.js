@@ -1,6 +1,9 @@
 import React, { Component }  from 'react'
 import { get } from "lodash";
 import { connect } from "react-redux";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+// @Components
 import {
   CCard,
   CCardBody,
@@ -11,6 +14,7 @@ import {
   CRow,
 } from '@coreui/react'
 import ColorDetail from './ColorDetail'
+// @Actions
 import ColorActions from "../../redux/actions/color";
 
 const fields = ['name',{ key: 'actions', _style: { width: '15%'} }]
@@ -34,13 +38,33 @@ class ColorList extends Component {
     })
   }
 
+  submit = (id) => {
+    confirmAlert({
+      title: 'Thông báo',
+      message: 'Bạn có thực sự muốn xóa color này?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.onDelete(id)
+        },
+        {
+          label: 'No'
+        }
+      ]
+    });
+  };
+
+  onDelete = (_id)=>{
+    const {onDelete} = this.props;
+    onDelete(_id);
+  }
+
   onUpdate = (large, item) =>{
     const { onGetDetail } = this.props;
     this.setState({
       large
     })
     if(item){onGetDetail(item)}
-    //onGetDetail(item)
   }
 
   onClose = (large) =>{
@@ -51,19 +75,9 @@ class ColorList extends Component {
     onClearDetail();
   }
 
-  onSubmit = (data, _id) =>{
-    const { onCreate, onUpdate } = this.props;
-    if(_id === ''){
-      onCreate(data);
-    }
-    else {
-      onUpdate(_id, data);
-    }
-  }
-
   render () {
     const {large} = this.state;
-    const {listColor} = this.props;
+    const {listColor, colorDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -75,7 +89,7 @@ class ColorList extends Component {
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
                   color="success"
-                > Thêm loại sản phẩm
+                > Thêm màu
                 </CButton>
               </CCardHeader>
 
@@ -103,7 +117,7 @@ class ColorList extends Component {
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.setLarge(!large)}
+                          onClick={() => this.submit(item._id)}
                           className="mr-1"
                           color="danger"
                         >
@@ -112,13 +126,10 @@ class ColorList extends Component {
                       </td>)
                   }}
                 />
-                {/* {(productDetail && large) && <ColorDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
-
-                {(!productDetail && large) && <ColorDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>} */}
+                {(colorDetail && large) && <ColorDetail large={large} color={colorDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}/>}
+                {(!colorDetail && large) && <ColorDetail large={large} color={colorDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -131,6 +142,7 @@ class ColorList extends Component {
 const mapStateToProps = (state) => {
   return {
     listColor: state.color.list,
+    colorDetail: state.color.detail,
   }
 }
 
@@ -144,6 +156,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     onClearDetail: () =>{
       dispatch(ColorActions.onClearDetail())
+    },
+    onGetDetail: (id) => {
+      dispatch(ColorActions.onGetDetail(id))
+    },
+    onDelete: (id) =>{
+      dispatch(ColorActions.onDelete({id}))
     },
   }
 }

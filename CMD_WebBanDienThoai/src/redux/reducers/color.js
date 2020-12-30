@@ -55,6 +55,53 @@ export default function(state = init, action) {
         loading: false,
         list: get(action, "payload", []),
       };
+    case ColorActionTypes.GET_DETAIL:
+      return {
+        ...state,
+        loadingDetail: true,
+        detail: null,
+      };
+    case ColorActionTypes.GET_DETAIL_SUCCESS:
+      return {
+        ...state,
+        loadingDetail: false,
+        detail: action.payload,
+      };
+
+    case ColorActionTypes.GET_DETAIL_ERROR:
+      return {
+        ...state,
+        loadingDetail: false,
+        detail: action.payload,
+      };
+
+    case ColorActionTypes.CREATE:
+    case ColorActionTypes.UPDATE:
+    case ColorActionTypes.DELETE:
+      return {
+        ...state,
+        processing: true,
+      };
+
+    case ColorActionTypes.CREATE_ERROR:
+    case ColorActionTypes.UPDATE_ERROR:
+    case ColorActionTypes.DELETE_ERROR:
+      return {
+        ...state,
+        processing: false,
+      };
+    case ColorActionTypes.UPDATE_SUCCESS:
+      return {
+        ...state,
+        processing: true,
+      };
+
+    case ColorActionTypes.CREATE_SUCCESS:
+    case ColorActionTypes.DELETE_SUCCESS:
+      return {
+        ...state,
+        processing: false,
+      };
     default:
       return state;
   }

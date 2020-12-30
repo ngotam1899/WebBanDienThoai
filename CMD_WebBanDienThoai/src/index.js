@@ -7,7 +7,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import GlobalLoading from './components/GlobalLoading'
 import { icons } from './assets/icons'
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux'
 import configureStore from "./redux/store";
 
@@ -17,6 +18,7 @@ React.icons = icons
 
 ReactDOM.render(
   <Provider store={store}>
+    <ToastContainer/>
     <GlobalLoading/>
     <App/>
   </Provider>,

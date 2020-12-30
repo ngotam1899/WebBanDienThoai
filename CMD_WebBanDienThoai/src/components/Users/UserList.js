@@ -91,7 +91,7 @@ class UserList extends Component {
                     'actions':
                     (item)=>(
                       <td>
-                        <CButton
+                        {/* <CButton
                           onClick={() => this.onDetail(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"
                           color="warning"
@@ -104,7 +104,7 @@ class UserList extends Component {
                           color="danger"
                         >
                           Xóa
-                        </CButton>
+                        </CButton> */}
                       </td>)
                   }}
                 />

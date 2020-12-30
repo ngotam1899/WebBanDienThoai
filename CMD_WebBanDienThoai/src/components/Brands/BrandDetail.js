@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+import { connect } from "react-redux";
+// @Actions
+import BrandActions from "../../redux/actions/brands";
 
 class BrandDetail extends Component {
   constructor(props){
     super(props);
-    const {product} = props;
+    const {brand} = props;
     this.state = {
-      id: product ? product.id : '',
-      name: product ? product.name : '',
+      id: brand ? brand._id : '',
+      name: brand ? brand.name : ''
     }
   }
   onChange = (event) =>{
@@ -15,16 +18,21 @@ class BrandDetail extends Component {
     var name=target.name;
     var value=target.value;
     this.setState({
-        [name]:  value
+      [name]:  value
     })
   }
 
-  onSubmit = (data, _id) =>{
-    const {onSubmit} = this.props;
-    const {id, name,} = this.state;
-    data = {name}
-    _id = id;
-    onSubmit(data, _id);
+  onSubmit = () =>{
+    const {id, name, pathseo, name_en} = this.state;
+    const {onUpdate, onCreate} = this.props;
+    var data = {name, pathseo, name_en}
+    if (id) {
+      onUpdate(id, data);
+    }
+    else {
+      // 4. Create data
+      onCreate(data);
+    }
   }
 
 	render() {
@@ -60,4 +68,20 @@ class BrandDetail extends Component {
 	}
 }
 
-export default BrandDetail;
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreate: (params) =>{
+      dispatch(BrandActions.onCreate({params}))
+    },
+    onUpdate: (id, params) =>{
+      dispatch(BrandActions.onUpdate({id, params}))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BrandDetail);

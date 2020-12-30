@@ -1,15 +1,27 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import BrandActions, { BrandActionTypes } from "../actions/brands";
-import { getAllBrands } from "../apis/brands";
+import { getAllBrands, getDetailBrand, addBrand, updateBrand, deleteBrand } from "../apis/brands";
 
 function* handleGetList({ payload }) {
   try {
     const result = yield call(getAllBrands, payload);
     const data = get(result, "data");
+    if (data.code !== 200) throw data;
     yield put(BrandActions.onGetListSuccess(data.brands));
   } catch (error) {
     yield put(BrandActions.onGetListError(error));
+  }
+}
+
+function* handleGetDetail({ filters, id }) {
+  try {
+    const result = yield call(getDetailBrand, id);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    yield put(BrandActions.onGetDetailSuccess(data.category));
+  } catch (error) {
+    yield put(BrandActions.onGetDetailError(error));
   }
 }
 
@@ -17,106 +29,74 @@ function* handleGetList({ payload }) {
  *
  * create
  */
-/* function* handleCreate({ payload, filters, callback, merchant_id }) {
-  console.log("load",payload);
+function* handleCreate({ payload }) {
   try {
-    const result = yield call(EcommerceApi.Product.create, payload);
+    const result = yield call(addBrand, payload.params);
     const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    message.success("Create product success!");
-    if (callback) {
-      callback();
-    }
-    yield put(ProductsActions.onCreateSuccess(data));
-    yield put(ProductsActions.onGetList(filters));
-    if(merchant_id){
-      yield put(MerchantActions.onGetListProduct({id:merchant_id}));
-    }
+    if (data.code !== 201) throw data;
+    yield put(BrandActions.onCreateSuccess(data.brand));
+    yield put(BrandActions.onGetList());
   } catch (error) {
-    console.log(error);
-    message.error(get(error, "msg", "Error when create product!"));
-    yield put(ProductsActions.onCreateError(error));
+    yield put(BrandActions.onCreateError(error));
   }
-} */
+}
 
 /**
  *
  * update
  */
-/* function* handleUpdate({ payload, filters, callback, merchant_id }) {
-
+function* handleUpdate({ payload }) {
   try {
-    const result = yield call(EcommerceApi.Product.update, payload);
+    const result = yield call(updateBrand, payload.params, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    message.success("Update product success!");
-    if (callback) {
-      callback();
-    }
-
-    const detailResult = yield call(EcommerceApi.Product.getDetail, payload.id);
-    yield put(ProductsActions.onUpdateSuccess(get(detailResult, "data")));
-    yield put(ProductsActions.onGetList(filters));
-    if(merchant_id){
-      yield put(MerchantActions.onGetListProduct({id:merchant_id}));
-    }
+    const detailResult = yield call(getDetailBrand, payload.id);
+    yield put(BrandActions.onUpdateSuccess(get(detailResult, "data")));
+    yield put(BrandActions.onGetList());
   } catch (error) {
     console.log(error);
-    message.error(get(error, "msg", "Error when Update product!"));
-    yield put(ProductsActions.onUpdateError(error));
+    yield put(BrandActions.onUpdateError(error));
   }
-} */
+}
 
 /**
  *
  * delete
  */
-/* function* handleDelete({ id, filters, callback, merchant_id }) {
+function* handleDelete({ id }) {
   try {
-    const result = yield call(EcommerceApi.Product.delete, id);
+    const result = yield call(deleteBrand, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    message.success("Delete product success!");
-    if (callback) {
-      callback();
-    }
-    yield put(ProductsActions.onDeleteSuccess(data));
-    yield put(ProductsActions.onGetList(filters));
-    if(merchant_id){
-      yield put(MerchantActions.onGetListProduct({id:merchant_id}));
-    }
+    yield put(BrandActions.onDeleteSuccess(data));
+    yield put(BrandActions.onGetList());
   } catch (error) {
-    console.log(error);
-    message.error(get(error, "msg", "Error when Delete product!"));
-    yield put(ProductsActions.onDeleteError(error));
+    yield put(BrandActions.onDeleteError(error));
   }
-} */
-
-/**
- *
- */
+}
 
 export function* watchGetList() {
   yield takeEvery(BrandActionTypes.GET_LIST, handleGetList);
 }
-
-/*
+export function* watchGetDetail() {
+  yield takeEvery(BrandActionTypes.GET_DETAIL, handleGetDetail);
+}
 export function* watchCreate() {
-  yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
+  yield takeEvery(BrandActionTypes.CREATE, handleCreate);
 }
 export function* watchUpdate() {
-  yield takeEvery(ProductsActionTypes.UPDATE, handleUpdate);
+  yield takeEvery(BrandActionTypes.UPDATE, handleUpdate);
 }
 export function* watchDelete() {
-  yield takeEvery(ProductsActionTypes.DELETE, handleDelete);
-} */
+  yield takeEvery(BrandActionTypes.DELETE, handleDelete);
+}
 
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
-    /* fork(watchGetDetail),
+    fork(watchGetDetail),
     fork(watchCreate),
     fork(watchUpdate),
-    fork(watchDelete), */
+    fork(watchDelete),
   ]);
 }

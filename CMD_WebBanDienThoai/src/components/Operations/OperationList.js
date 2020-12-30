@@ -1,6 +1,9 @@
 import React, { Component }  from 'react'
 import { get } from "lodash";
 import { connect } from "react-redux";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+// @Components
 import {
   CCard,
   CCardBody,
@@ -11,6 +14,7 @@ import {
   CRow,
 } from '@coreui/react'
 import OperationDetail from './OperationDetail'
+// @Actions
 import OperationActions from "../../redux/actions/operations";
 
 const fields = ['name', { key: 'actions', _style: { width: '15%'} }]
@@ -33,6 +37,25 @@ class ProductList extends Component {
       large
     })
   }
+  submit = (id) => {
+    confirmAlert({
+      title: 'Thông báo',
+      message: 'Bạn có thực sự muốn xóa operation này?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.onDelete(id)
+        },
+        {
+          label: 'No'
+        }
+      ]
+    });
+  };
+  onDelete = (_id)=>{
+    const {onDelete} = this.props;
+    onDelete(_id);
+  }
 
   onUpdate = (large, item) =>{
     const { onGetDetail } = this.props;
@@ -40,7 +63,6 @@ class ProductList extends Component {
       large
     })
     if(item){onGetDetail(item)}
-    //onGetDetail(item)
   }
 
   onClose = (large) =>{
@@ -51,19 +73,9 @@ class ProductList extends Component {
     onClearDetail();
   }
 
-  onSubmit = (data, _id) =>{
-    const { onCreate, onUpdate } = this.props;
-    if(_id === ''){
-      onCreate(data);
-    }
-    else {
-      onUpdate(_id, data);
-    }
-  }
-
   render () {
     const {large} = this.state;
-    const {listOperations} = this.props;
+    const {listOperations, operationDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -75,7 +87,7 @@ class ProductList extends Component {
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
                   color="success"
-                > Thêm loại sản phẩm
+                > Thêm hệ điều hành
                 </CButton>
               </CCardHeader>
 
@@ -103,7 +115,7 @@ class ProductList extends Component {
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.setLarge(!large)}
+                          onClick={() => this.submit(item._id)}
                           className="mr-1"
                           color="danger"
                         >
@@ -112,13 +124,10 @@ class ProductList extends Component {
                       </td>)
                   }}
                 />
-                {/* {(productDetail && large) && <OperationDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
-
-                {(!productDetail && large) && <OperationDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>} */}
+                {(operationDetail && large) && <OperationDetail large={large} operation={operationDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}/>}
+                {(!operationDetail && large) && <OperationDetail large={large} operation={operationDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -131,6 +140,7 @@ class ProductList extends Component {
 const mapStateToProps = (state) => {
   return {
     listOperations: state.operations.list,
+    operationDetail: state.operations.detail,
   }
 }
 
@@ -144,6 +154,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     onClearDetail: () =>{
       dispatch(OperationActions.onClearDetail())
+    },
+    onGetDetail: (id) => {
+      dispatch(OperationActions.onGetDetail(id))
+    },
+    onDelete: (id) =>{
+      dispatch(OperationActions.onDelete({id}))
     },
   }
 }

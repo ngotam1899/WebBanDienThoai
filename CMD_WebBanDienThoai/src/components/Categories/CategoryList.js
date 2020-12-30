@@ -1,6 +1,9 @@
 import React, { Component }  from 'react'
 import { get } from "lodash";
 import { connect } from "react-redux";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+// @Components
 import {
   CCard,
   CCardBody,
@@ -11,6 +14,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CategoryDetail from './CategoryDetail'
+// @Actions
 import CategoryActions from "../../redux/actions/categories";
 
 const fields = ['name','slug', { key: 'actions', _style: { width: '15%'} }]
@@ -33,6 +37,21 @@ class CategoryList extends Component {
       large
     })
   }
+  submit = (id) => {
+    confirmAlert({
+      title: 'Thông báo',
+      message: 'Bạn có thực sự muốn xóa category này?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.onDelete(id)
+        },
+        {
+          label: 'No'
+        }
+      ]
+    });
+  };
 
   onDelete = (_id)=>{
     const {onDelete} = this.props;
@@ -45,7 +64,6 @@ class CategoryList extends Component {
       large
     })
     if(item){onGetDetail(item)}
-    //onGetDetail(item)
   }
 
   onClose = (large) =>{
@@ -98,7 +116,7 @@ class CategoryList extends Component {
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.onDelete(item._id)}
+                          onClick={() => this.submit(item._id)}
                           className="mr-1"
                           color="danger"
                         >

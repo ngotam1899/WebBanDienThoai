@@ -4,11 +4,12 @@ const CategoryList = React.lazy(() => import('./components/Categories/CategoryLi
 const BrandList = React.lazy(() => import('./components/Brands/BrandList'));
 const ColorList = React.lazy(() => import('./components/Colors/ColorList'));
 const OperationList = React.lazy(() => import('./components/Operations/OperationList'));
+
 const UserList = React.lazy(() => import('./components/Users/UserList'));
+const OrderList = React.lazy(() => import('./components/Orders/OrderList'));
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
 const Toaster = React.lazy(() => import('./views/notifications/toaster/Toaster'));
-
 
 const Breadcrumbs = React.lazy(() => import('./views/base/breadcrumbs/Breadcrumbs'));
 const Cards = React.lazy(() => import('./views/base/cards/Cards'));
@@ -54,6 +55,7 @@ const routes = [
   { path: '/products/operation-manage', name: 'Operation List', component: OperationList },
 
   { path: '/users/user-manage', name: 'User List', component: UserList },
+  { path: '/users/order-manage', name: 'Order List', component: OrderList },
 
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },

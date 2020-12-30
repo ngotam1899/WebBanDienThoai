@@ -1,4 +1,4 @@
-export const BrandActionTypes = {
+export const OrderActionTypes = {
   GET_LIST: "GET_LIST",
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
@@ -23,60 +23,60 @@ export const BrandActionTypes = {
   CLEAR_STATE: "CLEAR_STATE",
 };
 
-Object.keys(BrandActionTypes).forEach((key) => {
-  BrandActionTypes[
+Object.keys(OrderActionTypes).forEach((key) => {
+  OrderActionTypes[
     key
-  ] = `BRAND_${BrandActionTypes[key]}`;
+  ] = `ORDER_${OrderActionTypes[key]}`;
 });
 
 const onClearDetail = () => ({
-  type: BrandActionTypes.CLEAR_DETAIL,
+  type: OrderActionTypes.CLEAR_DETAIL,
 });
 
 const onClearState = () => ({
-  type: BrandActionTypes.CLEAR_STATE,
+  type: OrderActionTypes.CLEAR_STATE,
 });
 
 const onGetList = (payload) => ({
-  type: BrandActionTypes.GET_LIST,
+  type: OrderActionTypes.GET_LIST,
   payload,
 });
 
 const onGetListSuccess = (payload) => ({
-  type: BrandActionTypes.GET_LIST_SUCCESS,
+  type: OrderActionTypes.GET_LIST_SUCCESS,
   payload,
 });
 
 const onGetListError = (error) => ({
-  type: BrandActionTypes.GET_LIST_ERROR,
+  type: OrderActionTypes.GET_LIST_ERROR,
   payload: error,
 });
 
 const onGetDetail = (id) => ({
-  type: BrandActionTypes.GET_DETAIL,
+  type: OrderActionTypes.GET_DETAIL,
   id
 });
 const onGetDetailSuccess = (image) => ({
-  type: BrandActionTypes.GET_DETAIL_SUCCESS,
+  type: OrderActionTypes.GET_DETAIL_SUCCESS,
   payload: image
 });
 const onGetDetailError = (error) => ({
-  type: BrandActionTypes.GET_DETAIL_ERROR,
+  type: OrderActionTypes.GET_DETAIL_ERROR,
   payload: error
 });
 
 const onCreate = (params) => ({
-  type: BrandActionTypes.CREATE,
+  type: OrderActionTypes.CREATE,
   payload: params,
 });
 
 const onCreateSuccess = (detail) => ({
-  type: BrandActionTypes.CREATE_SUCCESS,
+  type: OrderActionTypes.CREATE_SUCCESS,
   payload: detail,
 });
 
 const onCreateError = (error) => ({
-  type: BrandActionTypes.CREATE_ERROR,
+  type: OrderActionTypes.CREATE_ERROR,
   payload: error,
 });
 
@@ -85,17 +85,17 @@ const onCreateError = (error) => ({
  * update
  */
 const onUpdate = ({ id, params }) => ({
-  type: BrandActionTypes.UPDATE,
+  type: OrderActionTypes.UPDATE,
   payload: { id, params },
 });
 
 const onUpdateSuccess = (detail) => ({
-  type: BrandActionTypes.UPDATE_SUCCESS,
+  type: OrderActionTypes.UPDATE_SUCCESS,
   payload: detail,
 });
 
 const onUpdateError = (error) => ({
-  type: BrandActionTypes.UPDATE_ERROR,
+  type: OrderActionTypes.UPDATE_ERROR,
   payload: error,
 });
 
@@ -104,22 +104,22 @@ const onUpdateError = (error) => ({
  * delete
  */
 const onDelete = ({ id }) => ({
-  type: BrandActionTypes.DELETE,
+  type: OrderActionTypes.DELETE,
   id,
 });
 
 const onDeleteSuccess = (detail) => ({
-  type: BrandActionTypes.DELETE_SUCCESS,
+  type: OrderActionTypes.DELETE_SUCCESS,
   payload: detail,
 });
 
 const onDeleteError = (error) => ({
-  type: BrandActionTypes.DELETE_ERROR,
+  type: OrderActionTypes.DELETE_ERROR,
   payload: error,
 });
 
 
-const BrandActions = {
+const OrderActions = {
   onGetList,
   onGetListSuccess,
   onGetListError,
@@ -144,4 +144,4 @@ const BrandActions = {
   onClearState,
 };
 
-export default BrandActions;
+export default OrderActions;

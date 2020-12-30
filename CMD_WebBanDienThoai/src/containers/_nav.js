@@ -148,6 +148,11 @@ export default [
         name: 'Danh sách người dùng',
         to: '/users/user-manage',
       },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách đơn hàng',
+        to: '/users/order-manage',
+      },
       /*{
         _tag: 'CSidebarNavItem',
         name: 'Brand buttons',

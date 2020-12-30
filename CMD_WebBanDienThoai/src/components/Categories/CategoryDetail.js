@@ -80,11 +80,6 @@ class CategoryDetail extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    productDetail: state.products.detail,
-    listBrands: state.brands.list,
-    listCategories: state.categories.list,
-    listOperations: state.operations.list,
-    listColor: state.color.list,
   }
 }
 

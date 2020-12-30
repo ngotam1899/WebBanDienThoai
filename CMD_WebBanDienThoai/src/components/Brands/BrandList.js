@@ -1,6 +1,9 @@
 import React, { Component }  from 'react'
 import { get } from "lodash";
 import { connect } from "react-redux";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+// @Components
 import {
   CCard,
   CCardBody,
@@ -11,6 +14,7 @@ import {
   CRow,
 } from '@coreui/react'
 import BrandDetail from './BrandDetail'
+// @Actions
 import BrandActions from "../../redux/actions/brands";
 
 const fields = ['name', { key: 'actions', _style: { width: '15%'} }]
@@ -33,6 +37,26 @@ class BrandList extends Component {
       large
     })
   }
+  submit = (id) => {
+    confirmAlert({
+      title: 'Thông báo',
+      message: 'Bạn có thực sự muốn xóa brand này?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.onDelete(id)
+        },
+        {
+          label: 'No'
+        }
+      ]
+    });
+  };
+
+  onDelete = (_id)=>{
+    const {onDelete} = this.props;
+    onDelete(_id);
+  }
 
   onUpdate = (large, item) =>{
     const { onGetDetail } = this.props;
@@ -40,7 +64,6 @@ class BrandList extends Component {
       large
     })
     if(item){onGetDetail(item)}
-    //onGetDetail(item)
   }
 
   onClose = (large) =>{
@@ -51,19 +74,9 @@ class BrandList extends Component {
     onClearDetail();
   }
 
-  onSubmit = (data, _id) =>{
-    const { onCreate, onUpdate } = this.props;
-    if(_id === ''){
-      onCreate(data);
-    }
-    else {
-      onUpdate(_id, data);
-    }
-  }
-
   render () {
     const {large} = this.state;
-    const {listBrands} = this.props;
+    const {listBrands, brandDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -75,7 +88,7 @@ class BrandList extends Component {
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
                   color="success"
-                > Thêm loại sản phẩm
+                > Thêm thương hiệu
                 </CButton>
               </CCardHeader>
 
@@ -100,7 +113,7 @@ class BrandList extends Component {
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.setLarge(!large)}
+                          onClick={() => this.submit(item._id)}
                           className="mr-1"
                           color="danger"
                         >
@@ -109,13 +122,10 @@ class BrandList extends Component {
                       </td>)
                   }}
                 />
-                {/* {(productDetail && large) && <BrandDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
-
-                {(!productDetail && large) && <BrandDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>} */}
+                {(brandDetail && large) && <BrandDetail large={large} brand={brandDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}/>}
+                {(!brandDetail && large) && <BrandDetail large={large} brand={brandDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -128,6 +138,7 @@ class BrandList extends Component {
 const mapStateToProps = (state) => {
   return {
     listBrands: state.brands.list,
+    brandDetail: state.brands.detail,
   }
 }
 
@@ -141,6 +152,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     onClearDetail: () =>{
       dispatch(BrandActions.onClearDetail())
+    },
+    onGetDetail: (id) => {
+      dispatch(BrandActions.onGetDetail(id))
+    },
+    onDelete: (id) =>{
+      dispatch(BrandActions.onDelete({id}))
     },
   }
 }

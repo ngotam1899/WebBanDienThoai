@@ -55,6 +55,53 @@ export default function(state = init, action) {
         loading: false,
         list: get(action, "payload", []),
       };
+    case OperationActionTypes.GET_DETAIL:
+      return {
+        ...state,
+        loadingDetail: true,
+        detail: null,
+      };
+    case OperationActionTypes.GET_DETAIL_SUCCESS:
+      return {
+        ...state,
+        loadingDetail: false,
+        detail: action.payload,
+      };
+
+    case OperationActionTypes.GET_DETAIL_ERROR:
+      return {
+        ...state,
+        loadingDetail: false,
+        detail: action.payload,
+      };
+
+    case OperationActionTypes.CREATE:
+    case OperationActionTypes.UPDATE:
+    case OperationActionTypes.DELETE:
+      return {
+        ...state,
+        processing: true,
+      };
+
+    case OperationActionTypes.CREATE_ERROR:
+    case OperationActionTypes.UPDATE_ERROR:
+    case OperationActionTypes.DELETE_ERROR:
+      return {
+        ...state,
+        processing: false,
+      };
+    case OperationActionTypes.UPDATE_SUCCESS:
+      return {
+        ...state,
+        processing: true,
+      };
+
+    case OperationActionTypes.CREATE_SUCCESS:
+    case OperationActionTypes.DELETE_SUCCESS:
+      return {
+        ...state,
+        processing: false,
+      };
     default:
       return state;
   }

@@ -10,12 +10,12 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import ColorDetail from './ColorDetail'
-import ColorActions from "../../redux/actions/color";
+import OrderList from './OrderList'
+import UsersActions from "../../redux/actions/user";
 
-const fields = ['name',{ key: 'actions', _style: { width: '15%'} }]
+const fields = ['first name', 'last name','phone','address','email',{ key: 'actions', _style: { width: '15%'} }]
 
-class ColorList extends Component {
+class UserList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +34,7 @@ class ColorList extends Component {
     })
   }
 
-  onUpdate = (large, item) =>{
+  onDetail = (large, item) =>{
     const { onGetDetail } = this.props;
     this.setState({
       large
@@ -51,37 +51,21 @@ class ColorList extends Component {
     onClearDetail();
   }
 
-  onSubmit = (data, _id) =>{
-    const { onCreate, onUpdate } = this.props;
-    if(_id === ''){
-      onCreate(data);
-    }
-    else {
-      onUpdate(_id, data);
-    }
-  }
-
   render () {
     const {large} = this.state;
-    const {listColor} = this.props;
+    const {listUser, userDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                <h5 className="float-left my-2">Danh sách màu</h5>
-                <CButton
-                  onClick={() => this.setLarge(!large)}
-                  className="mb-1 float-right"
-                  color="success"
-                > Thêm loại sản phẩm
-                </CButton>
+                <h5 className="float-left my-2">Danh sách đơn hàng</h5>
               </CCardHeader>
 
               <CCardBody>
                 <CDataTable
-                  items={listColor}
+                  items={listUser}
                   fields={fields}
                   hover
                   striped
@@ -89,14 +73,26 @@ class ColorList extends Component {
                   itemsPerPage={10}
                   pagination
                   scopedSlots = {{
-                    'name': (item) => (
-                      <td>{item.color}</td>
+                    'first name': (item) => (
+                      <td>{item.firstname}</td>
+                    ),
+                    'last name': (item) => (
+                      <td>{item.lastname}</td>
+                    ),
+                    'phone': (item) => (
+                      <td>{item.phonenumber}</td>
+                    ),
+                    'address': (item) => (
+                      <td>{item.address}</td>
+                    ),
+                    'email': (item) => (
+                      <td>{item.email}</td>
                     ),
                     'actions':
                     (item)=>(
                       <td>
                         <CButton
-                          onClick={() => this.onUpdate(!large, item._id)}
+                          onClick={() => this.onDetail(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"
                           color="warning"
                         >
@@ -112,13 +108,11 @@ class ColorList extends Component {
                       </td>)
                   }}
                 />
-                {/* {(productDetail && large) && <ColorDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
+                {(userDetail && large) && <OrderList large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
 
-                {(!productDetail && large) && <ColorDetail large={large} product={productDetail} onClose={this.onClose}
-                setImage={this.setImage} listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>} */}
+                {(!userDetail && large) && <OrderList large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
+                onSubmit={this.onSubmit}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -130,22 +124,23 @@ class ColorList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listColor: state.color.list,
+    listUser: state.user.list,
+    userDetail: state.user.detail,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetList: () => {
-      dispatch(ColorActions.onGetList())
+      dispatch(UsersActions.onGetList())
     },
     onClearState: () =>{
-      dispatch(ColorActions.onClearState())
+      dispatch(UsersActions.onClearState())
     },
     onClearDetail: () =>{
-      dispatch(ColorActions.onClearDetail())
+      dispatch(UsersActions.onClearDetail())
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ColorList)
+export default connect(mapStateToProps, mapDispatchToProps)(UserList)

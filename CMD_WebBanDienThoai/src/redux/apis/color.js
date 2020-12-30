@@ -15,3 +15,23 @@ export const getAllColors = (params = {}) =>{
     return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
 };
 
+// http://localhost:3000/products/colors/:colorID  METHOD = GET
+export const getDetailColor  = (colorID) =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${colorID}`);
+}
+
+// http://localhost:3000/products/colors  METHOD = POST
+export const addColor = (data) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);
+};
+
+// http://localhost:3000/products/colors/:colorID  METHOD = PUT
+export const updateColor  = (data, colorID) =>{
+  return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${colorID}`, data);
+}
+
+// http://localhost:3000/products/colors/:colorID  METHOD = DELETE
+export const deleteColor  = (colorID) =>{
+  return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${colorID}`);
+}
+

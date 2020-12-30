@@ -15,3 +15,23 @@ export const getAllBrands = (params = {}) =>{
     return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
 };
 
+// http://localhost:3000/products/brands/:brandID  METHOD = GET
+export const getDetailBrand  = (brandID) =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${brandID}`);
+}
+
+// http://localhost:3000/products/brands  METHOD = POST
+export const addBrand = (data) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);
+};
+
+// http://localhost:3000/products/brands/:brandID  METHOD = PUT
+export const updateBrand  = (data, brandID) =>{
+  return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${brandID}`, data);
+}
+
+// http://localhost:3000/products/brands/:brandID  METHOD = DELETE
+export const deleteBrand  = (brandID) =>{
+  return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${brandID}`);
+}
+

@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+import { connect } from "react-redux";
+// @Actions
+import OperationActions from "../../redux/actions/operations";
 
 class OperationDetail extends Component {
   constructor(props){
     super(props);
-    const {product} = props;
+    const {operation} = props;
     this.state = {
-      id: product ? product.id : '',
-      name: product ? product.name : '',
+      id: operation ? operation._id : '',
+      name: operation ? operation.operation : ''
     }
   }
   onChange = (event) =>{
@@ -19,28 +22,33 @@ class OperationDetail extends Component {
     })
   }
 
-  onSubmit = (data, _id) =>{
-    const {onSubmit} = this.props;
+  onSubmit = () =>{
     const {id, name} = this.state;
-    data = {name}
-    _id = id;
-    onSubmit(data, _id);
+    const {onUpdate, onCreate} = this.props;
+    var data = {operation: name}
+    if (id) {
+      onUpdate(id, data);
+    }
+    else {
+      // 4. Create data
+      onCreate(data);
+    }
   }
 
 	render() {
-    const {name } = this.state;
+    const { name } = this.state;
     const { large, onClose, operation} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
-        <CModalTitle>{operation ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}</CModalTitle>
+        <CModalTitle>{operation ? "Sửa thông tin hệ điều hành" : "Thêm hệ điều hành mới"}</CModalTitle>
 				</CModalHeader>
 				<CModalBody>
 					<div className="row">
 						<div className="col-12 col-lg-6">
 							<form>
 								<div className="form-group">
-									<label>Tên loại sản phẩm:</label>
+									<label>Tên hệ điều hành:</label>
                   <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
 								</div>
               </form>
@@ -60,4 +68,20 @@ class OperationDetail extends Component {
 	}
 }
 
-export default OperationDetail;
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreate: (params) =>{
+      dispatch(OperationActions.onCreate({params}))
+    },
+    onUpdate: (id, params) =>{
+      dispatch(OperationActions.onUpdate({id, params}))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(OperationDetail);

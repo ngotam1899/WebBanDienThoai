@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 
-class ColorDetail extends Component {
+class UserDetail extends Component {
   constructor(props){
     super(props);
-    const {product} = props;
+    const {user} = props;
     this.state = {
-      id: product ? product.id : '',
-      name: product ? product.name : '',
-      price: product ? product.price : null,
-      amount: product ? product.amount : null,
-      warrently: product ? product.warrently : null,
-      category: product ? product.category : null,
-      brand: product ? product.brand: null,
-      bigimage: product ? product.bigimage : null,
-      image: product ? product.image : null,
+      id: user ? user._id : '',
+      firstname: user ? user.firstname : '',
+      lastname: user ? user.lastname : '',
+      phonenumber: user ? user.phonenumber : '',
+      address: user ? user.address : '',
+      email: user ? user.email : '',
+      image: user ? user.image : '',
     }
   }
+
   onChange = (event) =>{
     var target=event.target;
     var name=target.name;
@@ -24,14 +23,6 @@ class ColorDetail extends Component {
     this.setState({
         [name]:  value
     })
-  }
-
-  onSubmit = (data, _id) =>{
-    const {onSubmit} = this.props;
-    const {id, name, price, amount, warrently, category, brand, bigimage, image} = this.state;
-    data = {name, price, amount, warrently, category, brand, bigimage, image}
-    _id = id;
-    onSubmit(data, _id);
   }
 
 	render() {
@@ -122,4 +113,4 @@ class ColorDetail extends Component {
 	}
 }
 
-export default ColorDetail;
+export default UserDetail;
