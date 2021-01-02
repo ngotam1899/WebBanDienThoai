@@ -37,11 +37,13 @@ function* handleCreate({ payload }) {
       var imageResult = yield call(addProductThumbnailImage, image);
       var result = yield call(addBrand,
         { name, image: imageResult.data.images[0]._id });
-      yield put(BrandActions.onCreateSuccess(get(result, "data.category")));
+      var data = get(result, "data", {});
+      if (data.code !== 201) throw data;
+      yield put(BrandActions.onCreateSuccess(get(result, "data.brand")));
     }
     else{
       const result = yield call(addBrand, payload.params);
-      const data = get(result, "data", {});
+      var data = get(result, "data", {});
       if (data.code !== 201) throw data;
       yield put(BrandActions.onCreateSuccess(data.brand));
     }
@@ -56,12 +58,24 @@ function* handleCreate({ payload }) {
  * update
  */
 function* handleUpdate({ payload }) {
+  const {image} = payload.params;
+  console.log(payload.params)
   try {
-    const result = yield call(updateBrand, payload.params, payload.id);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    const detailResult = yield call(getDetailBrand, payload.id);
-    yield put(BrandActions.onUpdateSuccess(get(detailResult, "data")));
+    if(image){
+      var imageResult = yield call(addProductThumbnailImage, image);
+      var result = yield call(updateBrand,{image: imageResult.data.images[0]._id }, payload.id);
+      const data = get(result, "data", {});
+      if (data.code !== 200) throw data;
+      var detailResult = yield call(getDetailBrand, payload.id);
+      yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
+    }
+    else{
+      const result = yield call(updateBrand, payload.params, payload.id);
+      const data = get(result, "data", {});
+      if (data.code !== 200) throw data;
+      var detailResult = yield call(getDetailBrand, payload.id);
+      yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
+    }
     yield put(BrandActions.onGetList());
   } catch (error) {
     console.log(error);

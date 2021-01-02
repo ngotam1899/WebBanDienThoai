@@ -17,7 +17,7 @@ import CategoryDetail from './CategoryDetail'
 // @Actions
 import CategoryActions from "../../redux/actions/categories";
 
-const fields = ['name','slug', { key: 'actions', _style: { width: '15%'} }]
+const fields = ['name','slug', { key: 'actions', _style: { width: '30%'} }]
 
 class CategoryList extends Component {
   constructor(props) {
@@ -30,6 +30,12 @@ class CategoryList extends Component {
     const { onClearState, onGetList } = this.props;
     onClearState();
     onGetList();
+  }
+
+  handleListProduct = (id) =>{
+    const { history } = this.props;
+    const pathname = '/products/product-manage';
+    history.push(`${pathname}?category=${id}`);
   }
 
   setLarge = (large) => {
@@ -108,6 +114,13 @@ class CategoryList extends Component {
                     'actions':
                     (item)=>(
                       <td>
+                        <CButton
+                          onClick={() => this.handleListProduct(item._id)}
+                          className="mr-1 mb-1 mb-xl-0"
+                          color="success"
+                        >
+                          Danh sách
+                        </CButton>
                         <CButton
                           onClick={() => this.onUpdate(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"

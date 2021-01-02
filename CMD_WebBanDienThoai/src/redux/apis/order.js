@@ -6,8 +6,12 @@ import queryString from 'query-string';
 
 const url = '/orders';
 // http://localhost:3000/orders  METHOD = GET
-export const getAllOrders  = () =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url}`);
+export const getAllOrders  = (params = {}) =>{
+  let queryParams = '';
+    if(Object.keys(params).length>0){
+        queryParams = `?${queryString.stringify(params)}`;
+    }
+    return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
 }
 //cho params 1 default value là object
 export const findOrders = (params = {}) =>{

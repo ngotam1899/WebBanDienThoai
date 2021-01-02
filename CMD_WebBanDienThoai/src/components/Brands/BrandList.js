@@ -17,7 +17,7 @@ import BrandDetail from './BrandDetail'
 // @Actions
 import BrandActions from "../../redux/actions/brands";
 
-const fields = ['name', { key: 'actions', _style: { width: '15%'} }]
+const fields = ['name', 'image',{ key: 'actions', _style: { width: '30%'} }]
 
 class BrandList extends Component {
   constructor(props) {
@@ -30,6 +30,11 @@ class BrandList extends Component {
     const { onClearState, onGetList } = this.props;
     onClearState();
     onGetList();
+  }
+  handleListProduct = (id) =>{
+    const { history } = this.props;
+    const pathname = '/products/product-manage';
+    history.push(`${pathname}?brand=${id}`);
   }
 
   setLarge = (large) => {
@@ -102,9 +107,21 @@ class BrandList extends Component {
                   itemsPerPage={10}
                   pagination
                   scopedSlots = {{
+                    'image': (item)=>(
+                      <td>
+                        <img src={ item.image ? item.image.public_url : "http://www.pha.gov.pk/img/img-02.jpg" } style={{width:'10vw'}} alt={item.name} />
+                      </td>
+                    ),
                     'actions':
                     (item)=>(
                       <td>
+                        <CButton
+                          onClick={() => this.handleListProduct(item._id)}
+                          className="mr-1 mb-1 mb-xl-0"
+                          color="success"
+                        >
+                          Danh sách
+                        </CButton>
                         <CButton
                           onClick={() => this.onUpdate(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"

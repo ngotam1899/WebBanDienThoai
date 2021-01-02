@@ -34,6 +34,12 @@ class UserList extends Component {
     })
   }
 
+  handleListOrder = (id) =>{
+    const { history } = this.props;
+    const pathname = '/users/order-manage';
+    history.push(`${pathname}?user=${id}`);
+  }
+
   onDetail = (large, item) =>{
     const { onGetDetail } = this.props;
     this.setState({
@@ -91,20 +97,13 @@ class UserList extends Component {
                     'actions':
                     (item)=>(
                       <td>
-                        {/* <CButton
-                          onClick={() => this.onDetail(!large, item._id)}
-                          className="mr-1 mb-1 mb-xl-0"
-                          color="warning"
-                        >
-                          Sửa
-                        </CButton>
                         <CButton
-                          onClick={() => this.setLarge(!large)}
-                          className="mr-1"
-                          color="danger"
+                          onClick={() => this.handleListOrder(item._id)}
+                          className="mr-1 mb-1 mb-xl-0"
+                          color="success"
                         >
-                          Xóa
-                        </CButton> */}
+                          Danh sách
+                        </CButton>
                       </td>)
                   }}
                 />

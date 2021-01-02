@@ -16,6 +16,7 @@ import {
   CRow,
 } from '@coreui/react'
 import OrderDetail from './OrderDetail'
+import Pagination from "react-js-pagination";
 // @Actions
 import OrderActions from "../../redux/actions/order";
 // @Function
@@ -32,13 +33,18 @@ class OrderList extends Component {
     this.state = {
       large: false,
       phone: filter.phone ===null ? "" : filter.phone,
+      filter: {
+        limit: 4,
+        page: 0,
+      },
     }
   }
   UNSAFE_componentWillMount() {
     const { onClearState, onGetList, location } = this.props;
     const filters = getFilterParams(location.search);
+    const { filter } = this.state;
     var params = {
-      //...filter,
+      ...filter,
       ...filters
     };
     onClearState();
@@ -48,9 +54,9 @@ class OrderList extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.location.search !== this.props.location.search) {
       const filters = getFilterParams(this.props.location.search);
-      //const { filter } = this.state;
+      const { filter } = this.state;
       var params = {
-        //...filter,
+        ...filter,
         ...filters
       };
       this.props.onGetList(params);
@@ -69,11 +75,18 @@ class OrderList extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  // phân trang
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
   // Button search
   searchPhone = (e) => {
     const {phone} = this.state;
     this.handleUpdateFilter({ phone });
   }
+
+
 
   submit = (id) => {
     confirmAlert({
@@ -109,6 +122,13 @@ class OrderList extends Component {
     if(item){onGetDetail(item)}
   }
 
+  handleChangeFilter = (event) => {
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.handleUpdateFilter({ [name]:  value});
+  }
+
   onChange = (event) =>{
     var target=event.target;
     var name=target.name;
@@ -128,7 +148,8 @@ class OrderList extends Component {
 
   render () {
     const {large, phone} = this.state;
-    const {listOrder, orderDetail, onClearDetail} = this.props;
+    const {listOrder, orderDetail, onClearDetail, total, location,} = this.props;
+    const filter = getFilterParams(location.search);
     return (
       <>
         <CRow>
@@ -138,12 +159,50 @@ class OrderList extends Component {
                 <h5 className="float-left my-2">Danh sách đơn hàng</h5>
                 <form>
                   <div className="input-group mb-3">
-                    <input type="text" className="form-control" value={phone} name="phone" placeholder="Search" onChange={this.onChange}/>
+                    <input type="text" className="form-control" value={phone} name="phone" placeholder="Nhập số điện thoại người nhận" onChange={this.onChange}/>
                     <div className="input-group-append">
-                      <button className="btn btn-primary" onClick={() => this.searchPhone()} type="submit">Search</button>
+                      <button className="btn btn-primary" onClick={() => this.searchPhone()} type="submit">Tìm kiếm</button>
                     </div>
                   </div>
                 </form>
+                <div className="row">
+                  <div className="col-12 col-md-4">
+                    <div className="card bg-danger">
+                      <div className="p-2">
+                        <b className="text-white">Tình trạng đơn hàng</b>
+                        <select className="form-control mt-2" value={filter.confirmed} name="confirmed" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="0">Chọn tình trạng đơn</option>
+                          <option value="1">Đã xác nhận đơn hàng</option>
+                          <option value="-1">Chưa xác nhận đơn hàng</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-4">
+                    <div className="card bg-warning">
+                      <div className="p-2">
+                        <b className="text-white">Tình trạng thanh toán</b>
+                        <select className="form-control mt-2" value={filter.is_paid} name="is_paid" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="0">Chọn tình trạng thanh toán</option>
+                          <option value="1">Đã thanh toán</option>
+                          <option value="-1">Chưa thanh toán</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-4">
+                    <div className="card bg-success">
+                      <div className="p-2">
+                        <b className="text-white">Tình trạng hàng</b>
+                        <select className="form-control mt-2" value={filter.status} name="status" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="0">Chọn tình trạng hàng</option>
+                          <option value="1">Đã nhận hàng</option>
+                          <option value="-1">Chưa nhận hàng</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </CCardHeader>
 
               <CCardBody>
@@ -153,8 +212,6 @@ class OrderList extends Component {
                   hover
                   striped
                   bordered
-                  itemsPerPage={10}
-                  pagination
                   scopedSlots = {{
                     'Date of create': (item) => (
                       <td>{item.createdAt}</td>
@@ -227,6 +284,20 @@ class OrderList extends Component {
                 onClearDetail={onClearDetail}
                 />}
               </CCardBody>
+              <div className="row justify-content-center">
+              <Pagination
+                  activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                  itemsCountPerPage={4}
+                  totalItemsCount={10}
+                  pageRangeDisplayed={3}
+                  linkClass="page-link"
+                  itemClass="page-item"
+                  prevPageText="Previous"
+                  nextPageText="Next"
+                  hideFirstLastPages="true"
+                  onChange={this.handlePageChange.bind(this)}
+                />
+              </div>
             </CCard>
           </CCol>
         </CRow>
@@ -239,6 +310,7 @@ const mapStateToProps = (state) => {
   return {
     listOrder: state.order.list,
     orderDetail: state.order.detail,
+    total: state.order.total,
   }
 }
 

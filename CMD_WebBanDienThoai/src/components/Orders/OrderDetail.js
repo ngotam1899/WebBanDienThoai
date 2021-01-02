@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
+// @Components
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+// @Actions
+import OrderActions from "../../redux/actions/order";
 
 class OrderDetail extends Component {
   constructor(props){
@@ -29,8 +33,17 @@ class OrderDetail extends Component {
     })
   }
 
+  onSubmit = (e) =>{
+    const {id, is_paid, confirm, status} = this.state;
+    const {onUpdate} = this.props;
+    /* Xử lý ảnh */
+    // e.preventDefault();
+    var data={is_paid, confirm, status};
+    onUpdate(id, data);
+  }
+
 	render() {
-    const {id, total_price, order_list, createdAt, status, payment_method, confirmed, is_paid, shipping_phonenumber, shipping_address, email} = this.state;
+    const {total_price, order_list, createdAt, status, payment_method, confirmed, is_paid, shipping_phonenumber, shipping_address, email} = this.state;
     const { large, onClose, order} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -51,7 +64,18 @@ class OrderDetail extends Component {
                 </div>
                 <div className="form-group">
                   <label>Tình trạng hàng:</label>
-                  <input type="text" className="form-control" name="status" value={status===true ? 'Đã giao hàng' : 'Chưa giao hàng'} disabled/>
+                  <div className="row">
+                    <div className="col-9">
+                      <input type="text" className="form-control" name="status" value={status===true ? 'Đã giao hàng' : 'Chưa giao hàng'} disabled/>
+                    </div>
+                    {status===false
+                    ? <div className="col-3">
+                      <button className="btn btn-success" onClick={() => this.setState({status: true})}>Confirm</button>
+                    </div>
+                    : <div className="col-3">
+                      <button className="btn btn-warning" onClick={() => this.setState({status: false})}>Undo</button>
+                    </div>}
+                  </div>
                 </div>
                 <div className="form-group">
                   <label>Phương thức thanh toán:</label>
@@ -66,12 +90,16 @@ class OrderDetail extends Component {
                 <div className="form-group">
                   <label>Tình trạng đơn:</label>
                   <div className="row">
-                    <div className={confirmed===true ? "col-12": "col-9"}>
+                    <div className="col-9">
                       <input type="text" className="form-control" name="confirmed" value={ confirmed===true ? `Đã xác nhận` : `Chưa xác nhận`} disabled/>
                     </div>
-                    <div className={confirmed===true ? "d-none" : "col-3"}>
-                      <button className="btn btn-success" onClick={() => {this.confirmOrder(id)}}>Confirm</button>
+                    {confirmed===false
+                    ? <div className="col-3">
+                      <button className="btn btn-success" onClick={() => this.setState({confirmed: true})}>Confirm</button>
                     </div>
+                    : <div className="col-3">
+                      <button className="btn btn-warning" onClick={() => this.setState({confirmed: false})}>Undo</button>
+                    </div>}
                   </div>
                 </div>
                 </>
@@ -142,4 +170,17 @@ class OrderDetail extends Component {
 	}
 }
 
-export default OrderDetail;
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onUpdate: (id, params) =>{
+      dispatch(OrderActions.onUpdate({id, params}))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderDetail);

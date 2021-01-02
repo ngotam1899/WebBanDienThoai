@@ -33,10 +33,15 @@ class BrandDetail extends Component {
     /* Xử lý ảnh */
     // e.preventDefault();
     const {selectedFile} = this.state;
-    var formData1 = new FormData();
-    formData1.append('image',selectedFile);
-    /* Xử lý ảnh */
-    var data = {name, image: formData1}
+    if(selectedFile){
+      var formData1 = new FormData();
+      formData1.append('image',selectedFile);
+      /* Xử lý ảnh */
+      var data = {name, image: formData1}
+    }
+    else{
+      var data = {name}
+    }
     if (id) {
       onUpdate(id, data);
     }

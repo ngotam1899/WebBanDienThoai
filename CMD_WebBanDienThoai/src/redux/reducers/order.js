@@ -1,5 +1,6 @@
 import { get, cloneDeep } from "lodash";
 import { OrderActionTypes } from "../actions/order";
+import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const init = {
   loading: true,
@@ -86,18 +87,26 @@ export default function(state = init, action) {
     case OrderActionTypes.CREATE_ERROR:
     case OrderActionTypes.UPDATE_ERROR:
     case OrderActionTypes.DELETE_ERROR:
+      var { message } = action.payload;
+      toastError(message);
       return {
         ...state,
         processing: false,
       };
     case OrderActionTypes.UPDATE_SUCCESS:
+      toastSuccess('Cập nhật thành công');
       return {
         ...state,
         processing: true,
       };
-
     case OrderActionTypes.CREATE_SUCCESS:
+      toastSuccess('Tạo mới thành công');
+      return {
+        ...state,
+        processing: true,
+      };
     case OrderActionTypes.DELETE_SUCCESS:
+      toastSuccess('Xóa thành công');
       return {
         ...state,
         processing: false,

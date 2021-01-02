@@ -1,5 +1,6 @@
 import { get, cloneDeep } from "lodash";
 import { BrandActionTypes } from "../actions/brands";
+import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const init = {
   loading: true,
@@ -82,22 +83,30 @@ export default function(state = init, action) {
         ...state,
         processing: true,
       };
-
     case BrandActionTypes.CREATE_ERROR:
     case BrandActionTypes.UPDATE_ERROR:
     case BrandActionTypes.DELETE_ERROR:
+      var { message } = action.payload;
+      toastError(message);
       return {
         ...state,
         processing: false,
       };
     case BrandActionTypes.UPDATE_SUCCESS:
+      toastSuccess('Cập nhật thành công');
       return {
         ...state,
         processing: true,
       };
 
     case BrandActionTypes.CREATE_SUCCESS:
+      toastSuccess('Tạo mới thành công');
+      return {
+        ...state,
+        processing: true,
+      };
     case BrandActionTypes.DELETE_SUCCESS:
+      toastSuccess('Xóa thành công');
       return {
         ...state,
         processing: false,

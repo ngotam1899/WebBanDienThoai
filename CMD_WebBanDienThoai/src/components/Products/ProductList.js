@@ -15,6 +15,7 @@ import {
   CRow,
 } from '@coreui/react'
 import ProductDetail from './ProductDetail'
+import Pagination from "react-js-pagination";
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
@@ -33,18 +34,22 @@ class ProductList extends Component {
     this.state = {
       large: false,
       keyword: filter.keyword ===null ? "" : filter.keyword,
+      filter: {
+        limit: 4,
+        page: 0,
+      },
     }
   }
   UNSAFE_componentWillMount() {
     const { onGetList, onGetListColor, onGetListBrand, location, onClearState, onGetListCategory } = this.props;
     onClearState();
     onGetListCategory();
-    //const { filter } = this.state;
+    const { filter } = this.state;
     onGetListColor();
     onGetListBrand();
     const filters = getFilterParams(location.search);
     var params = {
-      //...filter,
+      ...filter,
       ...filters
     };
     onGetList(params);
@@ -53,9 +58,9 @@ class ProductList extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.location.search !== this.props.location.search) {
       const filters = getFilterParams(this.props.location.search);
-      //const { filter } = this.state;
+      const { filter } = this.state;
       var params = {
-        //...filter,
+        ...filter,
         ...filters
       };
       this.props.onGetList(params);
@@ -82,6 +87,11 @@ class ProductList extends Component {
     };
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
+
+  // phân trang
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
 
   // Button search
   searchKeyWorld = (e) => {
@@ -139,7 +149,8 @@ class ProductList extends Component {
 
   render () {
     const {large, keyword} = this.state;
-    const {listProducts, productDetail, listCategories, listBrands, onClearDetail} = this.props;
+    const {listProducts, productDetail, listCategories, listBrands, onClearDetail, total, location,} = this.props;
+    const filter = getFilterParams(location.search);
     return (
       <>
         <CRow>
@@ -149,9 +160,9 @@ class ProductList extends Component {
                 <h5 className="float-left my-2">Danh sách sản phẩm</h5>
                 <form>
                   <div className="input-group mb-3">
-                    <input type="text" className="form-control" value={keyword} name="keyword" placeholder="Search" onChange={this.onChange}/>
+                    <input type="text" className="form-control" value={keyword} name="keyword" placeholder="Nhập tên sản phẩm" onChange={this.onChange}/>
                     <div className="input-group-append">
-                      <button className="btn btn-primary" onClick={() => this.searchKeyWorld()} type="submit">Search</button>
+                      <button className="btn btn-primary" onClick={() => this.searchKeyWorld()} type="submit">Tìm kiếm</button>
                     </div>
                   </div>
                 </form>
@@ -170,8 +181,6 @@ class ProductList extends Component {
                   hover
                   striped
                   bordered
-                  itemsPerPage={10}
-                  pagination
                   scopedSlots = {{
                     'image':
                     (item) => (
@@ -208,6 +217,20 @@ class ProductList extends Component {
                 {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
                 listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}/>}
               </CCardBody>}
+              <div className="row justify-content-center">
+              <Pagination
+                  activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                  itemsCountPerPage={4}
+                  totalItemsCount={total}
+                  pageRangeDisplayed={3}
+                  linkClass="page-link"
+                  itemClass="page-item"
+                  prevPageText="Previous"
+                  nextPageText="Next"
+                  hideFirstLastPages="true"
+                  onChange={this.handlePageChange.bind(this)}
+                />
+              </div>
             </CCard>
           </CCol>
         </CRow>
@@ -222,6 +245,7 @@ const mapStateToProps = (state) => {
     productDetail: state.products.detail,
     listBrands: state.brands.list,
     listCategories: state.categories.list,
+    total: state.products.total,
   }
 }
 
