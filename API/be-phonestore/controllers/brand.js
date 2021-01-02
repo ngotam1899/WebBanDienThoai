@@ -5,7 +5,7 @@ const Validator = require('../validators/validator')
 
 const getAllBrand = async(req, res, next) => {
     try {
-        const brands = await Brand.find()
+        const brands = await Brand.find().populate('image')
 
         return res.status(200).json({ success: true, code: 200, message: '', brands: brands })
     } catch (error) {
@@ -44,7 +44,7 @@ const getDetailBrand = async(req, res, next) => {
     const { IDBrand } = req.params;
     const isValid = await Validator.isValidObjId(IDBrand);
     if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id Brand is not correctly' }) } else {
-        const result = await Brand.findById(IDBrand);
+        const result = await Brand.findById(IDBrand).populate('image');
         return res.status(200).json({ success: true, code: 200, message: '', category: result })
     }
 }

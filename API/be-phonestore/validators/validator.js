@@ -10,7 +10,13 @@ isValidFile = (file) => {
     return true;
 }
 
+isAdmin = (user) => {
+    if (user.role == '0') return true;
+    return false;
+}
+
 module.exports = {
     isValidObjId,
-    isValidFile
+    isValidFile,
+    isAdmin
 }

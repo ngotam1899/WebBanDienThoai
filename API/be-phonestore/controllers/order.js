@@ -25,8 +25,39 @@ const transporter = nodemailer.createTransport(smtpTransport({
 
 const getAllOrder = async(req, res, next) => {
     try {
-        const orders = await Order.find()
-        return res.status(200).json({ success: true, code: 200, message: '', orders: orders })
+        let condition = {}
+        if (req.query.is_paid != undefined && (req.query.is_paid == 'true' || req.query.is_paid == 'false')) {
+            condition.is_paid = req.query.is_paid == 'true' ? true : false;
+        }
+        if (req.query.confirmed != undefined && (req.query.confirmed == 'true' || req.query.confirmed == 'false')) {
+            condition.confirmed = req.query.confirmed == 'true' ? true : false;
+        }
+        if (req.query.status != undefined && (req.query.status == 'true' || req.query.status == 'false')) {
+            condition.status = req.query.status == 'true' ? true : false;
+        }
+        let limit = 5;
+        let page = 0;
+        if (req.query.limit != undefined && req.query.limit != "") {
+            const number_limit = parseInt(req.query.limit);
+            if (number_limit && number_limit > 0) {
+                limit = number_limit;
+            }
+        }
+        if (req.query.page != undefined && req.query.page != "") {
+            const number_page = parseInt(req.query.page);
+            if (number_page && number_page > 0) {
+                page = number_page;
+            }
+        }
+        let sort = {}
+        if (req.query.sort != undefined && req.query.sort != '0') {
+            sort['createAt'] = req.query.sort == '1' ? 1 : -1;
+        }
+        const orders = await Order.find(condition)
+            .sort(sort)
+            .limit(limit)
+            .skip(limit * page);
+        return res.status(200).json({ success: true, code: 200, message: '', page: page, limit: limit, orders: orders })
     } catch (error) {
         return next(error)
     }
@@ -101,6 +132,32 @@ const addOrderItem = async(req, res, next) => {
     }
 }
 
+const updateOrder = async(req, res, next) => {
+    try {
+        const { IDOrder } = req.params;
+        if (Validator.isValidObjId(IDOrder) == true) {
+            const order = await Order.findById(IDOrder);
+            if (!order) {
+                return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
+            } else {
+                if (Validator.isAdmin(req.user) == true || req.user._id == order.user) {
+                    const orderUpdate = req.body;
+                    const result = await Order.findByIdAndUpdate(IDOrder, orderUpdate)
+
+                    if (!result) {
+                        return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' })
+                    }
+
+                    return res.status(200).json({ success: true, code: 200, message: '' })
+                }
+            }
+        } else {
+            return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
+        }
+    } catch (error) {
+
+    }
+}
 const requestSendEmail = async(req, res, next) => {
     try {
         const { IDOrder } = req.params;
@@ -201,8 +258,11 @@ const getAnOrder = async(req, res, next) => {
 }
 const findOrderByPhone = async(req, res, next) => {
     const phone = req.query.phone;
-    const order = await Order.find({ shipping_phonenumber: phone });
-    return res.status(200).json({ success: true, code: 200, message: '', order: order })
+    if (parseInt(phone) > 0) {
+        const order = await Order.find({ shipping_phonenumber: phone });
+        return res.status(200).json({ success: true, code: 200, message: '', order: order })
+    }
+
 }
 const deleteOrder = async(req, res, next) => {
     const { IDOrder } = req.params;
@@ -223,6 +283,7 @@ module.exports = {
     getAnOrder,
     addOrder,
     addOrderItem,
+    updateOrder,
     requestSendEmail,
     deleteOrder,
     confirmOrder,
