@@ -2,6 +2,7 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import BrandActions, { BrandActionTypes } from "../actions/brands";
 import { getAllBrands, getDetailBrand, addBrand, updateBrand, deleteBrand } from "../apis/brands";
+import { addProductThumbnailImage} from "../apis/cloudinary";
 
 function* handleGetList({ payload }) {
   try {
@@ -30,11 +31,20 @@ function* handleGetDetail({ filters, id }) {
  * create
  */
 function* handleCreate({ payload }) {
+  const {name, image} = payload.params;
   try {
-    const result = yield call(addBrand, payload.params);
-    const data = get(result, "data", {});
-    if (data.code !== 201) throw data;
-    yield put(BrandActions.onCreateSuccess(data.brand));
+    if(image){
+      var imageResult = yield call(addProductThumbnailImage, image);
+      var result = yield call(addBrand,
+        { name, image: imageResult.data.images[0]._id });
+      yield put(BrandActions.onCreateSuccess(get(result, "data.category")));
+    }
+    else{
+      const result = yield call(addBrand, payload.params);
+      const data = get(result, "data", {});
+      if (data.code !== 201) throw data;
+      yield put(BrandActions.onCreateSuccess(data.brand));
+    }
     yield put(BrandActions.onGetList());
   } catch (error) {
     yield put(BrandActions.onCreateError(error));

@@ -17,7 +17,7 @@ import ColorDetail from './ColorDetail'
 // @Actions
 import ColorActions from "../../redux/actions/color";
 
-const fields = ['name',{ key: 'actions', _style: { width: '15%'} }]
+const fields = ['name', 'color',{ key: 'actions', _style: { width: '15%'} }]
 
 class ColorList extends Component {
   constructor(props) {
@@ -105,6 +105,11 @@ class ColorList extends Component {
                   scopedSlots = {{
                     'name': (item) => (
                       <td>{item.color}</td>
+                    ),
+                    'color': (item) => (
+                      <td><CCol xl="2" md="4" sm="6" xs="12" className="mb-4">
+                      <div style={{paddingTop: '75%', backgroundColor: item.code_color}}></div>
+                    </CCol></td>
                     ),
                     'actions':
                     (item)=>(

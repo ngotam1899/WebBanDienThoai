@@ -5,6 +5,8 @@ import { withTranslation } from 'react-i18next'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom'
+import $ from 'jquery'
+
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 // @Function
@@ -16,6 +18,47 @@ class HomePage extends Component {
     this.state = {
       keyword: ""
     }
+  }
+
+  componentDidMount(){
+    this.improveScreen();
+  }
+
+  improveScreen() {
+    (function($){
+      // Slidder home 4
+      if($('#bxslider-home4').length >0){
+        var slider = $('#bxslider-home4').bxSlider({
+          nextText:'<i class="fa fa-angle-right"></i>',
+          prevText:'<i class="fa fa-angle-left"></i>',
+          auto: true,
+          onSliderLoad:function(currentIndex){
+            $('#bxslider-home4 li').find('.caption').each(function(i){
+              $(this).show().addClass('animated fadeInRight').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                $(this).removeClass('fadeInRight animated');
+              });
+            })                      
+          },
+          onSlideBefore:function(slideElement, oldIndex, newIndex){
+            //slideElement.find('.sl-description').hide();
+            slideElement.find('.caption').each(function(){                    
+              $(this).hide().removeClass('animated fadeInRight'); 
+            });                
+          },
+          onSlideAfter: function(slideElement, oldIndex, newIndex){  
+              //slideElement.find('.sl-description').show();
+            setTimeout(function(){
+              slideElement.find('.caption').each(function(){                    
+                $(this).show().addClass('animated fadeInRight').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                  $(this).removeClass('fadeInRight animated');
+                }); 
+              });
+            }, 500);                                
+          }
+        });
+        //slider.reloadSlider();
+      }
+    })(jQuery); // End of use strict
   }
 
   handleFilter = (event) => {
@@ -87,6 +130,36 @@ class HomePage extends Component {
                 </h2>
                 <h4 className="caption subtitle">Dual SIM</h4>
                 <a className="caption button-radius" href="#"><span className="icon"></span>{t('home.shop.button')}</a>
+              </div>
+            </li>
+            <li>
+              <img src={assets("products/h4-slide2.png")} alt="Slide" />
+              <div class="caption-group">
+                <h2 class="caption title">
+                  by one, get one <span class="primary">50% <strong>off</strong></span>
+                </h2>
+                <h4 class="caption subtitle">school supplies & backpacks.*</h4>
+                <a class="caption button-radius" href="#"><span class="icon"></span>Shop now</a>
+              </div>
+            </li>
+            <li>
+              <img src={assets("products/h4-slide3.png")} alt="Slide" />
+              <div class="caption-group">
+                <h2 class="caption title">
+                  Apple <span class="primary">Store <strong>Ipod</strong></span>
+                </h2>
+                <h4 class="caption subtitle">Select Item</h4>
+                <a class="caption button-radius" href="#"><span class="icon"></span>Shop now</a>
+              </div>
+            </li>
+            <li>
+              <img src={assets("products/h4-slide4.png")} alt="Slide" />
+              <div class="caption-group">
+                <h2 class="caption title">
+                  Apple <span class="primary">Store <strong>Ipod</strong></span>
+                </h2>
+                <h4 class="caption subtitle">& Phone</h4>
+                <a class="caption button-radius" href="#"><span class="icon"></span>Shop now</a>
               </div>
             </li>
           </ul>

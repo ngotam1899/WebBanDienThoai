@@ -284,3 +284,106 @@
   padding-top: 30px;
 }
 .product-widget-area .zigzag-bottom{background: #f4f4f4;}
+.caption-group h2{
+  font-size: 2vw
+}
+.caption-group h4{
+  font-size: 1.6vw;
+}
+.button-radius{
+  position: relative;
+  border: 1px solid #eaeaea;
+  padding: 1px;
+  min-height: 34px;
+  background: #fff;
+  display: inline-block;
+  line-height: 30px;
+  padding-left: 7vw;
+  margin: 0;
+  color: #666666;
+  -webkit-border-radius: 17px;
+  -moz-border-radius: 17px;
+  border-radius: 17px;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
+  width: 15vw;
+  height: 3vh;
+  font-size: 1vw;
+}
+.button-radius .icon{
+  -webkit-transition: all 1s ease-out;
+  -moz-transition: all 1s ease-out;
+  -o-transition: all 1s ease-out;
+  -ms-transition: all 1s ease-out;
+  transition: all 1s ease-out;
+  position: absolute;
+  left: 2%;
+  top: 2px;
+  overflow: hidden;
+}
+
+.button-radius .icon:before{
+  font-family: 'FontAwesome';
+  content: "\f105";
+  font-size: 14px;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  background-color: #5a88ca;
+  border-radius: 90%;
+  text-align: center;
+  line-height: 26px;
+  float: left;
+  -webkit-transition: all 1s ease-out;
+  -moz-transition: all 1s ease-out;
+  -o-transition: all 1s ease-out;
+  -ms-transition: all 1s ease-out;
+  transition: all 1s ease-out;
+}
+
+.button-radius.white{
+  border-color: #fff;
+  color: #fff;
+  background: transparent;
+}
+.button-radius.white .icon:before{
+  background: #fff;
+  color: #333;
+}
+
+.button-radius:hover .icon{
+  left: 100%;
+  margin-left: -30px;
+}
+.button-radius:hover{
+  padding-left: 20px;
+  padding-right: 40px;
+}
+
+.promo-area {
+  background:#fbfbfb;
+  color: #fff;
+  padding: 40px 0 40px;
+}
+
+.brands-area {
+  border-top:1px solid #e5e5e5;
+  border-bottom:1px solid #e5e5e5;
+  color: #fff;
+  padding: 20px 0 20px;
+}
+
+@media screen and (max-width: 900px){
+  .block-slider .caption-group .button-radius{
+    margin-top: 15px;
+  }
+}
+
+@media screen and (max-width: 440px){
+  .block-slider .caption-group .button-radius{
+    margin-top: 4px;
+  }
+}

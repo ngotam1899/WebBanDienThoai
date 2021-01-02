@@ -1,6 +1,11 @@
 import React, { Component }  from 'react'
 import { get } from "lodash";
 import { connect } from "react-redux";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import qs from "query-string";
+// @Components
+import { Button, UncontrolledPopover, PopoverHeader, PopoverBody, Collapse } from 'reactstrap';
 import {
   CCard,
   CCardBody,
@@ -10,37 +15,107 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import OrderList from './OrderList'
-import UsersActions from "../../redux/actions/user";
+import OrderDetail from './OrderDetail'
+// @Actions
+import OrderActions from "../../redux/actions/order";
+// @Function
+import getFilterParams from "../../utils/getFilterParams";
 
-const fields = ['first name', 'last name','phone','address','email',{ key: 'actions', _style: { width: '15%'} }]
+const fields = ['Date of create', 'Phone','Payment Status','Bill Status','Payment Method','Total','actions']
 
-class UserList extends Component {
+
+class OrderList extends Component {
   constructor(props) {
     super(props);
+    const {match, location} = props;
+    const filter = getFilterParams(location.search);
     this.state = {
       large: false,
+      phone: filter.phone ===null ? "" : filter.phone,
     }
   }
-  componentDidMount() {
-    const { onClearState, onGetList } = this.props;
+  UNSAFE_componentWillMount() {
+    const { onClearState, onGetList, location } = this.props;
+    const filters = getFilterParams(location.search);
+    var params = {
+      //...filter,
+      ...filters
+    };
     onClearState();
-    onGetList();
+    onGetList(params);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      const filters = getFilterParams(this.props.location.search);
+      //const { filter } = this.state;
+      var params = {
+        //...filter,
+        ...filters
+      };
+      this.props.onGetList(params);
+    }
+  }
+
+  // Chuyển router (thêm vào params)
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
+
+  // Button search
+  searchPhone = (e) => {
+    const {phone} = this.state;
+    this.handleUpdateFilter({ phone });
+  }
+
+  submit = (id) => {
+    confirmAlert({
+      title: 'Thông báo',
+      message: 'Bạn có thực sự muốn xóa brand này?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.onDelete(id)
+        },
+        {
+          label: 'No'
+        }
+      ]
+    });
+  };
   setLarge = (large) => {
     this.setState({
       large
     })
   }
 
-  onDetail = (large, item) =>{
+  onDelete = (_id)=>{
+    const {onDelete} = this.props;
+    onDelete(_id);
+  }
+
+  onUpdate = (large, item) =>{
     const { onGetDetail } = this.props;
     this.setState({
       large
     })
     if(item){onGetDetail(item)}
-    //onGetDetail(item)
+  }
+
+  onChange = (event) =>{
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
   }
 
   onClose = (large) =>{
@@ -52,8 +127,8 @@ class UserList extends Component {
   }
 
   render () {
-    const {large} = this.state;
-    const {listUser, userDetail, onClearDetail} = this.props;
+    const {large, phone} = this.state;
+    const {listOrder, orderDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -61,11 +136,19 @@ class UserList extends Component {
             <CCard>
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách đơn hàng</h5>
+                <form>
+                  <div className="input-group mb-3">
+                    <input type="text" className="form-control" value={phone} name="phone" placeholder="Search" onChange={this.onChange}/>
+                    <div className="input-group-append">
+                      <button className="btn btn-primary" onClick={() => this.searchPhone()} type="submit">Search</button>
+                    </div>
+                  </div>
+                </form>
               </CCardHeader>
 
               <CCardBody>
                 <CDataTable
-                  items={listUser}
+                  items={listOrder}
                   fields={fields}
                   hover
                   striped
@@ -73,46 +156,76 @@ class UserList extends Component {
                   itemsPerPage={10}
                   pagination
                   scopedSlots = {{
-                    'first name': (item) => (
-                      <td>{item.firstname}</td>
+                    'Date of create': (item) => (
+                      <td>{item.createdAt}</td>
                     ),
-                    'last name': (item) => (
-                      <td>{item.lastname}</td>
+                    'Phone': (item) => (
+                      <td>{item.shipping_phonenumber}</td>
                     ),
-                    'phone': (item) => (
-                      <td>{item.phonenumber}</td>
+                    'Payment Method': (item) => (
+                      <td>{item.payment_method=== "local" ? '(COD) Tiền mặt' : 'Paypal'}</td>
                     ),
-                    'address': (item) => (
-                      <td>{item.address}</td>
+                    'Payment Status': (item) => (
+                      <td>{item.is_paid== true ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
                     ),
-                    'email': (item) => (
-                      <td>{item.email}</td>
+                    'Bill Status': (item) => (
+                      <td>{item.status== true ? 'Đã giao hàng' : 'Chưa giao hàng'}</td>
+                    ),
+                    'Total': (item) => (
+                      <td>{item.total_price}</td>
                     ),
                     'actions':
                     (item)=>(
                       <td>
+                        <Button id={`UncontrolledPopover${item._id}`} type="button">
+                          <i className="fa fa-chevron-circle-down"></i>
+                        </Button>
+                        <UncontrolledPopover trigger="focus" placement="bottom" target={`UncontrolledPopover${item._id}`}>
+                          <PopoverHeader>Các tác vụ</PopoverHeader>
+                          <PopoverBody>
+                            <CButton
+                            onClick={() => this.onUpdate(!large, item._id)}
+                            className="mr-1 mb-1 mb-xl-0"
+                            color="warning"
+                          >
+                            Sửa
+                          </CButton>
+                          <CButton
+                            onClick={() => this.submit(item._id)}
+                            className="mr-1"
+                            color="danger"
+                          >
+                            Hủy đơn
+                          </CButton>
+                          </PopoverBody>
+                        </UncontrolledPopover>
+                      </td>
+                      /* {
+                        <td>
                         <CButton
-                          onClick={() => this.onDetail(!large, item._id)}
+                          onClick={() => this.onUpdate(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"
                           color="warning"
                         >
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.setLarge(!large)}
+                          onClick={() => this.submit(item._id)}
                           className="mr-1"
                           color="danger"
                         >
-                          Xóa
+                          Hủy đơn
                         </CButton>
-                      </td>)
+                      </td> }*/)
                   }}
                 />
-                {(userDetail && large) && <OrderList large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
+                {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}
+                />}
 
-                {(!userDetail && large) && <OrderList large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
+                {(!orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}
+                onClearDetail={onClearDetail}
+                />}
               </CCardBody>
             </CCard>
           </CCol>
@@ -124,23 +237,29 @@ class UserList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listUser: state.user.list,
-    userDetail: state.user.detail,
+    listOrder: state.order.list,
+    orderDetail: state.order.detail,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetList: () => {
-      dispatch(UsersActions.onGetList())
+    onGetList: (params) => {
+      dispatch(OrderActions.onGetList(params))
     },
     onClearState: () =>{
-      dispatch(UsersActions.onClearState())
+      dispatch(OrderActions.onClearState())
     },
     onClearDetail: () =>{
-      dispatch(UsersActions.onClearDetail())
+      dispatch(OrderActions.onClearDetail())
+    },
+    onGetDetail: (id) => {
+      dispatch(OrderActions.onGetDetail(id))
+    },
+    onDelete: (id) =>{
+      dispatch(OrderActions.onDelete({id}))
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserList)
+export default connect(mapStateToProps, mapDispatchToProps)(OrderList)

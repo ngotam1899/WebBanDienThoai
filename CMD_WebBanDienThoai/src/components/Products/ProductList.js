@@ -1,6 +1,7 @@
 import React, { Component }  from 'react'
 import { get } from "lodash";
 import { connect } from "react-redux";
+import qs from "query-string";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 // @Components
@@ -17,6 +18,7 @@ import ProductDetail from './ProductDetail'
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
+import ColorActions from "../../redux/actions/color";
 import CategoryActions from "../../redux/actions/categories";
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
@@ -26,16 +28,65 @@ const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { wi
 class ProductList extends Component {
   constructor(props) {
     super(props);
+    const {match, location} = props;
+    const filter = getFilterParams(location.search);
     this.state = {
       large: false,
+      keyword: filter.keyword ===null ? "" : filter.keyword,
     }
   }
-  componentDidMount() {
-    const { onGetList, onClearState, onGetListBrand, onGetListCategory} = this.props;
+  UNSAFE_componentWillMount() {
+    const { onGetList, onGetListColor, onGetListBrand, location, onClearState, onGetListCategory } = this.props;
     onClearState();
-    onGetListBrand();
     onGetListCategory();
-    onGetList();
+    //const { filter } = this.state;
+    onGetListColor();
+    onGetListBrand();
+    const filters = getFilterParams(location.search);
+    var params = {
+      //...filter,
+      ...filters
+    };
+    onGetList(params);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      const filters = getFilterParams(this.props.location.search);
+      //const { filter } = this.state;
+      var params = {
+        //...filter,
+        ...filters
+      };
+      this.props.onGetList(params);
+    }
+  }
+
+  onChange = (event) =>{
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
+  }
+
+  // Chuyển router (thêm vào params)
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
+
+  // Button search
+  searchKeyWorld = (e) => {
+    const {keyword} = this.state;
+    this.handleUpdateFilter({ keyword});
   }
 
   setLarge = (large) => {
@@ -87,7 +138,7 @@ class ProductList extends Component {
   }
 
   render () {
-    const {large} = this.state;
+    const {large, keyword} = this.state;
     const {listProducts, productDetail, listCategories, listBrands, onClearDetail} = this.props;
     return (
       <>
@@ -97,13 +148,13 @@ class ProductList extends Component {
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách sản phẩm</h5>
                 <form>
-                <div className="input-group mb-3">
-                  <input type="text" className="form-control" placeholder="Search"/>
-                  <div className="input-group-append">
-                    <button className="btn btn-primary" type="submit">Search</button>
+                  <div className="input-group mb-3">
+                    <input type="text" className="form-control" value={keyword} name="keyword" placeholder="Search" onChange={this.onChange}/>
+                    <div className="input-group-append">
+                      <button className="btn btn-primary" onClick={() => this.searchKeyWorld()} type="submit">Search</button>
+                    </div>
                   </div>
-                </div>
-              </form>
+                </form>
                 <CButton
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
@@ -176,14 +227,17 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetList: () => {
-      dispatch(ProductsActions.onGetList())
+    onGetList: (params) => {
+      dispatch(ProductsActions.onGetList(params))
     },
     onGetDetail: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
     },
     onGetListBrand: () => {
       dispatch(BrandActions.onGetList())
+    },
+    onGetListColor: () => {
+      dispatch(ColorActions.onGetList())
     },
     onGetListCategory: () => {
       dispatch(CategoryActions.onGetList())

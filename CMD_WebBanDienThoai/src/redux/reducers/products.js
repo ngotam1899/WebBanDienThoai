@@ -55,8 +55,8 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        loading: false,
-        list: get(action, "payload", []),
+        total: get(action, "payload.total"),
+        list: get(action, "payload.list", []),
       };
 
     case ProductsActionTypes.GET_DETAIL:

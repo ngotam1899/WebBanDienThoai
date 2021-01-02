@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 
-class UserDetail extends Component {
+class OrderDetail extends Component {
   constructor(props){
     super(props);
-    const {user} = props;
+    const {order} = props;
     this.state = {
-      id: user ? user._id : '',
-      firstname: user ? user.firstname : '',
-      lastname: user ? user.lastname : '',
-      phonenumber: user ? user.phonenumber : '',
-      address: user ? user.address : '',
-      email: user ? user.email : '',
-      image: user ? user.image : '',
+      id: order ? order._id : '',
+      total_price: order ? order.total_price: '',
+      createdAt: order ? order.createdAt: '',
+      payment_method: order ? order.payment_method: '',
+      status: order ? order.status: '',
+      confirmed: order ? order.confirmed: '',
+      is_paid: order ? order.is_paid: '',
+      order_list: order ? order.order_list : [],
+      shipping_address: order ? order.shipping_address: '',
+      shipping_phonenumber: order ? order.shipping_phonenumber: '',
+      email: order ? order.email: '',
     }
   }
 
@@ -26,76 +30,101 @@ class UserDetail extends Component {
   }
 
 	render() {
-    const {name, price, amount, warrently, category, brand, bigimage, image} = this.state;
-    const { large, onClose, setImage, listCategories, listBrands, product} = this.props;
+    const {id, total_price, order_list, createdAt, status, payment_method, confirmed, is_paid, shipping_phonenumber, shipping_address, email} = this.state;
+    const { large, onClose, order} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
-        <CModalTitle>{product ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}</CModalTitle>
+        <CModalTitle>{order ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}</CModalTitle>
 				</CModalHeader>
 				<CModalBody>
 					<div className="row">
 						<div className="col-12 col-lg-6">
 							<form>
-								<div className="form-group">
-									<label>Tên sản phẩm:</label>
-                  <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
-								</div>
-								<div className="form-group">
-									<label>Giá bán lẻ (VND):</label>
-                  <input type="number" className="form-control" name="price" value={price} onChange={this.onChange}/>
-								</div>
                 <div className="form-group">
-									<label>Số lượng (chiếc):</label>
-                  <input type="number" className="form-control" name="amount" value={amount} onChange={this.onChange}/>
-								</div>
+                  <label>Ngày tạo:</label>
+                  <input type="text" className="form-control" name="createdAt" value={Date(createdAt)} disabled/>
+                </div>
                 <div className="form-group">
-									<label>Thời hạn bảo hành:</label>
-                  <input type="number" className="form-control" name="warrently" value={warrently} onChange={this.onChange}/>
-								</div>
+                  <label>Tổng hóa đơn: (VND)</label>
+                  <input type="number" className="form-control" name="total_price" value={total_price} disabled/>
+                </div>
                 <div className="form-group">
-									<label>Loại sản phẩm:</label>
-                  <select className="form-control" required="required" name="category"
-                        value={category}
-                        onChange={this.onChange}>
-                    {listCategories.map((category, index) =>{
-                      return(
-                        <option key={index} value={category._id}>{category.name}</option>
-                      )
-                    })}
-                  </select>
-								</div>
+                  <label>Tình trạng hàng:</label>
+                  <input type="text" className="form-control" name="status" value={status===true ? 'Đã giao hàng' : 'Chưa giao hàng'} disabled/>
+                </div>
                 <div className="form-group">
-									<label>Tên thương hiệu:</label>
-                  <select className="form-control" required="required" name="brand"
-                        value={brand}
-                        onChange={this.onChange}>
-                    {listBrands.map((brand, index) =>{
-                      return(
-                        <option key={index} value={brand._id}>{brand.name}</option>
-                      )
-                    })}
-                  </select>
-								</div>
+                  <label>Phương thức thanh toán:</label>
+                  <div className="row">
+                    <div className="col-12">
+                      <input type="text" className="form-control" name="payment_method" value={ payment_method === "local" ? `COD (Tiền mặt)` : 'Paypal'} disabled/>
+                    </div>
+                  </div>
+                </div>
+                {payment_method==="local"
+                ? <>
+                <div className="form-group">
+                  <label>Tình trạng đơn:</label>
+                  <div className="row">
+                    <div className={confirmed===true ? "col-12": "col-9"}>
+                      <input type="text" className="form-control" name="confirmed" value={ confirmed===true ? `Đã xác nhận` : `Chưa xác nhận`} disabled/>
+                    </div>
+                    <div className={confirmed===true ? "d-none" : "col-3"}>
+                      <button className="btn btn-success" onClick={() => {this.confirmOrder(id)}}>Confirm</button>
+                    </div>
+                  </div>
+                </div>
+                </>
+                : <>
+                <div className="form-group">
+                  <label>Tình trạng thanh toán:</label>
+                  <div className="row">
+                    <div className="col-12">
+                      <input type="text" className="form-control" name="is_paid" value={ is_paid===true ? 'Đã thanh toán' : 'Chưa thanh toán'} disabled/>
+                    </div>
+                  </div>
+                </div>
+                </>}
 							</form>
 						</div>
             <div className="col-12 col-lg-6">
 							<form>
-								<div className="form-group">
-                  <img src={setImage(bigimage)} style={{border: '1px solid'}} alt=""></img>
-                  <input type="file" className="form-control" name="image"/>
-								</div>
                 <div className="form-group">
-                  <div className="row">
-                  {image && image.map((item, index) => {
-                    return (
-                      <div className="col-4" key={index}>
-                      <img src={setImage(item)} className="w-100" style={{border: '1px solid'}} alt=""></img>
-                      </div>
-                    )
-                  })}
+                  <label>Số điện thoại người nhận:</label>
+                  <input type="number" className="form-control" name="shipping_phonenumber" value={shipping_phonenumber} disabled/>
+                </div>
+                <div className="form-group">
+                  <label>Địa chỉ người nhận:</label>
+                  <input type="text" className="form-control" name="shipping_address" value={shipping_address} disabled/>
+                </div>
+                <div className="form-group">
+                  <label>Email người nhận:</label>
+                  <input type="email" className="form-control" name="email" value={email} disabled/>
+                </div>
+								<div className="form-group">
+									<label>Chi tiết đơn hàng</label>
+                  <div className="form-group">
+                  {order_list.map((item, index) =>{
+                  return (
+                  <div className="card my-1" key={index}>
+                    <div className="row no-gutters">
+                        <div className="col-sm-3">
+                          <img className="card-img" src={item.image ? item.image : "http://www.pha.gov.pk/img/img-02.jpg"} alt={item.name} />
+                        </div>
+                        <div className="col-sm-5 align-self-center">
+                          <p className="text-dark m-0">{item.name}</p>
+                        </div>
+                        <div className="col-sm-4 align-self-center">
+                          <p className="m-0">{item.price} VND x {item.quantity}</p>
+                        </div>
+                    </div>
                   </div>
+                  )
+                })
+                }
+              </div>
 								</div>
+
 							</form>
 						</div>
 					</div>
@@ -113,4 +142,4 @@ class UserDetail extends Component {
 	}
 }
 
-export default UserDetail;
+export default OrderDetail;

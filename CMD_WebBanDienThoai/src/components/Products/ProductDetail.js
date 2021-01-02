@@ -180,11 +180,11 @@ class ProductDetail extends Component {
       // 2. Lưu state dạng FormData
       reader.onloadend = () => {
         // eslint-disable-next-line
-        var formData1 = new FormData();
-        formData1.append('image',selectedFile);
-        this.setState({
-          bigimage: formData1
-        })
+      var formData1 = new FormData();
+      formData1.append('image',selectedFile);
+      this.setState({
+        bigimage: formData1
+      })
         this.onCallback(id);
       };
       reader.onerror = () => {
@@ -288,7 +288,7 @@ class ProductDetail extends Component {
                 {bigimage ? <div className="form-group img-thumbnail3">
                   {
                     previewSource ? (
-                      <img src={previewSource} alt=""/>
+                      <img src={previewSource} className="w-100" alt=""/>
                     )
                     : <img src={bigimage.public_url} style={{ border: '1px solid', width: '100%' }} alt=""/>
                   }
@@ -302,7 +302,7 @@ class ProductDetail extends Component {
                 : <div className="form-group img-thumbnail3">
                   {
                     previewSource ? (
-                      <img src={previewSource} alt=""/>
+                      <img src={previewSource} className="w-100" alt=""/>
                     )
                     : <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" style={{ border: '1px solid', width: '100%' }}></img>
                   }
