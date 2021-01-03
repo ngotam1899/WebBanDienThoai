@@ -26,14 +26,17 @@ const transporter = nodemailer.createTransport(smtpTransport({
 const getAllOrder = async(req, res, next) => {
     try {
         let condition = {}
-        if (req.query.is_paid != undefined && (req.query.is_paid == 'true' || req.query.is_paid == 'false')) {
-            condition.is_paid = req.query.is_paid == 'true' ? true : false;
+        if (req.query.is_paid != undefined && req.query.is_paid != '0') {
+            condition.is_paid = req.query.is_paid == '1' ? true : false;
         }
-        if (req.query.confirmed != undefined && (req.query.confirmed == 'true' || req.query.confirmed == 'false')) {
-            condition.confirmed = req.query.confirmed == 'true' ? true : false;
+        if (req.query.confirmed != undefined && req.query.confirmed != '0') {
+            condition.confirmed = req.query.confirmed == '1' ? true : false;
         }
-        if (req.query.status != undefined && (req.query.status == 'true' || req.query.status == 'false')) {
-            condition.status = req.query.status == 'true' ? true : false;
+        if (req.query.status != undefined && req.query.status == '0') {
+            condition.status = req.query.status == '1' ? true : false;
+        }
+        if (req.query.user != undefined && Validator.isValidObjId(req.query.user) == true) {
+            condition._id = req.query.user;
         }
         let limit = 5;
         let page = 0;
@@ -57,7 +60,8 @@ const getAllOrder = async(req, res, next) => {
             .sort(sort)
             .limit(limit)
             .skip(limit * page);
-        return res.status(200).json({ success: true, code: 200, message: '', page: page, limit: limit, orders: orders })
+        let total = await Order.countDocuments(condition);
+        return res.status(200).json({ success: true, code: 200, message: '', page: page, limit: limit, total: total, orders: orders })
     } catch (error) {
         return next(error)
     }
