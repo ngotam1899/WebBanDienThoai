@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import AuthorizationActions from '../../redux/actions/auth'
+import './styles.css';
 
 class ActiveAccount extends Component {
   componentDidMount(){
@@ -12,9 +13,15 @@ class ActiveAccount extends Component {
 
   render() {
     return (
-      <div>
-        Đăng ký tài khoản thành công
-        <button className=""><a href="/user/dang-nhap">Đăng nhập</a></button>
+      <div id="notfound">
+        <div className="notfound">
+          <div className="notfound-404">
+            <h1>Wellcome!</h1>
+          </div>
+          <h2>Đăng ký tài khoản thành công</h2>
+          <p>Chào mừng bạn đã đến với TellMe - Trang web bán điện thoại uy tín, chính hãng.</p>
+          <a href="/user/dang-nhap">Đăng nhập</a>
+        </div>
       </div>
     );
   }

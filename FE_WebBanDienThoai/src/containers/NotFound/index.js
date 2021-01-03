@@ -4,7 +4,7 @@ import './styles.css';
 class NotFound extends Component {
     render() {
         return (
-            <div id="notfound">
+	<div id="notfound">
 		<div className="notfound">
 			<div className="notfound-404">
 				<h1>Oops!</h1>
