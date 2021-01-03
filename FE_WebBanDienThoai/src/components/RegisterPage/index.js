@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 //dispatch action
 import AuthorizationActions from '../../redux/actions/auth'
-
+import { toastError } from '../../utils/toastHelper';
 import '../LoginPage/loginStyles.css'
 
 class RegisterPage extends Component {
@@ -30,12 +30,12 @@ class RegisterPage extends Component {
 	
 	onRegister(data){
 		const {firstname, lastname, phonenumber, address, email, password, confirmPassword} = this.state;
-		const {onRegister} = this.props;
+		const {onRegister,t} = this.props;
 		data = {firstname, lastname, phonenumber, address, email, password};
 		if(password === confirmPassword){
 			onRegister(data);
 		}else{
-			console.log("confirmPassword sai")
+			toastError(t('user.password.error'))
 		}
 	}
 

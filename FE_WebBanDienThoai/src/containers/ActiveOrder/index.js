@@ -10,9 +10,15 @@ class ActiveOrder extends Component {
 
   render() {
     return (
-      <div>
-        Xác nhận đơn hàng thành công
-        <button className=""><a href="/">Tiếp tục mua hàng</a></button>
+      <div id="notfound">
+        <div className="notfound">
+          <div className="notfound-404">
+            <h1 style={{fontSize: '10vw'}}>Congratulations!</h1>
+          </div>
+          <h2>Xác nhận đơn hàng thành công</h2>
+          <p>Bạn đã xác nhận đơn hàng thành công, hãy đợi bộ phận vận đơn liên lạc nhé.</p>
+          <a href="/">Tiếp tục mua hàng</a>
+        </div>
       </div>
     );
   }

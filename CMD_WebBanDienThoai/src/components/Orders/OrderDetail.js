@@ -34,11 +34,11 @@ class OrderDetail extends Component {
   }
 
   onSubmit = (e) =>{
-    const {id, is_paid, confirm, status} = this.state;
+    const {id, is_paid, confirmed, status} = this.state;
     const {onUpdate} = this.props;
     /* Xử lý ảnh */
     // e.preventDefault();
-    var data={is_paid, confirm, status};
+    var data={is_paid, confirmed, status};
     onUpdate(id, data);
   }
 

@@ -144,7 +144,7 @@ class ProductList extends Component {
   setBrand = (brand) =>{
     const {listBrands} = this.props;
     const brandName = listBrands.find(obj => obj._id === brand);
-    return get(brandName, "name");
+    return get(brandName, "image.public_url");
   }
 
   render () {
@@ -189,7 +189,7 @@ class ProductList extends Component {
                       </td>
                     ),
                     'brand': (item) => (
-                      <td>{this.setBrand(item.brand)}</td>
+                      <td><img src={this.setBrand(item.brand)} style={{width:'8vw'}}></img></td>
                     ),
                     'actions':
                     (item)=>(

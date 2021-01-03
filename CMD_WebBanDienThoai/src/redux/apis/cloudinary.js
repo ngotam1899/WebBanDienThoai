@@ -26,3 +26,8 @@ export const getProductImage  = (productId) =>{
 export const addProductThumbnailImage = (data) =>{
   return axiosService.post(`${API_ENDPOINT_AUTH}/products/image`, data);
 };
+
+// http://localhost:3000/products/brands/image  METHOD = POST
+export const addProductBrandImage = (data) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}/products/brands/image`, data);
+};

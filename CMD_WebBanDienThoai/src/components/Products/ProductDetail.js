@@ -251,7 +251,8 @@ class ProductDetail extends Component {
                 </div>
                 <div className="form-group">
                   <label>Slug:</label>
-                  <input type="text" className="form-control" name="pathseo" value={pathseo ? pathseo : changeToSlug(name)} onChange={this.onChange} />
+                  {name ? <input type="text" className="form-control" name="pathseo" value={pathseo ? pathseo : changeToSlug(name)} onChange={this.onChange} />
+                  : <input type="text" className="form-control" name="pathseo" value={pathseo} onChange={this.onChange} />}
                 </div>
                 <div className="form-group">
                   <label>Số lượng (chiếc):</label>
@@ -441,7 +442,7 @@ class ProductDetail extends Component {
                       <option key={-1} value="">Chọn 1 màu</option>
                     {listColor.map((color, index) => {
                       return (
-                        <option key={index} value={color._id}>{color.color}</option>
+                        <option style={{backgroundColor: `${color.code_color}`}} key={index} value={color._id}>{color.color}</option>
                       )
                     })}
                     </select>}
