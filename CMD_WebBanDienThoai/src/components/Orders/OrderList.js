@@ -34,7 +34,7 @@ class OrderList extends Component {
       large: false,
       phone: filter.phone ===null ? "" : filter.phone,
       filter: {
-        limit: 4,
+        limit: 5,
         page: 0,
       },
     }
@@ -288,7 +288,7 @@ class OrderList extends Component {
               <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
                   itemsCountPerPage={4}
-                  totalItemsCount={10}
+                  totalItemsCount={total}
                   pageRangeDisplayed={3}
                   linkClass="page-link"
                   itemClass="page-item"

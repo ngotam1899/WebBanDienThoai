@@ -11,14 +11,14 @@ function* handleGetList({ payload }) {
       const result = yield call(findOrders, payload);
       const data = get(result, "data");
       if (data.code !== 200) throw data;
-      yield put(OrderActions.onGetListSuccess(data.order));
+      yield put(OrderActions.onGetListSuccess(data.order, data.total));
     }
     else {
       console.log("2")
       const result = yield call(getAllOrders, payload);
       const data = get(result, "data");
       if (data.code !== 200) throw data;
-      yield put(OrderActions.onGetListSuccess(data.orders));
+      yield put(OrderActions.onGetListSuccess(data.orders, data.total));
     }
   } catch (error) {
     yield put(OrderActions.onGetListError(error));
