@@ -35,8 +35,8 @@ const getAllOrder = async(req, res, next) => {
         if (req.query.status != undefined && req.query.status == '0') {
             condition.status = req.query.status == '1' ? true : false;
         }
-        if (req.query.user != undefined && Validator.isValidObjId(req.query.user) == true) {
-            condition._id = req.query.user;
+        if (req.query.user != undefined) {
+            condition.shipping_phonenumber = req.query.user;
         }
         let limit = 5;
         let page = 0;
@@ -144,16 +144,15 @@ const updateOrder = async(req, res, next) => {
             if (!order) {
                 return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
             } else {
-                if (Validator.isAdmin(req.user) == true || req.user._id == order.user) {
-                    const orderUpdate = req.body;
-                    const result = await Order.findByIdAndUpdate(IDOrder, orderUpdate)
+                const orderUpdate = req.body;
+                const result = await Order.findByIdAndUpdate(IDOrder, orderUpdate)
 
-                    if (!result) {
-                        return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' })
-                    }
-
-                    return res.status(200).json({ success: true, code: 200, message: '' })
+                if (!result) {
+                    return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' })
                 }
+
+                return res.status(200).json({ success: true, code: 200, message: '' })
+                return res.status(200).json({ success: false, code: 403, message: 'Permission denied' })
             }
         } else {
             return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });

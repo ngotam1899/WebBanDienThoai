@@ -44,7 +44,8 @@ const UserSchema = new Schema({
         default: false
     },
     role: {
-        type: String
+        type: String,
+        default: '1'
     },
     token: {
         type: String
