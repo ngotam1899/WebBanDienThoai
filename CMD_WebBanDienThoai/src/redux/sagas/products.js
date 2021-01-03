@@ -9,10 +9,10 @@ import UIActions from "../actions/ui";
 function* handleGetList({ payload }) {
   yield put(UIActions.showLoading());
   try {
-    yield delay(1000)
     const result = yield call(getAllProducts, payload);
     const data = get(result, "data");
-    yield put(ProductsActions.onGetListSuccess(data.product));
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onGetListSuccess(data.products, data.total));
   } catch (error) {
     yield put(ProductsActions.onGetListError(error));
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 import { connect } from "react-redux";
+import { SketchPicker } from 'react-color';
 // @Actions
 import ColorActions from "../../redux/actions/color";
 
@@ -10,7 +11,8 @@ class ColorDetail extends Component {
     const {color} = props;
     this.state = {
       id: color ? color._id : '',
-      name: color ? color.color : ''
+      name: color ? color.color : '',
+      code_color: color ? color.code_color : '#fff',
     }
   }
   onChange = (event) =>{
@@ -23,9 +25,9 @@ class ColorDetail extends Component {
   }
 
   onSubmit = () =>{
-    const {id, name} = this.state;
+    const {id, name, code_color} = this.state;
     const {onUpdate, onCreate} = this.props;
-    var data = {color: name}
+    var data = {color: name, code_color}
     if (id) {
       onUpdate(id, data);
     }
@@ -35,8 +37,12 @@ class ColorDetail extends Component {
     }
   }
 
+  handleChangeComplete = (color) => {
+    this.setState({ code_color: color.hex });
+  };
+
 	render() {
-    const {name} = this.state;
+    const {name, code_color} = this.state;
     const { large, onClose, color} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -51,6 +57,13 @@ class ColorDetail extends Component {
 									<label>Tên màu:</label>
                   <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
 								</div>
+                <div className="form-group">
+                  <label>Chọn màu:</label>
+                  <SketchPicker
+                    color={ code_color }
+                    onChangeComplete={ this.handleChangeComplete }
+                  />
+                </div>
               </form>
             </div>
 					</div>

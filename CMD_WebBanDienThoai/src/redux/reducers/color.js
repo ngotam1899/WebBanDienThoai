@@ -1,5 +1,6 @@
 import { get, cloneDeep } from "lodash";
 import { ColorActionTypes } from "../actions/color";
+import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const init = {
   loading: true,
@@ -86,18 +87,26 @@ export default function(state = init, action) {
     case ColorActionTypes.CREATE_ERROR:
     case ColorActionTypes.UPDATE_ERROR:
     case ColorActionTypes.DELETE_ERROR:
+      var { message } = action.payload;
+      toastError(message);
       return {
         ...state,
         processing: false,
       };
     case ColorActionTypes.UPDATE_SUCCESS:
+      toastSuccess('Cập nhật thành công');
       return {
         ...state,
         processing: true,
       };
-
     case ColorActionTypes.CREATE_SUCCESS:
+      toastSuccess('Tạo mới thành công');
+      return {
+        ...state,
+        processing: true,
+      };
     case ColorActionTypes.DELETE_SUCCESS:
+      toastSuccess('Xóa thành công');
       return {
         ...state,
         processing: false,

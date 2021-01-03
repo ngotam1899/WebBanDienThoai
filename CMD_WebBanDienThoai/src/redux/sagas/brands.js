@@ -2,6 +2,7 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import BrandActions, { BrandActionTypes } from "../actions/brands";
 import { getAllBrands, getDetailBrand, addBrand, updateBrand, deleteBrand } from "../apis/brands";
+import { addProductThumbnailImage} from "../apis/cloudinary";
 
 function* handleGetList({ payload }) {
   try {
@@ -30,11 +31,22 @@ function* handleGetDetail({ filters, id }) {
  * create
  */
 function* handleCreate({ payload }) {
+  const {name, image} = payload.params;
   try {
-    const result = yield call(addBrand, payload.params);
-    const data = get(result, "data", {});
-    if (data.code !== 201) throw data;
-    yield put(BrandActions.onCreateSuccess(data.brand));
+    if(image){
+      var imageResult = yield call(addProductThumbnailImage, image);
+      var result = yield call(addBrand,
+        { name, image: imageResult.data.images[0]._id });
+      var data = get(result, "data", {});
+      if (data.code !== 201) throw data;
+      yield put(BrandActions.onCreateSuccess(get(result, "data.brand")));
+    }
+    else{
+      const result = yield call(addBrand, payload.params);
+      var data = get(result, "data", {});
+      if (data.code !== 201) throw data;
+      yield put(BrandActions.onCreateSuccess(data.brand));
+    }
     yield put(BrandActions.onGetList());
   } catch (error) {
     yield put(BrandActions.onCreateError(error));
@@ -46,12 +58,24 @@ function* handleCreate({ payload }) {
  * update
  */
 function* handleUpdate({ payload }) {
+  const {image} = payload.params;
+  console.log(payload.params)
   try {
-    const result = yield call(updateBrand, payload.params, payload.id);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    const detailResult = yield call(getDetailBrand, payload.id);
-    yield put(BrandActions.onUpdateSuccess(get(detailResult, "data")));
+    if(image){
+      var imageResult = yield call(addProductThumbnailImage, image);
+      var result = yield call(updateBrand,{image: imageResult.data.images[0]._id }, payload.id);
+      const data = get(result, "data", {});
+      if (data.code !== 200) throw data;
+      var detailResult = yield call(getDetailBrand, payload.id);
+      yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
+    }
+    else{
+      const result = yield call(updateBrand, payload.params, payload.id);
+      const data = get(result, "data", {});
+      if (data.code !== 200) throw data;
+      var detailResult = yield call(getDetailBrand, payload.id);
+      yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
+    }
     yield put(BrandActions.onGetList());
   } catch (error) {
     console.log(error);

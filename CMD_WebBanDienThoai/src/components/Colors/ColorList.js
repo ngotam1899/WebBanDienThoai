@@ -17,7 +17,7 @@ import ColorDetail from './ColorDetail'
 // @Actions
 import ColorActions from "../../redux/actions/color";
 
-const fields = ['name',{ key: 'actions', _style: { width: '15%'} }]
+const fields = ['name', 'color',{ key: 'actions', _style: { width: '30%'} }]
 
 class ColorList extends Component {
   constructor(props) {
@@ -53,6 +53,11 @@ class ColorList extends Component {
       ]
     });
   };
+  handleListProduct = (id) =>{
+    const { history } = this.props;
+    const pathname = '/products/product-manage';
+    history.push(`${pathname}?color=${id}`);
+  }
 
   onDelete = (_id)=>{
     const {onDelete} = this.props;
@@ -106,9 +111,21 @@ class ColorList extends Component {
                     'name': (item) => (
                       <td>{item.color}</td>
                     ),
+                    'color': (item) => (
+                      <td><CCol xl="2" md="4" sm="6" xs="12" className="mb-4">
+                      <div style={{paddingTop: '75%', backgroundColor: item.code_color}}></div>
+                    </CCol></td>
+                    ),
                     'actions':
                     (item)=>(
                       <td>
+                        <CButton
+                          onClick={() => this.handleListProduct(item._id)}
+                          className="mr-1 mb-1 mb-xl-0"
+                          color="success"
+                        >
+                          Danh sách
+                        </CButton>
                         <CButton
                           onClick={() => this.onUpdate(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"

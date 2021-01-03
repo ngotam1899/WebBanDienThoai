@@ -1,5 +1,6 @@
 import { get, /*  cloneDeep */ } from "lodash";
 import { ProductsActionTypes } from "../actions/products";
+import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const init = {
   loading: true,
@@ -55,8 +56,8 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        loading: false,
-        list: get(action, "payload", []),
+        total: get(action, "payload.total"),
+        list: get(action, "payload.list", []),
       };
 
     case ProductsActionTypes.GET_DETAIL:
@@ -91,23 +92,26 @@ export default function(state = init, action) {
     case ProductsActionTypes.CREATE_ERROR:
     case ProductsActionTypes.UPDATE_IMAGE_ERROR:
     case ProductsActionTypes.DELETE_ERROR:
+      var { message } = action.payload;
+      toastError(message);
       return {
         ...state,
         processing: false,
       };
     case ProductsActionTypes.UPDATE_IMAGE_SUCCESS:
-      //return handleUpdate({state, action});
+      toastSuccess('Cập nhật thành công');
       return {
         ...state,
         processing: true,
       };
     case ProductsActionTypes.CREATE_SUCCESS:
+      toastSuccess('Tạo mới thành công');
       return {
         ...state,
-        loadingDetail: false,
-        detail: action.payload,
+        processing: true,
       };
     case ProductsActionTypes.DELETE_SUCCESS:
+      toastSuccess('Xóa thành công');
       return {
         ...state,
         processing: false,
