@@ -153,7 +153,7 @@ const deleteproduct = async(req, res, next) => {
         const { IDProduct } = req.params
         const product = await Product.findById(IDProduct)
         if (!product) return res.status(200).json({ success: false, code: 404, message: 'The product is not exist' })
-        await unUseImage(product)
+            //await unUseImage(product)
         await Mobile.findByIdAndDelete(product.detail_info.mobile)
         await Product.findByIdAndDelete(IDProduct)
         return res.status(200).json({ success: true, code: 200, message: 'success' })

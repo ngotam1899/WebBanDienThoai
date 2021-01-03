@@ -5,7 +5,6 @@ const cloudinary = require('cloudinary')
 const Mobile = require('../models/Mobile')
 const createError = require('http-errors')
 const Product = require('../models/Product')
-const { query } = require('express')
     /* const slp = require('sleep') */
 
 const uploadImageMobile = async(req, res, next) => {
