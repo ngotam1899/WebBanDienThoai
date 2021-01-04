@@ -29,6 +29,8 @@
   "shop.distance.button": "Browse",
   "shop.pagination.prev": "Previous",
   "shop.pagination.next": "Next",
+  "shop.search.first": "There are all",
+  "shop.search.last": "search results",
 
   "detail.shop.title":"Product detail",
   "detail.category.label":"Category",

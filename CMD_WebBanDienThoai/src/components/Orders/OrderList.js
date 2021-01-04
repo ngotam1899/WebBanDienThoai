@@ -166,6 +166,11 @@ class OrderList extends Component {
                   </div>
                 </form>
                 <div className="row">
+                  <div className="col">
+                    <p className="float-left" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>
+                  </div>
+                </div>
+                <div className="row">
                   <div className="col-12 col-md-4">
                     <div className="card bg-danger">
                       <div className="p-2">

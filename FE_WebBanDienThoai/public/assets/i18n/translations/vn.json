@@ -29,6 +29,8 @@
   "shop.distance.button": "Duyệt",
   "shop.pagination.prev": "Lùi",
   "shop.pagination.next": "Tiến",
+  "shop.search.first": "Có tất cả",
+  "shop.search.last": "kết quả tìm kiếm",
 
   "detail.shop.title":"Trang chi tiết",
   "detail.category.label":"Loại sản phẩm",

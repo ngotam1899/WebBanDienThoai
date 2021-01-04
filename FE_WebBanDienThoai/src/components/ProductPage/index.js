@@ -140,6 +140,7 @@ class ProductPage extends Component {
                           <button className="btn btn-danger h-100" onClick={() => this.searchKeyWorld()}>{t('shop.search.button')}</button>
                         </div>
                       </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -252,6 +253,7 @@ class ProductPage extends Component {
                     </div>
                   </div>
                 </div>
+                <p style={{fontStyle: 'italic'}}>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
                 <div className="row">
                   {listProducts.map((product, index) => {
                     return (

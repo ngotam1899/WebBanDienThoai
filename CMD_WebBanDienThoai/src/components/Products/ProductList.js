@@ -221,12 +221,18 @@ class ProductList extends Component {
                     </div>
                   </div>
                 </div>
-                <CButton
-                  onClick={() => this.setLarge(!large)}
-                  className="mb-1 float-right"
-                  color="success"
-                > Thêm sản phẩm
-                </CButton>
+                <div className="row">
+                  <div className="col">
+                  <p className="float-left" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>
+                  <CButton
+                    onClick={() => this.setLarge(!large)}
+                    className="mb-1 float-right"
+                    color="success"
+                  > Thêm sản phẩm
+                  </CButton>
+                  </div>
+                </div>
+
               </CCardHeader>
 
               {listBrands && listCategories && <CCardBody>
