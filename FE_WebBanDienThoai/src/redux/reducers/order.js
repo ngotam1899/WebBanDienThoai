@@ -74,8 +74,17 @@ export default function(state = init, action) {
         detail: action.payload,
       };
     case OrdersActionsTypes.DISCARD_ORDER:
+      return {
+        ...state,
+      };
     case OrdersActionsTypes.DISCARD_ORDER_SUCCESS:
+      toastSuccess("Hủy đơn hàng thành công")
+      return {
+        ...state,
+      };
     case OrdersActionsTypes.DISCARD_ORDER_ERROR:
+      var { message } = action.payload;
+      toastError(message)
       return {
         ...state,
       };

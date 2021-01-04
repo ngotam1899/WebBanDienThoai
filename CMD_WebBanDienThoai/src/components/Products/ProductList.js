@@ -34,6 +34,8 @@ class ProductList extends Component {
     this.state = {
       large: false,
       keyword: filter.keyword ===null ? "" : filter.keyword,
+      min_p: filter.min_p ===null ? "" : filter.min_p,
+      max_p: filter.max_p ===null ? "" : filter.max_p,
       filter: {
         limit: 4,
         page: 0,
@@ -65,6 +67,19 @@ class ProductList extends Component {
       };
       this.props.onGetList(params);
     }
+  }
+
+  handleChangeFilter = (event) => {
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.handleUpdateFilter({ [name]:  value});
+  }
+
+  // Change distance price
+  distancePrice = (e) => {
+    const {min_p, max_p} = this.state;
+    this.handleUpdateFilter({ min_p, max_p});
   }
 
   onChange = (event) =>{
@@ -148,7 +163,7 @@ class ProductList extends Component {
   }
 
   render () {
-    const {large, keyword} = this.state;
+    const {large, keyword, min_p, max_p} = this.state;
     const {listProducts, productDetail, listCategories, listBrands, onClearDetail, total, location,} = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -166,6 +181,46 @@ class ProductList extends Component {
                     </div>
                   </div>
                 </form>
+                <div className="row">
+                  <div className="col-12 col-md-4">
+                    <div className="card bg-danger">
+                      <div className="p-2">
+                        <b className="text-white">Sắp xếp theo tên</b>
+                        <select className="form-control mt-2" value={filter.sort_n} name="sort_n" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="0">Chọn kiểu sắp xếp</option>
+                          <option value="1">Tên sản phẩm từ A - Z</option>
+                          <option value="-1">Tên sản phẩm từ Z - A</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-4">
+                    <div className="card bg-warning">
+                      <div className="p-2">
+                        <b className="text-white">Sắp xếp theo giá</b>
+                        <select className="form-control mt-2" value={filter.sort_p} name="sort_p" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="0">Chọn kiểu sắp xếp</option>
+                          <option value="1">Gía từ thấp tới cao</option>
+                          <option value="-1">Gía từ cao xuống thấp</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-4">
+                    <div className="card bg-success">
+                      <div className="p-2">
+                        <b className="text-white">Duyệt theo khoảng giá</b>
+                        <div className="row input-group mx-auto mt-2">
+                          <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder="Từ" className="form-control w-40"></input>
+                          <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder="đến" className="form-control w-40"></input>
+                          <div class="input-group-append">
+                            <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <CButton
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
