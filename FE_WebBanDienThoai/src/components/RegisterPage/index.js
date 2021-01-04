@@ -40,6 +40,7 @@ class RegisterPage extends Component {
 	}
 
 	componentDidMount(){ 
+		document.title = "[TellMe] Đăng ký"
 		this.improveScreen();
 	}
 

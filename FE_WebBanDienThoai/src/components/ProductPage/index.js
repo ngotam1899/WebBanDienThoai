@@ -48,6 +48,7 @@ class ProductPage extends Component {
   
   //??
   UNSAFE_componentWillMount() {
+    document.title = "[TellMe] Trang bán hàng"
     const { onGetList, onGetListColor, onGetListBrand, location } = this.props;
     const { filter } = this.state;
     onGetListColor();
@@ -120,6 +121,8 @@ class ProductPage extends Component {
   handlePageChange(pageNumber) {
     this.handleUpdateFilter({ page: pageNumber-1 });
   }
+
+  
 
   render() {
     const {keyword, min_p, max_p} = this.state;

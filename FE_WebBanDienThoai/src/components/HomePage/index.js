@@ -21,6 +21,7 @@ class HomePage extends Component {
   }
 
   componentDidMount(){
+    document.title = "[TellMe] Trang bán hàng"
     this.improveScreen();
   }
 

@@ -52,6 +52,7 @@ class CheckoutPage extends Component {
   }
 
   UNSAFE_componentWillMount() {
+    document.title = "[TellMe] Trang bán hàng"
     var total = 0;
     var totalPrice = 0;
     var { cart } = this.props;

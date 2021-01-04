@@ -4,6 +4,7 @@ import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 import { get } from "lodash";
 import {LOCAL} from '../../constants/index';
+import { Helmet } from 'react-helmet'
 // @Actions
 import ProductsActions from '../../redux/actions/products'
 import BrandActions from "../../redux/actions/brands";
@@ -27,7 +28,7 @@ class DetailPage extends Component {
     FB.XFBML.parse();
   }
   componentDidMount(){
-    const {match, onGetDetailProduct, onGetListBrand, onGetListCategory, onGetListColor, onGetListOperation} = this.props;
+    const {match, onGetDetailProduct, onGetListBrand, onGetListCategory, onGetListColor, onGetListOperation, product} = this.props;
     onGetListBrand();
     onGetListCategory();
     onGetListColor();
@@ -70,12 +71,24 @@ class DetailPage extends Component {
   onAddToCart = (product, quantity) =>{
 		var {onAddProductToCart} = this.props;
 		onAddProductToCart(product, quantity);
-	}
+  }
+  
+  componentWillUnmount(){
+    const {onClearDetail} =this.props;
+    onClearDetail()
+  }
 
   render() {
     const {product, currency, t, listColor, listOperations} = this.props;
     const {quantity} = this.state;
     return (<>
+      <div className="application">
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{product && product.name}</title>
+          <link rel="" href={product && `${LOCAL}/#/product/${product.pathseo}/${product._id}`} />
+        </Helmet>
+      </div>
       <div className="product-big-title-area">
         <div className="container">
           <div className="row">
@@ -260,6 +273,9 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
+    onClearDetail: () =>{
+      dispatch(ProductsActions.onClearDetail())
+    },
     onGetDetailProduct: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
     },

@@ -43,6 +43,7 @@ class LoginPage extends Component {
 	}
 
 	componentDidMount(){ 
+		document.title = "[TellMe] Đăng nhập"
 		this.improveScreen()
 		const {history} = this.props;
 		console.log("history", history)

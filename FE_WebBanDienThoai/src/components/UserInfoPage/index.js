@@ -22,6 +22,10 @@ class UserInfoPage extends Component {
     }
   }
 
+  componentDidMount(){
+    document.title = "[TellMe] Trang bán hàng"
+  }
+
   handleFileInputChange = (e) => {
     const file = e.target.files[0];
     // 1. Hiển thị ảnh vừa thêm
