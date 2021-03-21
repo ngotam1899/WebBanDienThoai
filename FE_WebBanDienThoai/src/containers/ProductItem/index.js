@@ -5,6 +5,7 @@ import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 // @Functions
 import tryConvert from '../../utils/changeMoney'
+import numberWithCommas from "../../utils/formatPrize";
 
 class ProductItem extends Component {
 	onAddToCart = (product) =>{
@@ -26,8 +27,8 @@ class ProductItem extends Component {
 						</Link>
 					</h2>
 					<div className="product-carousel-price">
-            <ins>{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</ins> <br/>
-						<del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del>
+            <ins>{currency=="VND" ? numberWithCommas(product.price) : numberWithCommas(parseFloat(tryConvert(product.price, currency, false)).toFixed(2))} {currency}</ins> <br/>
+						<del>{currency=="VND" ? numberWithCommas(product.price*1.2) : numberWithCommas(parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2))} {currency}</del>
 					</div>
 					<div className="product-option-shop">
 						<button

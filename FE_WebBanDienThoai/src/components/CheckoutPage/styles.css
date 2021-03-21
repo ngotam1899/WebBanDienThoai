@@ -52,7 +52,7 @@ a.about_paypal {
 #customer_details select, .shipping_calculator select {
   border: 1px solid #ddd;
   margin-bottom: 15px;
-  padding: 10px;
+  padding: 5px 10px;
   width: 100%;
 }
 .payment_method_paypal label {

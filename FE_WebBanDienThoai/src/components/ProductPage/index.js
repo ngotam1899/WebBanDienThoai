@@ -6,6 +6,7 @@ import qs from "query-string";
 import './styles.css';
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
+
 // @Components
 import ProductItem from "../../containers/ProductItem"
 import Pagination from "react-js-pagination";

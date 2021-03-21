@@ -8,9 +8,10 @@ import user from "./user";
 import order from "./order";
 import color from "./color";
 import operations from "./operations";
+import address from "./address";
 
 export default function* rootSaga(getState) {
   yield all([
-    products(), cloudinary(), brands(), categories(), auth(), user(), order(), color(), operations()
+    products(), cloudinary(), brands(), categories(), auth(), user(), order(), color(), operations(), address()
   ]);
 }

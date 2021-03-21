@@ -10,7 +10,7 @@ import ChangePassword from '../../containers/ChangePassword';
 //@Actions
 import UsersActions from '../../redux/actions/user'
 import OrdersActions from '../../redux/actions/order'
-
+import AddressActions from "../../redux/actions/address";
 
 class UserInfoPage extends Component {
   constructor(props) {
@@ -23,7 +23,10 @@ class UserInfoPage extends Component {
   }
 
   componentDidMount(){
-    document.title = "[TellMe] Trang bán hàng"
+    const {onGetListCity} = this.props;
+    onGetListCity();
+
+    document.title = "[TellMe] Trang bán hàng";
   }
 
   handleFileInputChange = (e) => {
@@ -72,7 +75,7 @@ class UserInfoPage extends Component {
   }
 
   render() {
-    const {authInfo, avatar, orderList, orderItem, t} = this.props;
+    const {authInfo, avatar, orderList, orderItem, t, listCity} = this.props;
     const {previewSource, fileInputState} = this.state;
     return (
       <div className="bg-user-info py-4">
@@ -220,7 +223,7 @@ class UserInfoPage extends Component {
           </>}
         </div>
         {orderItem ? <OrderDetail orderItem={orderItem}/> : <OrderDetail/>}
-        {authInfo && <UserDetail userInfo={authInfo}/>}
+        {authInfo && listCity && <UserDetail userInfo={authInfo} listCity={listCity}/>}
         <ChangePassword/>
       </div>
     );
@@ -233,6 +236,7 @@ const mapStateToProps = (state) =>{
     avatar: state.user.avatar,
     orderList: state.order.list,
     orderItem: state.order.detail,
+    listCity: state.address.city,
   }
 }
 
@@ -246,6 +250,9 @@ const mapDispatchToProps =(dispatch)=> {
     },
     onGetDetail : (id) =>{
 			dispatch(OrdersActions.onGetDetail(id))
+    },
+    onGetListCity: () => {
+      dispatch(AddressActions.onGetCity())
     },
 	}
 };

@@ -56,7 +56,7 @@ export default function(state = init, action) {
       return {
         ...state,
         loading: false,
-        list: get(action, "payload", []),
+        list: get(action, "payload", []), // list: action.payload
       };
 
     case CategoryActionTypes.GET_DETAIL:

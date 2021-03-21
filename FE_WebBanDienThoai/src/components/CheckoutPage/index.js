@@ -5,6 +5,7 @@ import { assets } from '../../constants/assetsImage';
 import { withTranslation } from 'react-i18next'
 // @Actions
 import OrdersActions from '../../redux/actions/order'
+import AddressActions from "../../redux/actions/address";
 // @Components
 import Search from '../../containers/Search';
 import Paypal from './Paypal';
@@ -40,6 +41,11 @@ class CheckoutPage extends Component {
       total: 0,
       totalPrice: 0,
       payment_method: "local",
+      //address
+      cityID: null,
+      shipping_city: "",
+      shipping_district:"",
+      shipping_ward: "",
     }
   }
   onChange = (event) =>{
@@ -49,6 +55,11 @@ class CheckoutPage extends Component {
     this.setState({
       [name]:  value
     })
+  }
+
+  componentDidMount() {
+    const {onGetListCity} = this.props;
+    onGetListCity();
   }
 
   UNSAFE_componentWillMount() {
@@ -80,10 +91,44 @@ class CheckoutPage extends Component {
       totalPrice
     })
   }
+
+  componentWillUnmount(){
+    const {onClearState} = this.props;
+    onClearState();
+  }
+
+  setDistrict = (event) =>{
+    const {value, options, selectedIndex} = event.target;
+    const {onGetListDistrict} = this.props;
+    this.setState({
+      cityID: value,
+      shipping_city: options[selectedIndex].text,
+      shipping_district: "",
+    })
+    onGetListDistrict({province_id: event.target.value });
+  }
+
+  setWard = (event) => {
+    const {options, selectedIndex} = event.target;
+    const {onGetListWard} = this.props;
+    const {cityID} = this.state;
+    this.setState({
+      shipping_district: options[selectedIndex].text,
+    })
+    onGetListWard(cityID, event.target.value);
+  }
+
+  setAddress = (event) =>{
+    const {options, selectedIndex} = event.target;
+    this.setState({
+      shipping_ward: options[selectedIndex].text
+    })
+  }
   
   placeOrder(){
     const {onCreateAnOrder, authInfo} = this.props;
-    const {shipToDifferentAddress, order_comments, total, totalPrice, shipping_phone, shipping_address, payment_method, order_list} = this.state;
+    const {shipToDifferentAddress, order_comments, total, totalPrice, shipping_phone, 
+      shipping_address, shipping_city, shipping_district, shipping_ward, payment_method, order_list} = this.state;
     var data = {};
     //3. Truyền thông tin order vào body req
     
@@ -94,7 +139,7 @@ class CheckoutPage extends Component {
         total_quantity: total,
         shipping_phonenumber: shipping_phone,
         email: authInfo.email,
-        shipping_address: shipping_address,
+        shipping_address: `${shipping_address}, ${shipping_ward}, ${shipping_district}, ${shipping_city}`,
         note: order_comments,
         payment_method,
         is_paid: false
@@ -122,7 +167,7 @@ class CheckoutPage extends Component {
 
   render() {
     const {shipToDifferentAddress, shipping_phone, shipping_address, shipping_first_name, shipping_last_name, order_comments, payment_method, totalPrice, total, order_list} = this.state;
-    const {authInfo, currency, t, onCreateAnOrder} = this.props;
+    const {authInfo, currency, t, onCreateAnOrder, listCity, listDistrict, listWard} = this.props;
     return (
       <>
         <div className="product-big-title-area">
@@ -204,6 +249,34 @@ class CheckoutPage extends Component {
                                 <label className="" htmlFor="shipping_address">{t('checkout.address.input')} <abbr title="required" className="required">*</abbr>
                                 </label>
                                 <input type="text" value={shipping_address} placeholder="Street address" id="shipping_address" name="shipping_address" className="input-text " onChange={this.onChange} />
+                         
+                                <select  className="form-control" type="text" placeholder="Chọn tỉnh/ thành"
+                                  onChange={this.setDistrict} required>
+                                    {listCity && listCity.map((item, index)=>{
+                                        return(
+                                          <option key={index} value={item.ProvinceID} name="shipping_city">{item.ProvinceName}</option>
+                                        )
+                                      })
+                                    }
+                                  </select>
+                                  <select  className="form-control" type="text" placeholder="Chọn quận/ huyện" 
+                                  onChange={this.setWard} required>
+                                    {listDistrict && listDistrict.map((item, index)=>{
+                                          return(
+                                            <option key={index} value={item.DistrictID} name="shipping_district">{item.DistrictName}</option>
+                                          )
+                                        })
+                                      }
+                                  </select>
+                                  <select  className="form-control" type="text" placeholder="Chọn phường xã" 
+                                  onChange={this.setAddress} required>
+                                    {listWard && listWard.map((item, index)=>{
+                                          return(
+                                            <option key={index} value={item.WardCode} name="shipping_ward">{item.WardName}</option>
+                                          )
+                                        })
+                                      }
+                                  </select>
                               </p>
                               <p id="shipping_phone_field" className="form-row form-row-last validate-required validate-phone">
                                 <label className="" htmlFor="shipping_phone">{t('checkout.phone.input')} <abbr title="required" className="required">*</abbr>
@@ -292,6 +365,9 @@ const mapStateToProps = (state) =>{
     authInfo: state.auth.detail,
     cart: state.cart,
     currency: state.currency,
+    listCity: state.address.city,
+    listDistrict: state.address.district,
+    listWard: state.address.ward,
   }
 }
 
@@ -300,6 +376,18 @@ const mapDispatchToProps = (dispatch, props) => {
     onCreateAnOrder: (data) => {
       dispatch(OrdersActions.onCreateAnOrder(data))
     },
+    onGetListCity: () => {
+      dispatch(AddressActions.onGetCity())
+    },
+    onGetListDistrict: (cityID) => {
+      dispatch(AddressActions.onGetDistrict(cityID))
+    },
+    onGetListWard: (cityID, districtID) => {
+      dispatch(AddressActions.onGetWard(cityID, districtID))
+    },
+    onClearState: () =>{
+      dispatch(AddressActions.onClearState())
+    }
   }
 }
 

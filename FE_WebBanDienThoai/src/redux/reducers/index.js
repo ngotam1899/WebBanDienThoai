@@ -11,7 +11,8 @@ import color from "./color";
 import operations from "./operations";
 import ui from "./ui";
 import currency from "./currency";
+import address from "./address";
 
 export default combineReducers({
-  products,cart, cloudinary, auth, brands, categories, user, order, color, ui, operations, currency
+  products,cart, cloudinary, auth, brands, categories, user, order, color, ui, operations, currency, address
 });

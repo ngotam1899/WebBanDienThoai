@@ -8,36 +8,32 @@ const ProductSchema = new Schema({
     price: {
         type: Number
     },
-    amount: {
+    amount: {   // Tổng số lượng các sản phẩm
         type: Number
     },
     pathseo: {
         type: String
     },
-    warrently: {
+    warrently: {    //Bỏ
         type: Number
     },
-    bigimage: {
+    bigimage: {     //Thumbnail
         type: Schema.Types.ObjectId,
         ref: "Image_Pro"
     },
-    image: [{
+    image: [{       // Bỏ
         type: Schema.Types.ObjectId,
         ref: "Image_Pro"
     }],
-    category: {
-        type: Schema.Types.ObjectId,
+    category: {     
+        type: Schema.Types.ObjectId, 
         ref: "Category"
     },
-    brand: {
+    brand: {        
         type: Schema.Types.ObjectId,
         ref: "Brand"
     },
-    /*origin: {
-        type: Schema.Types.ObjectId,
-        ref: "Origin"
-    },*/
-    detail_info: {
+    detail_info: {  
         mobile: {
             type: Schema.Types.ObjectId,
             ref: "Mobile"

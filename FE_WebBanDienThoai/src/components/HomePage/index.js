@@ -225,6 +225,8 @@ class HomePage extends Component {
   }
 }
 
+
+
 const mapStateToProps = (state) => {
   return {
     listProducts: state.products.list,
@@ -235,7 +237,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onFilter: (keyword) => {
-      dispatch(ProductsActions.onFilter(keyword))
+      dispatch(ProductsActions.onFilter(keyword));
     },
     onAddProductToCart: (product) => {
       dispatch(ProductsActions.onAddProductToCart(product, 1));
