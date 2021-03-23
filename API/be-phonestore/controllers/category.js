@@ -19,13 +19,13 @@ const addCategory = async(req, res, next) => {
 }
 const updateCategory = async(req, res, next) => {
     const { IDCategory } = req.params
-    const {name, specification} = req.body
+    const {name, specifications} = req.body
     const category = await Category.findById(IDCategory);
     if(name) category.name = name;
-    if(specification) {
-        const IDSpecification = await Specification.findById(specification);
+    if(specifications) {
+        const IDSpecification = await Specification.findById(specifications);
         if (!IDSpecification) return res.status(200).json({ success: false, code: 404, message: 'Specification is identify' })
-        category.specification = specification
+        category.specifications = specifications
     }
     await category.save();
     /* const result = await Category.findByIdAndUpdate(IDCategory, category)
