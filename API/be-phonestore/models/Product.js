@@ -42,7 +42,19 @@ const ProductSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "EarPhone"
         }
-    }
+    },
+    specifications: [{
+        _id: {
+            type: Schema.Types.ObjectId,
+            ref: "Specification" 
+        },
+        name: {
+            type: String
+        },
+        value: {
+            type: String
+        }
+    }],
 }, {
     timestamps: true
 })

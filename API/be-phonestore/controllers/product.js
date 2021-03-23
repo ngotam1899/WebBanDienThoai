@@ -3,6 +3,7 @@ const Image_Pro = require('../models/Image_Pro')
 const Validator = require('../validators/validator')
 const cloudinary = require('cloudinary')
 const Mobile = require('../models/Mobile')
+const Specification = require('../models/specification')
 const createError = require('http-errors')
 const Product = require('../models/Product')
     /* const slp = require('sleep') */
@@ -227,11 +228,56 @@ const searchProduct = async(req, res, next) => {
     }
 }
 
+const updateProduct = async(req, res, next) => {
+    try {
+        const { IDProduct } = req.params
+
+        const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, specifications } = req.body
+
+        const product = await Product.findById(IDProduct)
+        if (!product) return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' })
+
+        if (name) product.name = name;
+        if (price) product.price = price;
+        if (amount) product.amount = amount;
+        if (pathseo) product.pathseo = pathseo;
+        if (warrently) product.warrently = warrently;
+        if (bigimage) product.bigimage = bigimage;
+        if (image) product.image = image
+        if (category) {
+            const is_category = await Category.findById(category)
+            if (!is_category) return res.status(200).json({ success: false, code: 404, message: 'category is identify' })
+            product.category = category
+        }
+        if (brand) {
+            const is_brand = await Brand.findById(brand)
+            if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
+            product.brand = brand;
+        }
+        if(specifications){
+            for (let item of specifications) {
+                let specificationFound = await Specification.findById(item.specification);
+                if (specificationFound) {
+                    let _id = specificationFound._id;
+                    let name = specificationFound.name;
+                    let value = item.value
+                    await product.specifications.push({ _id, name, value });
+                }
+            }
+        }
+        await product.save()
+        return res.status(200).json({ success: true, code: 200, message: '' })
+    } catch (error) {
+        return next(error)
+    }
+}
+
 module.exports = {
     uploadImageMobile,
     getAllProduct,
     getAllProductByBrand,
     getAllProductByCategory,
     getAllProductByColor,
-    searchProduct
+    searchProduct,
+    updateProduct
 }

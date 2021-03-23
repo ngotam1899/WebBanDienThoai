@@ -1,12 +1,12 @@
 const Category = require('../models/Category')
+const Specification = require('../models/specification')
 const Validator = require('../validators/validator')
 
 const createError = require('http-errors')
 
 const getAllCategory = async(req, res, next) => {
     try {
-        const categorys = await Category.find()
-
+        const categorys = await Category.find().populate({ path: 'specification', select: 'name' })
         return res.status(200).json({ success: true, code: 200, message: '', categorys: categorys })
     } catch (error) {
         return next(error)
@@ -18,17 +18,20 @@ const addCategory = async(req, res, next) => {
     return res.status(200).json({ success: true, code: 201, message: '', category: newCategory })
 }
 const updateCategory = async(req, res, next) => {
-
     const { IDCategory } = req.params
-
-    const category = req.body
-
-    const result = await Category.findByIdAndUpdate(IDCategory, category)
-
+    const {name, specification} = req.body
+    const category = await Category.findById(IDCategory);
+    if(name) category.name = name;
+    if(specification) {
+        const IDSpecification = await Specification.findById(specification);
+        if (!IDSpecification) return res.status(200).json({ success: false, code: 404, message: 'Specification is identify' })
+        category.specification = specification
+    }
+    await category.save();
+    /* const result = await Category.findByIdAndUpdate(IDCategory, category)
     if (!result) {
         return res.status(200).json({ success: false, code: 400, message: 'id category is not correctly' })
-    }
-
+    } */
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
 const deleteCategory = async(req, res, next) => {

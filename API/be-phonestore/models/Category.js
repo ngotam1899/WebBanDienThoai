@@ -13,8 +13,11 @@ const CategorySchema = new Schema({
     },
     pathseo_en: {
         type: String
-    }
-
+    },
+    specifications: [{
+        type: Schema.Types.ObjectId,
+        ref: "Specification"
+    }],
 })
 
 const Category = mongoose.model('Category', CategorySchema)
