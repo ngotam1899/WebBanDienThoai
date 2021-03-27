@@ -40,7 +40,6 @@ router.route('/categorys')
 router.route('/categorys/:IDCategory')
     .put(categoryController.updateCategory)
     .delete(categoryController.deleteCategory)
-router.route('/categorys/:IDCategory')
     .get(categoryController.getDetailCategory)
 
 // Region Specification

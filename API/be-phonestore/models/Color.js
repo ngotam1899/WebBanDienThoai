@@ -2,13 +2,13 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ColorSchema = new Schema({
-    color: {
+    name_vn: {
         type: String
     },
-    color_en: {
+    name_en: {
         type: String
     },
-    code_color: {
+    code: {
         type: String
     }
 })

@@ -5,7 +5,10 @@ const ProductSchema = new Schema({
     name: {
         type: String
     },
-    price: {
+    price_max: {
+        type: Number
+    },
+    price_min: {
         type: Number
     },
     amount: {   // Tổng số lượng các sản phẩm
@@ -55,6 +58,27 @@ const ProductSchema = new Schema({
             type: String
         }
     }],
+    colors: [{
+        _id: {
+            type: Schema.Types.ObjectId,
+            ref: "Color" 
+        },
+        name_en: {
+            type: String
+        },
+        name_vn: {
+            type: String
+        },
+        image: {
+            type: String
+        },
+        amount: {
+           type: Number 
+        },
+        price: {
+           type: Number
+        }
+    }]
 }, {
     timestamps: true
 })
