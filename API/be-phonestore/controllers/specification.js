@@ -8,7 +8,7 @@ const getAllSpecification = async(req, res, next) => {
         let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
         condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
     }
-    let limit = 5;
+    let limit = 30;
     let page = 0;
     if (req.query.limit != undefined && req.query.limit != "") {
         const number_limit = parseInt(req.query.limit);

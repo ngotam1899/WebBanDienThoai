@@ -125,6 +125,11 @@ export default [
         name: 'Danh sách thương hiệu',
         to: '/products/brand-manage',
       },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách thuộc tính',
+        to: '/products/specification-manage',
+      },
       /* {
         _tag: 'CSidebarNavItem',
         name: 'Tabs',

@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 import { connect } from "react-redux";
 // @Actions
-import OperationActions from "../../redux/actions/operations";
+import SpecificationActions from "../../redux/actions/specification";
 
-class OperationDetail extends Component {
+class SpecificationDetail extends Component {
   constructor(props){
     super(props);
-    const {operation} = props;
+    const {specification} = props;
     this.state = {
-      id: operation ? operation._id : '',
-      name: operation ? operation.operation : ''
+      id: specification ? specification._id : '',
+      name: specification ? specification.specification : ''
     }
   }
   onChange = (event) =>{
@@ -25,31 +25,39 @@ class OperationDetail extends Component {
   onSubmit = () =>{
     const {id, name} = this.state;
     const {onUpdate, onCreate} = this.props;
-    var data = {operation: name}
+    var data = {name}
+    console.log("data: ",data)
     if (id) {
       onUpdate(id, data);
     }
     else {
-      // 4. Create data
       onCreate(data);
     }
   }
 
+  onAddSpecification = (name) =>{
+    const {onUpdate} = this.props;
+    const {specifications} = this.state;
+    specifications.push(name)
+    onUpdate({specifications});
+  }
+
+
 	render() {
     const { name } = this.state;
-    const { large, onClose, operation} = this.props;
-    console.log("abc: ", operation);
+    const { large, onClose, specification} = this.props;
+    console.log("abc: ", specification);
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
-        <CModalTitle>{operation ? "Sửa thông tin hệ điều hành" : "Thêm hệ điều hành mới"}</CModalTitle>
+        <CModalTitle>{specification ? "Sửa thông tin thuộc tính" : "Thêm thuộc tính mới"}</CModalTitle>
 				</CModalHeader>
 				<CModalBody>
 					<div className="row">
 						<div className="col-12 col-lg-6">
 							<form>
 								<div className="form-group">
-									<label>Tên hệ điều hành:</label>
+									<label>Tên hệ thuộc tính:</label>
                   <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
 								</div>
               </form>
@@ -77,12 +85,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreate: (params) =>{
-      dispatch(OperationActions.onCreate({params}))
+      dispatch(SpecificationActions.onCreate({params}))
     },
     onUpdate: (id, params) =>{
-      dispatch(OperationActions.onUpdate({id, params}))
+      dispatch(SpecificationActions.onUpdate({id, params}))
     }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OperationDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(SpecificationDetail);

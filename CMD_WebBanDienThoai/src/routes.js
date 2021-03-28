@@ -4,6 +4,7 @@ const CategoryList = React.lazy(() => import('./components/Categories/CategoryLi
 const BrandList = React.lazy(() => import('./components/Brands/BrandList'));
 const ColorList = React.lazy(() => import('./components/Colors/ColorList'));
 const OperationList = React.lazy(() => import('./components/Operations/OperationList'));
+const SpecificationList = React.lazy(() => import('./components/Specification/SpecificationList'));
 
 const UserList = React.lazy(() => import('./components/Users/UserList'));
 const OrderList = React.lazy(() => import('./components/Orders/OrderList'));
@@ -53,6 +54,7 @@ const routes = [
   { path: '/products/brand-manage', name: 'Brand List', component: BrandList },
   { path: '/products/color-manage', name: 'Color List', component: ColorList },
   { path: '/products/operation-manage', name: 'Operation List', component: OperationList },
+  { path: '/products/specification-manage', name: 'Specification List', component: SpecificationList },
 
   { path: '/users/user-manage', name: 'User List', component: UserList },
   { path: '/users/order-manage', name: 'Order List', component: OrderList },
