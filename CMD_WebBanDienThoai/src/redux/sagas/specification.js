@@ -30,7 +30,7 @@ function* handleGetDetail({ filters, id }) {
     const result = yield call(getDetailSpecification, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    yield put(SpecificationActions.onGetDetailSuccess(data.specifications));
+    yield put(SpecificationActions.onGetDetailSuccess(data.specification));
   } catch (error) {
     yield put(SpecificationActions.onGetDetailError(error));
   }

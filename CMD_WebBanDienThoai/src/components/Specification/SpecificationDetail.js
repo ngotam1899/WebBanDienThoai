@@ -10,7 +10,7 @@ class SpecificationDetail extends Component {
     const {specification} = props;
     this.state = {
       id: specification ? specification._id : '',
-      name: specification ? specification.specification : ''
+      name: specification ? specification.name : ''
     }
   }
   onChange = (event) =>{
