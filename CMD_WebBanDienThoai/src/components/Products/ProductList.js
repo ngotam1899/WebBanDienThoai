@@ -21,6 +21,8 @@ import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
 import ColorActions from "../../redux/actions/color";
 import CategoryActions from "../../redux/actions/categories";
+import SpecificationActions from "../../redux/actions/specification";
+
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
 
@@ -43,7 +45,7 @@ class ProductList extends Component {
     }
   }
   UNSAFE_componentWillMount() {
-    const { onGetList, onGetListColor, onGetListBrand, location, onClearState, onGetListCategory } = this.props;
+    const { onGetList, onGetListColor, onGetListBrand, location, onClearState, onGetListCategory, onGetListSpecification } = this.props;
     onClearState();
     onGetListCategory();
     const { filter } = this.state;
@@ -55,6 +57,7 @@ class ProductList extends Component {
       ...filters
     };
     onGetList(params);
+    onGetListSpecification();
   }
 
   componentDidUpdate(prevProps) {
@@ -164,7 +167,7 @@ class ProductList extends Component {
 
   render () {
     const {large, keyword, min_p, max_p} = this.state;
-    const {listProducts, productDetail, listCategories, listBrands, onClearDetail, total, location,} = this.props;
+    const {listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location,} = this.props;
     const filter = getFilterParams(location.search);
     return (
       <>
@@ -235,7 +238,7 @@ class ProductList extends Component {
 
               </CCardHeader>
 
-              {listBrands && listCategories && <CCardBody>
+              {listBrands && listCategories && listSpecification && <CCardBody>
                 <CDataTable
                   items={listProducts}
                   fields={fields}
@@ -273,10 +276,10 @@ class ProductList extends Component {
                   }}
                 />
                 {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
-                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}/>}
+                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail} listSpecification={listSpecification}/>}
 
                 {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
-                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail}/>}
+                listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail} listSpecification={listSpecification}/>}
               </CCardBody>}
               <div className="row justify-content-center">
               <Pagination
@@ -307,6 +310,7 @@ const mapStateToProps = (state) => {
     listBrands: state.brands.list,
     listCategories: state.categories.list,
     total: state.products.total,
+    listSpecification: state.specification.list,
   }
 }
 
@@ -332,6 +336,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onClearDetail: () =>{
       dispatch(ProductsActions.onClearDetail())
+    },
+    onGetListSpecification : (params) => {
+      dispatch(SpecificationActions.onGetList(params))
     },
     onDelete: (id) =>{
       dispatch(ProductsActions.onDelete({id}))

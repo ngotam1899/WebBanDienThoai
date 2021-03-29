@@ -48,10 +48,10 @@ function* handleUpdate({ payload }) {
   try {
     const result = yield call(updateCategory, payload.params, payload.id);
     const data = get(result, "data", {});
-    console.log("data", data)
     if (data.code !== 200) throw data;
     const detailResult = yield call(getDetailCategory, payload.id);
-    yield put(CategoryActions.onUpdateSuccess(get(detailResult, "data")));
+    yield put(CategoryActions.onUpdateSuccess(detailResult.data.category));
+
     yield put(CategoryActions.onGetList());
   } catch (error) {
     console.log(error);

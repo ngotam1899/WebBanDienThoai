@@ -84,6 +84,7 @@ export default function(state = init, action) {
       return {
         ...state,
         processing: true,
+        detail: action.payload
       };
     case CategoryActionTypes.CREATE_SUCCESS:
       toastSuccess('Tạo mới thành công');

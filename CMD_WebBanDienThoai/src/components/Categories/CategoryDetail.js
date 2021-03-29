@@ -86,7 +86,6 @@ class CategoryDetail extends Component {
 	render() {
     const {name, pathseo, name_en, specifications, keyword} = this.state;
     const { large, onClose, category, listSpecification, listSearch} = this.props;
-    console.log("specifications", specifications)
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
