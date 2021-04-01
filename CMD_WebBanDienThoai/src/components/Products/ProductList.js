@@ -167,7 +167,7 @@ class ProductList extends Component {
 
   render () {
     const {large, keyword, min_p, max_p} = this.state;
-    const {listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location,} = this.props;
+    const {listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location} = this.props;
     const filter = getFilterParams(location.search);
     return (
       <>
@@ -216,7 +216,7 @@ class ProductList extends Component {
                         <div className="row input-group mx-auto mt-2">
                           <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder="Từ" className="form-control w-40"></input>
                           <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder="đến" className="form-control w-40"></input>
-                          <div class="input-group-append">
+                          <div className="input-group-append">
                             <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
                           </div>
                         </div>
@@ -285,13 +285,13 @@ class ProductList extends Component {
               <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
                   itemsCountPerPage={4}
-                  totalItemsCount={total}
+                  totalItemsCount={total ? total : 0}
                   pageRangeDisplayed={3}
                   linkClass="page-link"
                   itemClass="page-item"
                   prevPageText="Previous"
                   nextPageText="Next"
-                  hideFirstLastPages="true"
+                  hideFirstLastPages={true}
                   onChange={this.handlePageChange.bind(this)}
                 />
               </div>

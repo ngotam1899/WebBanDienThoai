@@ -21,7 +21,7 @@ import CategoryActions from "../../redux/actions/categories";
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
-    const { product, listCategories, listBrands, listColor } = props;
+    const { product, listCategories, listBrands } = props;
     this.state = {
       // @Product Info
       id: product ? product._id : "",
@@ -34,7 +34,9 @@ class ProductDetail extends Component {
       brand: product ? product.brand : listBrands[0]._id,
       bigimage: product ? product.bigimage : "",
       image: product ? product.image : [],
-      specifications: product ? product.specifications : listCategories[0].specifications,
+      specifications: product ? (product.specifications.length!=0 ? product.specifications
+        : listCategories[listCategories.findIndex(i => i._id === product.category)].specifications)
+      : listCategories[0].specifications,
 
       // @Product Image
       previewSource: "",
@@ -44,38 +46,17 @@ class ProductDetail extends Component {
       previewList: [],
       selectedList: [],
       fileInputList: [],
-      // @Product Details
-      /* mobileDes: product
-        ? product.detail_info.mobile
-        : {
-            display: "",
-            revolution: "",
-            widescreen: "",
-            operation: "",
-            camera1: "",
-            camera2: "",
-            cpu: "",
-            ram: "",
-            memory: "",
-            microcard: "",
-            sim: "",
-            network: "",
-            pin: "",
-            quickcharging: "",
-            weight: "",
-            thick: "",
-            color: "",
-          }, */
       value : []
     };
+
   }
 
   componentWillMount() {
     const { onGetListOperation, onGetListColor } = this.props;
     onGetListOperation();
     onGetListColor();
-
   }
+
   onChange = (event) => {
     var target = event.target;
     var name = target.name;
@@ -156,19 +137,6 @@ class ProductDetail extends Component {
     };
   };
 
-  onChangeMobile = (event) => {
-    var target = event.target;
-    var name = target.name;
-    var value = target.value;
-    //1. Tạo 1 copy của state mobile cũ
-    this.setState((prevState) => ({
-      mobileDes: {
-        // object that we want to update
-        ...prevState.mobileDes, // keep all other key-value pairs
-        [name]: value, // update the value of specific key
-      },
-    }));
-  };
   onSelect = (event) => {
     var target = event.target;
     var name = target.name;
@@ -185,27 +153,44 @@ class ProductDetail extends Component {
     var name = target.name;
     var _value = target.value;
     const {value} = this.state;
-    this.setState((prevState) => ({
-      value: [
-        // object that we want to update
-        ...prevState.value, // keep all other key-value pairs
+    if(value.findIndex(obj => obj.specification === name) == -1){
+      this.setState((prevState) => ({
+        value: [...prevState.value,
         {
-          specification: name,
-          value: _value
-        }
-      ],
-    }));
-    console.log("value", value)
+          specification:name,
+          value:_value
+        }]
+      }))
+    }
+    else{
+      this.setState((prevState) => ({
+        value: prevState.value.map(
+          obj => (obj.specification === name ? Object.assign(obj, { value: _value }) : obj)
+        )
+      }))
+    }
   }
 
   componentDidUpdate(props) {
-    if (
-      this.props.categoryDetail !== props.categoryDetail &&
-      this.props.categoryDetail
-    ) {
-      this.setState({
-        specifications: this.props.categoryDetail.specifications,
-      });
+    const {product, categoryDetail} =this.props;
+    if (categoryDetail !== props.categoryDetail && categoryDetail) {
+      if(categoryDetail._id == product.category){
+        if(product.specifications.length>0){
+          this.setState({
+            specifications: product.specifications,
+          });
+        }
+        else{
+          this.setState({
+            specifications: categoryDetail.specifications,
+          });
+        }
+      }
+      else{
+        this.setState({
+          specifications: categoryDetail.specifications,
+        });
+      }
     }
   }
 
@@ -259,7 +244,7 @@ class ProductDetail extends Component {
   };
 
   onCallback = (id, formData) => {
-    const { onCreate, onUpdateImage, product } = this.props;
+    const { onCreate, onUpdateImage } = this.props;
     const {
       name,
       price,
@@ -270,7 +255,8 @@ class ProductDetail extends Component {
       bigimage,
       image,
       pathseo,
-      mobileDes,
+      value,
+      specifications
     } = this.state;
     if (id) {
       // eslint-disable-next-line
@@ -284,12 +270,7 @@ class ProductDetail extends Component {
         bigimage,
         image,
         pathseo,
-        detail_info: {
-          mobile: {
-            _id: product.detail_info.mobile._id,
-            ...mobileDes,
-          },
-        },
+        specifications: value,
       };
       onUpdateImage(id, data, formData);
     } else {
@@ -305,7 +286,7 @@ class ProductDetail extends Component {
         bigimage,
         pathseo,
         image,
-        detail_info: { ...mobileDes },
+        specifications:value,
       };
       onCreate(data, formData);
     }
@@ -328,7 +309,6 @@ class ProductDetail extends Component {
       brand,
       bigimage,
       image,
-      mobileDes,
       previewSource,
       fileInputState,
       previewList,
@@ -339,7 +319,6 @@ class ProductDetail extends Component {
       onClose,
       listCategories,
       listBrands,
-      categoryDetail,
       product,
     } = this.props;
     return (
@@ -570,16 +549,18 @@ class ProductDetail extends Component {
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">Chi tiết sản phẩm</div>
                 <div className="card-body text-dark">
-                  {specifications[0].value
+                  {specifications[0] && specifications[0].value
                     ?
                     specifications.map((item, index) => {
                     return (
                     <div className="form-group" key={index}>
-                      <label>{item.name}</label>
+                      <label key={index+1}>{item.name}</label>
                       <input
                         type="text"
                         className="form-control"
-                        value={item.value}
+                        key={index}
+                        name={item._id}
+                        defaultValue={item.value}
                         onChange={this.onChangeDetail}
                       />
                     </div>)

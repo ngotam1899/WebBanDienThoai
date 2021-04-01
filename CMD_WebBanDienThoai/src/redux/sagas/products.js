@@ -91,7 +91,7 @@ function* handleCreate( {payload} ) {
  * update
  */
 function* handleUpdateImage( {payload} ) {
-  const {name, price, amount, pathseo, warrently, brand, category, detail_info} = payload.params;
+  const {name, price, amount, pathseo, warrently, brand, category, specifications} = payload.params;
   try {
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
     if(payload.params.bigimage._id === undefined && payload.formData){
@@ -101,7 +101,7 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand, detail_info,
+      { name, price, amount, pathseo, warrently, category, brand, specifications,
         "bigimage":bigimage.data.images[0]._id,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
@@ -111,7 +111,7 @@ function* handleUpdateImage( {payload} ) {
     else if(payload.params.bigimage._id === undefined){
       var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
       var result = yield call(updateProduct,
-        { name, price, amount, pathseo, warrently, category, detail_info, brand,
+        { name, price, amount, pathseo, warrently, category, brand,specifications,
           "bigimage":bigimage.data.images[0]._id
         }, payload.id);
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
@@ -123,14 +123,14 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, detail_info, brand,
+      { name, price, amount, pathseo, warrently, category, brand,specifications,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     else{
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, detail_info, brand,
+      { name, price, amount, pathseo, warrently, category, brand,specifications,
         "image": payload.params.image
       }, payload.id);
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
@@ -148,7 +148,6 @@ function* handleUpdateImage( {payload} ) {
  */
 function* handleDelete({ id }) {
   try {
-    console.log("id", id);
     const result = yield call(deleteProduct, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;

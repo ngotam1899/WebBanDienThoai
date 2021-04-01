@@ -4,6 +4,8 @@ const Validator = require('../validators/validator');
 const cloudinary = require('cloudinary');
 const Mobile = require('../models/Mobile');
 const Specification = require('../models/specification');
+const Brand = require('../models/Brand');
+const Category = require('../models/Category');
 const Color = require('../models/Color');
 const createError = require('http-errors');
 const Product = require('../models/Product');
@@ -273,6 +275,7 @@ const updateProduct = async (req, res, next) => {
 		if (bigimage) product.bigimage = bigimage;
 		if (image) product.image = image;
 		if (category) {
+			console.log()
 			const is_category = await Category.findById(category);
 			if (!is_category)
 				return res.status(200).json({ success: false, code: 404, message: 'category is identify' });
@@ -285,12 +288,22 @@ const updateProduct = async (req, res, next) => {
 		}
 		if (specifications) {
 			for (let item of specifications) {
-				let specificationFound = await Specification.findById(item.specification);
+				let specificationFound = await Specification.findById(item._id);
 				if (specificationFound) {
 					let _id = specificationFound._id;
 					let name = specificationFound.name;
 					let value = item.value;
-					await product.specifications.push({ _id, name, value });
+					/* var specificationArray=[];
+					specificationArray.push({ _id, name, value })
+					product.specifications = specificationArray; */
+					for(let obj of product.specifications){
+						if(obj._id.toString()==_id.toString()){
+							obj.value = value
+						}
+						else{
+							await product.specifications.push({ _id, name, value });
+						}
+					}
 				}
 			}
 		}

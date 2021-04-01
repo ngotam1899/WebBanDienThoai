@@ -28,7 +28,7 @@ export const addProduct = (data) =>{
 
 // http://localhost:3000/products/:id  METHOD = PUT
 export const updateProduct  = (data, productId) =>{
-    return axiosService.put(`${API_ENDPOINT_AUTH}${url_phone}/${productId}`, data);
+    return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${productId}`, data);
 }
 
 // http://localhost:3000/products/:id  METHOD = DELETE
