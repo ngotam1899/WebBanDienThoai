@@ -32,15 +32,16 @@ class BrandDetail extends Component {
     const {onUpdate, onCreate} = this.props;
     /* Xử lý ảnh */
     // e.preventDefault();
+    var data;
     const {selectedFile} = this.state;
     if(selectedFile){
       var formData1 = new FormData();
       formData1.append('image',selectedFile);
       /* Xử lý ảnh */
-      var data = {name, image: formData1}
+      data = {name, image: formData1}
     }
     else{
-      var data = {name}
+      data = {name}
     }
     if (id) {
       onUpdate(id, data);

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import {get} from 'lodash'
-import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CBadge, CDataTable } from '@coreui/react';
+import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CDataTable } from '@coreui/react';
 import { connect } from "react-redux";
 // @Actions
 import CategoryActions from "../../redux/actions/categories";
 import SpecificationActions from "../../redux/actions/specification";
-// @Functions
-import getFilterParams from "../../utils/getFilterParams";
 
 const fields = ['name' ,{ key: 'actions', _style: { width: '10%'} }]
 

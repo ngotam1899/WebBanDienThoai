@@ -33,17 +33,18 @@ function* handleGetDetail({ filters, id }) {
 function* handleCreate({ payload }) {
   const {name, image} = payload.params;
   try {
+    var data;
     if(image){
       var imageResult = yield call(addProductBrandImage, image);
       var result = yield call(addBrand,
         { name, image: imageResult.data.image._id });
-      var data = get(result, "data", {});
+      data = get(result, "data", {});
       if (data.code !== 201) throw data;
       yield put(BrandActions.onCreateSuccess(get(result, "data.brand")));
     }
     else{
       const result = yield call(addBrand, payload.params);
-      var data = get(result, "data", {});
+      data = get(result, "data", {});
       if (data.code !== 201) throw data;
       yield put(BrandActions.onCreateSuccess(data.brand));
     }
@@ -61,20 +62,21 @@ function* handleUpdate({ payload }) {
   const {image} = payload.params;
   console.log(payload.params)
   try {
+    var detailResult;
     if(image){
       var imageResult = yield call(addProductBrandImage, image);
       console.log(imageResult)
       var result = yield call(updateBrand,{image: imageResult.data.image._id }, payload.id);
       const data = get(result, "data", {});
       if (data.code !== 200) throw data;
-      var detailResult = yield call(getDetailBrand, payload.id);
+      detailResult = yield call(getDetailBrand, payload.id);
       yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
     }
     else{
       const result = yield call(updateBrand, payload.params, payload.id);
       const data = get(result, "data", {});
       if (data.code !== 200) throw data;
-      var detailResult = yield call(getDetailBrand, payload.id);
+      detailResult = yield call(getDetailBrand, payload.id);
       yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
     }
     yield put(BrandActions.onGetList());

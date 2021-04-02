@@ -31,7 +31,7 @@ const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { wi
 class ProductList extends Component {
   constructor(props) {
     super(props);
-    const {match, location} = props;
+    const {location} = props;
     const filter = getFilterParams(location.search);
     this.state = {
       large: false,
@@ -253,7 +253,7 @@ class ProductList extends Component {
                       </td>
                     ),
                     'brand': (item) => (
-                      <td><img src={this.setBrand(item.brand)} style={{width:'8vw'}}></img></td>
+                      <td><img src={this.setBrand(item.brand)} style={{width:'8vw'}} alt={item.name}></img></td>
                     ),
                     'actions':
                     (item)=>(

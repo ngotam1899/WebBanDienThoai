@@ -1,11 +1,10 @@
 import React, { Component }  from 'react'
-import { get } from "lodash";
 import { connect } from "react-redux";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import qs from "query-string";
 // @Components
-import { Button, UncontrolledPopover, PopoverHeader, PopoverBody, Collapse } from 'reactstrap';
+import { Button, UncontrolledPopover, PopoverHeader, PopoverBody } from 'reactstrap';
 import {
   CCard,
   CCardBody,
@@ -28,7 +27,7 @@ const fields = ['Date of create', 'Phone','Payment Status','Bill Status','Paymen
 class OrderList extends Component {
   constructor(props) {
     super(props);
-    const {match, location} = props;
+    const {location} = props;
     const filter = getFilterParams(location.search);
     this.state = {
       large: false,
@@ -228,10 +227,10 @@ class OrderList extends Component {
                       <td>{item.payment_method=== "local" ? '(COD) Tiền mặt' : 'Paypal'}</td>
                     ),
                     'Payment Status': (item) => (
-                      <td>{item.is_paid== true ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
+                      <td>{item.is_paid=== true ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
                     ),
                     'Bill Status': (item) => (
-                      <td>{item.status== true ? 'Đã giao hàng' : 'Chưa giao hàng'}</td>
+                      <td>{item.status=== true ? 'Đã giao hàng' : 'Chưa giao hàng'}</td>
                     ),
                     'Total': (item) => (
                       <td>{item.total_price}</td>

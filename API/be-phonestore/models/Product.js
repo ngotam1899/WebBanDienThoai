@@ -14,10 +14,13 @@ const ProductSchema = new Schema({
     amount: {   // Tổng số lượng các sản phẩm
         type: Number
     },
+    discount:{
+        type: Number
+    },
     pathseo: {
         type: String
     },
-    warrently: {    //Bỏ
+    warrently: {   
         type: Number
     },
     bigimage: {     //Thumbnail

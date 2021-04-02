@@ -51,7 +51,7 @@ class ProductDetail extends Component {
   setValue = (product, categoryDetail) => {
     var specifications = [];
     if(product){
-      if(product.specifications.length!=0){
+      if(product.specifications.length!==0){
         categoryDetail.specifications.map(item =>{
           specifications.push({
             _id: item,
@@ -195,7 +195,7 @@ class ProductDetail extends Component {
   componentDidUpdate(props) {
     const {product, categoryDetail, listCategories} =this.props;
     if (categoryDetail !== props.categoryDetail && categoryDetail) {
-      if(categoryDetail._id == product.category){
+      if(categoryDetail._id === product.category){
         if(product.specifications.length>0){
           this.setState({
             specifications: this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category)])
@@ -253,7 +253,7 @@ class ProductDetail extends Component {
       // 1. Lưu cloudinary
       // eslint-disable-next-line
       var formData2 = new FormData();
-      for (var i = 0; i < selectedList.length; i++) {
+      for (i = 0; i < selectedList.length; i++) {
         formData2.append("image", selectedList[i]);
       }
       this.onCallback(id, formData2);

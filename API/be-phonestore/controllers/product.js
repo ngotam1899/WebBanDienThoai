@@ -2,7 +2,6 @@ const Comment = require('../models/Comment');
 const Image_Pro = require('../models/Image_Pro');
 const Validator = require('../validators/validator');
 const cloudinary = require('cloudinary');
-const Mobile = require('../models/Mobile');
 const Specification = require('../models/specification');
 const Brand = require('../models/Brand');
 const Category = require('../models/Category');
@@ -121,7 +120,6 @@ const getAllProduct = async (req, res, next) => {
 				condition['detail_info.mobile'] = listID;
 			}
 		}
-		//  condition["$options"] = { limit: 1 }
 		let limit = 5;
 		let page = 0;
 
@@ -184,56 +182,6 @@ const getAllProduct = async (req, res, next) => {
 		return next(error);
 	}
 };
-const getAllProductByBrand = async (req, res, next) => {
-	try {
-		const { IDBrand } = req.params;
-		if (!Validator.isValidObjId(IDBrand))
-			return res.status(200).json({ success: false, code: 400, message: 'check link again!' });
-		const products = await Product.find({ brand: IDBrand })
-			.populate({ path: 'bigimage', select: 'public_url' })
-			.populate({ path: 'image', select: 'public_url' });
-
-		return res.status(200).json({ success: true, code: 200, message: 'success', products });
-	} catch (error) {
-		return next(error);
-	}
-};
-
-const getAllProductByColor = async (req, res, next) => {
-	try {
-		const { IDColor } = req.params;
-		if (!Validator.isValidObjId(IDColor))
-			return res.status(200).json({ success: false, code: 400, message: 'check link again!' });
-		const mobile = await Mobile.find({ color: IDColor });
-
-		const listID = [];
-
-		mobile.forEach(async (element) => {
-			listID.push(element._id);
-		});
-		const products = await Product.find({ 'detail_info.mobile': listID })
-			.populate({ path: 'bigimage', select: 'public_url' })
-			.populate({ path: 'image', select: 'public_url' });
-		return res.status(200).json({ success: true, code: 200, message: 'success', products });
-	} catch (error) {
-		return next(error);
-	}
-};
-
-const getAllProductByCategory = async (req, res, next) => {
-	try {
-		const { IDCategory } = req.params;
-		if (!Validator.isValidObjId(IDCategory))
-			return res.status(200).json({ success: false, code: 400, message: 'check link again!' });
-		const products = await Product.find({ category: IDCategory })
-			.populate({ path: 'bigimage', select: 'public_url' })
-			.populate({ path: 'image', select: 'public_url' });
-
-		return res.status(200).json({ success: true, code: 200, message: 'success', products: products });
-	} catch (error) {
-		return next(error);
-	}
-};
 const searchProduct = async (req, res, next) => {
 	try {
 		const products = await Product.find()
@@ -248,7 +196,6 @@ const searchProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
 	try {
 		const { IDProduct } = req.params;
-
 		const {
 			name,
 			price,
@@ -260,7 +207,8 @@ const updateProduct = async (req, res, next) => {
 			category,
 			brand,
 			specifications,
-			colors
+			colors,
+			discount
 		} = req.body;
 
 		const product = await Product.findById(IDProduct);
@@ -273,6 +221,7 @@ const updateProduct = async (req, res, next) => {
 		if (pathseo) product.pathseo = pathseo;
 		if (warrently) product.warrently = warrently;
 		if (bigimage) product.bigimage = bigimage;
+		if (discount) product.discount = discount;
 		if (image) product.image = image;
 		if (category) {
 			console.log()
@@ -300,8 +249,9 @@ const updateProduct = async (req, res, next) => {
 			product.specifications = specificationArray;
 		}
 		if (colors) {
+			var colorArray=[];
 			for (let item of colors) {
-				let colorFound = await Color.findById(item.color);
+				let colorFound = await Color.findById(item._id);
 				if (colorFound) {
 					let _id = colorFound._id;
 					let name_en = colorFound.name_en;
@@ -309,9 +259,10 @@ const updateProduct = async (req, res, next) => {
 					let amount = item.amount;
 					let price = item.price;
 					let image = item.image;
-					await product.colors.push({ _id, name_en, name_vn, amount, price, image });
+					colorArray.push({ _id, name_en, name_vn, amount, price, image });
 				}
 			}
+			product.colors = colorArray;
 		}
 		await product.save();
 		return res.status(200).json({ success: true, code: 200, message: '' });
@@ -320,12 +271,99 @@ const updateProduct = async (req, res, next) => {
 	}
 };
 
+const addProduct = async(req, res, next) => {
+	try {
+		const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, specifications,
+			colors,
+			discount } = req.body
+		const product = new Product();
+		if (name) product.name = name;
+		if (price) product.price = price;
+		if (amount) product.amount = amount;
+		if (pathseo) product.pathseo = pathseo;
+		if (warrently) product.warrently = warrently;
+		if (bigimage) product.bigimage = bigimage;
+		if (discount) product.discount = discount;
+		if (image) product.image = image
+		if (category) {
+			const is_category = await Category.findById(category)
+			if (!is_category) return res.status(200).json({ success: false, code: 404, message: 'category is identify' })
+			product.category = category
+		}
+		if (brand) {
+			const is_brand = await Brand.findById(brand)
+			if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
+			product.brand = brand;
+		}
+		if (specifications) {
+			var specificationArray=[];
+			for (let item of specifications) {
+				let specificationFound = await Specification.findById(item._id);
+				if (specificationFound) {
+					let _id = specificationFound._id;
+					let name = specificationFound.name;
+					let value = item.value;
+					specificationArray.push({ _id, name, value })
+				}
+			}
+			product.specifications = specificationArray;
+		}
+		if (colors) {
+			var colorArray=[];
+			for (let item of colors) {
+				let colorFound = await Color.findById(item._id);
+				if (colorFound) {
+					let _id = colorFound._id;
+					let name_en = colorFound.name_en;
+					let name_vn = colorFound.name_vn;
+					let amount = item.amount;
+					let price = item.price;
+					let image = item.image;
+					colorArray.push({ _id, name_en, name_vn, amount, price, image });
+				}
+			}
+			product.colors = colorArray;
+		}
+		await product.save()
+		return res.status(201).json({
+			success: true,
+			code: 201,
+			product
+		})
+	} catch (error) {
+		return next(error)
+	}
+}
+const deleteProduct = async(req, res, next) => {
+	try {
+		const { IDProduct } = req.params
+		const product = await Product.findById(IDProduct)
+		if (!product) return res.status(200).json({ success: false, code: 404, message: 'The product is not exist' })
+		await Product.findByIdAndDelete(IDProduct)
+		return res.status(200).json({ success: true, code: 200, message: 'success' })
+	} catch (error) {
+		next(error)
+	}
+}
+const getProductDetail = async(req, res, next) => {
+	try {
+		const { IDProduct } = req.params
+		const product = await Product.findById(IDProduct)
+			.populate({ path: 'bigimage', select: 'public_url' })
+			.populate({ path: 'image', select: 'public_url' });
+
+		return res.status(200).json({ success: true, code: 200, message: '', product })
+	} catch (error) {
+		return next(error)
+	}
+}
+
 module.exports = {
 	uploadImageMobile,
 	getAllProduct,
-	getAllProductByBrand,
-	getAllProductByCategory,
-	getAllProductByColor,
+	getProductDetail,
 	searchProduct,
-	updateProduct
+	updateProduct,
+	addProduct,
+	deleteProduct
 };

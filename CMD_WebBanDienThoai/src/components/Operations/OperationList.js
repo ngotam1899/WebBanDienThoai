@@ -1,5 +1,4 @@
 import React, { Component }  from 'react'
-import { get } from "lodash";
 import { connect } from "react-redux";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css

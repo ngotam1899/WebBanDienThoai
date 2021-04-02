@@ -1,5 +1,4 @@
 import React, { Component }  from 'react'
-import { get } from "lodash";
 import { connect } from "react-redux";
 import {
   CCard,

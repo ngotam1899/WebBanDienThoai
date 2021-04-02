@@ -21,7 +21,6 @@ const fields = ['name', { key: 'actions', _style: { width: '15%'} }]
 class ProductList extends Component {
   constructor(props) {
     super(props);
-    const {specifications} = props;
     this.state = {
       large: false,
     }

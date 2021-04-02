@@ -6,7 +6,6 @@ import queryString from 'query-string';
 
 // http://localhost:3000/products  METHOD = GET
 const url = '/products';
-const url_phone = '/products/phones';
 //cho params 1 default value là object
 export const getAllProducts = (params = {}) =>{
     let queryParams = '';
@@ -18,12 +17,12 @@ export const getAllProducts = (params = {}) =>{
 
 // http://localhost:3000/products/:id  METHOD = GET
 export const getDetailProduct  = (productId) =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url_phone}/${productId}`);
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${productId}`);
 }
 
 // http://localhost:3000/products  METHOD = POST
 export const addProduct = (data) =>{
-    return axiosService.post(`${API_ENDPOINT_AUTH}${url_phone}`, data);
+    return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);
 };
 
 // http://localhost:3000/products/:id  METHOD = PUT
@@ -33,7 +32,7 @@ export const updateProduct  = (data, productId) =>{
 
 // http://localhost:3000/products/:id  METHOD = DELETE
 export const deleteProduct  = (productId) =>{
-    return axiosService.delete(`${API_ENDPOINT_AUTH}${url_phone}/${productId}`);
+    return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${productId}`);
 }
 
 // http://localhost:3000/products/operations  METHOD = GET

@@ -1,4 +1,4 @@
-import { get, cloneDeep } from "lodash";
+import { get} from "lodash";
 import { OrderActionTypes } from "../actions/order";
 import { toastError, toastSuccess } from '../../utils/toastHelper';
 
@@ -7,25 +7,6 @@ const init = {
   detail: null,
   processing: false,
 };
-
-function handleUpdate({state, action}) {
-  const list = cloneDeep(state.list);
-  const detailData = get(action, "payload.data");
-  const index = list.findIndex(i => i.id === detailData.id);
-  console.log("index", index);
-  if (index !== -1) {
-    list[index] = {...list[index], ...detailData};
-  }
-  return {
-    ...state,
-    processing: false,
-    list,
-    detail: {
-      ...state.detail,
-      data: { ...state.detail.data, ...detailData },
-    },
-  };
-}
 
 export default function(state = init, action) {
   switch (action.type) {
@@ -48,7 +29,6 @@ export default function(state = init, action) {
       return {
         ...state,
          loading: false,
-        /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
       };
     case OrderActionTypes.GET_LIST_SUCCESS:
       return {
