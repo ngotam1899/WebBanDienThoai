@@ -34,10 +34,6 @@ class ProductDetail extends Component {
       brand: product ? product.brand : listBrands[0]._id,
       bigimage: product ? product.bigimage : "",
       image: product ? product.image : [],
-      specifications: product ? (product.specifications.length!=0 ? product.specifications
-        : listCategories[listCategories.findIndex(i => i._id === product.category)].specifications)
-      : listCategories[0].specifications,
-
       // @Product Image
       previewSource: "",
       selectedFile: "",
@@ -46,9 +42,46 @@ class ProductDetail extends Component {
       previewList: [],
       selectedList: [],
       fileInputList: [],
-      value : []
+      specifications : product ? this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category)])
+      : this.setValue(product, listCategories[0])
     };
 
+  }
+
+  setValue = (product, categoryDetail) => {
+    var specifications = [];
+    if(product){
+      if(product.specifications.length!=0){
+        categoryDetail.specifications.map(item =>{
+          specifications.push({
+            _id: item,
+            value: ""
+          })
+          product.specifications.map(i =>{
+            specifications.map(
+              obj => (obj._id === i._id ? Object.assign(obj, { value: i.value }) : obj)
+            )
+          })
+        })
+      }
+      else{
+        categoryDetail.specifications.map(item =>{
+          specifications.push({
+            _id: item,
+            value: ""
+          })
+        })
+      }
+    }
+    else{
+      categoryDetail.specifications.map(item =>{
+        specifications.push({
+          _id: item,
+          value: ""
+        })
+      })
+    }
+    return specifications;
   }
 
   componentWillMount() {
@@ -151,44 +184,32 @@ class ProductDetail extends Component {
   onChangeDetail = (event) =>{
     var target = event.target;
     var name = target.name;
-    var _value = target.value;
-    const {value} = this.state;
-    if(value.findIndex(obj => obj.specification === name) == -1){
-      this.setState((prevState) => ({
-        value: [...prevState.value,
-        {
-          specification:name,
-          value:_value
-        }]
-      }))
-    }
-    else{
-      this.setState((prevState) => ({
-        value: prevState.value.map(
-          obj => (obj.specification === name ? Object.assign(obj, { value: _value }) : obj)
-        )
-      }))
-    }
+    var value = target.value;
+    this.setState((prevState) => ({
+      specifications: prevState.specifications.map(
+        obj => (obj._id === name ? Object.assign(obj, { value }) : obj)
+      )
+    }))
   }
 
   componentDidUpdate(props) {
-    const {product, categoryDetail} =this.props;
+    const {product, categoryDetail, listCategories} =this.props;
     if (categoryDetail !== props.categoryDetail && categoryDetail) {
       if(categoryDetail._id == product.category){
         if(product.specifications.length>0){
           this.setState({
-            specifications: product.specifications,
+            specifications: this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category)])
           });
         }
         else{
           this.setState({
-            specifications: categoryDetail.specifications,
+            specifications: this.setValue(product, categoryDetail)
           });
         }
       }
       else{
         this.setState({
-          specifications: categoryDetail.specifications,
+          specifications: this.setValue(product, categoryDetail)
         });
       }
     }
@@ -255,8 +276,7 @@ class ProductDetail extends Component {
       bigimage,
       image,
       pathseo,
-      value,
-      specifications
+      specifications,
     } = this.state;
     if (id) {
       // eslint-disable-next-line
@@ -270,7 +290,7 @@ class ProductDetail extends Component {
         bigimage,
         image,
         pathseo,
-        specifications: value,
+        specifications,
       };
       onUpdateImage(id, data, formData);
     } else {
@@ -286,7 +306,7 @@ class ProductDetail extends Component {
         bigimage,
         pathseo,
         image,
-        specifications:value,
+        specifications,
       };
       onCreate(data, formData);
     }
@@ -549,30 +569,16 @@ class ProductDetail extends Component {
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">Chi tiết sản phẩm</div>
                 <div className="card-body text-dark">
-                  {specifications[0] && specifications[0].value
-                    ?
-                    specifications.map((item, index) => {
+                  {specifications.map((item, index) => {
                     return (
                     <div className="form-group" key={index}>
-                      <label key={index+1}>{item.name}</label>
+                      <label key={index+1}>{this.setSpecification(item._id)}</label>
                       <input
+                        key={item._id}
                         type="text"
                         className="form-control"
-                        key={index}
                         name={item._id}
                         defaultValue={item.value}
-                        onChange={this.onChangeDetail}
-                      />
-                    </div>)
-                    })
-                    : specifications.map((item, index) => {
-                    return (
-                    <div className="form-group" key={index}>
-                      <label>{this.setSpecification(item)}</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name={item}
                         onChange={this.onChangeDetail}
                       />
                     </div>)

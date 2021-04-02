@@ -287,25 +287,17 @@ const updateProduct = async (req, res, next) => {
 			product.brand = brand;
 		}
 		if (specifications) {
+			var specificationArray=[];
 			for (let item of specifications) {
 				let specificationFound = await Specification.findById(item._id);
 				if (specificationFound) {
 					let _id = specificationFound._id;
 					let name = specificationFound.name;
 					let value = item.value;
-					/* var specificationArray=[];
 					specificationArray.push({ _id, name, value })
-					product.specifications = specificationArray; */
-					for(let obj of product.specifications){
-						if(obj._id.toString()==_id.toString()){
-							obj.value = value
-						}
-						else{
-							await product.specifications.push({ _id, name, value });
-						}
-					}
 				}
 			}
+			product.specifications = specificationArray;
 		}
 		if (colors) {
 			for (let item of colors) {
@@ -316,20 +308,7 @@ const updateProduct = async (req, res, next) => {
 					let name_vn = colorFound.name_vn;
 					let amount = item.amount;
 					let price = item.price;
-					if (item.image) {
-						await cloudinary.v2.uploader.upload(item.image.tempFilePath, { folder: 'Asset' }, function(
-							err,
-							result
-						) {
-							if (err) next(err);
-							const imageMain = new Image_Pro();
-							imageMain.id_cloud = result.asset_id;
-							imageMain.name = image.name;
-							imageMain.public_url = result.url;
-							imageMain.save();
-							image = imageMain.public_url;
-						});
-					}
+					let image = item.image;
 					await product.colors.push({ _id, name_en, name_vn, amount, price, image });
 				}
 			}
