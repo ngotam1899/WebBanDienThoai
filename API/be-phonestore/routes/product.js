@@ -11,10 +11,8 @@ const colorController = require('../controllers/color');
 const cpuController = require('../controllers/cpu');
 const widescreenController = require('../controllers/widescreen');
 const operationController = require('../controllers/operation');
-const mobileController = require('../controllers/phone');
 const productController = require('../controllers/product');
 const imageController = require('../controllers/image');
-const earphoneController = require('../controllers/earphone');
 
 const passport = require('passport');
 require('../middlewares/passport');
