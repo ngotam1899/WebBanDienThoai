@@ -48,7 +48,7 @@ function* handleCreate( {payload} ) {
         "bigimage":bigimage.data.images[0]._id,
         "image": imageArray
       });
-      if (result.data.code !== 200) throw result.data;
+      if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     // 2. TH2: Nếu bigimge mới
@@ -59,7 +59,7 @@ function* handleCreate( {payload} ) {
       { name, price, amount, pathseo, warrently, category, brand,specifications,
         "bigimage":bigimage.data.images[0]._id
       });
-      if (result.data.code !== 200) throw result.data;
+      if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     // 3. TH3: Nếu image mới
@@ -72,12 +72,12 @@ function* handleCreate( {payload} ) {
       { name, price, amount, pathseo, warrently, category, brand,specifications,
         "image": imageArray
       });
-      if (result.data.code !== 200) throw result.data;
+      if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     else{
       result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications });
-      if (result.data.code !== 200) throw result.data;
+      if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     yield put(ProductsActions.onGetList());
