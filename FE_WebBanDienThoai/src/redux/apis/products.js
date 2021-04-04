@@ -5,7 +5,7 @@ import {API_ENDPOINT_AUTH} from '../../constants/index';
 import queryString from 'query-string';
 
 // http://localhost:3000/products  METHOD = GET
-const url = '/products/phones';
+const url = '/products';
 //cho params 1 default value là object
 export const getAllProducts = (params = {}) =>{
     let queryParams = '';

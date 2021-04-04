@@ -16,7 +16,7 @@ import ColorDetail from './ColorDetail'
 // @Actions
 import ColorActions from "../../redux/actions/color";
 
-const fields = ['name', 'color',{ key: 'actions', _style: { width: '30%'} }]
+const fields = ['name_vn', 'name_en', 'color',{ key: 'actions', _style: { width: '30%'} }]
 
 class ColorList extends Component {
   constructor(props) {
@@ -107,13 +107,15 @@ class ColorList extends Component {
                   itemsPerPage={10}
                   pagination
                   scopedSlots = {{
-                    'name': (item) => (
-                      <td>{item.color}</td>
+                    'name_vn': (item) => (
+                      <td>{item.name_vn}</td>
+                    ),
+                    'name_en': (item) => (
+                      <td>{item.name_en}</td>
                     ),
                     'color': (item) => (
-                      <td><CCol xl="2" md="4" sm="6" xs="12" className="mb-4">
-                      <div style={{paddingTop: '75%', backgroundColor: item.code_color}}></div>
-                    </CCol></td>
+                      <td><CRow><CCol xl="2" md="4" sm="6" xs="12" className="mb-4" style={{paddingTop: '0',height:'25px', backgroundColor: item.code}}>
+                    </CCol></CRow></td>
                     ),
                     'actions':
                     (item)=>(

@@ -139,7 +139,6 @@ class DetailPage extends Component {
                       <div className="product-inner-category">
                         <p className="mt-1 mb-0">{t('detail.category.label')}: <a href="">{this.setCategory(product.category)}</a></p>
                         <p className="mt-1 mb-0">{t('detail.brand.label')}: <a href="">{this.setBrand(product.brand)}</a></p>
-                        <p className="mt-1">{t('detail.color.label')}: <a href="">{this.setColor(product.detail_info.mobile.color)}</a></p>
                       </div>
 
                       <ul className="nav nav-tabs">
@@ -160,66 +159,14 @@ class DetailPage extends Component {
                           <table className="table table-inverse table-responsive">
                             <thead className="thead-inverse">
                               <tbody>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.display')}</td>
-                                  <td>{product.detail_info.mobile.display}</td>
+                              {product && product.specifications.map((item,index)=>{
+                                return (
+                                <tr key="index">
+                                  <td scope="row">{item.name}</td>
+                                  <td>{item.value}</td>
                                 </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.widescreen')}</td>
-                                  <td>{product.detail_info.mobile.widescreen}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.operation')}</td>
-                                  <td>{listOperations && this.setOperation(product.detail_info.mobile.operation)}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.camera1')}</td>
-                                  <td>{product.detail_info.mobile.camera1}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.camera2')}</td>
-                                  <td>{product.detail_info.mobile.camera2}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.cpu')}</td>
-                                  <td>{product.detail_info.mobile.cpu}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.ram')}</td>
-                                  <td>{product.detail_info.mobile.ram} GB</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.memory')}</td>
-                                  <td>{product.detail_info.mobile.memory} GB</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.microcard')}</td>
-                                  <td>{product.detail_info.mobile.microcard}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.sim')}</td>
-                                  <td>{product.detail_info.mobile.sim}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.network')}</td>
-                                  <td>{product.detail_info.mobile.network}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.pin')}</td>
-                                  <td>{product.detail_info.mobile.pin}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.quickcharging')}</td>
-                                  <td>{product.detail_info.mobile.quickcharging}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.weight')}</td>
-                                  <td>{product.detail_info.mobile.weight}</td>
-                                </tr>
-                                <tr>
-                                  <td scope="row">{t('detail.mobile.thick')}</td>
-                                  <td>{product.detail_info.mobile.thick}</td>
-                                </tr>
+                                )
+                              })}
                               </tbody>
                             </thead>
                           </table>

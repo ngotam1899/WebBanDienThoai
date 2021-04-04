@@ -11,8 +11,9 @@ class ColorDetail extends Component {
     const {color} = props;
     this.state = {
       id: color ? color._id : '',
-      name: color ? color.color : '',
-      code_color: color ? color.code_color : '#fff',
+      name_vn: color ? color.name_vn : '',
+      name_en: color ? color.name_en : '',
+      code: color ? color.code : '#fff',
     }
   }
   onChange = (event) =>{
@@ -20,14 +21,15 @@ class ColorDetail extends Component {
     var name=target.name;
     var value=target.value;
     this.setState({
-        [name]:  value
+        [name]: value
     })
   }
 
   onSubmit = () =>{
-    const {id, name, code_color} = this.state;
+    const {id, name_vn, name_en, code} = this.state;
     const {onUpdate, onCreate} = this.props;
-    var data = {color: name, code_color}
+    var data = {name_vn, name_en, code}
+    //console.log("data: ", data)
     if (id) {
       onUpdate(id, data);
     }
@@ -38,11 +40,11 @@ class ColorDetail extends Component {
   }
 
   handleChangeComplete = (color) => {
-    this.setState({ code_color: color.hex });
+    this.setState({ code: color.hex });
   };
 
 	render() {
-    const {name, code_color} = this.state;
+    const {name_vn, name_en , code} = this.state;
     const { large, onClose, color} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -55,12 +57,16 @@ class ColorDetail extends Component {
 							<form>
 								<div className="form-group">
 									<label>Tên màu:</label>
-                  <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
+                  <input type="text" className="form-control" name="name_vn" value={name_vn} onChange={this.onChange}/>
+								</div>
+                <div className="form-group">
+									<label>Tên tiếng anh:</label>
+                  <input type="text" className="form-control" name="name_en" value={name_en} onChange={this.onChange}/>
 								</div>
                 <div className="form-group">
                   <label>Chọn màu:</label>
                   <SketchPicker
-                    color={ code_color }
+                    color={ code }
                     onChangeComplete={ this.handleChangeComplete }
                   />
                 </div>
