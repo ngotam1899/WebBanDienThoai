@@ -117,18 +117,10 @@ const updateProduct = async (req, res, next) => {
 		if (!product)
 			return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' });
 
-		if (name) {
-			const productFound = await Product.findOne({ name })
-			if(productFound) return res.status(200).json({ success: false, code: 404, message: 'Product had stored' });
-			else product.name = name;
-		}
+		if (name) product.name = name;
 		if (price) product.price = price;
 		if (amount) product.amount = amount;
-		if (pathseo) {
-			const productFound = await Product.findOne({ pathseo })
-			if(productFound) return res.status(200).json({ success: false, code: 404, message: 'Product had stored' });
-			else product.pathseo = pathseo;
-		}
+		if (pathseo) product.pathseo = pathseo;
 		if (warrently) product.warrently = warrently;
 		if (bigimage) product.bigimage = bigimage;
 		if (discount) product.discount = discount;

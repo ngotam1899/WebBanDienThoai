@@ -377,6 +377,7 @@ class ProductDetail extends Component {
                     className="form-control"
                     name="name"
                     value={name}
+                    disabled={product ? true : false}
                     onChange={this.onChange}
                   />
                 </div>
@@ -397,6 +398,7 @@ class ProductDetail extends Component {
                       type="text"
                       className="form-control"
                       name="pathseo"
+                      disabled={product ? true : false}
                       value={pathseo ? pathseo : changeToSlug(name)}
                       onChange={this.onChange}
                     />
@@ -406,6 +408,7 @@ class ProductDetail extends Component {
                       className="form-control"
                       name="pathseo"
                       value={pathseo}
+                      disabled={product ? true : false}
                       onChange={this.onChange}
                     />
                   )}
