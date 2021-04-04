@@ -9,7 +9,6 @@ const passport = require('passport')
 
 const routerUser = require('./routes/user')
 const routerReview = require('./routes/review')
-const routerShop = require('./routes/shop')
 const routerProduct = require('./routes/product')
 const routerOrder = require('./routes/order')
 
@@ -71,7 +70,6 @@ app.use(bodyParser.json())
 //Routes
 app.use('/users', routerUser)
 app.use('/reviews', routerReview)
-app.use('/shop-info', routerShop)
 app.use('/products', routerProduct)
 app.use('/orders', routerOrder)
 

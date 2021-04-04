@@ -28,10 +28,6 @@ const updateCategory = async(req, res, next) => {
         category.specifications = specifications
     }
     await category.save();
-    /* const result = await Category.findByIdAndUpdate(IDCategory, category)
-    if (!result) {
-        return res.status(200).json({ success: false, code: 400, message: 'id category is not correctly' })
-    } */
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
 const deleteCategory = async(req, res, next) => {

@@ -17,17 +17,12 @@ const addColor = async(req, res, next) => {
     return res.status(200).json({ success: true, code: 201, message: '', color: newColor })
 }
 const updateColor = async(req, res, next) => {
-
     const { IDColor } = req.params
-
     const color = req.body
-
     const result = await Color.findByIdAndUpdate(IDColor, color)
-
     if (!result) {
         return res.status(200).json({ success: false, code: 400, message: 'id color is not correctly' })
     }
-
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
 const deleteColor = async(req, res, next) => {

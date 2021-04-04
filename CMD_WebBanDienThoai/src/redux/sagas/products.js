@@ -48,6 +48,7 @@ function* handleCreate( {payload} ) {
         "bigimage":bigimage.data.images[0]._id,
         "image": imageArray
       });
+      if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     // 2. TH2: Nếu bigimge mới
@@ -55,9 +56,10 @@ function* handleCreate( {payload} ) {
       bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
       console.log(bigimage)
       result = yield call(addProduct,
-        { name, price, amount, pathseo, warrently, category, brand,specifications,
-          "bigimage":bigimage.data.images[0]._id
-        });
+      { name, price, amount, pathseo, warrently, category, brand,specifications,
+        "bigimage":bigimage.data.images[0]._id
+      });
+      if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     // 3. TH3: Nếu image mới
@@ -70,10 +72,12 @@ function* handleCreate( {payload} ) {
       { name, price, amount, pathseo, warrently, category, brand,specifications,
         "image": imageArray
       });
+      if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     else{
       result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications });
+      if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     yield put(ProductsActions.onGetList());
@@ -101,15 +105,17 @@ function* handleUpdateImage( {payload} ) {
         "bigimage":bigimage.data.images[0]._id,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
+      if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     // 2. TH2: Nếu bigimge mới
     else if(payload.params.bigimage._id === undefined){
       var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
       var result = yield call(updateProduct,
-        { name, price, amount, pathseo, warrently, category, brand,specifications,
-          "bigimage":bigimage.data.images[0]._id
-        }, payload.id);
+      { name, price, amount, pathseo, warrently, category, brand,specifications,
+        "bigimage":bigimage.data.images[0]._id
+      }, payload.id);
+      if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     // 3. TH3: Nếu image mới
@@ -122,6 +128,7 @@ function* handleUpdateImage( {payload} ) {
       { name, price, amount, pathseo, warrently, category, brand,specifications,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
+      if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     else{
@@ -129,6 +136,7 @@ function* handleUpdateImage( {payload} ) {
       { name, price, amount, pathseo, warrently, category, brand,specifications,
         "image": payload.params.image
       }, payload.id);
+      if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     yield put(ProductsActions.onGetList());

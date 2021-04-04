@@ -3,16 +3,16 @@ const Schema = mongoose.Schema
 
 const CategorySchema = new Schema({
     name: {
-        type: String
+        type: String,
+        unique:true
     },
     name_en: {
-        type: String
+        type: String,
+        unique:true
     },
     pathseo: {
-        type: String
-    },
-    pathseo_en: {
-        type: String
+        type: String,
+        unique: true
     },
     specifications: [{
         type: Schema.Types.ObjectId,

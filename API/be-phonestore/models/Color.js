@@ -3,10 +3,12 @@ const Schema = mongoose.Schema
 
 const ColorSchema = new Schema({
     name_vn: {
-        type: String
+        type: String,
+        unique: true
     },
     name_en: {
-        type: String
+        type: String,
+        unique: true
     },
     code: {
         type: String

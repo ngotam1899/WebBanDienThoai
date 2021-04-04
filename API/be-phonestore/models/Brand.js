@@ -3,7 +3,8 @@ const Schema = mongoose.Schema
 
 const BrandSchema = new Schema({
     name: {
-        type: String
+        type: String,
+        unique: true
     },
     image: {
         type: Schema.Types.ObjectId,

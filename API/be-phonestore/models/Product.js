@@ -3,7 +3,8 @@ const Schema = mongoose.Schema
 
 const ProductSchema = new Schema({
     name: {
-        type: String
+        type: String,
+        unique: true
     },
     price_max: {
         type: Number
@@ -18,7 +19,8 @@ const ProductSchema = new Schema({
         type: Number
     },
     pathseo: {
-        type: String
+        type: String,
+        unique: true
     },
     warrently: {   
         type: Number
@@ -38,16 +40,6 @@ const ProductSchema = new Schema({
     brand: {        
         type: Schema.Types.ObjectId,
         ref: "Brand"
-    },
-    detail_info: {  
-        mobile: {
-            type: Schema.Types.ObjectId,
-            ref: "Mobile"
-        },
-        earphone: {
-            type: Schema.Types.ObjectId,
-            ref: "EarPhone"
-        }
     },
     specifications: [{
         _id: {

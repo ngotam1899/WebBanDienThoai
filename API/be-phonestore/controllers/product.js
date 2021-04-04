@@ -6,7 +6,6 @@ const Specification = require('../models/specification');
 const Brand = require('../models/Brand');
 const Category = require('../models/Category');
 const Color = require('../models/Color');
-const createError = require('http-errors');
 const Product = require('../models/Product');
 /* const slp = require('sleep') */
 
@@ -15,33 +14,33 @@ const uploadImageMobile = async (req, res, next) => {
 		const { IDProduct } = req.params;
 
 		const product = await Product.findById(IDProduct);
-		if (!product) return res.status(404).json({ message: 'Can not match any product' });
+		if (!product) return res.status(200).json({ message: 'Can not match any product' });
 		if (!req.files || Object.keys(req.files).length === 0)
-			return res.status(400).json({ message: 'No file were uploaded' });
+			return res.status(200).json({ message: 'No file were uploaded' });
 		const bigImage = req.files.bigImage;
-		if (bigImage.size > 1024 * 1024) return res.status(400).json({ message: 'Size too large' });
+		if (bigImage.size > 1024 * 1024) return res.status(200).json({ message: 'Size too large' });
 		if (
 			bigImage.mimetype !== 'image/png' &&
 			bigImage.mimetype !== 'image/jpeg' &&
 			bigImage.mimetype !== 'image/jpg'
 		)
-			return res.status(400).json({ message: 'The format file is incorrect' });
+			return res.status(200).json({ message: 'The format file is incorrect' });
 
 		const image1 = req.files.image1;
 		const image2 = req.files.image2;
 		const image3 = req.files.image3;
 
-		if (image1.size > 1024 * 1024) return res.status(400).json({ message: 'Size too large' });
+		if (image1.size > 1024 * 1024) return res.status(200).json({ message: 'Size too large' });
 		if (image1.mimetype !== 'image/png' && image1.mimetype !== 'image/jpeg' && image1.mimetype !== 'image/jpg')
-			return res.status(400).json({ message: 'The format file is incorrect' });
+			return res.status(200).json({ message: 'The format file is incorrect' });
 
-		if (image2.size > 1024 * 1024) return res.status(400).json({ message: 'Size too large' });
+		if (image2.size > 1024 * 1024) return res.status(200).json({ message: 'Size too large' });
 		if (image2.mimetype !== 'image/png' && image2.mimetype !== 'image/jpeg' && image2.mimetype !== 'image/jpg')
-			return res.status(400).json({ message: 'The format file is incorrect' });
+			return res.status(200).json({ message: 'The format file is incorrect' });
 
-		if (image3.size > 1024 * 1024) return res.status(400).json({ message: 'Size too large' });
+		if (image3.size > 1024 * 1024) return res.status(200).json({ message: 'Size too large' });
 		if (image3.mimetype !== 'image/png' && image3.mimetype !== 'image/jpeg' && image3.mimetype !== 'image/jpg')
-			return res.status(400).json({ message: 'The format file is incorrect' });
+			return res.status(200).json({ message: 'The format file is incorrect' });
 
 		await cloudinary.v2.uploader.upload(bigImage.tempFilePath, { folder: 'Asset' }, function(err, result) {
 			if (err) next(err);
@@ -91,7 +90,6 @@ const uploadImageMobile = async (req, res, next) => {
 
 const getAllProduct = async (req, res, next) => {
 	try {
-		//let regex = /^[a-zA-Z0-9& ]*$/;
 		let condition = {};
 		if (req.query.keyword != undefined && req.query.keyword != '') {
 			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
@@ -108,17 +106,6 @@ const getAllProduct = async (req, res, next) => {
 			}
 		}
 		if (req.query.color != undefined && req.query.color != '') {
-			if (Validator.isValidObjId(req.query.color)) {
-				const mobile = await Mobile.find({ color: req.query.color });
-
-				const listID = [];
-
-				mobile.forEach(async (element) => {
-					listID.push(element._id);
-				});
-
-				condition['detail_info.mobile'] = listID;
-			}
 		}
 		let limit = 5;
 		let page = 0;
@@ -147,21 +134,16 @@ const getAllProduct = async (req, res, next) => {
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
 		}
-		//  condition["$orderby"] = sort;
-		//  console.log(condition)
 		let products;
 		if (req.query.color != undefined && req.query.color != '') {
 			products = await Product.find(condition)
 				.populate({ path: 'bigimage', select: 'public_url' })
-				.populate({ path: 'image', select: 'public_url' })
-				.populate('detail_info.mobile')
 				.sort(sort)
 				.limit(limit)
 				.skip(limit * page);
 		} else {
 			products = await Product.find(condition)
 				.populate({ path: 'bigimage', select: 'public_url' })
-				.populate({ path: 'image', select: 'public_url' })
 				.sort(sort)
 				.limit(limit)
 				.skip(limit * page);
@@ -215,10 +197,18 @@ const updateProduct = async (req, res, next) => {
 		if (!product)
 			return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' });
 
-		if (name) product.name = name;
+		if (name) {
+			const productFound = await Product.findOne({ name })
+			if(productFound) return res.status(200).json({ success: false, code: 404, message: 'Product had stored' });
+			else product.name = name;
+		}
 		if (price) product.price = price;
 		if (amount) product.amount = amount;
-		if (pathseo) product.pathseo = pathseo;
+		if (pathseo) {
+			const productFound = await Product.findOne({ pathseo })
+			if(productFound) return res.status(200).json({ success: false, code: 404, message: 'Product had stored' });
+			else product.pathseo = pathseo;
+		}
 		if (warrently) product.warrently = warrently;
 		if (bigimage) product.bigimage = bigimage;
 		if (discount) product.discount = discount;
@@ -262,6 +252,12 @@ const updateProduct = async (req, res, next) => {
 					colorArray.push({ _id, name_en, name_vn, amount, price, image });
 				}
 			}
+			let priceArray =[];
+			colorArray.map(item =>{
+				priceArray.push(item.price)
+			})
+			product.price_max = Math.max(...priceArray)
+			product.price_min = Math.min(...priceArray)
 			product.colors = colorArray;
 		}
 		await product.save();
@@ -277,10 +273,18 @@ const addProduct = async(req, res, next) => {
 			colors,
 			discount } = req.body
 		const product = new Product();
-		if (name) product.name = name;
+		if (name) {
+			const productFound = await Product.findOne({ name })
+			if(productFound) return res.status(200).json({ success: false, code: 404, message: 'Product had stored' });
+			else product.name = name;
+		}
 		if (price) product.price = price;
 		if (amount) product.amount = amount;
-		if (pathseo) product.pathseo = pathseo;
+		if (pathseo) {
+			const productFound = await Product.findOne({ pathseo })
+			if(productFound) return res.status(200).json({ success: false, code: 404, message: 'Product had stored' });
+			else product.pathseo = pathseo;
+		}
 		if (warrently) product.warrently = warrently;
 		if (bigimage) product.bigimage = bigimage;
 		if (discount) product.discount = discount;
@@ -322,6 +326,12 @@ const addProduct = async(req, res, next) => {
 					colorArray.push({ _id, name_en, name_vn, amount, price, image });
 				}
 			}
+			let priceArray =[];
+			colorArray.map(item =>{
+				priceArray.push(item.price)
+			})
+			product.price_max = Math.max(...priceArray)
+			product.price_min = Math.min(...priceArray)
 			product.colors = colorArray;
 		}
 		await product.save()
@@ -349,6 +359,8 @@ const getProductDetail = async(req, res, next) => {
 	try {
 		const { IDProduct } = req.params
 		const product = await Product.findById(IDProduct)
+			.populate({ path: 'category', select: 'name' })
+			.populate({ path: 'brand', select: 'name' })
 			.populate({ path: 'bigimage', select: 'public_url' })
 			.populate({ path: 'image', select: 'public_url' });
 

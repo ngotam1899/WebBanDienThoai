@@ -30,8 +30,8 @@ class ProductDetail extends Component {
       pathseo: product ? product.pathseo : "",
       amount: product ? product.amount : "",
       warrently: product ? product.warrently : "",
-      category: product ? product.category : listCategories[0]._id,
-      brand: product ? product.brand : listBrands[0]._id,
+      category: product ? product.category._id : listCategories[0]._id,
+      brand: product ? product.brand._id : listBrands[0]._id,
       bigimage: product ? product.bigimage : "",
       image: product ? product.image : [],
       // @Product Image
@@ -42,7 +42,7 @@ class ProductDetail extends Component {
       previewList: [],
       selectedList: [],
       fileInputList: [],
-      specifications : product ? this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category)])
+      specifications : product ? this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category._id)])
       : this.setValue(product, listCategories[0])
     };
 
@@ -50,7 +50,7 @@ class ProductDetail extends Component {
 
   setValue = (product, categoryDetail) => {
     var specifications = [];
-    if(product){
+    if(product){  //Trường hợp sửa
       if(product.specifications.length!==0){
         categoryDetail.specifications.map(item =>{
           specifications.push({
@@ -64,7 +64,7 @@ class ProductDetail extends Component {
           })
         })
       }
-      else{
+      else{ //mảng specification=[]
         categoryDetail.specifications.map(item =>{
           specifications.push({
             _id: item,
@@ -73,13 +73,31 @@ class ProductDetail extends Component {
         })
       }
     }
-    else{
+    else{ //Trường hợp thêm
       categoryDetail.specifications.map(item =>{
         specifications.push({
           _id: item,
           value: ""
         })
       })
+      /*
+      specifications = ["gsdvfjhsdsfd","153dsfsdfds","153dsfsdfds"]
+      ->
+      specifications = [
+        {
+          _id: "gsdvfjhsdsfd",
+          value: ""
+        },
+        {
+          _id: "153dsfsdfds",
+          value: ""
+        },
+        {
+          _id: "153dsfsdfds",
+          value: ""
+        },
+      ]
+      */
     }
     return specifications;
   }
@@ -195,10 +213,10 @@ class ProductDetail extends Component {
   componentDidUpdate(props) {
     const {product, categoryDetail, listCategories} =this.props;
     if (categoryDetail !== props.categoryDetail && categoryDetail) {
-      if(categoryDetail._id === product.category){
+      if(product && categoryDetail._id === product.category._id){
         if(product.specifications.length>0){
           this.setState({
-            specifications: this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category)])
+            specifications: this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category._id)])
           });
         }
         else{
@@ -490,7 +508,7 @@ class ProductDetail extends Component {
                         id="fileInput"
                         value={fileInputState}
                         onChange={this.handleFileInputChange}
-                        style={{ width: "100%" }}
+                        style={{ width: "100%", height: "100%" }}
                       />
                     </div>
                   </div>

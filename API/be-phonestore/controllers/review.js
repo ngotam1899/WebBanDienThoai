@@ -1,5 +1,4 @@
 const Review = require('../models/Review')
-const Shop = require('../models/Shop')
 
 const createError = require('http-errors')
 const User = require('../models/User')
