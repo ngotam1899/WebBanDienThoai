@@ -160,8 +160,14 @@ const updateProduct = async (req, res, next) => {
 					let name_vn = colorFound.name_vn;
 					let amount = item.amount;
 					let price = item.price;
-					let image = item.image;
-					colorArray.push({ _id, name_en, name_vn, amount, price, image });
+					let imageFound = await Image_Pro.findById(item.image);
+					if(image){
+						let image = imageFound.public_url;
+						colorArray.push({ _id, name_en, name_vn, amount, price, image });
+					}
+					else{
+						colorArray.push({ _id, name_en, name_vn, amount, price });
+					}
 				}
 			}
 			let priceArray =[];

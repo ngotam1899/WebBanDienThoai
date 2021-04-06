@@ -3,6 +3,7 @@ import "./product.css";
 import { connect } from "react-redux";
 // @Functions
 import changeToSlug from "../../utils/ChangeToSlug";
+import { toastError } from "../../utils/toastHelper";
 // @ComponentS
 import {
   CButton,
@@ -26,14 +27,26 @@ class ProductDetail extends Component {
       // @Product Info
       id: product ? product._id : "",
       name: product ? product.name : "",
-      price: product ? product.price : "",
       pathseo: product ? product.pathseo : "",
-      amount: product ? product.amount : "",
       warrently: product ? product.warrently : "",
       category: product ? product.category._id : listCategories[0]._id,
       brand: product ? product.brand._id : listBrands[0]._id,
       bigimage: product ? product.bigimage : "",
       image: product ? product.image : [],
+      // @Product Color
+      colorList: product ? product.colors : [],
+      nameColor: "",
+      amountColor: 0,
+      priceColor: 0,
+      colorEditing: "none",
+      btnStatus: "Thêm màu",
+      onEditing: false,
+      indexColor: -1,
+      imageColor:
+        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+      previewColorImage: "",
+      selectedColor: "",
+      colorInputState: "",
       // @Product Image
       previewSource: "",
       selectedFile: "",
@@ -42,44 +55,51 @@ class ProductDetail extends Component {
       previewList: [],
       selectedList: [],
       fileInputList: [],
-      specifications : product ? this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category._id)])
-      : this.setValue(product, listCategories[0])
+      // @Product Specifition
+      specifications: product
+        ? this.setValue(
+            product,
+            listCategories[
+              listCategories.findIndex((i) => i._id === product.category._id)
+            ]
+          )
+        : this.setValue(product, listCategories[0]),
     };
-
   }
 
   setValue = (product, categoryDetail) => {
     var specifications = [];
-    if(product){  //Trường hợp sửa
-      if(product.specifications.length!==0){
-        categoryDetail.specifications.map(item =>{
+    if (product) {
+      //Trường hợp sửa
+      if (product.specifications.length !== 0) {
+        categoryDetail.specifications.map((item) => {
           specifications.push({
             _id: item,
-            value: ""
-          })
-          product.specifications.map(i =>{
-            specifications.map(
-              obj => (obj._id === i._id ? Object.assign(obj, { value: i.value }) : obj)
-            )
-          })
-        })
-      }
-      else{ //mảng specification=[]
-        categoryDetail.specifications.map(item =>{
+            value: "",
+          });
+          product.specifications.map((i) => {
+            specifications.map((obj) =>
+              obj._id === i._id ? Object.assign(obj, { value: i.value }) : obj
+            );
+          });
+        });
+      } else {
+        //mảng specification=[]
+        categoryDetail.specifications.map((item) => {
           specifications.push({
             _id: item,
-            value: ""
-          })
-        })
+            value: "",
+          });
+        });
       }
-    }
-    else{ //Trường hợp thêm
-      categoryDetail.specifications.map(item =>{
+    } else {
+      //Trường hợp thêm
+      categoryDetail.specifications.map((item) => {
         specifications.push({
           _id: item,
-          value: ""
-        })
-      })
+          value: "",
+        });
+      });
       /*
       specifications = ["gsdvfjhsdsfd","153dsfsdfds","153dsfsdfds"]
       ->
@@ -100,7 +120,7 @@ class ProductDetail extends Component {
       */
     }
     return specifications;
-  }
+  };
 
   componentWillMount() {
     const { onGetListOperation, onGetListColor } = this.props;
@@ -150,7 +170,15 @@ class ProductDetail extends Component {
       fileInputState: e.target.value,
     });
   };
-
+  handleColorInputChange = (e) => {
+    const file = e.target.files[0];
+    // 1. Hiển thị ảnh vừa thêm
+    this.previewColor(file);
+    this.setState({
+      selectedColor: file,
+      colorInputState: e.target.value,
+    });
+  };
   handleListInputChange = (e) => {
     const file = e.target.files[0];
     const { selectedList, fileInputList } = this.state;
@@ -174,7 +202,16 @@ class ProductDetail extends Component {
       });
     };
   };
-
+  //
+  previewColor = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      this.setState({
+        previewColorImage: reader.result,
+      });
+    };
+  };
   // Hàm xử lý file - set hiển thị ảnh mới thêm vào state previewSource
   previewList = (file) => {
     const reader = new FileReader();
@@ -199,35 +236,127 @@ class ProductDetail extends Component {
     onGetDetailCategories(id);
   };
 
-  onChangeDetail = (event) =>{
+  onChangeDetail = (event) => {
     var target = event.target;
     var name = target.name;
     var value = target.value;
     this.setState((prevState) => ({
-      specifications: prevState.specifications.map(
-        obj => (obj._id === name ? Object.assign(obj, { value }) : obj)
-      )
-    }))
+      specifications: prevState.specifications.map((obj) =>
+        obj._id === name ? Object.assign(obj, { value }) : obj
+      ),
+    }));
+  };
+
+  onAddColor = (value) => {
+    if (value === "none") {
+      this.setState({
+        colorEditing: "inherit",
+        btnStatus: "Hủy",
+        onEditing: false,
+      });
+    } else {
+      this.setState({
+        colorEditing: "none",
+        btnStatus: "Thêm màu",
+        nameColor: "",
+        amountColor: 0,
+        priceColor: 0,
+        onEditing: false,
+        imageColor:
+          "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+      });
+    }
+  };
+
+  onEditColor = (item) => {
+    const { colorList } = this.state;
+    this.setState({
+      nameColor: item._id,
+      amountColor: item.amount,
+      priceColor: item.price,
+      colorEditing: "inherit",
+      imageColor: item.image,
+      btnStatus: "Hủy",
+      onEditing: true,
+      indexColor: colorList.indexOf(item),
+    });
+  };
+
+  onDeleteColor = (item) => {
+    const { colorList } = this.state;
+    colorList.splice(colorList.indexOf(item), 1);
+    this.setState({
+      colorList,
+    });
+  };
+
+  onSaveColor() {
+    const {nameColor,
+      priceColor,
+      amountColor,
+      onEditing,
+      indexColor,
+      colorList
+    } = this.state;
+    const { listColor } = this.props;
+    if(!nameColor){
+      toastError("Chọn màu trước khi lưu");
+    }
+    else{
+      if (onEditing === false) {
+        // TH thêm màu
+        if (colorList.find((obj) => obj._id === nameColor)) {
+          toastError("Màu này đã tồn tại");
+        } else {
+          colorList.push({
+            _id: nameColor,
+            name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
+            amount: amountColor,
+            price: priceColor,
+          });
+        }
+      } else {
+        // TH sửa màu
+        for (let i = 0; i < colorList.length; i++) {
+          colorList[indexColor] = {
+            _id: nameColor,
+            name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
+            amount: amountColor,
+            price: priceColor,
+          };
+        }
+      }
+    }
+    this.setState({
+      colorList,
+    });
+    console.log("colorList", colorList);
   }
 
   componentDidUpdate(props) {
-    const {product, categoryDetail, listCategories} =this.props;
+    const { product, categoryDetail, listCategories } = this.props;
     if (categoryDetail !== props.categoryDetail && categoryDetail) {
-      if(product && categoryDetail._id === product.category._id){
-        if(product.specifications.length>0){
+      // categoryDetail thay doi
+      if (product && categoryDetail._id === product.category._id) {
+        // truong hop sua
+        if (product.specifications.length > 0) {
           this.setState({
-            specifications: this.setValue(product, listCategories[listCategories.findIndex(i => i._id === product.category._id)])
+            specifications: this.setValue(
+              product,
+              listCategories[
+                listCategories.findIndex((i) => i._id === product.category._id)
+              ]
+            ),
+          });
+        } else {
+          this.setState({
+            specifications: this.setValue(product, categoryDetail),
           });
         }
-        else{
-          this.setState({
-            specifications: this.setValue(product, categoryDetail)
-          });
-        }
-      }
-      else{
+      } else {
+        // truong hop them moi
         this.setState({
-          specifications: this.setValue(product, categoryDetail)
+          specifications: this.setValue(product, categoryDetail),
         });
       }
     }
@@ -295,6 +424,7 @@ class ProductDetail extends Component {
       image,
       pathseo,
       specifications,
+      colorList
     } = this.state;
     if (id) {
       // eslint-disable-next-line
@@ -309,6 +439,7 @@ class ProductDetail extends Component {
         image,
         pathseo,
         specifications,
+        colors: colorList
       };
       onUpdateImage(id, data, formData);
     } else {
@@ -325,22 +456,23 @@ class ProductDetail extends Component {
         pathseo,
         image,
         specifications,
+        colors: colorList
       };
       onCreate(data, formData);
     }
   };
 
-  setSpecification = (specification) =>{
-    const {listSpecification} = this.props;
-    const specificationName = listSpecification.find(obj => obj._id === specification);
+  setSpecification = (specification) => {
+    const { listSpecification } = this.props;
+    const specificationName = listSpecification.find(
+      (obj) => obj._id === specification
+    );
     return specificationName.name;
-  }
+  };
 
   render() {
     const {
       name,
-      price,
-      amount,
       pathseo,
       warrently,
       category,
@@ -351,12 +483,21 @@ class ProductDetail extends Component {
       fileInputState,
       previewList,
       specifications,
+      colorList,
+      nameColor,
+      priceColor,
+      amountColor,
+      colorEditing,
+      btnStatus,
+      imageColor,
+      previewColorImage,
     } = this.state;
     const {
       large,
       onClose,
       listCategories,
       listBrands,
+      listColor,
       product,
     } = this.props;
     return (
@@ -382,16 +523,6 @@ class ProductDetail extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Giá bán lẻ (VND):</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="price"
-                    value={price}
-                    onChange={this.onChange}
-                  />
-                </div>
-                <div className="form-group">
                   <label>Slug:</label>
                   {name ? (
                     <input
@@ -412,16 +543,6 @@ class ProductDetail extends Component {
                       onChange={this.onChange}
                     />
                   )}
-                </div>
-                <div className="form-group">
-                  <label>Số lượng (chiếc):</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="amount"
-                    value={amount}
-                    onChange={this.onChange}
-                  />
                 </div>
                 <div className="form-group">
                   <label>Thời hạn bảo hành:</label>
@@ -587,23 +708,154 @@ class ProductDetail extends Component {
               </form>
             </div>
             <div className="col-12 col-lg-6">
-              <div className="card text-white mb-3">
-                <div className="card-header bg-primary">Chi tiết sản phẩm</div>
-                <div className="card-body text-dark">
-                  {specifications.map((item, index) => {
-                    return (
-                    <div className="form-group" key={index}>
-                      <label key={index+1}>{this.setSpecification(item._id)}</label>
-                      <input
-                        key={item._id}
-                        type="text"
-                        className="form-control"
-                        name={item._id}
-                        defaultValue={item.value}
-                        onChange={this.onChangeDetail}
-                      />
-                    </div>)
-                  })}
+              <div className="card p-3">
+                <div className="mb-3">
+                  <h3 className="d-inline-block">Danh sách màu</h3>
+                  <button
+                    className="btn btn-primary float-right"
+                    type="button"
+                    onClick={() => this.onAddColor(colorEditing)}
+                  >
+                    {btnStatus}
+                  </button>
+                  <button
+                    className="btn btn-success float-right mr-2"
+                    style={{ display: colorEditing }}
+                    onClick={() => this.onSaveColor()}
+                    type="button"
+                  >
+                    Lưu
+                  </button>
+                </div>
+                <div
+                  className="row border-bottom"
+                  style={{ display: colorEditing }}
+                >
+                  <div className="col-5">
+                    <div className=" img-thumbnail2">
+                      {previewColorImage
+                        ? <img src={previewColorImage}
+                          className="w-100"
+                          style={{ border: "1px solid" }}
+                          alt=""></img>
+                        : <img
+                          src={imageColor}
+                          className="w-100"
+                          style={{ border: "1px solid" }}
+                          alt=""
+                        ></img>
+                      }
+                      <div className="btn btn-lg btn-primary img-des">
+                        Choose Photo
+                        <input
+                          type="file"
+                          name="image"
+                          className="w-100 h-100"
+                          value={fileInputState}
+                          onChange={this.handleColorInputChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-7">
+                    <select
+                      className="form-control my-1"
+                      required="required"
+                      name="nameColor"
+                      value={nameColor}
+                      onChange={this.onChange}
+                    >
+                      <option value={-1}>Chọn màu</option>
+                      {listColor.map((color, index) => {
+                        return (
+                          <option key={index} value={color._id}>
+                            {color.name_vn}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <input
+                      className="form-control my-1"
+                      placeholder="Nhập giá sản phẩm"
+                      type="number"
+                      name="priceColor"
+                      value={priceColor}
+                      onChange={this.onChange}
+                      min="0"
+                    ></input>
+                    <input
+                      className="form-control my-1"
+                      placeholder="Nhập số lượng"
+                      type="number"
+                      name="amountColor"
+                      value={amountColor}
+                      onChange={this.onChange}
+                      min="0"
+                    ></input>
+                  </div>
+                </div>
+                {colorList.map((item, index) => {
+                  return (
+                    <div className="row my-2" key={index}>
+                      <div className="col-4">
+                        <img
+                          src={item.image ? item.image: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"}
+                          alt=""
+                          className="w-100"
+                          style={{ border: "1px solid" }}
+                        />
+                      </div>
+                      <div className="col-4">
+                        <label className="d-block font-weight-bold">
+                          {item.name_vn}
+                        </label>
+                        <label className="d-block font-italic">
+                          {item.price}
+                        </label>
+                        <label className="d-block">{item.amount}</label>
+                      </div>
+                      <div className="col-4">
+                        <button
+                          className="btn btn-warning d-inline-block float-right m-1"
+                          type="button"
+                          onClick={() => this.onEditColor(item)}
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          className="btn btn-danger d-inline-block float-right m-1"
+                          type="button"
+                          onClick={() => this.onDeleteColor(item)}
+                        >
+                          Xóa
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div className="card text-white mb-3">
+                  <div className="card-header bg-primary">
+                    Chi tiết sản phẩm
+                  </div>
+                  <div className="card-body text-dark">
+                    {specifications.map((item, index) => {
+                      return (
+                        <div className="form-group" key={index}>
+                          <label key={index + 1}>
+                            {this.setSpecification(item._id)}
+                          </label>
+                          <input
+                            key={item._id}
+                            type="text"
+                            className="form-control"
+                            name={item._id}
+                            defaultValue={item.value}
+                            onChange={this.onChangeDetail}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
@@ -648,7 +900,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     onGetDetailCategories: (id) => {
       dispatch(CategoryActions.onGetDetail(id));
-    }
+    },
   };
 };
 
