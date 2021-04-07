@@ -55,19 +55,12 @@ const getAllProduct = async (req, res, next) => {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
 		}
 		let products;
-		if (req.query.color != undefined && req.query.color != '') {
-			products = await Product.find(condition)
-				.populate({ path: 'bigimage', select: 'public_url' })
-				.sort(sort)
-				.limit(limit)
-				.skip(limit * page);
-		} else {
-			products = await Product.find(condition)
-				.populate({ path: 'bigimage', select: 'public_url' })
-				.sort(sort)
-				.limit(limit)
-				.skip(limit * page);
-		}
+		products = await Product.find(condition, {specifications : 0, colors: 0, image:0, warrently: 0})
+			.populate({ path: 'bigimage', select: 'public_url' })
+			.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
+			.sort(sort)
+			.limit(limit)
+			.skip(limit * page);
 		let count = await Product.countDocuments(condition);
 		return res
 			.status(200)
@@ -84,17 +77,6 @@ const getAllProduct = async (req, res, next) => {
 		return next(error);
 	}
 };
-const searchProduct = async (req, res, next) => {
-	try {
-		const products = await Product.find()
-			.populate({ path: 'bigimage', select: 'public_url' })
-			.populate({ path: 'image', select: 'public_url' });
-		return res.status(200).json({ success: true, code: 200, message: '', products: products });
-	} catch (error) {
-		return next(error);
-	}
-};
-
 const updateProduct = async (req, res, next) => {
 	try {
 		const { IDProduct } = req.params;
@@ -152,6 +134,7 @@ const updateProduct = async (req, res, next) => {
 		}
 		if (colors) {
 			var colorArray=[];
+			console.log(colors)
 			for (let item of colors) {
 				let colorFound = await Color.findById(item._id);
 				if (colorFound) {
@@ -160,16 +143,17 @@ const updateProduct = async (req, res, next) => {
 					let name_vn = colorFound.name_vn;
 					let amount = item.amount;
 					let price = item.price;
-					let imageFound = await Image_Pro.findById(item.image);
+					let image = await Image_Pro.findById(item.image);
 					if(image){
-						let image = imageFound.public_url;
-						colorArray.push({ _id, name_en, name_vn, amount, price, image });
+						let image_link = image.public_url
+						colorArray.push({ _id, name_en, name_vn, amount, price, image, image_link });
 					}
 					else{
 						colorArray.push({ _id, name_en, name_vn, amount, price });
 					}
 				}
 			}
+			
 			let priceArray =[];
 			colorArray.map(item =>{
 				priceArray.push(item.price)
@@ -291,7 +275,6 @@ const getProductDetail = async(req, res, next) => {
 module.exports = {
 	getAllProduct,
 	getProductDetail,
-	searchProduct,
 	updateProduct,
 	addProduct,
 	deleteProduct

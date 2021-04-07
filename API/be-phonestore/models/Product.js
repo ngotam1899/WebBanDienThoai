@@ -65,6 +65,10 @@ const ProductSchema = new Schema({
             type: String
         },
         image: {
+            type: Schema.Types.ObjectId,
+            ref: "Image_Pro"
+        },
+        image_link: {
             type: String
         },
         amount: {

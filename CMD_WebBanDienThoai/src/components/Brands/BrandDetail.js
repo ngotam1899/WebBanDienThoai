@@ -15,7 +15,6 @@ class BrandDetail extends Component {
       image: brand ? brand.image: '',
       previewSource: '',
       selectedFile: '',
-      fileInputState: '',
     }
   }
   onChange = (event) =>{
@@ -58,7 +57,6 @@ class BrandDetail extends Component {
     this.previewFile(file);
     this.setState({
       selectedFile: file,
-      fileInputState: e.target.value
     })
   }
   // Khi nhấn nút submit ảnh
@@ -77,7 +75,7 @@ class BrandDetail extends Component {
   };
 
 	render() {
-    const {name, image, previewSource, fileInputState} = this.state;
+    const {name, image, previewSource} = this.state;
     const { large, onClose, brand} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -104,7 +102,6 @@ class BrandDetail extends Component {
                   <div className="file btn btn-lg btn-primary">
                     Change Photo
                     <input type="file" name="image" id="fileInput"
-                    value={fileInputState}
                     onChange={this.handleFileInputChange} style={{width: '100%'}}/>
                   </div>
                 </div>
@@ -117,12 +114,11 @@ class BrandDetail extends Component {
                   }
                   <div className="file btn btn-lg btn-primary">
                     Change Photo
-                    <input type="file" name="image" id="fileInput" value={fileInputState}
+                    <input type="file" name="image" id="fileInput"
                       onChange={this.handleFileInputChange} style={{width: '100%'}}/>
                   </div>
                 </div>}
 								</div>
-
               </form>
             </div>
 					</div>

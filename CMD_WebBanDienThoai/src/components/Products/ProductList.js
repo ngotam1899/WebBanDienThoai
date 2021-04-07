@@ -159,12 +159,6 @@ class ProductList extends Component {
     onDelete(_id);
   }
 
-  setBrand = (brand) =>{
-    const {listBrands} = this.props;
-    const brandName = listBrands.find(obj => obj._id === brand);
-    return get(brandName, "image.public_url");
-  }
-
   render () {
     const {large, keyword, min_p, max_p} = this.state;
     const {listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location} = this.props;
@@ -253,7 +247,7 @@ class ProductList extends Component {
                       </td>
                     ),
                     'brand': (item) => (
-                      <td><img src={this.setBrand(item.brand)} style={{width:'8vw'}} alt={item.name}></img></td>
+                      <td><img src={item.brand ? item.brand.image.public_url: "http://www.pha.gov.pk/img/img-02.jpg"} style={{width:'8vw'}} alt={item.name}></img></td>
                     ),
                     'actions':
                     (item)=>(

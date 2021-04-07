@@ -19,13 +19,12 @@ require('../middlewares/passport');
 
 //Region Brand
 router.route('/brands').get(brandController.getAllBrand).post(brandController.addBrand);
-router.route('/brands/image').get(imageController.getAllImageBrand).post(imageController.uploadImageBrand);
+router.route('/brands/image').post(imageController.uploadImageBrand);
 router
 	.route('/brands/:IDBrand')
 	.get(brandController.getDetailBrand)
 	.put(brandController.updateBrand)
 	.delete(brandController.deleteBrand);
-router.route('/brands/image/:IDImage').get(imageController.getAllImageBrand);
 
 //Region CateGory
 router.route('/categorys').get(categoryController.getAllCategory).post(categoryController.addCategory);
@@ -92,8 +91,7 @@ router.route('/:IDProduct')
 
 router.route('/comment').post(passport.authenticate('jwt', { session: false }), commentController.addComment);
 
-router.route('/image').get(imageController.getAllImg).post(imageController.uploadImage);
-router.route('/image/:IDImage').get(imageController.getImage).delete(imageController.deleteImage);
+router.route('/image').post(imageController.uploadImage);
 
 
 module.exports = router;

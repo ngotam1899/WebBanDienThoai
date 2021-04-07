@@ -42,19 +42,15 @@ class ProductDetail extends Component {
       btnStatus: "Thêm màu",
       onEditing: false,
       indexColor: -1,
-      imageColor:
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+      imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
       previewColorImage: "",
       selectedColor: "",
-      colorInputState: "",
       // @Product Image
       previewSource: "",
       selectedFile: "",
-      fileInputState: "",
       // @Product list images
       previewList: [],
       selectedList: [],
-      fileInputList: [],
       // @Product Specifition
       specifications: product
         ? this.setValue(
@@ -100,24 +96,6 @@ class ProductDetail extends Component {
           value: "",
         });
       });
-      /*
-      specifications = ["gsdvfjhsdsfd","153dsfsdfds","153dsfsdfds"]
-      ->
-      specifications = [
-        {
-          _id: "gsdvfjhsdsfd",
-          value: ""
-        },
-        {
-          _id: "153dsfsdfds",
-          value: ""
-        },
-        {
-          _id: "153dsfsdfds",
-          value: ""
-        },
-      ]
-      */
     }
     return specifications;
   };
@@ -149,66 +127,53 @@ class ProductDetail extends Component {
   };
 
   deletePreview = (item) => {
-    const { previewList } = this.state;
+    const { previewList, selectedList } = this.state;
     // Vị trí trong mảng có image cần xóa
     var deleteIndex = previewList.indexOf(
       previewList.find((img) => img === item)
     );
     // Tạo mảng mới không có phần tử muốn xóa
     previewList.splice(deleteIndex, 1);
+    selectedList.splice(deleteIndex, 1);
     this.setState({
-      previewList,
+      previewList, selectedList
     });
   };
 
   handleFileInputChange = (e) => {
+    var {name} = e.target;
     const file = e.target.files[0];
     // 1. Hiển thị ảnh vừa thêm
-    this.previewFile(file);
-    this.setState({
-      selectedFile: file,
-      fileInputState: e.target.value,
-    });
-  };
-  handleColorInputChange = (e) => {
-    const file = e.target.files[0];
-    // 1. Hiển thị ảnh vừa thêm
-    this.previewColor(file);
-    this.setState({
-      selectedColor: file,
-      colorInputState: e.target.value,
-    });
+    this.previewFile(file, name);
+    if(name === "previewSource"){
+      this.setState({
+        selectedFile: file,
+      });
+    }
+    else if(name === "previewColorImage"){
+      this.setState({
+        selectedColor: file,
+      });
+    }
   };
   handleListInputChange = (e) => {
     const file = e.target.files[0];
-    const { selectedList, fileInputList } = this.state;
+    const { selectedList } = this.state;
     // 1. Hiển thị ảnh vừa thêm
     this.previewList(file);
     selectedList.push(file);
-    fileInputList.push(e.target.value);
     this.setState({
       selectedList,
-      fileInputList,
     });
   };
 
   // Hàm xử lý file - set hiển thị ảnh mới thêm vào state previewSource
-  previewFile = (file) => {
+  previewFile = (file, name) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       this.setState({
-        previewSource: reader.result,
-      });
-    };
-  };
-  //
-  previewColor = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      this.setState({
-        previewColorImage: reader.result,
+        [name]: reader.result,
       });
     };
   };
@@ -250,20 +215,24 @@ class ProductDetail extends Component {
   onAddColor = (value) => {
     if (value === "none") {
       this.setState({
-        colorEditing: "inherit",
+        colorEditing: "inline-flex",
         btnStatus: "Hủy",
         onEditing: false,
       });
-    } else {
+    } else {  //Click button Hủy
       this.setState({
+        // Gán giá trị button
         colorEditing: "none",
         btnStatus: "Thêm màu",
+        // Gán giá trị fields
         nameColor: "",
         amountColor: 0,
         priceColor: 0,
         onEditing: false,
-        imageColor:
-          "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+        imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+        // Trả preview về mặc định
+        previewColorImage: "",
+        selectedColor: "",
       });
     }
   };
@@ -271,14 +240,19 @@ class ProductDetail extends Component {
   onEditColor = (item) => {
     const { colorList } = this.state;
     this.setState({
+      // Gán giá trị button
+      colorEditing: "inline-flex",
+      btnStatus: "Hủy",
+      // Gán giá trị fields
       nameColor: item._id,
       amountColor: item.amount,
       priceColor: item.price,
-      colorEditing: "inherit",
-      imageColor: item.image,
-      btnStatus: "Hủy",
       onEditing: true,
+      imageColor: item.image_link ? item.image_link :  "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
       indexColor: colorList.indexOf(item),
+      // Trả preview về mặc định
+      previewColorImage: "",
+      selectedColor: "",
     });
   };
 
@@ -480,7 +454,6 @@ class ProductDetail extends Component {
       bigimage,
       image,
       previewSource,
-      fileInputState,
       previewList,
       specifications,
       colorList,
@@ -501,7 +474,7 @@ class ProductDetail extends Component {
       product,
     } = this.props;
     return (
-      <CModal show={large} onClose={() => onClose(!large)} size="lg">
+      <CModal show={large} onClose={() => onClose(!large)} size="lg" closeOnBackdrop={false}>
         <CModalHeader closeButton>
           <CModalTitle>
             {product ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}
@@ -511,38 +484,85 @@ class ProductDetail extends Component {
           <div className="row">
             <div className="col-12 col-lg-6">
               <form>
-                <div className="form-group">
-                  <label>Tên sản phẩm:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="name"
-                    value={name}
-                    disabled={product ? true : false}
-                    onChange={this.onChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Slug:</label>
-                  {name ? (
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="pathseo"
-                      disabled={product ? true : false}
-                      value={pathseo ? pathseo : changeToSlug(name)}
-                      onChange={this.onChange}
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="pathseo"
-                      value={pathseo}
-                      disabled={product ? true : false}
-                      onChange={this.onChange}
-                    />
-                  )}
+                <div className="row">
+                  <div className="col-6">
+                    <div className="form-group">
+                      <label>Tên sản phẩm:</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="name"
+                        value={name}
+                        disabled={product ? true : false}
+                        onChange={this.onChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Slug:</label>
+                      {name ? (
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="pathseo"
+                          disabled={product ? true : false}
+                          value={pathseo ? pathseo : changeToSlug(name)}
+                          onChange={this.onChange}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="pathseo"
+                          value={pathseo}
+                          disabled={product ? true : false}
+                          onChange={this.onChange}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {bigimage ? (
+                  <div className="form-group img-thumbnail3 col-6">
+                    {previewSource ? (
+                      <img src={previewSource} className="border rounded w-100" alt="" />
+                    ) : (
+                      <img
+                        src={bigimage.public_url}
+                        className="border rounded w-100"
+                        alt=""
+                      />
+                    )}
+                    <div className="file btn btn-lg btn-primary">
+                      Change Photo
+                      <input
+                        type="file"
+                        name="previewSource"
+                        onChange={this.handleFileInputChange}
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="form-group img-thumbnail3">
+                    {previewSource ? (
+                      <img src={previewSource} className="border rounded w-100" alt="" />
+                    ) : (
+                      <img
+                        src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+                        alt=""
+                        className="border rounded w-100"
+                      ></img>
+                    )}
+                    <div className="file btn btn-lg btn-primary">
+                      Change Photo
+                      <input
+                        type="file"
+                        name="image"
+                        onChange={this.handleFileInputChange}
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </div>
+                  </div>
+                )}
                 </div>
                 <div className="form-group">
                   <label>Thời hạn bảo hành:</label>
@@ -590,53 +610,6 @@ class ProductDetail extends Component {
                     })}
                   </select>
                 </div>
-                {bigimage ? (
-                  <div className="form-group img-thumbnail3">
-                    {previewSource ? (
-                      <img src={previewSource} className="w-100" alt="" />
-                    ) : (
-                      <img
-                        src={bigimage.public_url}
-                        style={{ border: "1px solid", width: "100%" }}
-                        alt=""
-                      />
-                    )}
-                    <div className="file btn btn-lg btn-primary">
-                      Change Photo
-                      <input
-                        type="file"
-                        name="image"
-                        id="fileInput"
-                        value={fileInputState}
-                        onChange={this.handleFileInputChange}
-                        style={{ width: "100%" }}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="form-group img-thumbnail3">
-                    {previewSource ? (
-                      <img src={previewSource} className="w-100" alt="" />
-                    ) : (
-                      <img
-                        src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
-                        alt=""
-                        style={{ border: "1px solid", width: "100%" }}
-                      ></img>
-                    )}
-                    <div className="file btn btn-lg btn-primary">
-                      Change Photo
-                      <input
-                        type="file"
-                        name="image"
-                        id="fileInput"
-                        value={fileInputState}
-                        onChange={this.handleFileInputChange}
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    </div>
-                  </div>
-                )}
                 <div className="form-group">
                   <div className="row">
                     {image &&
@@ -646,8 +619,7 @@ class ProductDetail extends Component {
                             <div className=" img-thumbnail2">
                               <img
                                 src={item.public_url}
-                                className="w-100"
-                                style={{ border: "1px solid" }}
+                                className="border rounded w-100"
                                 alt=""
                               ></img>
                               <div className="btn btn-lg btn-primary img-des">
@@ -669,7 +641,7 @@ class ProductDetail extends Component {
                           return (
                             <div className="col-3" key={index}>
                               <div className="img-thumbnail2">
-                                <img src={item} alt="" className="w-100" />
+                                <img src={item} alt="" className="border rounded w-100" />
                                 <div className="btn btn-lg btn-primary img-des">
                                   Delete Photo
                                   <input
@@ -690,8 +662,7 @@ class ProductDetail extends Component {
                         <img
                           src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
                           alt=""
-                          className="w-100"
-                          style={{ border: "1px solid" }}
+                          className="border rounded w-100"
                         ></img>
                         <div className="btn btn-lg btn-primary img-des">
                           Add Photo
@@ -708,154 +679,157 @@ class ProductDetail extends Component {
               </form>
             </div>
             <div className="col-12 col-lg-6">
-              <div className="card p-3">
-                <div className="mb-3">
-                  <h3 className="d-inline-block">Danh sách màu</h3>
-                  <button
-                    className="btn btn-primary float-right"
-                    type="button"
-                    onClick={() => this.onAddColor(colorEditing)}
-                  >
-                    {btnStatus}
-                  </button>
-                  <button
-                    className="btn btn-success float-right mr-2"
-                    style={{ display: colorEditing }}
-                    onClick={() => this.onSaveColor()}
-                    type="button"
-                  >
-                    Lưu
-                  </button>
-                </div>
-                <div
-                  className="row border-bottom"
+              <div className="row">
+                <div className="col-12">
+                <h5 className="float-left">Danh sách màu</h5>
+                <div className="float-right">
+                <button
+                  className="btn btn-success mr-2"
                   style={{ display: colorEditing }}
+                  onClick={() => this.onSaveColor()}
+                  type="button"
                 >
-                  <div className="col-5">
-                    <div className=" img-thumbnail2">
-                      {previewColorImage
-                        ? <img src={previewColorImage}
-                          className="w-100"
-                          style={{ border: "1px solid" }}
-                          alt=""></img>
-                        : <img
-                          src={imageColor}
-                          className="w-100"
-                          style={{ border: "1px solid" }}
-                          alt=""
-                        ></img>
-                      }
-                      <div className="btn btn-lg btn-primary img-des">
-                        Choose Photo
-                        <input
-                          type="file"
-                          name="image"
-                          className="w-100 h-100"
-                          value={fileInputState}
-                          onChange={this.handleColorInputChange}
-                        />
-                      </div>
+                  Lưu
+                </button>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => this.onAddColor(colorEditing)}
+                >
+                  {btnStatus}
+                </button>
+                </div>
+                </div>
+              </div>
+
+              <div
+                className="row"
+                style={{ display: colorEditing }}
+              >
+                <div className="col-5">
+                  <div className="img-thumbnail2">
+                    {previewColorImage
+                      ? <img src={previewColorImage}
+                        className="border rounded w-100"
+                        alt=""></img>
+                      : <img
+                        src={imageColor}
+                        className="border rounded w-100"
+                        alt=""
+                      ></img>
+                    }
+                    <div className="btn btn-lg btn-primary img-des">
+                      Choose Photo
+                      <input
+                        type="file"
+                        name="previewColorImage"
+                        className="w-100 h-100"
+                        onChange={this.handleFileInputChange}
+                      />
                     </div>
-                  </div>
-                  <div className="col-7">
-                    <select
-                      className="form-control my-1"
-                      required="required"
-                      name="nameColor"
-                      value={nameColor}
-                      onChange={this.onChange}
-                    >
-                      <option value={-1}>Chọn màu</option>
-                      {listColor.map((color, index) => {
-                        return (
-                          <option key={index} value={color._id}>
-                            {color.name_vn}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <input
-                      className="form-control my-1"
-                      placeholder="Nhập giá sản phẩm"
-                      type="number"
-                      name="priceColor"
-                      value={priceColor}
-                      onChange={this.onChange}
-                      min="0"
-                    ></input>
-                    <input
-                      className="form-control my-1"
-                      placeholder="Nhập số lượng"
-                      type="number"
-                      name="amountColor"
-                      value={amountColor}
-                      onChange={this.onChange}
-                      min="0"
-                    ></input>
                   </div>
                 </div>
-                {colorList.map((item, index) => {
-                  return (
-                    <div className="row my-2" key={index}>
-                      <div className="col-4">
-                        <img
-                          src={item.image ? item.image: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"}
-                          alt=""
-                          className="w-100"
-                          style={{ border: "1px solid" }}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <label className="d-block font-weight-bold">
-                          {item.name_vn}
-                        </label>
-                        <label className="d-block font-italic">
-                          {item.price}
-                        </label>
-                        <label className="d-block">{item.amount}</label>
-                      </div>
-                      <div className="col-4">
-                        <button
-                          className="btn btn-warning d-inline-block float-right m-1"
-                          type="button"
-                          onClick={() => this.onEditColor(item)}
-                        >
-                          Sửa
-                        </button>
-                        <button
-                          className="btn btn-danger d-inline-block float-right m-1"
-                          type="button"
-                          onClick={() => this.onDeleteColor(item)}
-                        >
-                          Xóa
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div className="card text-white mb-3">
-                  <div className="card-header bg-primary">
-                    Chi tiết sản phẩm
-                  </div>
-                  <div className="card-body text-dark">
-                    {specifications.map((item, index) => {
+                <div className="col-7">
+                  <select
+                    className="form-control my-1"
+                    required="required"
+                    name="nameColor"
+                    value={nameColor}
+                    onChange={this.onChange}
+                  >
+                    <option value={-1}>Chọn màu</option>
+                    {listColor.map((color, index) => {
                       return (
-                        <div className="form-group" key={index}>
-                          <label key={index + 1}>
-                            {this.setSpecification(item._id)}
-                          </label>
-                          <input
-                            key={item._id}
-                            type="text"
-                            className="form-control"
-                            name={item._id}
-                            defaultValue={item.value}
-                            onChange={this.onChangeDetail}
-                          />
-                        </div>
+                        <option key={index} value={color._id}>
+                          {color.name_vn}
+                        </option>
                       );
                     })}
+                  </select>
+                  <input
+                    className="form-control my-1"
+                    placeholder="Nhập giá sản phẩm"
+                    type="number"
+                    name="priceColor"
+                    value={priceColor}
+                    onChange={this.onChange}
+                    min="0"
+                  ></input>
+                  <input
+                    className="form-control my-1"
+                    placeholder="Nhập số lượng"
+                    type="number"
+                    name="amountColor"
+                    value={amountColor}
+                    onChange={this.onChange}
+                    min="0"
+                  ></input>
+                </div>
+              </div>
+
+              {colorList.map((item, index) => {
+                return (
+                  <div className="row" key={index}>
+                    <div className="col-3">
+                      <img
+                        src={item.image_link ? item.image_link: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"}
+                        alt={item.name_vn}
+                        className="border rounded w-100"
+                      />
+                    </div>
+                    <div className="col-5">
+                      <p className="font-weight-bold my-0">
+                        {item.name_vn}
+                      </p>
+                      <p className="font-italic my-0">
+                        {item.price} VND
+                      </p>
+                      <p className="my-0">
+                        Số lượng {item.amount}
+                      </p>
+                    </div>
+                    <div className="col-4">
+                      <button
+                        className="btn btn-warning d-inline-block float-right m-1"
+                        type="button"
+                        onClick={() => this.onEditColor(item)}
+                      >
+                        <i className="fa fa-highlighter"></i>
+                      </button>
+                      <button
+                        className="btn btn-danger d-inline-block float-right m-1"
+                        type="button"
+                        onClick={() => this.onDeleteColor(item)}
+                      >
+                        <i className="fa fa-trash-alt"></i>
+                      </button>
+                    </div>
                   </div>
+                );
+              })}
+
+              <div className="card text-white mb-3">
+                <div className="card-header bg-primary">
+                  Chi tiết sản phẩm
+                </div>
+                <div className="card-body text-dark">
+                  {specifications.map((item, index) => {
+                    return (
+                      <div className="form-group" key={index}>
+                        <label key={index + 1}>
+                          {this.setSpecification(item._id)}
+                        </label>
+                        <input
+                          key={item._id}
+                          type="text"
+                          className="form-control"
+                          name={item._id}
+                          defaultValue={item.value}
+                          onChange={this.onChangeDetail}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
