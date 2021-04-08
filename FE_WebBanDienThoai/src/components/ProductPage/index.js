@@ -298,7 +298,6 @@ class ProductPage extends Component {
 const mapStateToProps = (state) => {
   return {
     listProducts: ProductsSelectors.getList(state),
-    listImages: state.cloudinary.list,
     listColor: state.color.list,
     listBrand: state.brands.list,
     total: state.products.total,

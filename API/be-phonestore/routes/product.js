@@ -1,4 +1,3 @@
-const express = require('express');
 const router = require('express-promise-router')();
 
 const commentController = require('../controllers/comment');
@@ -12,14 +11,12 @@ const cpuController = require('../controllers/cpu');
 const widescreenController = require('../controllers/widescreen');
 const operationController = require('../controllers/operation');
 const productController = require('../controllers/product');
-const imageController = require('../controllers/image');
 
 const passport = require('passport');
 require('../middlewares/passport');
 
 //Region Brand
 router.route('/brands').get(brandController.getAllBrand).post(brandController.addBrand);
-router.route('/brands/image').post(imageController.uploadImageBrand);
 router
 	.route('/brands/:IDBrand')
 	.get(brandController.getDetailBrand)
@@ -90,8 +87,5 @@ router.route('/:IDProduct')
   .delete(productController.deleteProduct);
 
 router.route('/comment').post(passport.authenticate('jwt', { session: false }), commentController.addComment);
-
-router.route('/image').post(imageController.uploadImage);
-
 
 module.exports = router;

@@ -2,7 +2,7 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
 import { getAllProducts, getDetailProduct, addProduct,updateProduct, deleteProduct } from "../apis/products";
-import { addProductThumbnailImage} from "../apis/cloudinary";
+import { addImage} from "../apis/cloudinary";
 import UIActions from "../actions/ui";
 
 function* handleGetList({ payload }) {
@@ -38,8 +38,8 @@ function* handleCreate( {payload} ) {
     var result,image, imageArray;
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
     if(payload.params.bigimage && payload.formData){
-      bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
-      image = yield call(addProductThumbnailImage, payload.formData);
+      bigimage = yield call(addImage, payload.params.bigimage);
+      image = yield call(addImage, payload.formData);
       imageArray = image.data.images.map((item)=>{
         return item._id
       })
@@ -53,7 +53,7 @@ function* handleCreate( {payload} ) {
     }
     // 2. TH2: Nếu bigimge mới
     else if(payload.params.bigimage){
-      bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
+      bigimage = yield call(addImage, payload.params.bigimage);
       console.log(bigimage)
       result = yield call(addProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors,
@@ -64,7 +64,7 @@ function* handleCreate( {payload} ) {
     }
     // 3. TH3: Nếu image mới
     else if(payload.formData){
-      image = yield call(addProductThumbnailImage, payload.formData);
+      image = yield call(addImage, payload.formData);
       imageArray = image.data.images.map((item)=>{
         return item._id
       })
@@ -95,8 +95,8 @@ function* handleUpdateImage( {payload} ) {
   try {
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
     if(payload.params.bigimage._id === undefined && payload.formData){
-      var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
-      var image = yield call(addProductThumbnailImage, payload.formData);
+      var bigimage = yield call(addImage, payload.params.bigimage);
+      var image = yield call(addImage, payload.formData);
       var imageArray = image.data.images.map((item)=>{
         return item._id
       })
@@ -110,7 +110,7 @@ function* handleUpdateImage( {payload} ) {
     }
     // 2. TH2: Nếu bigimge mới
     else if(payload.params.bigimage._id === undefined){
-      var bigimage = yield call(addProductThumbnailImage, payload.params.bigimage);
+      var bigimage = yield call(addImage, payload.params.bigimage);
       var result = yield call(updateProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors,
         "bigimage":bigimage.data.images[0]._id
@@ -120,7 +120,7 @@ function* handleUpdateImage( {payload} ) {
     }
     // 3. TH3: Nếu image mới
     else if(payload.formData){
-      var image = yield call(addProductThumbnailImage, payload.formData);
+      var image = yield call(addImage, payload.formData);
       var imageArray = image.data.images.map((item)=>{
         return item._id
       })

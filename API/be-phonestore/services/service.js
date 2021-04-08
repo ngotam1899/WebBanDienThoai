@@ -1,5 +1,5 @@
 const JWT = require('jsonwebtoken')
-const { JWT_SECRET, EMAIL_NAME, PASS, PORT } = require('../configs/config')
+const { JWT_SECRET } = require('../configs/config')
 
 
 const encodedToken = (userID, time) => {

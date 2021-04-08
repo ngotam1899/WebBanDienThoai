@@ -31,7 +31,4 @@ router.route('/:userID')
     .get(userController.getUser)
     .put(userController.replaceUser)
     .delete(userController.deleteUser)
-
-router.route('/image')
-    .post(imageController.uploadImageUser)
 module.exports = router

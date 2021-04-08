@@ -18,7 +18,7 @@ const UserSchema = new Schema({
     },
     image: {
         type: Schema.Types.ObjectId,
-        ref: "Image_User"
+        ref: "Image"
     },
     email: {
         type: String,
@@ -59,7 +59,6 @@ UserSchema.pre('findByIdAndUpdate', async function(next) {
         const salt = await bcrypts.genSalt(15)
         const passwordHash = await bcrypts.hash(this.password, salt)
         this.password = passwordHash
-
         next()
     } catch (error) {
         next(error)

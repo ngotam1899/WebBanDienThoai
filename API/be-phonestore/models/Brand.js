@@ -8,7 +8,7 @@ const BrandSchema = new Schema({
     },
     image: {
         type: Schema.Types.ObjectId,
-        ref: 'Image_Brand'
+        ref: 'Image'
     }
 })
 

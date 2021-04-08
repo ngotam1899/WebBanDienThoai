@@ -97,7 +97,7 @@ class BrandDetail extends Component {
                     previewSource ? (
                       <img src={previewSource} className="w-100" alt=""/>
                     )
-                    : <img src={image.public_url} style={{ border: '1px solid', width: '100%' }} alt=""/>
+                    : <img src={image.public_url && "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"} style={{ border: '1px solid', width: '100%' }} alt=""/>
                   }
                   <div className="file btn btn-lg btn-primary">
                     Change Photo

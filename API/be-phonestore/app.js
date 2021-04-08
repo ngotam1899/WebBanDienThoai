@@ -11,6 +11,7 @@ const routerUser = require('./routes/user')
 const routerReview = require('./routes/review')
 const routerProduct = require('./routes/product')
 const routerOrder = require('./routes/order')
+const routerImage = require('./routes/image')
 
 const mongoose = require('mongoose')
 
@@ -45,9 +46,9 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
     .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))
 
 cloudinary.config({
-    cloud_name: 'bephonestore',
-    api_key: '537574645278545',
-    api_secret: 'AsNGJDBvVsBj06nS_GHi7R12A50'
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
 //Middlewares
@@ -72,7 +73,7 @@ app.use('/users', routerUser)
 app.use('/reviews', routerReview)
 app.use('/products', routerProduct)
 app.use('/orders', routerOrder)
-
+app.use('/image', routerImage)
 
 //Catch 404 error and forward them to error handler
 app.use((req, res, next) => {

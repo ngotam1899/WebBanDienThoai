@@ -84,16 +84,15 @@ class UserInfoPage extends Component {
             <div className="row">
               <div className="col-md-4">
                 <form onSubmit={this.handleSubmitFile} className="form">
-                  {avatar ? <div className="profile-img">
+                  {authInfo.image ? <div className="profile-img">
                     {
                       previewSource ? (
                         <img src={previewSource} alt=""/>
-                      ) : <img src={avatar} alt="" />
+                      ) : <img src={authInfo.image.public_url} alt="" />
                     }
                       <div className="file btn btn-lg btn-primary">
                       {t('user.file.input')}
                         <input type="file" name="image" id="fileInput"
-                        value={fileInputState}
                         onChange={this.handleFileInputChange} />
                       </div>
                     </div>
@@ -106,7 +105,6 @@ class UserInfoPage extends Component {
                       <div className="file btn btn-lg btn-primary">
                       {t('user.file.input')}
                         <input type="file" name="image" id="fileInput"
-                        value={fileInputState}
                         onChange={this.handleFileInputChange} />
                       </div>
                     </div>
@@ -233,7 +231,6 @@ class UserInfoPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
-    avatar: state.user.avatar,
     orderList: state.order.list,
     orderItem: state.order.detail,
     listCity: state.address.city,

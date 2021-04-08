@@ -1,6 +1,6 @@
 const Order = require('../models/Order')
 const Product = require('../models/Product')
-const Image_Pro = require('../models/Image_Pro')
+const Image = require('../models/Image')
 const Validator = require('../validators/validator')
 
 var smtpTransport = require('nodemailer-smtp-transport');
@@ -96,7 +96,7 @@ const addOrder = async(req, res, next) => {
                     let price = productFound.price;
 
                     console.log(productFound)
-                    let imageFound = await Image_Pro.findById(productFound.bigimage);
+                    let imageFound = await Image.findById(productFound.bigimage);
                     if (imageFound) {
                         var image = imageFound.public_url;
                     }

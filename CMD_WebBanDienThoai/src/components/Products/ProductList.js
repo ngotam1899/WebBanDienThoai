@@ -1,5 +1,4 @@
 import React, { Component }  from 'react'
-import { get } from "lodash";
 import { connect } from "react-redux";
 import qs from "query-string";
 import { confirmAlert } from 'react-confirm-alert'; // Import
@@ -247,7 +246,7 @@ class ProductList extends Component {
                       </td>
                     ),
                     'brand': (item) => (
-                      <td><img src={item.brand ? item.brand.image.public_url: "http://www.pha.gov.pk/img/img-02.jpg"} style={{width:'8vw'}} alt={item.name}></img></td>
+                      <td><img src={item.brand.image ? item.brand.image.public_url: "http://www.pha.gov.pk/img/img-02.jpg"} style={{width:'8vw'}} alt={item.name}></img></td>
                     ),
                     'actions':
                     (item)=>(

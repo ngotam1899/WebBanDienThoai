@@ -2,7 +2,7 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import BrandActions, { BrandActionTypes } from "../actions/brands";
 import { getAllBrands, getDetailBrand, addBrand, updateBrand, deleteBrand } from "../apis/brands";
-import { addProductBrandImage} from "../apis/cloudinary";
+import { addImage} from "../apis/cloudinary";
 
 function* handleGetList({ payload }) {
   try {
@@ -35,9 +35,9 @@ function* handleCreate({ payload }) {
   try {
     var data;
     if(image){
-      var imageResult = yield call(addProductBrandImage, image);
+      var imageResult = yield call(addImage, image);
       var result = yield call(addBrand,
-        { name, image: imageResult.data.image._id });
+        { name, image: imageResult.data.images[0]._id });
       data = get(result, "data", {});
       if (data.code !== 201) throw data;
       yield put(BrandActions.onCreateSuccess(get(result, "data.brand")));
@@ -64,9 +64,8 @@ function* handleUpdate({ payload }) {
   try {
     var detailResult;
     if(image){
-      var imageResult = yield call(addProductBrandImage, image);
-      console.log(imageResult)
-      var result = yield call(updateBrand,{image: imageResult.data.image._id }, payload.id);
+      var imageResult = yield call(addImage, image);
+      var result = yield call(updateBrand,{image: imageResult.data.images[0]._id }, payload.id);
       const data = get(result, "data", {});
       if (data.code !== 200) throw data;
       detailResult = yield call(getDetailBrand, payload.id);

@@ -1,5 +1,5 @@
 const Comment = require('../models/Comment');
-const Image_Pro = require('../models/Image_Pro');
+const Image = require('../models/Image');
 const Validator = require('../validators/validator');
 const cloudinary = require('cloudinary');
 const Specification = require('../models/specification');
@@ -143,7 +143,7 @@ const updateProduct = async (req, res, next) => {
 					let name_vn = colorFound.name_vn;
 					let amount = item.amount;
 					let price = item.price;
-					let image = await Image_Pro.findById(item.image);
+					let image = await Image.findById(item.image);
 					if(image){
 						let image_link = image.public_url
 						colorArray.push({ _id, name_en, name_vn, amount, price, image, image_link });

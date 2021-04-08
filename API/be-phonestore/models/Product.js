@@ -27,11 +27,11 @@ const ProductSchema = new Schema({
     },
     bigimage: {     //Thumbnail
         type: Schema.Types.ObjectId,
-        ref: "Image_Pro"
+        ref: "Image"
     },
     image: [{       // Bỏ
         type: Schema.Types.ObjectId,
-        ref: "Image_Pro"
+        ref: "Image"
     }],
     category: {     
         type: Schema.Types.ObjectId, 
@@ -66,7 +66,7 @@ const ProductSchema = new Schema({
         },
         image: {
             type: Schema.Types.ObjectId,
-            ref: "Image_Pro"
+            ref: "Image"
         },
         image_link: {
             type: String

@@ -32,7 +32,7 @@ class ProductDetail extends Component {
       category: product ? product.category._id : listCategories[0]._id,
       brand: product ? product.brand._id : listBrands[0]._id,
       bigimage: product ? product.bigimage : "",
-      image: product ? product.image : [],
+      image: product ? (product.image ? product.image : []) : [],
       // @Product Color
       colorList: product ? product.colors : [],
       nameColor: "",
@@ -520,8 +520,11 @@ class ProductDetail extends Component {
                       )}
                     </div>
                   </div>
+                  <div className="col-6">
+
+
                   {bigimage ? (
-                  <div className="form-group img-thumbnail3 col-6">
+                  <div className="form-group img-thumbnail3">
                     {previewSource ? (
                       <img src={previewSource} className="border rounded w-100" alt="" />
                     ) : (
@@ -556,13 +559,14 @@ class ProductDetail extends Component {
                       Change Photo
                       <input
                         type="file"
-                        name="image"
+                        name="previewSource"
                         onChange={this.handleFileInputChange}
                         style={{ width: "100%", height: "100%" }}
                       />
                     </div>
                   </div>
                 )}
+                </div>
                 </div>
                 <div className="form-group">
                   <label>Thời hạn bảo hành:</label>

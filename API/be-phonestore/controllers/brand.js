@@ -18,17 +18,12 @@ const addBrand = async(req, res, next) => {
     return res.status(200).json({ success: true, code: 201, message: '', brand: newBrand })
 }
 const updateBrand = async(req, res, next) => {
-
     const { IDBrand } = req.params
-
     const brand = req.body
-
     const result = await Brand.findByIdAndUpdate(IDBrand, brand)
-
     if (!result) {
         return res.status(200).json({ success: false, code: 400, message: 'id brand is not correctly' });
     }
-
     return res.status(200).json({ success: true, code: 200, message: '' })
 }
 const deleteBrand = async(req, res, next) => {

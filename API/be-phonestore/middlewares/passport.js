@@ -7,7 +7,7 @@ const FacebookTokenStrategy = require('passport-facebook-token')
 const { JWT_SECRET, GoogleID, GoogleSecret, FacebookID, FacebookSecret } = require('../configs/config')
 
 const User = require('../models/User')
-const Image_User = require('../models/Image_User')
+const Image = require('../models/Image')
 
 //Vertify token with jwt
 passport.use(new JwtStrategy({
@@ -15,7 +15,7 @@ passport.use(new JwtStrategy({
     secretOrKey: JWT_SECRET
 }, async(payload, done) => {
     try {
-        const user = await User.findById(payload.sub)
+        const user = await User.findById(payload.sub).populate({ path: 'image', select: 'public_url' });
 
         if (!user) {
             console.log("Can't found user")
@@ -34,7 +34,7 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
 }, async(email, password, done) => {
     try {
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email }).populate({ path: 'image', select: 'public_url' });
 
         if (!user) return done(null, false)
 
@@ -61,7 +61,8 @@ passport.use(new FacebookTokenStrategy({
         if (user) {
             done(null, user);
         } else if (profile.emails[0].value != "") {
-            let user = await User.findOne({ email: profile.emails[0].value });
+            let user = await User.findOne({ email: profile.emails[0].value })
+            .populate({ path: 'image', select: 'public_url' });
             if (user) {
                 user.auth_facebook_id = profile.id;
                 user.auth_type = 'facebook';
@@ -69,7 +70,7 @@ passport.use(new FacebookTokenStrategy({
                 done(null, user);
             }
         } else {
-            const image = new Image_User({
+            const image = new Image({
                 name: profile.displayName,
                 public_url: profile.photos[0].value
             })
@@ -107,14 +108,15 @@ passport.use(new GoogleTokenStrategy({
             if (user) {
                 done(null, user);
             } else {
-                const user = await User.findOne({ email: profile.emails[0].value });
+                const user = await User.findOne({ email: profile.emails[0].value })
+                .populate({ path: 'image', select: 'public_url' });;
                 if (user) {
                     user.auth_google_id = profile.id;
                     user.auth_type = 'google'
                     await user.save();
                     done(null, user);
                 } else {
-                    const image = new Image_User({
+                    const image = new Image({
                         name: profile.displayName,
                         public_url: profile._json.picture
                     })

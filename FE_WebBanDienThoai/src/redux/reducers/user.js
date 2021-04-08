@@ -29,24 +29,6 @@ function handleUpdate({state, action}) {
 
 export default function(state = init, action) {
   switch (action.type) {
-    case UsersActionTypes.GET_DETAIL:
-      return {
-        ...state,
-        loadingDetail: true,
-        detail: null,
-      };
-    case UsersActionTypes.GET_DETAIL_SUCCESS:
-      return {
-        ...state,
-        loadingDetail: false,
-        detail: action.payload,
-      };
-    case UsersActionTypes.GET_DETAIL_ERROR:
-      return {
-        ...state,
-        loadingDetail: false,
-        detail: action.payload,
-      };
     case UsersActionTypes.UPDATE_USER_IMAGE:
       return {...state};
     case UsersActionTypes.UPDATE_USER_IMAGE_SUCCESS:
@@ -55,21 +37,6 @@ export default function(state = init, action) {
     case UsersActionTypes.UPDATE_USER_IMAGE_ERROR:
       toastError("Lỗi ảnh");
       return {...state};
-    case UsersActionTypes.GET_USER_IMAGE:
-      return {
-        ...state,
-        avatar: null
-      };
-    case UsersActionTypes.GET_USER_IMAGE_SUCCESS:
-      return {
-        ...state,
-        avatar: action.payload,
-      };
-    case UsersActionTypes.GET_USER_IMAGE_ERROR:
-      return {
-        ...state,
-        avatar: null
-      };
     case UsersActionTypes.UPDATE:
       return {
         ...state,
