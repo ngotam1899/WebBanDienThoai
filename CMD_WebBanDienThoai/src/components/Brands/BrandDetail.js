@@ -31,23 +31,17 @@ class BrandDetail extends Component {
     const {onUpdate, onCreate} = this.props;
     /* Xử lý ảnh */
     // e.preventDefault();
-    var data;
     const {selectedFile} = this.state;
-    if(selectedFile){
-      var formData1 = new FormData();
-      formData1.append('image',selectedFile);
-      /* Xử lý ảnh */
-      data = {name, image: formData1}
-    }
-    else{
-      data = {name}
-    }
+    var formData = new FormData();
+    formData.append("name",name);
+    formData.append("image",selectedFile);
+    /* Xử lý ảnh */
     if (id) {
-      onUpdate(id, data);
+      onUpdate(id, formData);
     }
     else {
       // 4. Create data
-      onCreate(data);
+      onCreate(formData);
     }
   }
 
@@ -97,7 +91,7 @@ class BrandDetail extends Component {
                     previewSource ? (
                       <img src={previewSource} className="w-100" alt=""/>
                     )
-                    : <img src={image.public_url && "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"} style={{ border: '1px solid', width: '100%' }} alt=""/>
+                    : <img src={image.public_url || "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"} style={{ border: '1px solid', width: '100%' }} alt=""/>
                   }
                   <div className="file btn btn-lg btn-primary">
                     Change Photo

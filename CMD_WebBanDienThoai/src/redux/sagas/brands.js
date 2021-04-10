@@ -59,11 +59,9 @@ function* handleCreate({ payload }) {
  * update
  */
 function* handleUpdate({ payload }) {
-  const {image} = payload.params;
-  console.log(payload.params)
   try {
     var detailResult;
-    if(image){
+    /* if(image){
       var imageResult = yield call(addImage, image);
       var result = yield call(updateBrand,{image: imageResult.data.images[0]._id }, payload.id);
       const data = get(result, "data", {});
@@ -77,7 +75,13 @@ function* handleUpdate({ payload }) {
       if (data.code !== 200) throw data;
       detailResult = yield call(getDetailBrand, payload.id);
       yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
-    }
+    } */
+    const result = yield call(updateBrand, payload.params, payload.id);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    detailResult = yield call(getDetailBrand, payload.id);
+    yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
+
     yield put(BrandActions.onGetList());
   } catch (error) {
     console.log(error);

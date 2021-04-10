@@ -92,9 +92,10 @@ const updateProduct = async (req, res, next) => {
 			brand,
 			specifications,
 			colors,
-			discount
+			discount,
+			//@Image
 		} = req.body;
-
+		//const {_bigimage} = req.files
 		const product = await Product.findById(IDProduct);
 		if (!product)
 			return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' });
@@ -134,7 +135,6 @@ const updateProduct = async (req, res, next) => {
 		}
 		if (colors) {
 			var colorArray=[];
-			console.log(colors)
 			for (let item of colors) {
 				let colorFound = await Color.findById(item._id);
 				if (colorFound) {
@@ -162,6 +162,10 @@ const updateProduct = async (req, res, next) => {
 			product.price_min = Math.min(...priceArray)
 			product.colors = colorArray;
 		}
+		/* if(_bigimage){
+			console.log("Truyền vào formData")
+			console.log(_bigimage);
+		} */
 		await product.save();
 		return res.status(200).json({ success: true, code: 200, message: '' });
 	} catch (error) {

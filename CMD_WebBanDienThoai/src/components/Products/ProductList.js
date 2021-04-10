@@ -38,7 +38,7 @@ class ProductList extends Component {
       min_p: filter.min_p ===null ? "" : filter.min_p,
       max_p: filter.max_p ===null ? "" : filter.max_p,
       filter: {
-        limit: 4,
+        limit: 5,
         page: 0,
       },
     }

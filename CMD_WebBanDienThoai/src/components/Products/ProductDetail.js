@@ -13,6 +13,7 @@ import {
   CModalHeader,
   CModalTitle,
 } from "@coreui/react";
+import Images from "./Images";
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import OperationActions from "../../redux/actions/operations";
@@ -33,6 +34,7 @@ class ProductDetail extends Component {
       brand: product ? product.brand._id : listBrands[0]._id,
       bigimage: product ? product.bigimage : "",
       image: product ? (product.image ? product.image : []) : [],
+      modal: false,
       // @Product Color
       colorList: product ? product.colors : [],
       nameColor: "",
@@ -44,7 +46,7 @@ class ProductDetail extends Component {
       indexColor: -1,
       imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
       previewColorImage: "",
-      selectedColor: "",
+      selectedColorImage: "",
       // @Product Image
       previewSource: "",
       selectedFile: "",
@@ -148,11 +150,6 @@ class ProductDetail extends Component {
     if(name === "previewSource"){
       this.setState({
         selectedFile: file,
-      });
-    }
-    else if(name === "previewColorImage"){
-      this.setState({
-        selectedColor: file,
       });
     }
   };
@@ -270,7 +267,9 @@ class ProductDetail extends Component {
       amountColor,
       onEditing,
       indexColor,
-      colorList
+      colorList,
+      selectedColorImage,
+      previewColorImage
     } = this.state;
     const { listColor } = this.props;
     if(!nameColor){
@@ -287,6 +286,8 @@ class ProductDetail extends Component {
             name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
             amount: amountColor,
             price: priceColor,
+            image: selectedColorImage,
+            image_link: previewColorImage
           });
         }
       } else {
@@ -297,6 +298,8 @@ class ProductDetail extends Component {
             name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
             amount: amountColor,
             price: priceColor,
+            image: selectedColorImage,
+            image_link: previewColorImage
           };
         }
       }
@@ -354,22 +357,13 @@ class ProductDetail extends Component {
       this.onCallback(id, formData2);
     } else if (selectedFile) {
       // 1. Lưu cloudinary
-      // eslint-disable-next-line
-      var reader = new FileReader();
-      reader.readAsDataURL(selectedFile);
-      // 2. Lưu state dạng FormData
-      reader.onloadend = () => {
-        // eslint-disable-next-line
-        var formData1 = new FormData();
-        formData1.append("image", selectedFile);
-        this.setState({
-          bigimage: formData1,
-        });
-        this.onCallback(id);
-      };
-      reader.onerror = () => {
-        console.error("Lỗi không thêm mới được Thumbnail product");
-      };
+      var formData1 = new FormData();
+      formData1.append("image", selectedFile);
+      console.log(formData1)
+      await this.setState({
+        bigimage: formData1,
+      });
+      this.onCallback(id);
     } else if (selectedList.length !== 0) {
       // 1. Lưu cloudinary
       // eslint-disable-next-line
@@ -381,8 +375,6 @@ class ProductDetail extends Component {
     } else {
       this.onCallback(id, null);
     }
-    // @Xử lý các thông tin khác
-    // 3. Update data
   };
 
   onCallback = (id, formData) => {
@@ -444,6 +436,18 @@ class ProductDetail extends Component {
     return specificationName.name;
   };
 
+  onCloseModal = (modal) =>{
+    this.setState({
+      modal
+    })
+  }
+  setImage = (item) =>{
+    this.setState({
+      previewColorImage: item.public_url,
+      selectedColorImage: item._id
+    })
+  }
+
   render() {
     const {
       name,
@@ -453,6 +457,7 @@ class ProductDetail extends Component {
       brand,
       bigimage,
       image,
+      modal,
       previewSource,
       previewList,
       specifications,
@@ -725,10 +730,10 @@ class ProductDetail extends Component {
                     <div className="btn btn-lg btn-primary img-des">
                       Choose Photo
                       <input
-                        type="file"
+                        type="button"
                         name="previewColorImage"
                         className="w-100 h-100"
-                        onChange={this.handleFileInputChange}
+                        onClick={() => this.onCloseModal(true)}
                       />
                     </div>
                   </div>
@@ -838,10 +843,12 @@ class ProductDetail extends Component {
               </div>
             </div>
           </div>
+          {modal && image && <Images modal={modal} onCloseModal={this.onCloseModal} image={image} setImage={this.setImage}
+          deletePreview={this.deletePreview}/>}
         </CModalBody>
         <CModalFooter>
           <CButton color="success" onClick={() => this.onSubmitImage(!large)}>
-            Lưu ảnh
+            Lưu
           </CButton>{" "}
           <CButton color="secondary" onClick={() => onClose(!large)}>
             Cancel

@@ -107,4 +107,5 @@ const removeTmp = async (path) => {
 };
 module.exports = {
 	uploadImage,
+	upload
 };
