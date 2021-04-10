@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './image-gallery.css'
 import ImageGallery from 'react-image-gallery';
-const PREFIX_URL = 'https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/';
 
 
 class ImageGalleries extends Component {
@@ -62,7 +61,6 @@ class ImageGalleries extends Component {
         });
       })
     }
-    
     return images;
   }
 
@@ -79,12 +77,14 @@ class ImageGalleries extends Component {
   }
 
   render(){
+    const {imageColor} = this.props;
     return (
       <>
       <section className='app container'>
         <ImageGallery
           ref={i => this._imageGallery = i}
           items={this.images}
+          startIndex={imageColor ? this.images.findIndex(item => item.original === imageColor) : 0}
           lazyLoad={true}
           onClick={this._onImageClick.bind(this)}
           onImageLoad={this._onImageLoad}

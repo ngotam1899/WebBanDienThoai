@@ -63,14 +63,17 @@ class ColorDetail extends Component {
 									<label>Tên tiếng anh:</label>
                   <input type="text" className="form-control" name="name_en" value={name_en} onChange={this.onChange}/>
 								</div>
-                <div className="form-group">
-                  <label>Chọn màu:</label>
-                  <SketchPicker
-                    color={ code }
-                    onChangeComplete={ this.handleChangeComplete }
-                  />
-                </div>
+
               </form>
+            </div>
+            <div className="col-12 col-lg-6">
+              <div className="form-group">
+                <label>Chọn màu:</label>
+                <SketchPicker
+                  color={ code }
+                  onChangeComplete={ this.handleChangeComplete }
+                />
+              </div>
             </div>
 					</div>
 				</CModalBody>

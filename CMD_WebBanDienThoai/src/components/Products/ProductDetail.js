@@ -306,8 +306,16 @@ class ProductDetail extends Component {
     }
     this.setState({
       colorList,
+      // Gán giá trị button
+      colorEditing: "none",
+      btnStatus: "Thêm màu",
+      // Gán giá trị fields
+      nameColor: "",
+      amountColor: 0,
+      priceColor: 0,
+      onEditing: false,
+      imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
     });
-    console.log("colorList", colorList);
   }
 
   componentDidUpdate(props) {
@@ -444,7 +452,8 @@ class ProductDetail extends Component {
   setImage = (item) =>{
     this.setState({
       previewColorImage: item.public_url,
-      selectedColorImage: item._id
+      selectedColorImage: item._id,
+      modal: false
     })
   }
 

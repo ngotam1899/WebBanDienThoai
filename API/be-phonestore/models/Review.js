@@ -5,16 +5,19 @@ const ReviewSchema = new Schema({
     content: {
         type: String
     },
+    rating: {
+        type: Number
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: "User"
     },
-    createdate: {
-        type: Date
-    },
-    lastupdate: {
-        type: Date
+    product: {
+        type: Schema.Types.ObjectId,
+        ref: "Product"
     }
+}, {
+    timestamps: true
 })
 
 const Review = mongoose.model('Review', ReviewSchema)

@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 // @Actions
 import CategoryActions from "../../redux/actions/categories";
 import SpecificationActions from "../../redux/actions/specification";
+// @Functions
+import { toastError } from "../../utils/toastHelper";
 
 const fields = ['name' ,{ key: 'actions', _style: { width: '10%'} }]
 
@@ -49,9 +51,9 @@ class CategoryDetail extends Component {
   }
 
   onSubmit = () =>{
-    const {id, name, pathseo, name_en} = this.state;
+    const {id, name, pathseo, name_en, specifications} = this.state;
     const {onUpdate, onCreate} = this.props;
-    var data = {name, pathseo, name_en}
+    var data = {name, pathseo, name_en, specifications}
     if (id) {
       onUpdate(id, data);
     }
@@ -68,17 +70,20 @@ class CategoryDetail extends Component {
   }
 
   onAddSpecification = (_id) =>{
-    const {onUpdate} = this.props;
-    const {specifications, id} = this.state;
-    specifications.push(_id)
-    onUpdate(id, {specifications});
+    const {specifications} = this.state;
+    if(specifications.indexOf(_id)!== -1){
+      toastError("Thuộc tính này đã tồn tại trong danh sách")
+    }
+    else{
+      specifications.push(_id)
+    }
+    this.setState({specifications})
   }
 
   onDeleteSpecification = (_id) =>{
-    const {onUpdate} = this.props;
-    const {specifications, id} = this.state;
+    const {specifications} = this.state;
     specifications.splice(specifications.indexOf(_id), 1);
-    onUpdate(id, {specifications});
+    this.setState({specifications})
   }
 
 	render() {

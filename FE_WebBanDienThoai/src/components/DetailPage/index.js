@@ -7,10 +7,6 @@ import {LOCAL} from '../../constants/index';
 import { Helmet } from 'react-helmet'
 // @Actions
 import ProductsActions from '../../redux/actions/products'
-import BrandActions from "../../redux/actions/brands";
-import CategoryActions from "../../redux/actions/categories";
-import OperationActions from "../../redux/actions/operations";
-import ColorActions from "../../redux/actions/color";
 // @Components
 import ImageGalleries from './ImageGalleries';
 import './styles.css';
@@ -21,43 +17,22 @@ class DetailPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantity: 1
+      quantity: 1,
+      imageColor: ""
     }
   }
   componentDidUpdate() {
     FB.XFBML.parse();
   }
   componentDidMount(){
-    const {match, onGetDetailProduct, onGetListBrand, onGetListCategory, onGetListColor, onGetListOperation, product} = this.props;
-    onGetListBrand();
-    onGetListCategory();
-    onGetListColor();
-    onGetListOperation();
+    const {match, onGetDetailProduct} = this.props;
     onGetDetailProduct(match.params.productID);
   }
 
-  setBrand = (brand) =>{
-    const {listBrands} = this.props;
-    const brandName = listBrands.find(obj => obj._id === brand);
-    return get(brandName, "name");
-  }
-
-  setCategory = (category) =>{
-    const {listCategories} = this.props;
-    const categoryName = listCategories.find(obj => obj._id === category);
-    return get(categoryName, "name");
-  }
-
-  setColor = (color) =>{
-    const {listColor} = this.props;
-    const colorName = listColor.find(obj => obj._id === color);
-    return get(colorName, "color");
-  }
-
-  setOperation = (operation) =>{
-    const {listOperations} = this.props;
-    const operationName = listOperations.find(obj => obj._id === operation);
-    return get(operationName, "operation");
+  setColor = (item) =>{
+    this.setState({
+      imageColor: item.image_link
+    })
   }
 
   onUpdateQuantity = (product, quantity) => {
@@ -79,8 +54,8 @@ class DetailPage extends Component {
   }
 
   render() {
-    const {product, currency, t, listColor, listOperations} = this.props;
-    const {quantity} = this.state;
+    const {product, currency, t} = this.props;
+    const {quantity, imageColor} = this.state;
     return (<>
       <div className="application">
         <Helmet>
@@ -108,22 +83,35 @@ class DetailPage extends Component {
               <div className="product-content-right">
                 <div className="product-breadcroumb">
                   <a href="/#/">{t('header.home.menu')}</a>
-                  <a href="/#/">{product && listColor && this.setCategory(product.category)}</a>
+                  <a href="/#/">{product && product.category.name}</a>
                   <a href="#">{product && product.name}</a>
                 </div>
                 {product && <div className="row">
                   <div className="col-sm-5">
-                    {product.image && <ImageGalleries imageDetail={product.image}/> }
+                    {product.image && <ImageGalleries imageDetail={product.image} imageColor={imageColor}/> }
                   </div>
 
                   <div className="col-sm-7">
                     <div className="product-inner">
                       <h2 className="product-name">{product.name}</h2>
                       <div className="product-inner-price">
-                        <ins>{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</ins> 
-                        <del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del>
+                        {product.price_max ===product.price_min ? <ins>{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</ins>
+                        : <ins>{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} -
+                        {currency=="VND" ? product.price_max : parseFloat(tryConvert(product.price_max, currency, false)).toFixed(2)} {currency}</ins> }
+                        {/* <del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del> */}
                       </div>
-
+                      <div className="row">
+                        {product.colors.map((item, index)=>{
+                          return(
+                            <div className="" key={index}>
+                              <button type="button" key={item._id} className="card text-dark py-2 px-3 m-2" onClick={() => this.setColor(item)}>
+                                <p className="mb-0 h6">{item.name_vn}</p>
+                                <p className="mb-0 h7">{currency=="VND" ? item.price : parseFloat(tryConvert(item.price, currency, false)).toFixed(2)} {currency}</p>
+                              </button>
+                            </div>
+                          )
+                        })}
+                      </div>
                       <form action="" className="cart">
                         <div className="quantity">
                           <div className="quantity buttons_added">
@@ -137,8 +125,8 @@ class DetailPage extends Component {
                       </form>
 
                       <div className="product-inner-category">
-                        <p className="mt-1 mb-0">{t('detail.category.label')}: <a href="">{this.setCategory(product.category)}</a></p>
-                        <p className="mt-1 mb-0">{t('detail.brand.label')}: <a href="">{this.setBrand(product.brand)}</a></p>
+                        <p className="mt-1 mb-0">{t('detail.category.label')}: <a href="">{product.category.name}</a></p>
+                        <p className="mt-1 mb-0">{t('detail.brand.label')}: <a href="">{product.brand.name}</a></p>
                       </div>
 
                       <ul className="nav nav-tabs">
@@ -161,7 +149,7 @@ class DetailPage extends Component {
                               <tbody>
                               {product && product.specifications.map((item,index)=>{
                                 return (
-                                <tr key="index">
+                                <tr key={index}>
                                   <td scope="row">{item.name}</td>
                                   <td>{item.value}</td>
                                 </tr>
@@ -210,10 +198,6 @@ class DetailPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     product: state.products.detail,
-    listBrands: state.brands.list,
-    listCategories: state.categories.list,
-    listColor: state.color.list,
-    listOperations: state.operations.list,
     currency: state.currency,
   }
 }
@@ -225,18 +209,6 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onGetDetailProduct: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
-    },
-    onGetListBrand: () => {
-      dispatch(BrandActions.onGetList())
-    },
-    onGetListCategory: () => {
-      dispatch(CategoryActions.onGetList())
-    },
-    onGetListColor: () => {
-      dispatch(ColorActions.onGetList())
-    },
-    onGetListOperation: () => {
-      dispatch(OperationActions.onGetList())
     },
     onUpdateProductInCart: (product, quantity) => {
       dispatch(ProductsActions.onUpdateProductInCart(product, quantity))

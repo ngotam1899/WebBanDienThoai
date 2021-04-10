@@ -77,7 +77,11 @@ const ProductSchema = new Schema({
         price: {
            type: Number
         }
-    }]
+    }],
+    overallReview: {
+        type: Number
+    },
+    
 }, {
     timestamps: true
 })

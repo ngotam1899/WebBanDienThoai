@@ -277,9 +277,9 @@ class ProductList extends Component {
               <div className="row justify-content-center">
               <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
-                  itemsCountPerPage={4}
+                  itemsCountPerPage={5}
                   totalItemsCount={total ? total : 0}
-                  pageRangeDisplayed={3}
+                  pageRangeDisplayed={2}
                   linkClass="page-link"
                   itemClass="page-item"
                   prevPageText="Previous"

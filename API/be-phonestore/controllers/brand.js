@@ -14,7 +14,14 @@ const getAllBrand = async (req, res, next) => {
 	}
 };
 const addBrand = async (req, res, next) => {
-	const newBrand = new Brand(req.body);
+	const {name} = req.body;
+  const newBrand = new Brand();
+  if (name) newBrand.name = name;
+  if (req.files){
+    const {image} = req.files;
+    const newImage = await imageController.upload(image,Image)
+    newBrand.image = newImage._id;
+  }
 	await newBrand.save();
 	return res.status(200).json({ success: true, code: 201, message: '', brand: newBrand });
 };

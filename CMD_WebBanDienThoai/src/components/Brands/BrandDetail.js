@@ -84,9 +84,13 @@ class BrandDetail extends Component {
 									<label>Tên thương hiệu:</label>
                   <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
 								</div>
-                <div className="form-group">
+
+              </form>
+            </div>
+            <div className="col-12 col-lg-6">
+              <div className="form-group">
 									<label>Ảnh thương hiệu:</label>
-                  {image ? <div className="form-group img-thumbnail3">
+                  {image ? <div className="form-group img-thumbnail3" style={{"height":"100%"}}>
                   {
                     previewSource ? (
                       <img src={previewSource} className="w-100" alt=""/>
@@ -99,7 +103,7 @@ class BrandDetail extends Component {
                     onChange={this.handleFileInputChange} style={{width: '100%'}}/>
                   </div>
                 </div>
-                : <div className="form-group img-thumbnail3">
+                : <div className="form-group img-thumbnail3" style={{"height":"100%"}}>
                   {
                     previewSource ? (
                       <img src={previewSource} className="w-100" alt=""/>
@@ -112,8 +116,7 @@ class BrandDetail extends Component {
                       onChange={this.handleFileInputChange} style={{width: '100%'}}/>
                   </div>
                 </div>}
-								</div>
-              </form>
+							</div>
             </div>
 					</div>
 				</CModalBody>
