@@ -3,27 +3,26 @@ import React, { Component } from 'react';
 import tryConvert from '../../utils/changeMoney'
 
 class CartItem extends Component {
-  onUpdateQuantity = (product, quantity) => {
+  onUpdateQuantity = (product, color, quantity) => {
     var {onUpdateProductInCart} = this.props;
     if(quantity > 0){
-      onUpdateProductInCart(product, quantity);
+      onUpdateProductInCart(product,color, quantity);
     }
   }
 
-  onDeleteProductInCart = (product) => {
+  onDeleteProductInCart = (color) => {
     var {onDeleteProductInCart} = this.props;
-    onDeleteProductInCart(product);
+    onDeleteProductInCart(color);
   }
 
   render() {
     var {cart, currency} = this.props;
-    var {product} = cart;
-    var {quantity} = cart;
+    var {product, quantity, color} = cart;
     return (
     <>
       <tr className="cart_item">
         <td className="product-remove">
-          <input value="x" className="btn btn-danger" type="button" onClick={()=> this.onDeleteProductInCart(product)}></input>
+          <input value="x" className="btn btn-danger" type="button" onClick={()=> this.onDeleteProductInCart(color)}></input>
         </td>
 
         <td className="product-thumbnail">
@@ -32,25 +31,24 @@ class CartItem extends Component {
         </td>
 
         <td className="product-name">
-          <a href="single-product.html">{product.name}</a>
+          <a href="single-product.html">{product.name}-{product.colors.find(i => i._id === color).name_en}</a>
         </td>
 
         <td className="product-price">
-          <span className="amount">{currency ==="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)}</span>
+          <span className="amount">{currency ==="VND" ? product.colors.find(i => i._id === color).price : parseFloat(tryConvert(product.colors.find(i => i._id === color).price, currency, false)).toFixed(2)}</span>
           
         </td>
 
         <td className="product-quantity">
           <div className="quantity buttons_added">
-            <input type="button" className="minus h-100" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
-            <input type="number" size="4" className="input-text qty text" title="Qty" value={quantity} min="0"
-              step="1" />
-            <input type="button" className="plus h-100" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
+            <input type="button" className="minus h-100" value="-" onClick={() => this.onUpdateQuantity(product, color, quantity - 1)}/>
+            <input type="number" size="4" className="input-text qty text" value={quantity} min="0" step="1" />
+            <input type="button" className="plus h-100" value="+" onClick={() => this.onUpdateQuantity(product, color, quantity + 1)}/>
           </div>
         </td>
 
         <td className="product-subtotal">
-          <span className="amount">{currency ==="VND" ? quantity*product.price : parseFloat(quantity*tryConvert(product.price, currency, false)).toFixed(2)}</span>
+          <span className="amount">{currency ==="VND" ? quantity*product.colors.find(i => i._id === color).price : parseFloat(quantity*tryConvert(product.colors.find(i => i._id === color).price, currency, false)).toFixed(2)}</span>
           
         </td>
       </tr>

@@ -29,7 +29,6 @@ const getAllProduct = async (req, res, next) => {
 		}
 		let limit = 5;
 		let page = 0;
-
 		if (req.query.limit != undefined && req.query.limit != '') {
 			const number_limit = parseInt(req.query.limit);
 			if (number_limit && number_limit > 0) {
@@ -50,7 +49,9 @@ const getAllProduct = async (req, res, next) => {
 		if (req.query.sort_p != undefined && req.query.sort_p != '0') {
 			sort['price'] = req.query.sort_p == '1' ? 1 : -1;
 		}
-
+		if (req.query.active != undefined && req.query.active != '0') {
+			condition.active = req.query.active=='1' ? true : false || undefined;
+		}
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
 		}
@@ -95,7 +96,6 @@ const updateProduct = async (req, res, next) => {
 			discount,
 			//@Image
 		} = req.body;
-		//const {_bigimage} = req.files
 		const product = await Product.findById(IDProduct);
 		if (!product)
 			return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' });
@@ -162,10 +162,6 @@ const updateProduct = async (req, res, next) => {
 			product.price_min = Math.min(...priceArray)
 			product.colors = colorArray;
 		}
-		/* if(_bigimage){
-			console.log("Truyền vào formData")
-			console.log(_bigimage);
-		} */
 		await product.save();
 		return res.status(200).json({ success: true, code: 200, message: '' });
 	} catch (error) {
@@ -276,10 +272,38 @@ const getProductDetail = async(req, res, next) => {
 	}
 }
 
+const deactivateProduct = async (req, res, next) => {
+	try {
+		const { IDProduct } = req.params;
+		const product = await Product.findById(IDProduct);
+		if (!product)	return res.status(200).json({ success: false, code: 404, message: 'Can not found product' });
+		product.active = false;
+		await product.save();
+		return res.status(200).json({ success: true, code: 200, product });
+	} catch (error) {
+		return next(error)
+	}
+}
+
+const activateProduct = async (req, res, next) => {
+	try {
+		const { IDProduct } = req.params;
+		const product = await Product.findById(IDProduct);
+		if (!product)	return res.status(200).json({ success: false, code: 404, message: 'Can not found product' });
+		product.active = true;
+		await product.save();
+		return res.status(200).json({ success: true, code: 200, product });
+	} catch (error) {
+		return next(error)
+	}
+}
+
 module.exports = {
 	getAllProduct,
 	getProductDetail,
 	updateProduct,
 	addProduct,
-	deleteProduct
+	deleteProduct,
+	deactivateProduct,
+	activateProduct
 };

@@ -7,6 +7,10 @@ const OrderSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "Product"
         },
+        color: {
+            type: Schema.Types.ObjectId,
+            ref: "Color"
+        },
         name: {
             type: String
         },
@@ -45,7 +49,7 @@ const OrderSchema = new Schema({
     note: {
         type: String
     },
-    is_paid: {
+    is_paid: {          // Đã thanh toán chưa ? "DateTime" : ""
         type: Boolean,
         default: false
     },
@@ -54,13 +58,17 @@ const OrderSchema = new Schema({
         enum: ['local', 'paypal'],
         default: 'local'
     },
-    status: {
+    status: {           // Đã nhận hàng chưa ? "DateTime" : ""
         type: Boolean,
         default: false
     },
-    confirmed: {
+    confirmed: {        // Đã xác nhận chưa ? "DateTime" : ""
         type: Boolean,
         default: false
+    },
+    active: {
+        type: Boolean,
+        default: true  
     }
 }, {
     timestamps: true

@@ -84,7 +84,10 @@ router.route('/').get(productController.getAllProduct).post(productController.ad
 router.route('/:IDProduct')
   .get(productController.getProductDetail)
   .put(productController.updateProduct)
-  .delete(productController.deleteProduct);
+	.delete(productController.deleteProduct);
+
+router.route('/:IDProduct/activate').put(productController.activateProduct)
+router.route('/:IDProduct/deactivate').put(productController.deactivateProduct)
 
 router.route('/comment').post(passport.authenticate('jwt', { session: false }), commentController.addComment);
 

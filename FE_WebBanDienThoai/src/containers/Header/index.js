@@ -52,7 +52,7 @@ class Header extends Component {
     var { cart } = this.props;
     for (var i = 0; i < cart.length; i++) {
       total = total + cart[i].quantity
-      totalPrice = totalPrice + cart[i].quantity * cart[i].product.price
+      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
     }
     this.setState({
       total,

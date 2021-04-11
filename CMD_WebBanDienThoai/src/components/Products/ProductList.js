@@ -18,14 +18,13 @@ import Pagination from "react-js-pagination";
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
-import ColorActions from "../../redux/actions/color";
 import CategoryActions from "../../redux/actions/categories";
 import SpecificationActions from "../../redux/actions/specification";
 
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
 
-const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { width: '15%'} }]
+const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { width: '25%'} }]
 
 class ProductList extends Component {
   constructor(props) {
@@ -37,18 +36,19 @@ class ProductList extends Component {
       keyword: filter.keyword ===null ? "" : filter.keyword,
       min_p: filter.min_p ===null ? "" : filter.min_p,
       max_p: filter.max_p ===null ? "" : filter.max_p,
+      active: filter.active ===null ? "" : filter.active,
       filter: {
         limit: 5,
         page: 0,
+        active: 1
       },
     }
   }
   UNSAFE_componentWillMount() {
-    const { onGetList, onGetListColor, onGetListBrand, location, onClearState, onGetListCategory, onGetListSpecification } = this.props;
+    const { onGetList, onGetListBrand, location, onClearState, onGetListCategory, onGetListSpecification } = this.props;
     onClearState();
     onGetListCategory();
     const { filter } = this.state;
-    onGetListColor();
     onGetListBrand();
     const filters = getFilterParams(location.search);
     var params = {
@@ -75,7 +75,7 @@ class ProductList extends Component {
     var target=event.target;
     var name=target.name;
     var value=target.value;
-    this.handleUpdateFilter({ [name]:  value});
+    this.handleUpdateFilter({ [name]:  value, page: 0});
   }
 
   // Change distance price
@@ -113,7 +113,7 @@ class ProductList extends Component {
   // Button search
   searchKeyWorld = (e) => {
     const {keyword} = this.state;
-    this.handleUpdateFilter({ keyword});
+    this.handleUpdateFilter({ keyword, page: 0});
   }
 
   setLarge = (large) => {
@@ -158,6 +158,19 @@ class ProductList extends Component {
     onDelete(_id);
   }
 
+  onActivate = (id, active)=>{
+    const {onActivate, onDeactivate} = this.props;
+
+    if(active){
+      console.log(id, active)
+      onDeactivate(id);
+    }
+    else{
+      console.log(id, active)
+      onActivate(id)
+    }
+  }
+
   render () {
     const {large, keyword, min_p, max_p} = this.state;
     const {listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location} = this.props;
@@ -178,7 +191,7 @@ class ProductList extends Component {
                   </div>
                 </form>
                 <div className="row">
-                  <div className="col-12 col-md-4">
+                  <div className="col-12 col-md-3">
                     <div className="card bg-danger">
                       <div className="p-2">
                         <b className="text-white">Sắp xếp theo tên</b>
@@ -190,7 +203,7 @@ class ProductList extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-4">
+                  <div className="col-12 col-md-3">
                     <div className="card bg-warning">
                       <div className="p-2">
                         <b className="text-white">Sắp xếp theo giá</b>
@@ -202,7 +215,7 @@ class ProductList extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-4">
+                  <div className="col-12 col-md-3">
                     <div className="card bg-success">
                       <div className="p-2">
                         <b className="text-white">Duyệt theo khoảng giá</b>
@@ -216,16 +229,29 @@ class ProductList extends Component {
                       </div>
                     </div>
                   </div>
+                  <div className="col-12 col-md-3">
+                    <div className="card bg-primary">
+                      <div className="p-2">
+                        <b className="text-white">Duyệt trạng thái kích hoạt</b>
+                        <select className="form-control mt-2" value={filter.active ? filter.active : this.state.filter.active} name="active" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="0">Chọn kiểu trạng thái</option>
+                          <option value="1">Hiển thị trên trang bán hàng</option>
+                          <option value="-1">Ẩn trên trang bán hàng</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="row">
                   <div className="col">
                   <p className="float-left" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>
-                  <CButton
-                    onClick={() => this.setLarge(!large)}
-                    className="mb-1 float-right"
-                    color="success"
-                  > Thêm sản phẩm
-                  </CButton>
+
+                    <CButton
+                      onClick={() => this.setLarge(!large)}
+                      className="mb-1 float-right"
+                      color="success"
+                    > Thêm sản phẩm
+                    </CButton>
                   </div>
                 </div>
 
@@ -251,6 +277,12 @@ class ProductList extends Component {
                     'actions':
                     (item)=>(
                       <td>
+                        <CButton
+                          onClick={() => this.onActivate(item._id, item.active)}
+                          className={item.active ? "mr-1 mb-1 mb-xl-0 bg-primary text-white" : "mr-1 mb-1 mb-xl-0 bg-success text-white"}
+                        >
+                          {item.active ? "Deactivate" : "Activate"}
+                        </CButton>
                         <CButton
                           onClick={() => this.onUpdate(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"
@@ -318,8 +350,11 @@ const mapDispatchToProps = (dispatch) => {
     onGetListBrand: () => {
       dispatch(BrandActions.onGetList())
     },
-    onGetListColor: () => {
-      dispatch(ColorActions.onGetList())
+    onActivate: (id) => {
+      dispatch(ProductsActions.onActivate(id));
+    },
+    onDeactivate: (id) => {
+      dispatch(ProductsActions.onDeactivate(id));
     },
     onGetListCategory: () => {
       dispatch(CategoryActions.onGetList())

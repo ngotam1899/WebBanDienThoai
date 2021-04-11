@@ -26,7 +26,7 @@ class CartPage extends Component {
     var { cart } = this.props;
     for (var i = 0; i < cart.length; i++) {
       total = total + cart[i].quantity
-      totalPrice = totalPrice + cart[i].quantity * cart[i].product.price
+      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
     }
     this.setState({
       total,
@@ -40,7 +40,7 @@ class CartPage extends Component {
     var {cart} = this.props;
     for(var i=0; i< cart.length; i++){
       total = total+cart[i].quantity
-      totalPrice = totalPrice+ cart[i].quantity* cart[i].product.price
+      totalPrice = totalPrice+ cart[i].quantity* cart[i].product.colors.find(item=> item._id === cart[i].color).price
     }
     this.setState({ 
       total,
@@ -198,11 +198,11 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    onDeleteProductInCart: (product) => {
-      dispatch(ProductsActions.onDeleteProductInCart(product))
+    onDeleteProductInCart: (color) => {
+      dispatch(ProductsActions.onDeleteProductInCart(color))
     },
-    onUpdateProductInCart: (product, quantity) => {
-      dispatch(ProductsActions.onUpdateProductInCart(product, quantity))
+    onUpdateProductInCart: (product, color, quantity) => {
+      dispatch(ProductsActions.onUpdateProductInCart(product,color, quantity))
     },
   }
 }

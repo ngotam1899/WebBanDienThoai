@@ -132,20 +132,20 @@ const onUpdateError = (error) => ({
  * cart _ products
  */
 
-const onAddProductToCart = (product, quantity) =>({
+const onAddProductToCart = (product, color, quantity) =>({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
-  product, quantity
+  product,color, quantity
 })
-const onDeleteProductInCart = (product) =>{
+const onDeleteProductInCart = (color) =>{
   return {
     type: ProductsActionTypes.DELETE_PRODUCT_CART,
-    product
+    color
   }
 }
-const onUpdateProductInCart = (product, quantity) =>{
+const onUpdateProductInCart = (product,color, quantity) =>{
   return {
     type: ProductsActionTypes.UPDATE_PRODUCT_CART,
-    product, quantity
+    product,color, quantity
   }
 }
 const onChangeCurrency = (unit) =>{

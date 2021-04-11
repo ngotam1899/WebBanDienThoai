@@ -28,6 +28,7 @@ class ProductPage extends Component {
       filter: {
         limit: 4,
         page: 0,
+        active: 1,
         category: match.params.categoryID ? match.params.categoryID : null
       },
 
@@ -76,24 +77,18 @@ class ProductPage extends Component {
 
   // Sort with brands
   onSetBrand = (value) => {
-    this.handleUpdateFilter({ brand: value });
+    this.handleUpdateFilter({ brand: value, page: 0 });
   }
-
-  // Sort with colors
-  onSetColor = (value) => {
-    this.handleUpdateFilter({ color: value });
-  }
-
   // Button search
   searchKeyWorld = (e) => {
     const {keyword} = this.state;
-    this.handleUpdateFilter({ keyword});
+    this.handleUpdateFilter({ keyword, page : 0});
   }
 
   // Change distance price
   distancePrice = (e) => {
     const {min_p, max_p} = this.state;
-    this.handleUpdateFilter({ min_p, max_p});
+    this.handleUpdateFilter({ min_p, max_p, page: 0});
   }
 
   // Sort name
@@ -103,7 +98,7 @@ class ProductPage extends Component {
 
   // Sort price
   handleChangeSortPrice = (event) =>{
-    this.handleUpdateFilter({ sort_p: event.target.value });
+    this.handleUpdateFilter({ sort_p: event.target.value, page : 0 });
   }
 
   // Chuyển router (thêm vào params) 
@@ -127,7 +122,7 @@ class ProductPage extends Component {
 
   render() {
     const {keyword, min_p, max_p} = this.state;
-    const { listProducts, onAddProductToCart,listColor, listBrand, t, location, total } = this.props;
+    const { listProducts,listColor, listBrand, t, location, total } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <>
@@ -185,7 +180,7 @@ class ProductPage extends Component {
                     <div className="card bg-light mb-3">
                       <div className="card-header bg-info text-white"><h5 className="m-0">{t('shop.color.card')}</h5></div>
                       <div className="card-body">
-                        <form>
+                        {/* <form>
                           <div className="radio">
                             <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(null)}
                             checked={(filter.color === null || filter.brand === undefined) && "checked"}/>{t('shop.all.radio-button')}</label>
@@ -198,7 +193,7 @@ class ProductPage extends Component {
                             </div>
                             )
                           })}
-                        </form>
+                        </form> */}
                       </div>
                     </div>
                   </div>
@@ -261,8 +256,7 @@ class ProductPage extends Component {
                 <div className="row">
                   {listProducts.map((product, index) => {
                     return (
-                        <ProductItem product={product} key={index} 
-                        onAddProductToCart={onAddProductToCart} />
+                        <ProductItem product={product} key={index} />
                       )
                   })}
                 </div>
@@ -276,7 +270,7 @@ class ProductPage extends Component {
                 <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
                   itemsCountPerPage={4}
-                  totalItemsCount={total}
+                  totalItemsCount={total ? total : 10}
                   pageRangeDisplayed={3}
                   linkClass="page-link"
                   itemClass="page-item"
@@ -308,9 +302,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onGetList: (params) => {
       dispatch(ProductsActions.onGetList(params))
-    },
-    onAddProductToCart: (product) => {
-      dispatch(ProductsActions.onAddProductToCart(product, 1));
     },
     onGetListBrand: () => {
       dispatch(BrandActions.onGetList())

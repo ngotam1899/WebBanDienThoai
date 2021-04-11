@@ -7,16 +7,17 @@ var data = JSON.parse(localStorage.getItem('CART'));
 var initialState = data ? data : [];
 
 const cart = (state = initialState, action) =>{
-  var {product, quantity} = action;
+  var {product, color, quantity} = action;
   var index = -1;
   switch (action.type){
     case ProductsActionTypes.ADD_PRODUCT_TO_CART:
-      index = findProductInCart(state, product);
+      index = findProductInCart(state, color);
       if(index !== -1){
         state[index].quantity += quantity;  //cộng với 1
       }else{
         state.push({
-          product, 
+          product,
+          color,
           quantity
         });
       }
@@ -24,7 +25,7 @@ const cart = (state = initialState, action) =>{
       toastSuccess('Đã thêm vào giỏ hàng');
       return [...state];
     case ProductsActionTypes.DELETE_PRODUCT_CART:
-      index = findProductInCart(state, product);
+      index = findProductInCart(state, color);
       if(index !== -1){
         state.splice(index, 1);  // cắt đi từ vị trí index, cắt 1 phần tử
       }
@@ -32,8 +33,9 @@ const cart = (state = initialState, action) =>{
       toastSuccess('Đã xóa khỏi giỏ hàng');
       return [...state];
     case ProductsActionTypes.UPDATE_PRODUCT_CART:
-      index = findProductInCart(state, product);
+      index = findProductInCart(state, color);
       if(index !== -1){
+        state[index].product = product;
         state[index].quantity = quantity;
       }
       localStorage.setItem('CART', JSON.stringify(state));
@@ -44,13 +46,13 @@ const cart = (state = initialState, action) =>{
   }
 }
 
-const findProductInCart = (cart, product) => {
+const findProductInCart = (cart, productColor) => {
   //Trường hợp không tìm thấy
   var index = -1;
   if(cart.length>0){
     for(var i=0; i<cart.length; i++){
       // xem coi các product trong mảng cart có tồn tại product mới chọn ko?
-      if(cart[i].product._id === product._id){
+      if(cart[i].color === productColor){
         index = i;  //trả về vị trí
         break;
       }

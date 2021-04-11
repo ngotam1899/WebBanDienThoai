@@ -5,14 +5,9 @@ import { compose } from "redux";
 import { withTranslation } from "react-i18next";
 // @Functions
 import tryConvert from "../../utils/changeMoney";
-import numberWithCommas from "../../utils/formatPrize";
+import numberWithCommas from "../../utils/formatPrice";
 
 class ProductItem extends Component {
-  onAddToCart = (product) => {
-    var { onAddProductToCart } = this.props;
-    onAddProductToCart(product);
-  };
-
   render() {
     const { product, currency, t } = this.props;
     return (
@@ -37,16 +32,16 @@ class ProductItem extends Component {
             </Link>
           </h2>
           <div className="product-carousel-price">
-            {/* <ins>
-              {currency == "VND"
-                ? numberWithCommas(product.price)
+            <ins>
+              {currency === "VND" && product.price_min 
+                ? numberWithCommas(product.price_min)
                 : numberWithCommas(
                     parseFloat(
-                      tryConvert(product.price, currency, false)
+                      tryConvert(product.price_min, currency, false)
                     ).toFixed(2)
                   )}{" "}
               {currency}
-            </ins>{" "} */}
+            </ins>{" "}
             <br />
             {/* <del>
               {currency == "VND"
@@ -58,14 +53,6 @@ class ProductItem extends Component {
                   )}{" "}
               {currency}
             </del> */}
-          </div>
-          <div className="product-option-shop">
-            <button
-              className="add_to_cart_button"
-              onClick={() => this.onAddToCart(product)}
-            >
-              {t("shop.add-to-cart.button")}
-            </button>
           </div>
         </div>
       </div>

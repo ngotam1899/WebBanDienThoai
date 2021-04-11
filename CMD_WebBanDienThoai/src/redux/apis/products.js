@@ -22,26 +22,25 @@ export const getDetailProduct  = (productId) =>{
 
 // http://localhost:3000/products  METHOD = POST
 export const addProduct = (data) =>{
-    return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);
 };
 
 // http://localhost:3000/products/:id  METHOD = PUT
 export const updateProduct  = (data, productId) =>{
-    return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${productId}`, data);
+  return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${productId}`, data);
 }
 
 // http://localhost:3000/products/:id  METHOD = DELETE
 export const deleteProduct  = (productId) =>{
-    return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${productId}`);
+  return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${productId}`);
 }
 
-// http://localhost:3000/products/operations  METHOD = GET
-export const getAllOperations = () =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/operations`);
+// http://localhost:3000/products/:id/activate  METHOD = PUT
+export const activateProduct  = (productId) =>{
+  return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${productId}/activate`);
 }
 
-// http://localhost:3000/products/colors  METHOD = GET
-export const getAllColors = () =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/colors`);
+// http://localhost:3000/products/:id/deactivate  METHOD = PUT
+export const deactivateProduct  = (productId) =>{
+  return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${productId}/deactivate`);
 }
-

@@ -15,6 +15,9 @@ const ProductSchema = new Schema({
     amount: {   // Tổng số lượng các sản phẩm
         type: Number
     },
+    active: {
+        type: Boolean
+    },
     discount:{
         type: Number
     },

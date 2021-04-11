@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct, addProduct,updateProduct, deleteProduct } from "../apis/products";
+import { getAllProducts, getDetailProduct, addProduct,updateProduct, deleteProduct, activateProduct, deactivateProduct } from "../apis/products";
 import { addImage} from "../apis/cloudinary";
 import UIActions from "../actions/ui";
 
@@ -141,7 +141,6 @@ function* handleUpdateImage( {payload} ) {
     }
     yield put(ProductsActions.onGetList());
   } catch (error) {
-    console.log(error);
     yield put(ProductsActions.onUpdateImageError(error));
   }
 }
@@ -158,8 +157,31 @@ function* handleDelete({ id }) {
     yield put(ProductsActions.onDeleteSuccess(data));
     yield put(ProductsActions.onGetList());
   } catch (error) {
-    console.log(error);
     yield put(ProductsActions.onDeleteError(error));
+  }
+}
+
+function* handleActivate({payload}) {
+  try {
+    const result = yield call(activateProduct, payload);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onActivateSuccess(data));
+    yield put(ProductsActions.onGetList());
+  } catch (error) {
+    yield put(ProductsActions.onActivateError(error));
+  }
+}
+
+function* handleDeactivate({payload}) {
+  try {
+    const result = yield call(deactivateProduct, payload);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onDeactivateSuccess(data));
+    yield put(ProductsActions.onGetList());
+  } catch (error) {
+    yield put(ProductsActions.onDeactivateError(error));
   }
 }
 
@@ -169,11 +191,9 @@ function* handleDelete({ id }) {
 export function* watchGetList() {
   yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
 }
-
  export function* watchGetDetail() {
   yield takeEvery(ProductsActionTypes.GET_DETAIL, handleGetDetail);
 }
-
 export function* watchCreate() {
   yield takeEvery(ProductsActionTypes.CREATE, handleCreate);
 }
@@ -183,6 +203,12 @@ export function* watchUpdateImage() {
 export function* watchDelete() {
   yield takeEvery(ProductsActionTypes.DELETE, handleDelete);
 }
+export function* watchActivate() {
+  yield takeEvery(ProductsActionTypes.ACTIVATE, handleActivate);
+}
+export function* watchDeactivate() {
+  yield takeEvery(ProductsActionTypes.DEACTIVATE, handleDeactivate);
+}
 
 export default function* rootSaga() {
   yield all([
@@ -191,5 +217,7 @@ export default function* rootSaga() {
     fork(watchCreate),
     fork(watchUpdateImage),
     fork(watchDelete),
+    fork(watchActivate),
+    fork(watchDeactivate),
   ]);
 }

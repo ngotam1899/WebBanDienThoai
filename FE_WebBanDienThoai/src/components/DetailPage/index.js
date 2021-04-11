@@ -12,13 +12,16 @@ import ImageGalleries from './ImageGalleries';
 import './styles.css';
 // @Functions
 import tryConvert from '../../utils/changeMoney'
+import numberWithCommas from "../../utils/formatPrice";
+import { toastError } from '../../utils/toastHelper';
 
 class DetailPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       quantity: 1,
-      imageColor: ""
+      imageColor: "",
+      check: 0
     }
   }
   componentDidUpdate() {
@@ -31,7 +34,8 @@ class DetailPage extends Component {
 
   setColor = (item) =>{
     this.setState({
-      imageColor: item.image_link
+      imageColor: item.image_link,
+      check: item._id
     })
   }
 
@@ -44,8 +48,14 @@ class DetailPage extends Component {
   }
 
   onAddToCart = (product, quantity) =>{
-		var {onAddProductToCart} = this.props;
-		onAddProductToCart(product, quantity);
+    var {onAddProductToCart} = this.props;
+    const {check} = this.state;
+    if(check===0){
+      toastError("Chưa chọn màu sản phẩm")
+    }
+    else{
+      onAddProductToCart(product, check, quantity);
+    }
   }
   
   componentWillUnmount(){
@@ -53,9 +63,24 @@ class DetailPage extends Component {
     onClearDetail()
   }
 
+  setPrice = (currency, min, max) =>{
+    if(currency==="VND"){
+      if(min===max){
+        return numberWithCommas(min)
+      }
+      else return `${numberWithCommas(min)}-${numberWithCommas(max)}`
+    }
+    else{
+      if(min===max){
+        return numberWithCommas(parseFloat(tryConvert(min, currency, false)).toFixed(0))
+      }
+      else return `${numberWithCommas(parseFloat(tryConvert(min, currency, false)).toFixed(0))}-${numberWithCommas(parseFloat(tryConvert(max, currency, false)).toFixed(0))}`
+    }
+  }
+
   render() {
     const {product, currency, t} = this.props;
-    const {quantity, imageColor} = this.state;
+    const {quantity, imageColor, check} = this.state;
     return (<>
       <div className="application">
         <Helmet>
@@ -77,16 +102,16 @@ class DetailPage extends Component {
       </div>
       <div className="single-product-area">
         <div className="zigzag-bottom"></div>
-        <div className="container">
+        {product && <div className="container">
           <div className="row">
             <div className="col-md-12">
               <div className="product-content-right">
                 <div className="product-breadcroumb">
                   <a href="/#/">{t('header.home.menu')}</a>
-                  <a href="/#/">{product && product.category.name}</a>
-                  <a href="#">{product && product.name}</a>
+                  <a href={`/#/products/a/${product.category._id}`}>{product.category.name}</a>
+                  <a href={`/#/product/a/${product._id}`}>{product.name}</a>
                 </div>
-                {product && <div className="row">
+                <div className="row">
                   <div className="col-sm-5">
                     {product.image && <ImageGalleries imageDetail={product.image} imageColor={imageColor}/> }
                   </div>
@@ -95,34 +120,34 @@ class DetailPage extends Component {
                     <div className="product-inner">
                       <h2 className="product-name">{product.name}</h2>
                       <div className="product-inner-price">
-                        {product.price_max ===product.price_min ? <ins>{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</ins>
-                        : <ins>{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} -
-                        {currency=="VND" ? product.price_max : parseFloat(tryConvert(product.price_max, currency, false)).toFixed(2)} {currency}</ins> }
+                        <ins>{product.price_min && this.setPrice(currency, product.price_min, product.price_max)} {currency}</ins>
+                      
                         {/* <del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del> */}
                       </div>
                       <div className="row">
                         {product.colors.map((item, index)=>{
                           return(
                             <div className="" key={index}>
-                              <button type="button" key={item._id} className="card text-dark py-2 px-3 m-2" onClick={() => this.setColor(item)}>
-                                <p className="mb-0 h6">{item.name_vn}</p>
-                                <p className="mb-0 h7">{currency=="VND" ? item.price : parseFloat(tryConvert(item.price, currency, false)).toFixed(2)} {currency}</p>
+                              <button type="button" key={item._id} 
+                                className={item.amount===0 ? "card text-dark py-2 px-3 m-2 bg-active" :"card text-dark py-2 px-3 m-2"} 
+                                onClick={() => this.setColor(item)} 
+                                disabled={item.amount===0 ? true : false}>
+                                <p className="mb-0 h6">{item.name_vn} <span className="fa fa-check" style={{"display": check===item._id ? "inline-block" : "none"}}></span></p>
+                                <p className="mb-0 h7">{this.setPrice(currency, item.price, item.price)} {currency}</p>
                               </button>
                             </div>
                           )
                         })}
                       </div>
-                      <form action="" className="cart">
-                        <div className="quantity">
+                        {/* <div className="quantity">
                           <div className="quantity buttons_added">
                             <input type="button" className="minus h-100" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
-                            <input type="number" size="4" className="input-text qty text" title="Qty" value={quantity} min="0"
-                              step="1" />
+                            <input type="number" className="input-text qty text" value={quantity} min="0" step="1" readOnly/>
                             <input type="button" className="plus h-100" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
                           </div>
-                        </div>
+                        </div> */}
                         <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
-                      </form>
+             
 
                       <div className="product-inner-category">
                         <p className="mt-1 mb-0">{t('detail.category.label')}: <a href="">{product.category.name}</a></p>
@@ -184,12 +209,12 @@ class DetailPage extends Component {
                       </div>
                     </div>
                   </div>
-                </div>}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      }</div>
     </>
     )
   }
@@ -210,11 +235,11 @@ const mapDispatchToProps = (dispatch, props) => {
     onGetDetailProduct: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
     },
-    onUpdateProductInCart: (product, quantity) => {
-      dispatch(ProductsActions.onUpdateProductInCart(product, quantity))
+    onUpdateProductInCart: (product, color,  quantity) => {
+      dispatch(ProductsActions.onUpdateProductInCart(product, color, quantity))
     },
-    onAddProductToCart: (product, quantity) => {
-      dispatch(ProductsActions.onAddProductToCart(product, quantity));
+    onAddProductToCart: (product, color, quantity) => {
+      dispatch(ProductsActions.onAddProductToCart(product, color, quantity));
     },
   }
 }

@@ -121,3 +121,9 @@
   font-weight: bold;
   color: red;
 }
+.bg-active {
+	background-color: #f6f6f6;
+}
+.bg-active p{
+	color: #bbb;
+}

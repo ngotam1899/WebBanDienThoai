@@ -19,12 +19,16 @@ export const ProductsActionTypes = {
   DELETE_SUCCESS: "DELETE_SUCCESS",
   DELETE_ERROR: "DELETE_ERROR",
 
+  ACTIVATE: "ACTIVATE",
+  ACTIVATE_SUCCESS: "ACTIVATE_SUCCESS",
+  ACTIVATE_ERROR: "ACTIVATE_ERROR",
+
+  DEACTIVATE: "DEACTIVATE",
+  DEACTIVATE_SUCCESS: "DEACTIVATE_SUCCESS",
+  DEACTIVATE_ERROR: "DEACTIVATE_ERROR",
+
   CLEAR_DETAIL: "CLEAR_DETAIL",
   CLEAR_STATE: "CLEAR_STATE",
-
-  ADD_PRODUCT_TO_CART: "ADD_PRODUCT_TO_CART",
-  UPDATE_PRODUCT_CART: "UPDATE_PRODUCT_CART",
-  DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
 };
 
 Object.keys(ProductsActionTypes).forEach((key) => {
@@ -131,30 +135,43 @@ const onDeleteError = (error) => ({
   type: ProductsActionTypes.DELETE_ERROR,
   payload: error,
 });
-
 /**
  *
- * cart _ products
+ * activate
  */
+const onActivate = (id) => ({
+  type: ProductsActionTypes.ACTIVATE,
+  payload: id,
+});
 
-const onAddProductToCart = (product, quantity) =>({
-  type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
-  product, quantity
-})
+const onActivateSuccess = (detail) => ({
+  type: ProductsActionTypes.ACTIVATE_SUCCESS,
+  payload: detail,
+});
 
-const onDeleteProductInCart = (product) =>{
-  return {
-    type: ProductsActionTypes.DELETE_PRODUCT_CART,
-    product
-  }
-}
+const onActivateError = (error) => ({
+  type: ProductsActionTypes.ACTIVATE_ERROR,
+  payload: error,
+});
+/**
+ *
+ * deactivate
+ */
+const onDeactivate = (id) => ({
+  type: ProductsActionTypes.DEACTIVATE,
+  payload: id,
+});
 
-const onUpdateProductInCart = (product, quantity) =>{
-  return {
-    type: ProductsActionTypes.UPDATE_PRODUCT_CART,
-    product, quantity
-  }
-}
+const onDeactivateSuccess = (detail) => ({
+  type: ProductsActionTypes.DEACTIVATE_SUCCESS,
+  payload: detail,
+});
+
+const onDeactivateError = (error) => ({
+  type: ProductsActionTypes.DEACTIVATE_ERROR,
+  payload: error,
+});
+
 const ProductsActions = {
   onClearDetail,
   onClearState,
@@ -179,9 +196,13 @@ const ProductsActions = {
   onDeleteSuccess,
   onDeleteError,
 
-  onAddProductToCart,
-  onDeleteProductInCart,
-  onUpdateProductInCart,
+  onActivate,
+  onActivateSuccess,
+  onActivateError,
+
+  onDeactivate,
+  onDeactivateSuccess,
+  onDeactivateError,
 };
 
 export default ProductsActions;

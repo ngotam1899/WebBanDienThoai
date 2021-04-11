@@ -16,7 +16,6 @@ import {
 import Images from "./Images";
 // @Actions
 import ProductsActions from "../../redux/actions/products";
-import OperationActions from "../../redux/actions/operations";
 import ColorActions from "../../redux/actions/color";
 import CategoryActions from "../../redux/actions/categories";
 
@@ -44,6 +43,7 @@ class ProductDetail extends Component {
       btnStatus: "Thêm màu",
       onEditing: false,
       indexColor: -1,
+      imageID: 0,
       imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
       previewColorImage: "",
       selectedColorImage: "",
@@ -103,8 +103,7 @@ class ProductDetail extends Component {
   };
 
   componentWillMount() {
-    const { onGetListOperation, onGetListColor } = this.props;
-    onGetListOperation();
+    const { onGetListColor } = this.props;
     onGetListColor();
   }
 
@@ -245,6 +244,7 @@ class ProductDetail extends Component {
       amountColor: item.amount,
       priceColor: item.price,
       onEditing: true,
+      imageID: item.image,
       imageColor: item.image_link ? item.image_link :  "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
       indexColor: colorList.indexOf(item),
       // Trả preview về mặc định
@@ -268,6 +268,8 @@ class ProductDetail extends Component {
       onEditing,
       indexColor,
       colorList,
+      imageID,
+      imageColor,
       selectedColorImage,
       previewColorImage
     } = this.state;
@@ -298,8 +300,8 @@ class ProductDetail extends Component {
             name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
             amount: amountColor,
             price: priceColor,
-            image: selectedColorImage,
-            image_link: previewColorImage
+            image: selectedColorImage ? selectedColorImage : imageID,
+            image_link: previewColorImage ? previewColorImage : imageColor
           };
         }
       }
@@ -756,7 +758,7 @@ class ProductDetail extends Component {
                     onChange={this.onChange}
                   >
                     <option value={-1}>Chọn màu</option>
-                    {listColor.map((color, index) => {
+                    {listColor && listColor.map((color, index) => {
                       return (
                         <option key={index} value={color._id}>
                           {color.name_vn}
@@ -870,9 +872,6 @@ class ProductDetail extends Component {
 const mapStateToProps = (state) => {
   return {
     productDetail: state.products.detail,
-    listBrands: state.brands.list,
-    listCategories: state.categories.list,
-    listOperations: state.operations.list,
     listColor: state.color.list,
     categoryDetail: state.categories.detail,
   };
@@ -889,12 +888,9 @@ const mapDispatchToProps = (dispatch) => {
     onGetListColor: () => {
       dispatch(ColorActions.onGetList());
     },
-    onGetListOperation: () => {
-      dispatch(OperationActions.onGetList());
-    },
     onGetDetailCategories: (id) => {
-      dispatch(CategoryActions.onGetDetail(id));
-    },
+      dispatch(CategoryActions.onGetDetail(id))
+    }
   };
 };
 
