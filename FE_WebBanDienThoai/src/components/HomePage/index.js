@@ -94,21 +94,18 @@ class HomePage extends Component {
                       <div className="card">
                       {listProducts && keyword && listProducts.map((product, index) =>{
                         return (
-                          <>
-                          <div className="row" style={{height: "80px"}} key={index}>
+                          <Link to={`/product/${product.pathseo}/${product._id}`}>
+                          <div className="row text-dark text-decoration-none" style={{height: "80px"}} key={index}>
                             <div className="col-3 my-auto">
-                              <Link to={`/product/${product.pathseo}/${product._id}`}><img style={{height: "80px"}} src={product.bigimage.public_url}></img></Link>
+                              <><img style={{height: "80px"}} src={product.bigimage.public_url}></img></>
                             </div>
-                            <div className="col-4 text-left my-auto">
+                            <div className="col-9 text-left my-auto">
                               <p className="mb-0">{product.name}</p>
-                              <p className="mb-0">{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</p>
-                            </div>
-                            <div className="col-5 my-auto text-right">
-                              <button className="btn btn-success mr-3" onClick ={ () => this.onAddToCart(product)}><i className="fa fa-cart-plus"></i> {t('shop.add-to-cart.button')}</button>
+                              <p className="mb-0">{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
                             </div>
                           </div>
                           <div class="border-bottom"></div>
-                          </>
+                          </Link>
                         )
                       })}
                       </div>

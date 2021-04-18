@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
-import { get } from "lodash";
 import {LOCAL} from '../../constants/index';
 import { Helmet } from 'react-helmet'
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import draftToHtml from 'draftjs-to-html';
 // @Actions
 import ProductsActions from '../../redux/actions/products'
 // @Components
+import Rating from 'react-rating'
 import ImageGalleries from './ImageGalleries';
 import './styles.css';
 // @Functions
@@ -21,7 +23,9 @@ class DetailPage extends Component {
     this.state = {
       quantity: 1,
       imageColor: "",
-      check: 0
+      check: 0,
+      rating: 0,
+      message: ""
     }
   }
   componentDidUpdate() {
@@ -78,9 +82,24 @@ class DetailPage extends Component {
     }
   }
 
+  onChange = (event) => {
+    var target = event.target;
+    var name = target.name;
+    var value = target.value;
+    this.setState({
+      [name]: value,
+    })
+  }
+
+  onReview = () =>{
+    const {rating, message} = this.state;
+    console.log( rating, message)
+  }
+
   render() {
     const {product, currency, t} = this.props;
-    const {quantity, imageColor, check} = this.state;
+    const {quantity, imageColor, check, rating, message} = this.state;
+    
     return (<>
       <div className="application">
         <Helmet>
@@ -89,18 +108,8 @@ class DetailPage extends Component {
           <link rel="" href={product && `${LOCAL}/#/product/${product.pathseo}/${product._id}`} />
         </Helmet>
       </div>
-      <div className="product-big-title-area">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="product-bit-title text-center">
-                <h2>{t('detail.shop.title')}</h2>
-              </div>
-            </div> 
-          </div>
-        </div>
-      </div>
-      <div className="single-product-area">
+      
+      <div className="">
         <div className="zigzag-bottom"></div>
         {product && <div className="container">
           <div className="row">
@@ -117,11 +126,10 @@ class DetailPage extends Component {
                   </div>
 
                   <div className="col-sm-7">
-                    <div className="product-inner">
-                      <h2 className="product-name">{product.name}</h2>
+                    <div className="">
+                      <h2 className="">{product.name}</h2>
                       <div className="product-inner-price">
                         <ins>{product.price_min && this.setPrice(currency, product.price_min, product.price_max)} {currency}</ins>
-                      
                         {/* <del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del> */}
                       </div>
                       <div className="row">
@@ -139,78 +147,151 @@ class DetailPage extends Component {
                           )
                         })}
                       </div>
-                        {/* <div className="quantity">
-                          <div className="quantity buttons_added">
-                            <input type="button" className="minus h-100" value="-" onClick={() => this.onUpdateQuantity(product,quantity - 1)}/>
-                            <input type="number" className="input-text qty text" value={quantity} min="0" step="1" readOnly/>
-                            <input type="button" className="plus h-100" value="+" onClick={() => this.onUpdateQuantity(product, quantity + 1)}/>
-                          </div>
-                        </div> */}
-                        <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
-             
-
+                      <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
                       <div className="product-inner-category">
                         <p className="mt-1 mb-0">{t('detail.category.label')}: <a href="">{product.category.name}</a></p>
                         <p className="mt-1 mb-0">{t('detail.brand.label')}: <a href="">{product.brand.name}</a></p>
-                      </div>
-
-                      <ul className="nav nav-tabs">
-                        <li className="nav-item">
-                          <a className="nav-link active" data-toggle="tab" href="#description">{t('detail.description.select')}</a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="nav-link" data-toggle="tab" href="#review">{t('detail.review.select')}</a>
-                        </li>
-                        <li className="nav-item">
-                          <a className="nav-link" data-toggle="tab" href="#fbComment">{t('detail.comment.select')}</a>
-                        </li>
-                      </ul>
-
-                      <div className="tab-content">
-                        <div className="tab-pane container active" id="description">
-                          <br />
-                          <table className="table table-inverse table-responsive">
-                            <thead className="thead-inverse">
-                              <tbody>
-                              {product && product.specifications.map((item,index)=>{
-                                return (
-                                <tr key={index}>
-                                  <td scope="row">{item.name}</td>
-                                  <td>{item.value}</td>
-                                </tr>
-                                )
-                              })}
-                              </tbody>
-                            </thead>
-                          </table>
-                        </div>
-                        <div className="tab-pane container fade" id="review">
-                          <br />
-                          <div className="submit-review">
-                            <p><label>{t('detail.name.label')}</label> <input name="name" type="text" /></p>
-                            <p><label>Email</label> <input name="email" type="email" /></p>
-                            <div className="rating-chooser">
-                              <p className="m-0">{t('detail.rating.label')}</p>
-                              <div className="rating-wrap-post">
-                                <i className="fa fa-star"></i>
-                                <i className="fa fa-star"></i>
-                                <i className="fa fa-star"></i>
-                                <i className="fa fa-star"></i>
-                                <i className="fa fa-star"></i>
-                              </div>
-                            </div>
-                            <p><label>{t('detail.review.label')}</label> <textarea name="review" id="" cols="30" rows="10"></textarea></p>
-                            <p><input type="submit" value={t('detail.submit.button')} /></p>
-                          </div>
-                        </div>
-                        <div className="tab-pane container fade" id="fbComment">
-                          <div className="fb-comments" data-href={`${LOCAL}/#/product/${product.pathseo}/${product._id}`} data-width="600" data-numposts="5"></div>
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <section className="product_description_area">
+                <div className="container">
+                  <ul className="nav nav-tabs" id="myTab" role="tablist">
+                    <li className="nav-item">
+                      <a className="nav-link" id="home-tab" data-toggle="tab" href="#description" role="tab" aria-controls="home" aria-selected="true">Description</a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link" id="profile-tab" data-toggle="tab" href="#specification" role="tab" aria-controls="profile"
+                      aria-selected="false">Specification</a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link" id="contact-tab" data-toggle="tab" href="#comment" role="tab" aria-controls="contact"
+                      aria-selected="false">Comments</a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
+                      aria-selected="false">Reviews</a>
+                    </li>
+                  </ul>
+                  <div className="tab-content" id="myTabContent">
+                    <div className="tab-pane fade" id="description" role="tabpanel" aria-labelledby="home-tab">
+                      {product.description ? <div dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(product.description))}}></div> : ""}
+                    </div>
+                    <div className="tab-pane fade" id="specification" role="tabpanel" aria-labelledby="profile-tab">
+                      <div className="table-responsive">
+                        <table className="table">
+                          <tbody>
+                            {product && product.specifications.map((item,index)=>{
+                                return (
+                                <tr key={index}>
+                                  <td className="font-weight-bold" scope="row">{item.name}</td>
+                                  <td>{item.value}</td>
+                                </tr>
+                                )
+                              })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div className="tab-pane fade" id="comment" role="tabpanel" aria-labelledby="contact-tab">
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="fb-comments" data-href={`${LOCAL}/#/product/${product.pathseo}/${product._id}`} data-width="100%" data-numposts="5"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+                      <div className="row">
+                        <div className="col-lg-6">
+                          <div className="row total_rate">
+                            <div className="col-6">
+                
+                              <div className="box_total">
+                                <h5>Overall</h5>
+                                <h4>{product.stars ? product.stars : ""}</h4>
+                                <h6>(2 Reviews)</h6>
+                              </div>
+                            </div>
+                            <div className="col-6">
+                              <div className="rating_list">
+                                <h3>Based on 2 Reviews</h3>
+                                <ul className="list-unstyled">
+                                  <li>5 Star <span className="mx-2"><Rating
+                                    initialRating={5}
+                                    emptySymbol="fa fa-star text-secondary"
+                                    fullSymbol="fa fa-star text-warning"
+                                    readonly
+                                    /></span>0</li>
+                                  <li>4 Star <span className="mx-2"><Rating
+                                    initialRating={4}
+                                    emptySymbol="fa fa-star text-secondary"
+                                    fullSymbol="fa fa-star text-warning"
+                                    readonly
+                                    /></span>0</li>
+                                  <li>3 Star <span className="mx-2"><Rating
+                                    initialRating={3}
+                                    emptySymbol="fa fa-star text-secondary"
+                                    fullSymbol="fa fa-star text-warning"
+                                    readonly
+                                    /></span>0</li>
+                                  <li>2 Star <span className="mx-2"><Rating
+                                    initialRating={2}
+                                    emptySymbol="fa fa-star text-secondary"
+                                    fullSymbol="fa fa-star text-warning"
+                                    readonly
+                                    /></span>0</li>
+                                  <li>1 Star <span className="mx-2"><Rating
+                                    initialRating={1}
+                                    emptySymbol="fa fa-star text-secondary"
+                                    fullSymbol="fa fa-star text-warning"
+                                    readonly
+                                  /></span>0</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="review_list">
+                            <div className="review_item">
+                              <div className="media">
+                                <div className="d-flex">
+                                  <img src="{{User.avatarPath}}" alt=""/>
+                                </div>
+                                <div className="media-body">
+                                  <h4>actions</h4>
+                                </div>
+                              </div>
+                              <p>action</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-lg-6">
+                          <div className="review_box">
+                            <h5>Add a Review</h5>
+                            <p>Your Rating: <span className="ml-3"><Rating
+                              initialRating={rating}
+                              emptySymbol="fa fa-star text-secondary"
+                              fullSymbol="fa fa-star text-warning"
+                              onChange={(rating)=> this.setState({rating})}
+                              /></span></p>
+                            <div className="form-group">
+                              <textarea className="form-control different-control w-100" name="message" value={message} cols="30" rows="5"  onChange={this.onChange}></textarea>
+                            </div>
+                            <div className="form-group text-center text-md-right mt-3">
+                              <button type="button" className="add_to_cart_button" onClick={this.onReview}>Submit Now</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </div>

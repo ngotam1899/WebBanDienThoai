@@ -14,6 +14,9 @@ import {
   CModalTitle,
 } from "@coreui/react";
 import Images from "./Images";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import ColorActions from "../../redux/actions/color";
@@ -35,7 +38,7 @@ class ProductDetail extends Component {
       image: product ? (product.image ? product.image : []) : [],
       modal: false,
       // @Product Color
-      colorList: product ? product.colors : [],
+      colors: product ? product.colors : [],
       nameColor: "",
       amountColor: 0,
       priceColor: 0,
@@ -47,6 +50,7 @@ class ProductDetail extends Component {
       imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
       previewColorImage: "",
       selectedColorImage: "",
+      description: product && product.description ? EditorState.createWithContent(convertFromRaw(JSON.parse(product.description))) : EditorState.createEmpty(),
       // @Product Image
       previewSource: "",
       selectedFile: "",
@@ -234,7 +238,7 @@ class ProductDetail extends Component {
   };
 
   onEditColor = (item) => {
-    const { colorList } = this.state;
+    const { colors } = this.state;
     this.setState({
       // Gán giá trị button
       colorEditing: "inline-flex",
@@ -246,7 +250,7 @@ class ProductDetail extends Component {
       onEditing: true,
       imageID: item.image,
       imageColor: item.image_link ? item.image_link :  "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-      indexColor: colorList.indexOf(item),
+      indexColor: colors.indexOf(item),
       // Trả preview về mặc định
       previewColorImage: "",
       selectedColor: "",
@@ -254,10 +258,10 @@ class ProductDetail extends Component {
   };
 
   onDeleteColor = (item) => {
-    const { colorList } = this.state;
-    colorList.splice(colorList.indexOf(item), 1);
+    const { colors } = this.state;
+    colors.splice(colors.indexOf(item), 1);
     this.setState({
-      colorList,
+      colors,
     });
   };
 
@@ -267,7 +271,7 @@ class ProductDetail extends Component {
       amountColor,
       onEditing,
       indexColor,
-      colorList,
+      colors,
       imageID,
       imageColor,
       selectedColorImage,
@@ -280,10 +284,10 @@ class ProductDetail extends Component {
     else{
       if (onEditing === false) {
         // TH thêm màu
-        if (colorList.find((obj) => obj._id === nameColor)) {
+        if (colors.find((obj) => obj._id === nameColor)) {
           toastError("Màu này đã tồn tại");
         } else {
-          colorList.push({
+          colors.push({
             _id: nameColor,
             name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
             amount: amountColor,
@@ -294,8 +298,8 @@ class ProductDetail extends Component {
         }
       } else {
         // TH sửa màu
-        for (let i = 0; i < colorList.length; i++) {
-          colorList[indexColor] = {
+        for (let i = 0; i < colors.length; i++) {
+          colors[indexColor] = {
             _id: nameColor,
             name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
             amount: amountColor,
@@ -307,7 +311,7 @@ class ProductDetail extends Component {
       }
     }
     this.setState({
-      colorList,
+      colors,
       // Gán giá trị button
       colorEditing: "none",
       btnStatus: "Thêm màu",
@@ -400,7 +404,8 @@ class ProductDetail extends Component {
       image,
       pathseo,
       specifications,
-      colorList
+      colors,
+      description
     } = this.state;
     if (id) {
       // eslint-disable-next-line
@@ -415,7 +420,10 @@ class ProductDetail extends Component {
         image,
         pathseo,
         specifications,
-        colors: colorList
+        colors,
+        description: JSON.stringify(
+          convertToRaw(description.getCurrentContent())
+        )
       };
       onUpdateImage(id, data, formData);
     } else {
@@ -432,7 +440,10 @@ class ProductDetail extends Component {
         pathseo,
         image,
         specifications,
-        colors: colorList
+        colors,
+        description: JSON.stringify(
+          convertToRaw(description.getCurrentContent())
+        )
       };
       onCreate(data, formData);
     }
@@ -472,7 +483,7 @@ class ProductDetail extends Component {
       previewSource,
       previewList,
       specifications,
-      colorList,
+      colors,
       nameColor,
       priceColor,
       amountColor,
@@ -480,6 +491,7 @@ class ProductDetail extends Component {
       btnStatus,
       imageColor,
       previewColorImage,
+      description
     } = this.state;
     const {
       large,
@@ -630,78 +642,10 @@ class ProductDetail extends Component {
                     })}
                   </select>
                 </div>
-                <div className="form-group">
-                  <div className="row">
-                    {image &&
-                      image.map((item, index) => {
-                        return (
-                          <div className="col-3" key={index}>
-                            <div className=" img-thumbnail2">
-                              <img
-                                src={item.public_url}
-                                className="border rounded w-100"
-                                alt=""
-                              ></img>
-                              <div className="btn btn-lg btn-primary img-des">
-                                Delete Photo
-                                <input
-                                  type="button"
-                                  name="image"
-                                  className="w-100 h-100"
-                                  onClick={() => this.deletePhoto(item._id)}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    {previewList[0] && (
-                      <>
-                        {previewList.map((item, index) => {
-                          return (
-                            <div className="col-3" key={index}>
-                              <div className="img-thumbnail2">
-                                <img src={item} alt="" className="border rounded w-100" />
-                                <div className="btn btn-lg btn-primary img-des">
-                                  Delete Photo
-                                  <input
-                                    type="button"
-                                    name="image"
-                                    className="w-100 h-100"
-                                    onClick={() => this.deletePreview(item)}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </>
-                    )}
-                    <div className="col-3">
-                      <div className=" img-thumbnail2">
-                        <img
-                          src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
-                          alt=""
-                          className="border rounded w-100"
-                        ></img>
-                        <div className="btn btn-lg btn-primary img-des">
-                          Add Photo
-                          <input
-                            type="file"
-                            onChange={this.handleListInputChange}
-                            className="w-100 h-100"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="col-12 col-lg-6">
-              <div className="row">
+
+                <div className="row">
                 <div className="col-12">
-                <h5 className="float-left">Danh sách màu</h5>
+                <label className="float-left">Danh sách màu:</label>
                 <div className="float-right">
                 <button
                   className="btn btn-success mr-2"
@@ -787,7 +731,7 @@ class ProductDetail extends Component {
                 </div>
               </div>
 
-              {colorList.map((item, index) => {
+              {colors.map((item, index) => {
                 return (
                   <div className="row" key={index}>
                     <div className="col-3">
@@ -827,6 +771,75 @@ class ProductDetail extends Component {
                   </div>
                 );
               })}
+                <div className="form-group mt-1">
+                  <div className="row">
+                    {image &&
+                      image.map((item, index) => {
+                        return (
+                          <div className="col-3" key={index}>
+                            <div className=" img-thumbnail2">
+                              <img
+                                src={item.public_url}
+                                className="border rounded w-100"
+                                alt=""
+                              ></img>
+                              <div className="btn btn-lg btn-primary img-des">
+                                Delete Photo
+                                <input
+                                  type="button"
+                                  name="image"
+                                  className="w-100 h-100"
+                                  onClick={() => this.deletePhoto(item._id)}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    {previewList[0] && (
+                      <>
+                        {previewList.map((item, index) => {
+                          return (
+                            <div className="col-3" key={index}>
+                              <div className="img-thumbnail2">
+                                <img src={item} alt="" className="border rounded w-100" />
+                                <div className="btn btn-lg btn-primary img-des">
+                                  Delete Photo
+                                  <input
+                                    type="button"
+                                    name="image"
+                                    className="w-100 h-100"
+                                    onClick={() => this.deletePreview(item)}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </>
+                    )}
+                    <div className="col-3">
+                      <div className=" img-thumbnail2">
+                        <img
+                          src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+                          alt=""
+                          className="border rounded w-100"
+                        ></img>
+                        <div className="btn btn-lg btn-primary img-des">
+                          Add Photo
+                          <input
+                            type="file"
+                            onChange={this.handleListInputChange}
+                            className="w-100 h-100"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div className="col-12 col-lg-6">
 
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">
@@ -852,6 +865,14 @@ class ProductDetail extends Component {
                   })}
                 </div>
               </div>
+            </div>
+            <div className="col-12">
+              <Editor
+                editorState={description}
+                wrapperClassName="desc-wrapper"
+                editorClassName="desc-editor"
+                onEditorStateChange={(description) => this.setState({description})}
+              />
             </div>
           </div>
           {modal && image && <Images modal={modal} onCloseModal={this.onCloseModal} image={image} setImage={this.setImage}

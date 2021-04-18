@@ -13,7 +13,7 @@ class Search extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			keyword: ""
+			keyword: "",
 		}
 	}
 
@@ -53,12 +53,9 @@ class Search extends Component {
 							<div className="col-3 my-auto">
 								<Link to={`/product/${product.pathseo}/${product._id}`}><img className="w-100" src={product.bigimage.public_url}></img></Link>
 							</div>
-							<div className="col-6">
+							<div className="col-9">
 								<p className="mb-0">{product.name}</p>
-								<p className="mb-0">{currency=="VND" ? product.price : parseFloat(tryConvert(product.price, currency, false)).toFixed(2)} {currency}</p>
-							</div>
-							<div className="col-3 my-auto">
-								<button className="btn btn-success" onClick ={ () => this.onAddToCart(product)}><i className="fa fa-cart-plus"></i></button>
+								<p className="mb-0">{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
 							</div>
 						</div>
 						<div class="border-bottom"></div>

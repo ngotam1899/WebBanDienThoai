@@ -33,3 +33,13 @@
   font-size: 0.6vw;
   background: #212529b8;
 }
+
+.desc-wrapper * {
+  box-sizing: content-box;
+}
+.desc-editor {
+  border: 1px solid #f1f1f1 !important;
+  padding: 5px !important;
+  border-radius: 2px !important;
+  height: 80% !important;
+}

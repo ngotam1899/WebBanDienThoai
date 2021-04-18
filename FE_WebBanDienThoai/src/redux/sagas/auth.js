@@ -16,7 +16,6 @@ function* handleRegister({ payload }) {
     if (data.code !== 201) throw data;
     yield put(AuthorizationActions.onRegisterSuccess(data));
   } catch (error) {
-    console.log(error);
     yield put(AuthorizationActions.onRegisterError(error));
   }
 }
@@ -29,7 +28,6 @@ function* handleLogin({ payload }) {
     localStorage.setItem('AUTH_USER', result.headers.authorization);
     yield put(AuthorizationActions.onLoginSuccess(data.user));
   } catch (error) {
-    console.log(error);
     yield put(AuthorizationActions.onLoginError(error));
   }
 }
@@ -42,22 +40,18 @@ function* handleLoginFacebook({ payload }) {
     localStorage.setItem('AUTH_USER', result.headers.authorization);
     yield put(AuthorizationActions.onLoginFacebookSuccess(data.user));
   } catch (error) {
-    console.log(error);
     yield put(AuthorizationActions.onLoginFacebookError(error));
   }
 }
 
 function* handleLoginGoogle({ payload }) {
-  console.log(payload);
   try {
-    
     const result = yield call(loginGoogle, {"access_token":payload});
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     localStorage.setItem('AUTH_USER', result.headers.authorization);
     yield put(AuthorizationActions.onLoginGoogleSuccess(data.user));
   } catch (error) {
-    console.log(error);
     yield put(AuthorizationActions.onLoginGoogleError(error));
   }
 }
@@ -69,7 +63,6 @@ function* handleActiveAccount({ payload}) {
     if (data.code !== 200) throw data;
     yield put(AuthorizationActions.onActivateAccountSuccess(data));
   } catch (error) {
-    console.log(error, "Incorect or Expired link");
     yield put(AuthorizationActions.onActivateAccountError(error));
   }
 }
@@ -85,7 +78,6 @@ function* handleGetProfile() {
     const orderData = yield call(orderHistory, data._id);
     yield put(OrdersActions.onGetHistoryOrderSuccess(orderData.data.orders));
   } catch (error) {
-    console.log(error, "Incorect or Expired link");
     yield put(AuthorizationActions.onGetProfileError(error));
   }
 }

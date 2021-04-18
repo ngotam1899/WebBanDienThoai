@@ -23,8 +23,6 @@ const updateCategory = async(req, res, next) => {
     const category = await Category.findById(IDCategory);
     if(name) category.name = name;
     if(specifications) {
-        const IDSpecification = await Specification.findById(specifications);
-        if (!IDSpecification) return res.status(200).json({ success: false, code: 404, message: 'Specification is identify' })
         category.specifications = specifications
     }
     await category.save();
@@ -33,7 +31,8 @@ const updateCategory = async(req, res, next) => {
 const deleteCategory = async(req, res, next) => {
     const { IDCategory } = req.params
     const isValid = await Validator.isValidObjId(IDCategory);
-    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id category is not correctly' }) } else {
+    if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id category is not correctly' }) } 
+    else {
         const result = await Category.findByIdAndDelete(IDCategory);
         if (result) return res.status(200).json({ success: true, code: 200, message: '' })
     }

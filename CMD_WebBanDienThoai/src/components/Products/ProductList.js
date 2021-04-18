@@ -15,6 +15,7 @@ import {
 } from '@coreui/react'
 import ProductDetail from './ProductDetail'
 import Pagination from "react-js-pagination";
+
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
@@ -268,11 +269,11 @@ class ProductList extends Component {
                     'image':
                     (item) => (
                       <td>
-                        <img src={ item.bigimage ? item.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg" } style={{width:'10vw'}} alt={item.name} />
+                        <img src={ item.bigimage ? item.bigimage.public_url : "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" } style={{width:'10vw'}} alt={item.name} />
                       </td>
                     ),
                     'brand': (item) => (
-                      <td><img src={item.brand.image ? item.brand.image.public_url: "http://www.pha.gov.pk/img/img-02.jpg"} style={{width:'8vw'}} alt={item.name}></img></td>
+                      <td><img src={item.brand.image ? item.brand.image.public_url: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"} style={{width:'8vw'}} alt={item.name}></img></td>
                     ),
                     'actions':
                     (item)=>(

@@ -94,7 +94,7 @@ const updateProduct = async (req, res, next) => {
 			specifications,
 			colors,
 			discount,
-			//@Image
+			description
 		} = req.body;
 		const product = await Product.findById(IDProduct);
 		if (!product)
@@ -108,8 +108,8 @@ const updateProduct = async (req, res, next) => {
 		if (bigimage) product.bigimage = bigimage;
 		if (discount) product.discount = discount;
 		if (image) product.image = image;
+		if (description) product.description = description;
 		if (category) {
-			console.log()
 			const is_category = await Category.findById(category);
 			if (!is_category)
 				return res.status(200).json({ success: false, code: 404, message: 'category is identify' });
@@ -171,7 +171,7 @@ const updateProduct = async (req, res, next) => {
 
 const addProduct = async(req, res, next) => {
 	try {
-		const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, specifications,
+		const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, specifications, description,
 			colors,
 			discount } = req.body
 		const product = new Product();
@@ -191,6 +191,7 @@ const addProduct = async(req, res, next) => {
 		if (bigimage) product.bigimage = bigimage;
 		if (discount) product.discount = discount;
 		if (image) product.image = image
+		if (description) product.description = description;
 		if (category) {
 			const is_category = await Category.findById(category)
 			if (!is_category) return res.status(200).json({ success: false, code: 404, message: 'category is identify' })
