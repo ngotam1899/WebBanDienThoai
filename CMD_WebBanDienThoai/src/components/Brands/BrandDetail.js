@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
 import { connect } from "react-redux";
+import {INITIAL_IMAGE} from '../../constants';
 // @Actions
 import BrandActions from "../../redux/actions/brands";
 import '../Products/product.css'
@@ -95,7 +96,7 @@ class BrandDetail extends Component {
                     previewSource ? (
                       <img src={previewSource} className="w-100" alt=""/>
                     )
-                    : <img src={image.public_url || "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"} style={{ border: '1px solid', width: '100%' }} alt=""/>
+                    : <img src={image.public_url || INITIAL_IMAGE} style={{ border: '1px solid', width: '100%' }} alt=""/>
                   }
                   <div className="file btn btn-lg btn-primary">
                     Change Photo
@@ -108,7 +109,7 @@ class BrandDetail extends Component {
                     previewSource ? (
                       <img src={previewSource} className="w-100" alt=""/>
                     )
-                    : <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" style={{ border: '1px solid', width: '100%' }}></img>
+                    : <img src={INITIAL_IMAGE} alt="" style={{ border: '1px solid', width: '100%' }}></img>
                   }
                   <div className="file btn btn-lg btn-primary">
                     Change Photo

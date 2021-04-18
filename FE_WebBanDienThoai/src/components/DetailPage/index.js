@@ -4,10 +4,10 @@ import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 import {LOCAL} from '../../constants/index';
 import { Helmet } from 'react-helmet'
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import draftToHtml from 'draftjs-to-html';
 // @Actions
 import ProductsActions from '../../redux/actions/products'
+import ReviewActions from '../../redux/actions/review'
 // @Components
 import Rating from 'react-rating'
 import ImageGalleries from './ImageGalleries';
@@ -16,6 +16,7 @@ import './styles.css';
 import tryConvert from '../../utils/changeMoney'
 import numberWithCommas from "../../utils/formatPrice";
 import { toastError } from '../../utils/toastHelper';
+import {INITIAL_IMAGE} from '../../constants';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -29,11 +30,19 @@ class DetailPage extends Component {
     }
   }
   componentDidUpdate() {
-    FB.XFBML.parse();
+    try{
+      FB.XFBML.parse();
+    }
+    catch(err){
+      console.log(err)
+    }
   }
+
   componentDidMount(){
-    const {match, onGetDetailProduct} = this.props;
+    const {match, onGetDetailProduct, onGetReviews} = this.props;
     onGetDetailProduct(match.params.productID);
+    onGetReviews(match.params.productID)
+    
   }
 
   setColor = (item) =>{
@@ -41,14 +50,6 @@ class DetailPage extends Component {
       imageColor: item.image_link,
       check: item._id
     })
-  }
-
-  onUpdateQuantity = (product, quantity) => {
-    var {onUpdateProductInCart} = this.props;
-    if(quantity > 0){
-      this.setState({quantity})
-      onUpdateProductInCart(product, quantity);
-    }
   }
 
   onAddToCart = (product, quantity) =>{
@@ -63,8 +64,8 @@ class DetailPage extends Component {
   }
   
   componentWillUnmount(){
-    const {onClearDetail} =this.props;
-    onClearDetail()
+/*     const {onClearDetail} =this.props;
+    onClearDetail() */
   }
 
   setPrice = (currency, min, max) =>{
@@ -96,8 +97,16 @@ class DetailPage extends Component {
     console.log( rating, message)
   }
 
+  setAmountRating = (review, star) => {
+    var amount = 0;
+    review.map(item => {
+      if(item.rating === star) amount++;
+    })
+    return amount;
+  }
+
   render() {
-    const {product, currency, t} = this.props;
+    const {product, currency, t, review} = this.props;
     const {quantity, imageColor, check, rating, message} = this.state;
     
     return (<>
@@ -181,7 +190,7 @@ class DetailPage extends Component {
                   </ul>
                   <div className="tab-content" id="myTabContent">
                     <div className="tab-pane fade" id="description" role="tabpanel" aria-labelledby="home-tab">
-                      {product.description ? <div dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(product.description))}}></div> : ""}
+                      {product.description ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(product.description))}}></div> : ""}
                     </div>
                     <div className="tab-pane fade" id="specification" role="tabpanel" aria-labelledby="profile-tab">
                       <div className="table-responsive">
@@ -227,47 +236,58 @@ class DetailPage extends Component {
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                    /></span>0</li>
+                                    /></span>{review ? this.setAmountRating(review, 5) : 0}</li>
                                   <li>4 Star <span className="mx-2"><Rating
                                     initialRating={4}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                    /></span>0</li>
+                                    /></span>{review ? this.setAmountRating(review, 4) : 0}</li>
                                   <li>3 Star <span className="mx-2"><Rating
                                     initialRating={3}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                    /></span>0</li>
+                                    /></span>{review ? this.setAmountRating(review,3) : 0}</li>
                                   <li>2 Star <span className="mx-2"><Rating
                                     initialRating={2}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                    /></span>0</li>
+                                  /></span>{review ? this.setAmountRating(review,2) : 0}</li>
                                   <li>1 Star <span className="mx-2"><Rating
                                     initialRating={1}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                  /></span>0</li>
+                                  /></span>{review ? this.setAmountRating(review,1) : 0}</li>
                                 </ul>
                               </div>
                             </div>
                           </div>
                           <div className="review_list">
-                            <div className="review_item">
-                              <div className="media">
-                                <div className="d-flex">
-                                  <img src="{{User.avatarPath}}" alt=""/>
+                            {review && review.map((item, index)=>{
+                              return (
+                                <div className="row" key={index}>
+                                  <div className="col-12">
+                                  <div className="float-left mr-3">
+                                    <img className="rounded-circle square-60" src={item.user.image ? item.user.image.public_url : INITIAL_IMAGE} alt=""/>
+                                  </div>
+                                  <div className="">
+                                    <p className="font-weight-bold mb-0">{item.user.firstname} {item.user.lastname}</p>
+                                    <p className="mb-0"><Rating
+                                      initialRating={item.rating}
+                                      emptySymbol="fa fa-star text-secondary"
+                                      fullSymbol="fa fa-star text-warning"
+                                      readonly
+                                    /> | <span className="font-italic">{item.createdAt}</span></p>
+                                    <p>{item.content}</p>
+                                  </div>
+                                  
+                                  </div>
                                 </div>
-                                <div className="media-body">
-                                  <h4>actions</h4>
-                                </div>
-                              </div>
-                              <p>action</p>
-                            </div>
+                              )
+                            })}
                           </div>
                         </div>
                         <div className="col-lg-6">
@@ -305,6 +325,7 @@ const mapStateToProps = (state) =>{
   return {
     product: state.products.detail,
     currency: state.currency,
+    review: state.review.list
   }
 }
 
@@ -316,11 +337,11 @@ const mapDispatchToProps = (dispatch, props) => {
     onGetDetailProduct: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
     },
-    onUpdateProductInCart: (product, color,  quantity) => {
-      dispatch(ProductsActions.onUpdateProductInCart(product, color, quantity))
-    },
     onAddProductToCart: (product, color, quantity) => {
       dispatch(ProductsActions.onAddProductToCart(product, color, quantity));
+    },
+    onGetReviews: (id) => {
+      dispatch(ReviewActions.onGetList(id));
     },
   }
 }

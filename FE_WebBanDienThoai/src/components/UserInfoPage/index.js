@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
+import {INITIAL_IMAGE} from '../../constants';
 import './styles.css'
 //@Components
 import OrderDetail from '../../containers/OrderDetail';
@@ -100,7 +101,7 @@ class UserInfoPage extends Component {
                     {
                       previewSource ? (
                         <img src={previewSource} alt=""/>
-                      ) : <img src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" alt="" />
+                      ) : <img src={INITIAL_IMAGE} alt="" />
                     }
                       <div className="file btn btn-lg btn-primary">
                       {t('user.file.input')}

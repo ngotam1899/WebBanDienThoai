@@ -247,3 +247,7 @@
 .product_description_area .tab-content .table tbody tr:first-child td {
 	border-top: 0px;
 }
+.square-60 {
+	width: 60px;
+	height: 60px;
+}

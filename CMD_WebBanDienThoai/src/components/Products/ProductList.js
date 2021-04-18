@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import qs from "query-string";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
 // @Components
 import {
   CCard,
@@ -24,7 +25,7 @@ import SpecificationActions from "../../redux/actions/specification";
 
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
-
+import {INITIAL_IMAGE} from '../../constants';
 const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { width: '25%'} }]
 
 class ProductList extends Component {
@@ -269,11 +270,11 @@ class ProductList extends Component {
                     'image':
                     (item) => (
                       <td>
-                        <img src={ item.bigimage ? item.bigimage.public_url : "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png" } style={{width:'10vw'}} alt={item.name} />
+                        <img src={ item.bigimage ? item.bigimage.public_url : INITIAL_IMAGE } style={{width:'10vw'}} alt={item.name} />
                       </td>
                     ),
                     'brand': (item) => (
-                      <td><img src={item.brand.image ? item.brand.image.public_url: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"} style={{width:'8vw'}} alt={item.name}></img></td>
+                      <td><img src={item.brand.image ? item.brand.image.public_url: INITIAL_IMAGE} style={{width:'8vw'}} alt={item.name}></img></td>
                     ),
                     'actions':
                     (item)=>(

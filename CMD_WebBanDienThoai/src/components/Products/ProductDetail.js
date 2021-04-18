@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./product.css";
 import { connect } from "react-redux";
 // @Functions
+import {INITIAL_IMAGE} from '../../constants';
 import changeToSlug from "../../utils/ChangeToSlug";
 import { toastError } from "../../utils/toastHelper";
 // @ComponentS
@@ -47,7 +48,7 @@ class ProductDetail extends Component {
       onEditing: false,
       indexColor: -1,
       imageID: 0,
-      imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+      imageColor: INITIAL_IMAGE,
       previewColorImage: "",
       selectedColorImage: "",
       description: product && product.description ? EditorState.createWithContent(convertFromRaw(JSON.parse(product.description))) : EditorState.createEmpty(),
@@ -229,7 +230,7 @@ class ProductDetail extends Component {
         amountColor: 0,
         priceColor: 0,
         onEditing: false,
-        imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+        imageColor: INITIAL_IMAGE,
         // Trả preview về mặc định
         previewColorImage: "",
         selectedColor: "",
@@ -249,7 +250,7 @@ class ProductDetail extends Component {
       priceColor: item.price,
       onEditing: true,
       imageID: item.image,
-      imageColor: item.image_link ? item.image_link :  "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+      imageColor: item.image_link ? item.image_link :  INITIAL_IMAGE,
       indexColor: colors.indexOf(item),
       // Trả preview về mặc định
       previewColorImage: "",
@@ -320,7 +321,7 @@ class ProductDetail extends Component {
       amountColor: 0,
       priceColor: 0,
       onEditing: false,
-      imageColor: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
+      imageColor: INITIAL_IMAGE,
     });
   }
 
@@ -470,6 +471,29 @@ class ProductDetail extends Component {
     })
   }
 
+  uploadImageCallBack = (file) => {
+    return new Promise(
+      (resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://api.imgur.com/3/image');
+        xhr.setRequestHeader('Authorization', 'Client-ID 034eb58605b7a76');
+        const data = new FormData();
+        data.append('image', file);
+        xhr.send(data);
+        xhr.addEventListener('load', () => {
+          const response = JSON.parse(xhr.responseText);
+          console.log(response)
+          resolve(response);
+        });
+        xhr.addEventListener('error', () => {
+          const error = JSON.parse(xhr.responseText);
+          console.log(error)
+          reject(error);
+        });
+      }
+    );
+  }
+
   render() {
     const {
       name,
@@ -578,7 +602,7 @@ class ProductDetail extends Component {
                       <img src={previewSource} className="border rounded w-100" alt="" />
                     ) : (
                       <img
-                        src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+                        src={INITIAL_IMAGE}
                         alt=""
                         className="border rounded w-100"
                       ></img>
@@ -736,7 +760,7 @@ class ProductDetail extends Component {
                   <div className="row" key={index}>
                     <div className="col-3">
                       <img
-                        src={item.image_link ? item.image_link: "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"}
+                        src={item.image_link ? item.image_link: INITIAL_IMAGE}
                         alt={item.name_vn}
                         className="border rounded w-100"
                       />
@@ -821,7 +845,7 @@ class ProductDetail extends Component {
                     <div className="col-3">
                       <div className=" img-thumbnail2">
                         <img
-                          src="https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+                          src={INITIAL_IMAGE}
                           alt=""
                           className="border rounded w-100"
                         ></img>
@@ -872,6 +896,9 @@ class ProductDetail extends Component {
                 wrapperClassName="desc-wrapper"
                 editorClassName="desc-editor"
                 onEditorStateChange={(description) => this.setState({description})}
+                toolbar={{
+                  image: { uploadCallback: this.uploadImageCallBack, alt: { present: true, mandatory: true } },
+                }}
               />
             </div>
           </div>

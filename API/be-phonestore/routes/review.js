@@ -6,6 +6,6 @@ router.route('/').post(reviewController.addReview)
 
 router.route('/:IDProduct/review-list').get(reviewController.getProductReView)
 
-router.route('/:ID').put(reviewController.updateReview)
+router.route('/:reviewID').put(reviewController.updateReview)
 
 module.exports = router

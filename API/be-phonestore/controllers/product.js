@@ -56,7 +56,7 @@ const getAllProduct = async (req, res, next) => {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
 		}
 		let products;
-		products = await Product.find(condition, {specifications : 0, colors: 0, image:0, warrently: 0})
+		products = await Product.find(condition, {specifications : 0, colors: 0, image:0, warrently: 0, description: 0})
 			.populate({ path: 'bigimage', select: 'public_url' })
 			.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
 			.sort(sort)

@@ -9,7 +9,8 @@ const getProductReView = async(req, res, next) => {
   try {
     const isValid = await Validator.isValidObjId(IDProduct);
     if (!isValid) return res.status(200).json({ success: false, code: 400, message: 'ProductID is not correctly' });
-    const reviews = await Review.find({ product: IDProduct });
+    const reviews = await Review.find({ product: IDProduct })
+    .populate({ path: 'user', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} });
     return res.status(200).json({ success: true, code: 200, reviews })
   } catch {
     new next(error)
@@ -28,6 +29,7 @@ const addReview = async(req, res, next) => {
   })
   const productFound = await Product.findById(product);
   productFound.stars = (ratingTotal/ reviews.length).toFixed(2);
+  productFound.reviewCount = reviews.length;
   await productFound.save()
   
   return res.status(200).json({ 
@@ -38,8 +40,18 @@ const addReview = async(req, res, next) => {
 }
 
 const updateReview = async(req, res, next) => {
-  const { reviewID } = req.params
-  const result = await Review.findByIdAndUpdate(reviewID, req.body)
+  const { reviewID } = req.params;
+  const {product} = req.body;
+  const result = await Review.findByIdAndUpdate(reviewID, req.body);
+  // Cập nhật rating của product
+  const reviews = await Review.find({ product });
+  var ratingTotal = 0;
+  reviews.map(item =>{
+    ratingTotal += item.rating;
+  })
+  const productFound = await Product.findById(product);
+  productFound.stars = (ratingTotal/ reviews.length).toFixed(2);
+  await productFound.save()
   if (!result) {
     return res.status(200).json({ success: 'false', code: 400, message: 'id review is not correctly' })
   }
