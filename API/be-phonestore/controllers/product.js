@@ -1,12 +1,12 @@
-const Comment = require('../models/Comment');
-const Image = require('../models/Image');
 const Validator = require('../validators/validator');
-const cloudinary = require('cloudinary');
-const Specification = require('../models/specification');
+
 const Brand = require('../models/Brand');
 const Category = require('../models/Category');
 const Color = require('../models/Color');
+const Group = require('../models/group');
+const Image = require('../models/Image');
 const Product = require('../models/Product');
+const Specification = require('../models/specification');
 
 const getAllProduct = async (req, res, next) => {
 	try {
@@ -56,7 +56,7 @@ const getAllProduct = async (req, res, next) => {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
 		}
 		let products;
-		products = await Product.find(condition, {specifications : 0, colors: 0, image:0, warrently: 0, description: 0})
+		products = await Product.find(condition, {specifications : 0, colors: 0, image:0, warrently: 0, description: 0, group: 0})
 			.populate({ path: 'bigimage', select: 'public_url' })
 			.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
 			.sort(sort)
@@ -94,12 +94,11 @@ const updateProduct = async (req, res, next) => {
 			specifications,
 			colors,
 			discount,
-			description
+			group,
+			description,
 		} = req.body;
 		const product = await Product.findById(IDProduct);
-		if (!product)
-			return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' });
-
+		if (!product) return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' });
 		if (name) product.name = name;
 		if (price) product.price = price;
 		if (amount) product.amount = amount;
@@ -119,6 +118,11 @@ const updateProduct = async (req, res, next) => {
 			const is_brand = await Brand.findById(brand);
 			if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' });
 			product.brand = brand;
+		}
+		if (group) {
+			const is_group = await Group.findById(group);
+			if (!is_group) return res.status(200).json({ success: false, code: 404, message: 'group is identify' });
+			product.group = group;
 		}
 		if (specifications) {
 			var specificationArray=[];
@@ -202,6 +206,11 @@ const addProduct = async(req, res, next) => {
 			if (!is_brand) return res.status(200).json({ success: false, code: 404, message: 'brand is identify' })
 			product.brand = brand;
 		}
+		if (group) {
+			const is_group = await Group.findById(group);
+			if (!is_group) return res.status(200).json({ success: false, code: 404, message: 'group is identify' });
+			product.group = group;
+		}
 		if (specifications) {
 			var specificationArray=[];
 			for (let item of specifications) {
@@ -262,11 +271,11 @@ const getProductDetail = async(req, res, next) => {
 	try {
 		const { IDProduct } = req.params
 		const product = await Product.findById(IDProduct)
-			.populate({ path: 'category', select: 'name' })
+			.populate({ path: 'category', select: ['name', 'pathseo'] })
 			.populate({ path: 'brand', select: 'name' })
+			.populate({ path: 'group', select: 'name' })
 			.populate({ path: 'bigimage', select: 'public_url' })
 			.populate({ path: 'image', select: 'public_url' });
-
 		return res.status(200).json({ success: true, code: 200, message: '', product })
 	} catch (error) {
 		return next(error)

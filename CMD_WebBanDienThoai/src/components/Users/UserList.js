@@ -109,7 +109,7 @@ class UserList extends Component {
                 {(userDetail && large) && <UserDetail large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
 
-                {(!userDetail && large) && <UserDetail large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
+                {(!userDetail && large) && <UserDetail large={large} onClose={this.onClose} onClearDetail={onClearDetail}
                 onSubmit={this.onSubmit}/>}
               </CCardBody>
             </CCard>

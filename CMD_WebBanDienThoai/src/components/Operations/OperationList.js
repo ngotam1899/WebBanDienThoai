@@ -125,7 +125,7 @@ class ProductList extends Component {
                 />
                 {(operationDetail && large) && <OperationDetail large={large} operation={operationDetail} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
-                {(!operationDetail && large) && <OperationDetail large={large} operation={operationDetail} onClose={this.onClose}
+                {(!operationDetail && large) && <OperationDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>

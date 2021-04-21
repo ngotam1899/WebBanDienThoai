@@ -225,7 +225,7 @@ class ProductList extends Component {
                           <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder="Từ" className="form-control w-40"></input>
                           <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder="đến" className="form-control w-40"></input>
                           <div className="input-group-append">
-                            <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
+                            <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search"></i></button>
                           </div>
                         </div>
                       </div>
@@ -305,7 +305,7 @@ class ProductList extends Component {
                 {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
                 listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail} listSpecification={listSpecification}/>}
 
-                {(!productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
+                {(!productDetail && large) && <ProductDetail large={large} onClose={this.onClose}
                 listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail} listSpecification={listSpecification}/>}
               </CCardBody>}
               <div className="row justify-content-center">

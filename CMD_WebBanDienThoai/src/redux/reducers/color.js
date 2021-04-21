@@ -29,7 +29,6 @@ export default function(state = init, action) {
       return {
         ...state,
          loading: false,
-        /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
       };
     case ColorActionTypes.GET_LIST_SUCCESS:
       return {

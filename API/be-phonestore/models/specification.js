@@ -5,7 +5,10 @@ const SpecificationSchema = new Schema({
 	name: {
 		type: String,
 		unique: true
-	}
+	},
+	selections: [{
+		type: String
+	}]
 });
 
 SpecificationSchema.pre('findOneAndDelete', function(next) {

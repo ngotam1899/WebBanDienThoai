@@ -45,7 +45,7 @@ function* handleCreate({ payload }) {
     const result = yield call(addSpecification, payload.params);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
-    yield put(SpecificationActions.onCreateSuccess(data.Specification));
+    yield put(SpecificationActions.onCreateSuccess(data.specification));
     yield put(SpecificationActions.onGetList());
   } catch (error) {
     yield put(SpecificationActions.onCreateError(error));

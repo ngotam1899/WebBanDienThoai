@@ -21,7 +21,7 @@ export default function(state = init, action) {
       return {
         ...init,
       };
-
+    case ProductsActionTypes.FILTER:
     case ProductsActionTypes.GET_LIST:
       return {
         ...state,
@@ -53,7 +53,12 @@ export default function(state = init, action) {
         loadingDetail: false,
         detail: action.payload,
       };
-
+    case ProductsActionTypes.FILTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        listSearch: get(action, "payload", []),
+      };
     case ProductsActionTypes.GET_DETAIL_ERROR:
       return {
         ...state,

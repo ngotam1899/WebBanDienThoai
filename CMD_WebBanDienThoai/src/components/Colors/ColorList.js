@@ -146,7 +146,7 @@ class ColorList extends Component {
                 />
                 {(colorDetail && large) && <ColorDetail large={large} color={colorDetail} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
-                {(!colorDetail && large) && <ColorDetail large={large} color={colorDetail} onClose={this.onClose}
+                {(!colorDetail && large) && <ColorDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>

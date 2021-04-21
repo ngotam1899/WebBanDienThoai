@@ -1,4 +1,4 @@
-import { takeEvery, fork, all, call, put } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
 import { getAllProducts, getDetailProduct, addProduct,updateProduct, deleteProduct, activateProduct, deactivateProduct } from "../apis/products";
@@ -28,12 +28,23 @@ function* handleGetDetail({ filters, id }) {
   }
 }
 
+function* handleFilter({ payload }) {
+  yield delay(2000);
+  const { keyword } = payload;
+  try {
+    const result = yield call(getAllProducts, {keyword});
+    const data = get(result, "data");
+    yield put(ProductsActions.onFilterSuccess(data.products));
+  } catch (error) {
+  }
+}
+
 /**
  *
  * create
  */
 function* handleCreate( {payload} ) {
-  var {name, price, amount, pathseo, warrently, brand, category,bigimage, specifications, colors, description} = payload.params;
+  var {name, price, amount, pathseo, warrently, brand, category,bigimage, specifications, colors, description, group} = payload.params;
   try {
     var result,image, imageArray;
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
@@ -44,7 +55,7 @@ function* handleCreate( {payload} ) {
         return item._id
       })
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
         "bigimage":bigimage.data.images[0]._id,
         "image": imageArray
       });
@@ -56,7 +67,7 @@ function* handleCreate( {payload} ) {
       bigimage = yield call(addImage, payload.params.bigimage);
       console.log(bigimage)
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
         "bigimage":bigimage.data.images[0]._id
       });
       if (result.data.code !== 201) throw result.data;
@@ -69,14 +80,14 @@ function* handleCreate( {payload} ) {
         return item._id
       })
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
         "image": imageArray
       });
       if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     else{
-      result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications, colors, description });
+      result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, group });
       if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
@@ -91,7 +102,7 @@ function* handleCreate( {payload} ) {
  * update
  */
 function* handleUpdateImage( {payload} ) {
-  const {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description} = payload.params;
+  const {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description, group} = payload.params;
   try {
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
     if(payload.params.bigimage._id === undefined && payload.formData){
@@ -101,7 +112,7 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand, specifications, colors, description,
+      { name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, group,
         "bigimage":bigimage.data.images[0]._id,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
@@ -112,7 +123,7 @@ function* handleUpdateImage( {payload} ) {
     else if(payload.params.bigimage._id === undefined){
       var bigimage = yield call(addImage, payload.params.bigimage);
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
         "bigimage":bigimage.data.images[0]._id
       }, payload.id);
       if (result.data.code !== 200) throw result.data;
@@ -125,7 +136,7 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
       if (result.data.code !== 200) throw result.data;
@@ -133,7 +144,7 @@ function* handleUpdateImage( {payload} ) {
     }
     else{
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
         "image": payload.params.image
       }, payload.id);
       if (result.data.code !== 200) throw result.data;
@@ -203,6 +214,9 @@ export function* watchUpdateImage() {
 export function* watchDelete() {
   yield takeEvery(ProductsActionTypes.DELETE, handleDelete);
 }
+export function* watchFilter() {
+  yield takeEvery(ProductsActionTypes.FILTER, handleFilter);
+}
 export function* watchActivate() {
   yield takeEvery(ProductsActionTypes.ACTIVATE, handleActivate);
 }
@@ -213,6 +227,7 @@ export function* watchDeactivate() {
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
+    fork(watchFilter),
     fork(watchGetDetail),
     fork(watchCreate),
     fork(watchUpdateImage),

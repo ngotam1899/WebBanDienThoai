@@ -26,7 +26,7 @@ class ProductPage extends Component {
       min_p: filter.min_p ===null ? "" : filter.min_p,
       max_p: filter.max_p ===null ? "" : filter.max_p,
       filter: {
-        limit: 4,
+        limit: 12,
         page: 0,
         active: 1,
         category: match.params.categoryID ? match.params.categoryID : null
@@ -169,7 +169,7 @@ class ProductPage extends Component {
                           return(
                           <div className="radio" key={index}>
                             <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(brand._id)} 
-                            checked={filter.brand === brand._id && "checked"}/>{brand.name}</label>
+                            checked={filter.brand === brand._id && "checked"}/>{brand.name} (0)</label>
                           </div>
                           )})}
                         </form>
@@ -235,7 +235,7 @@ class ProductPage extends Component {
                             <div className="row input-group mx-auto">
                               <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder={t('shop.distance.from')} className="form-control w-40"></input>
                               <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} className="form-control w-40"></input>
-                              <div class="input-group-append">
+                              <div className="input-group-append">
                                 <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
                               </div>
                             </div>

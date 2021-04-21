@@ -30,3 +30,11 @@ export default function(state = init, action) {
       return state;
   }
 }
+/* category: {
+      productLength: [
+        {
+          categoryId,
+          productLengthByCat
+        }
+      ]
+}*/

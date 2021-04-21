@@ -17,15 +17,10 @@
   .product-carousel {
     padding-top: 40px;
   }
-  .single-shop-product h2 {
-    font-size: 20px;
-    margin: 10px 0;
-}
 .product-option-shop {
     margin-top: 15px;
 }
 
-.single-shop-product {margin-bottom: 50px}
 .add_to_cart_button {
     background: none repeat scroll 0 0 #5a88ca;
     border: medium none;
@@ -45,4 +40,7 @@ select {border: none;}
 }
 .w-40{
   width:40%
+}
+.font-size-12{
+  font-size: 12px;
 }

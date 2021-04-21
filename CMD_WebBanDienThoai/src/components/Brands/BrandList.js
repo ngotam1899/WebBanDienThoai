@@ -140,7 +140,7 @@ class BrandList extends Component {
                 />
                 {(brandDetail && large) && <BrandDetail large={large} brand={brandDetail} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
-                {(!brandDetail && large) && <BrandDetail large={large} brand={brandDetail} onClose={this.onClose}
+                {(!brandDetail && large) && <BrandDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>

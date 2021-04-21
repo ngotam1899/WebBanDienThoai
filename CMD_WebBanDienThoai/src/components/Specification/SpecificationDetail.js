@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle } from '@coreui/react';
+import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CDataTable } from '@coreui/react';
 import { connect } from "react-redux";
 // @Actions
 import SpecificationActions from "../../redux/actions/specification";
+
+const fields = ['name' ,{ key: 'actions', _style: { width: '10%'} }]
 
 class SpecificationDetail extends Component {
   constructor(props){
@@ -10,7 +12,9 @@ class SpecificationDetail extends Component {
     const {specification} = props;
     this.state = {
       id: specification ? specification._id : '',
-      name: specification ? specification.name : ''
+      name: specification ? specification.name : '',
+      selections: specification ? specification.selections : [],
+      selection: ""
     }
   }
   onChange = (event) =>{
@@ -23,10 +27,9 @@ class SpecificationDetail extends Component {
   }
 
   onSubmit = () =>{
-    const {id, name} = this.state;
+    const {id, name, selections} = this.state;
     const {onUpdate, onCreate} = this.props;
-    var data = {name}
-    console.log("data: ",data)
+    var data = {name, selections}
     if (id) {
       onUpdate(id, data);
     }
@@ -35,18 +38,26 @@ class SpecificationDetail extends Component {
     }
   }
 
-  onAddSpecification = (name) =>{
-    const {onUpdate} = this.props;
-    const {specifications} = this.state;
-    specifications.push(name)
-    onUpdate({specifications});
+  onDeleteSelection = (item) =>{
+    const {selections} = this.state;
+    selections.splice(selections.indexOf(item), 1);
+    this.setState({
+      selections
+    })
   }
 
+  onAddSelection = () =>{
+    const {selections, selection} = this.state;
+    selections.push(selection);
+    this.setState({
+      selections,
+      selection: ""
+    })
+  }
 
 	render() {
-    const { name } = this.state;
+    const { name, selections, selection } = this.state;
     const { large, onClose, specification} = this.props;
-    console.log("abc: ", specification);
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>
@@ -55,12 +66,42 @@ class SpecificationDetail extends Component {
 				<CModalBody>
 					<div className="row">
 						<div className="col-12 col-lg-6">
-							<form>
 								<div className="form-group">
 									<label>Tên hệ thuộc tính:</label>
                   <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
 								</div>
-              </form>
+              </div>
+              <div className="col-12 col-lg-6">
+                <div className="form-group">
+									<label>Tùy chọn bổ sung:</label>
+                  <div className="input-group">
+                    <input type="text" className="form-control" name="selection" value={selection} onChange={this.onChange}/>
+                    <div className="input-group-append">
+                      <button className="btn btn-primary" onClick={this.onAddSelection} type="button">Add</button>
+                    </div>
+                  </div>
+                  {selections && <CDataTable
+                    items={selections}
+                    fields={fields}
+                    striped
+                    itemsPerPage={5}
+                    pagination
+                    scopedSlots = {{
+                      'name': (item) => (
+                        <td>{item}</td>
+                      ),
+                      'actions': (item) => (
+                        <CButton
+                          onClick={() => this.onDeleteSelection(item)}
+                          className="mr-1 mb-1 mb-xl-0"
+                          color="danger"
+                        >
+                          Xoá
+                        </CButton>
+                      )
+                    }}
+                  />}
+								</div>
             </div>
 					</div>
 				</CModalBody>

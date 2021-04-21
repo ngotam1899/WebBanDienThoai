@@ -139,7 +139,7 @@ class CategoryList extends Component {
                 />
                 {(categoryDetail && large) && <CategoryDetail large={large} category={categoryDetail} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
-                {(!categoryDetail && large) && <CategoryDetail large={large} category={categoryDetail} onClose={this.onClose}
+                {(!categoryDetail && large) && <CategoryDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>

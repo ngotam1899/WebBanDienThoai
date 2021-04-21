@@ -1,4 +1,4 @@
-/* .product-breadcroumb {
+.product-breadcroumb {
 	margin-bottom: 20px;
 }
 .product-breadcroumb > a {
@@ -6,15 +6,15 @@
 	position: relative;
 }
 .product-breadcroumb > a::before {
-	content: "/";
+	content: ">";
 	position: absolute;
 	right: -20px;
-	top: 2px;
+	top: 0;
 }
 .product-breadcroumb > a:last-child::before {
 	display: none;
 }
-.product-main-img {
+/* .product-main-img {
 	margin-bottom: 20px;
 }
 .product-gallery {

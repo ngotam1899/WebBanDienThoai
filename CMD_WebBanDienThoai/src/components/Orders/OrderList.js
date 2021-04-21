@@ -284,7 +284,7 @@ class OrderList extends Component {
                 onClearDetail={onClearDetail}
                 />}
 
-                {(!orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}
+                {(!orderDetail && large) && <OrderDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}
                 />}
               </CCardBody>

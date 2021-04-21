@@ -94,6 +94,10 @@ const ProductSchema = new Schema(
 				}
 			}
 		],
+		group: {
+			type: Schema.Types.ObjectId,
+			ref: 'Group'
+		},
 		stars: {
 			type: Number
 		},

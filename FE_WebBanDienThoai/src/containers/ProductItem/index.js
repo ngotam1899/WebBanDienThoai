@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { compose } from "redux";
 import { withTranslation } from "react-i18next";
+// @Components
+import Rating from 'react-rating'
 // @Functions
 import tryConvert from "../../utils/changeMoney";
 import numberWithCommas from "../../utils/formatPrice";
@@ -11,26 +13,24 @@ class ProductItem extends Component {
   render() {
     const { product, currency, t } = this.props;
     return (
-      <div className="col-md-3 col-6">
-        <div className="single-shop-product text-center">
-          <div className="product-upper">
-            <Link to={`/product/${product.pathseo}/${product._id}`}>
+      <div className="col-md-3 col-6 my-2">
+        <Link to={`/product/${product.pathseo}/${product._id}`} style={{textDecoration: 'none'}}>
+        <div className="single-shop-product">
+          <div className="product-upper text-center">
               <img
                 src={
                   product.bigimage
                     ? product.bigimage.public_url
                     : "http://www.pha.gov.pk/img/img-02.jpg"
                 }
+                className="h-100 w-auto"
                 alt={`${product.name}`}
               />
-            </Link>
           </div>
-          <h2>
-            <Link to={`/product/${product.pathseo}/${product._id}`}>
-              {product.name.substring(0, 15)}
-              {product.name.length > 15 ? "..." : ""}
-            </Link>
-          </h2>
+          <p className="text-dark mb-0 mt-2">
+              {product.name.substring(0, 22)}
+              {product.name.length > 22 ? "..." : ""}
+          </p>
           <div className="product-carousel-price">
             <ins>
               {currency === "VND" && product.price_min 
@@ -42,7 +42,6 @@ class ProductItem extends Component {
                   )}{" "}
               {currency}
             </ins>{" "}
-            <br />
             {/* <del>
               {currency == "VND"
                 ? numberWithCommas(product.price * 1.2)
@@ -53,8 +52,16 @@ class ProductItem extends Component {
                   )}{" "}
               {currency}
             </del> */}
+            <br/>
+            {product.stars && <><Rating
+              initialRating={product.stars}
+              emptySymbol="fa fa-star text-secondary"
+              fullSymbol="fa fa-star text-warning"
+              readonly
+            /><span className="ml-2 text-secondary font-size-12">2 đánh giá</span></>}
           </div>
         </div>
+        </Link>
       </div>
     );
   }

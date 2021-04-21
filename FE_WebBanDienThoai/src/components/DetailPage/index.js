@@ -126,8 +126,8 @@ class DetailPage extends Component {
               <div className="product-content-right">
                 <div className="product-breadcroumb">
                   <a href="/#/">{t('header.home.menu')}</a>
-                  <a href={`/#/products/a/${product.category._id}`}>{product.category.name}</a>
-                  <a href={`/#/product/a/${product._id}`}>{product.name}</a>
+                  <a href={`/#/products/${product.category.pathseo}/${product.category._id}`}>{product.category.name}</a>
+                  <a href={`/#/product/${product.pathseo}/${product._id}`}>{product.name}</a>
                 </div>
                 <div className="row">
                   <div className="col-sm-5">
@@ -140,6 +140,17 @@ class DetailPage extends Component {
                       <div className="product-inner-price">
                         <ins>{product.price_min && this.setPrice(currency, product.price_min, product.price_max)} {currency}</ins>
                         {/* <del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del> */}
+                      </div>
+                      <div className="row">
+                        <div className="col-12">
+                          <Rating
+                            initialRating={product.stars}
+                            emptySymbol="fa fa-star text-secondary"
+                            fullSymbol="fa fa-star text-warning"
+                            readonly
+                        /><span className="ml-2">2 đánh giá</span>
+                        </div>
+                      
                       </div>
                       <div className="row">
                         {product.colors.map((item, index)=>{

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-//Components
+// @Components
 import {
   CButton,
   CModal,
@@ -11,17 +11,11 @@ import {
 
 
 export default class Images extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-    }
-  }
 
   render() {
-    const {modal, onCloseModal,setImage,deletePreview, image} = this.props;
-    const {previewList} = this.state;
+    const {modal, onCloseModal,setImage, image} = this.props;
     return (
-      <CModal show={modal} onClose={() => onCloseModal(!modal)} closeOnBackdrop={false}>
+      <CModal show={modal} onClose={() => onCloseModal("modal", !modal)} closeOnBackdrop={false}>
         <CModalHeader closeButton>
           <CModalTitle>
             Danh sách hình ảnh
@@ -37,7 +31,7 @@ export default class Images extends Component {
           })}
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => onCloseModal(!modal)}>
+          <CButton color="secondary" onClick={() => onCloseModal("modal", !modal)}>
             Cancel
           </CButton>
         </CModalFooter>

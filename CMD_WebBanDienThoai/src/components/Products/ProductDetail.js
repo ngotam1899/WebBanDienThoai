@@ -15,6 +15,7 @@ import {
   CModalTitle,
 } from "@coreui/react";
 import Images from "./Images";
+import Group from "./Group";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -22,6 +23,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import ProductsActions from "../../redux/actions/products";
 import ColorActions from "../../redux/actions/color";
 import CategoryActions from "../../redux/actions/categories";
+import GroupActions from "../../redux/actions/group";
 
 class ProductDetail extends Component {
   constructor(props) {
@@ -51,6 +53,11 @@ class ProductDetail extends Component {
       imageColor: INITIAL_IMAGE,
       previewColorImage: "",
       selectedColorImage: "",
+      // @Product Group
+      group: product ? product.group : "",
+      keyword: "",
+      _modal: false,
+      // @Product Description
       description: product && product.description ? EditorState.createWithContent(convertFromRaw(JSON.parse(product.description))) : EditorState.createEmpty(),
       // @Product Image
       previewSource: "",
@@ -107,7 +114,7 @@ class ProductDetail extends Component {
     return specifications;
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { onGetListColor } = this.props;
     onGetListColor();
   }
@@ -195,11 +202,11 @@ class ProductDetail extends Component {
     var target = event.target;
     var name = target.name;
     var id = target.value;
-    const { onGetDetailCategories } = this.props;
+    const { onGetDetailCategory } = this.props;
     this.setState({
       [name]: id,
     });
-    onGetDetailCategories(id);
+    onGetDetailCategory(id);
   };
 
   onChangeDetail = (event) => {
@@ -406,7 +413,8 @@ class ProductDetail extends Component {
       pathseo,
       specifications,
       colors,
-      description
+      description,
+      group
     } = this.state;
     if (id) {
       // eslint-disable-next-line
@@ -422,6 +430,7 @@ class ProductDetail extends Component {
         pathseo,
         specifications,
         colors,
+        group: group._id,
         description: JSON.stringify(
           convertToRaw(description.getCurrentContent())
         )
@@ -442,6 +451,7 @@ class ProductDetail extends Component {
         image,
         specifications,
         colors,
+        group: group._id,
         description: JSON.stringify(
           convertToRaw(description.getCurrentContent())
         )
@@ -458,11 +468,19 @@ class ProductDetail extends Component {
     return specificationName.name;
   };
 
-  onCloseModal = (modal) =>{
+  onCloseModal = (name, value) =>{
     this.setState({
-      modal
+      [name] : value
     })
   }
+
+  onEditGroup = () =>{
+    const {onGetDetailGroup} = this.props;
+    const {group} = this.state;
+    onGetDetailGroup(group._id)
+    this.onCloseModal("_modal", true)
+  }
+
   setImage = (item) =>{
     this.setState({
       previewColorImage: item.public_url,
@@ -494,6 +512,18 @@ class ProductDetail extends Component {
     );
   }
 
+  handleFilter = (event) => {
+    const { keyword } = this.state;
+    const { onFilter } = this.props;
+		var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
+    onFilter(keyword);
+	}
+
   render() {
     const {
       name,
@@ -515,6 +545,9 @@ class ProductDetail extends Component {
       btnStatus,
       imageColor,
       previewColorImage,
+      group,
+      _modal,
+      keyword,
       description
     } = this.state;
     const {
@@ -524,6 +557,8 @@ class ProductDetail extends Component {
       listBrands,
       listColor,
       product,
+      listSearch,
+      groupDetail
     } = this.props;
     return (
       <CModal show={large} onClose={() => onClose(!large)} size="lg" closeOnBackdrop={false}>
@@ -573,8 +608,6 @@ class ProductDetail extends Component {
                     </div>
                   </div>
                   <div className="col-6">
-
-
                   {bigimage ? (
                   <div className="form-group img-thumbnail3">
                     {previewSource ? (
@@ -712,7 +745,7 @@ class ProductDetail extends Component {
                         type="button"
                         name="previewColorImage"
                         className="w-100 h-100"
-                        onClick={() => this.onCloseModal(true)}
+                        onClick={() => this.onCloseModal("modal", true)}
                       />
                     </div>
                   </div>
@@ -862,9 +895,42 @@ class ProductDetail extends Component {
                   </div>
                 </div>
               </form>
+              <div className="form-group">
+                <label className="float-left">Nhóm sản phẩm liên quan:</label>
+                <div className="float-right">
+                  <button type="button" className="btn btn-primary" onClick={()=> this.onCloseModal("_modal", true)}>Thêm nhóm</button>
+                </div>
+                <input className="form-control" name="keyword" value={keyword} onChange={this.handleFilter} placeholder="Tìm nhóm có sẵn"></input>
+                  <div className="card mb-0">
+                    {listSearch && keyword && listSearch.map((group, index) =>{
+                      return (
+                        <div key={index}>
+                          <div className="row">
+                            <div className="col-12" onClick={()=>this.setState({group})}>
+                              <p className="my-1 mx-2">{group.name}</p>
+                            </div>
+                          </div>
+                          <div className="border-bottom"></div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                {group && <div className="input-group">
+                  <input
+                    disabled
+                    type="string"
+                    className="form-control"
+                    name="group"
+                    value={group.name}
+                    onChange={this.onChange}
+                  />
+                  <div className="input-group-append">
+                    <button className="btn btn-warning" type="button" onClick={this.onEditGroup}>Sửa</button>
+                  </div>
+                </div>}
+              </div>
             </div>
             <div className="col-12 col-lg-6">
-
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">
                   Chi tiết sản phẩm
@@ -902,8 +968,9 @@ class ProductDetail extends Component {
               />
             </div>
           </div>
-          {modal && image && <Images modal={modal} onCloseModal={this.onCloseModal} image={image} setImage={this.setImage}
-          deletePreview={this.deletePreview}/>}
+          {modal && image && <Images modal={modal} onCloseModal={this.onCloseModal} image={image} setImage={this.setImage}/>}
+          {_modal && groupDetail && <Group modal={_modal} onCloseModal={this.onCloseModal} group={groupDetail}/>}
+          {_modal && !groupDetail && <Group modal={_modal} onCloseModal={this.onCloseModal}/>}
         </CModalBody>
         <CModalFooter>
           <CButton color="success" onClick={() => this.onSubmitImage(!large)}>
@@ -922,6 +989,8 @@ const mapStateToProps = (state) => {
     productDetail: state.products.detail,
     listColor: state.color.list,
     categoryDetail: state.categories.detail,
+    listSearch: state.group.listSearch,
+    groupDetail: state.group.detail
   };
 };
 
@@ -936,9 +1005,16 @@ const mapDispatchToProps = (dispatch) => {
     onGetListColor: () => {
       dispatch(ColorActions.onGetList());
     },
-    onGetDetailCategories: (id) => {
+    onGetDetailCategory: (id) => {
       dispatch(CategoryActions.onGetDetail(id))
-    }
+    },
+    onFilter : (keyword) =>{
+      dispatch(GroupActions.onFilter(keyword))
+    },
+    onGetDetailGroup: (id) => {
+      dispatch(GroupActions.onGetDetail(id))
+    },
+
   };
 };
 

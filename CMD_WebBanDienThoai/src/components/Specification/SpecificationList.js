@@ -147,7 +147,7 @@ class ProductList extends Component {
                 />
                 {(specificationDetail && large) && <SpecificationDetail large={large} specification={specificationDetail} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
-                {(!specificationDetail && large) && <SpecificationDetail large={large} specification={specificationDetail} onClose={this.onClose}
+                {(!specificationDetail && large) && <SpecificationDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>

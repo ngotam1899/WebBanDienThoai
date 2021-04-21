@@ -1,16 +1,17 @@
-.img-thumbnail3{
-  height: 170px;
+.img-thumbnail3, .img-thumbnail2 {
+  position: relative;
 }
 .img-thumbnail3 img{
   height: 100%;
   width: auto;
 }
 .img-thumbnail3 .file {
-  position: relative;
+  position: absolute;
   overflow: hidden;
   width: 100%;
   border: none;
-  top: -50px;
+  bottom: 50px;
+  left: 0;
   border-radius: 0;
   font-size: 1vw;
   background: #212529b8;
@@ -23,11 +24,11 @@
 }
 
 .img-thumbnail2 .img-des {
-  position: relative;
+  position: absolute;
   overflow: hidden;
   width: 100%;
   left: 0;
-  top: -50px;
+  bottom: 10px;
   border: none;
   border-radius: 0;
   font-size: 0.6vw;

@@ -27,6 +27,9 @@ export const ProductsActionTypes = {
   DEACTIVATE_SUCCESS: "DEACTIVATE_SUCCESS",
   DEACTIVATE_ERROR: "DEACTIVATE_ERROR",
 
+  FILTER: "FILTER",
+  FILTER_SUCCESS: "FILTER_SUCCESS",
+
   CLEAR_DETAIL: "CLEAR_DETAIL",
   CLEAR_STATE: "CLEAR_STATE",
 };
@@ -172,6 +175,20 @@ const onDeactivateError = (error) => ({
   payload: error,
 });
 
+//----------------  Filter  ----------------------
+
+const onFilter = keyword => ({
+  type: ProductsActionTypes.FILTER,
+  payload: {
+    keyword,
+  },
+});
+
+const onFilterSuccess = data => ({
+  type: ProductsActionTypes.FILTER_SUCCESS,
+  payload: data,
+});
+
 const ProductsActions = {
   onClearDetail,
   onClearState,
@@ -195,6 +212,9 @@ const ProductsActions = {
   onDelete,
   onDeleteSuccess,
   onDeleteError,
+
+  onFilter,
+  onFilterSuccess,
 
   onActivate,
   onActivateSuccess,
