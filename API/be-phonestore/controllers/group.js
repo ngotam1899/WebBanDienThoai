@@ -65,7 +65,7 @@ const getDetailGroup = async(req, res, next) => {
   const isValid = await Validator.isValidObjId(IDGroup);
   if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id category is not correctly' }) } else {
     const result = await Group.findById(IDGroup)
-    .populate({ path: 'products.product', select: ['name', 'bigimage'], populate : {path : 'bigimage', select: "public_url"}  });
+    .populate({ path: 'products.product', select: ['name', 'bigimage', 'price_min', 'pathseo'], populate : {path : 'bigimage', select: "public_url"}  });
     return res.status(200).json({ success: true, code: 200, message: '', group: result })
   }
 }

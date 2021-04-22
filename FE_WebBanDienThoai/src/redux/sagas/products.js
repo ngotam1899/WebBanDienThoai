@@ -3,6 +3,7 @@ import { get } from "lodash";
 import UIActions from "../actions/ui";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
 import { getAllProducts, getDetailProduct } from "../apis/products";
+import GroupActions from "../actions/group";
 
 function* handleGetList({ payload }) {
   yield put(UIActions.showLoading());
@@ -35,6 +36,7 @@ function* handleGetDetail({ filters, id }) {
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetDetailSuccess(data.product));
+    if(data.product.group) yield put(GroupActions.onGetDetail(data.product.group._id))
   } catch (error) {
     yield put(ProductsActions.onGetDetailError(error));
   }

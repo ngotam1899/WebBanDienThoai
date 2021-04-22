@@ -54,7 +54,7 @@ class ProductDetail extends Component {
       previewColorImage: "",
       selectedColorImage: "",
       // @Product Group
-      group: product ? product.group : "",
+      group: product ? product.group : null,
       keyword: "",
       _modal: false,
       // @Product Description
@@ -430,7 +430,7 @@ class ProductDetail extends Component {
         pathseo,
         specifications,
         colors,
-        group: group._id,
+        group: group && group._id ? group._id : group,
         description: JSON.stringify(
           convertToRaw(description.getCurrentContent())
         )
@@ -451,7 +451,7 @@ class ProductDetail extends Component {
         image,
         specifications,
         colors,
-        group: group._id,
+        group: group && group._id ? group._id : group,
         description: JSON.stringify(
           convertToRaw(description.getCurrentContent())
         )
@@ -580,7 +580,6 @@ class ProductDetail extends Component {
                         className="form-control"
                         name="name"
                         value={name}
-                        disabled={product ? true : false}
                         onChange={this.onChange}
                       />
                     </div>
@@ -591,7 +590,6 @@ class ProductDetail extends Component {
                           type="text"
                           className="form-control"
                           name="pathseo"
-                          disabled={product ? true : false}
                           value={pathseo ? pathseo : changeToSlug(name)}
                           onChange={this.onChange}
                         />
@@ -601,7 +599,6 @@ class ProductDetail extends Component {
                           className="form-control"
                           name="pathseo"
                           value={pathseo}
-                          disabled={product ? true : false}
                           onChange={this.onChange}
                         />
                       )}

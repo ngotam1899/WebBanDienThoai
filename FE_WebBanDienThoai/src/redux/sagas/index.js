@@ -4,6 +4,7 @@ import auth from "./auth";
 import brands from "./brands";
 import categories from "./categories";
 import color from "./color";
+import group from "./group";
 import order from "./order";
 import operations from "./operations";
 import products from "./products";
@@ -12,6 +13,6 @@ import user from "./user";
 
 export default function* rootSaga(getState) {
   yield all([
-    address(), auth(), brands(), categories(), color(), order(), operations(), products(), review(), user(),
+    address(), auth(), brands(), categories(), color(), group(), order(), operations(), products(), review(), user(),
   ]);
 }

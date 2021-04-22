@@ -47,7 +47,11 @@ function* handleCreate({ payload }) {
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(GroupActions.onCreateSuccess(data.group));
-    yield put(GroupActions.onGetList());
+/*     let product = yield select(state => state.products.detail);
+    yield put(ProductsActions.onUpdateImage({
+      id: product._id,
+      params: {group: data.group._id},
+      formData: null})); */
   } catch (error) {
     yield put(GroupActions.onCreateError(error));
   }
@@ -67,7 +71,6 @@ function* handleUpdate({ payload }) {
     let product = yield select(state => state.products.detail);
     yield put(ProductsActions.onGetDetail(product._id));
   } catch (error) {
-    console.log(error);
     yield put(GroupActions.onUpdateError(error));
   }
 }

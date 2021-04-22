@@ -276,7 +276,7 @@ class ProductPage extends Component {
                   itemClass="page-item"
                   prevPageText={t('shop.pagination.prev')}
                   nextPageText={t('shop.pagination.next')}
-                  hideFirstLastPages="true"
+                  hideFirstLastPages={true}
                   onChange={this.handlePageChange.bind(this)}
                 />
                 </nav>

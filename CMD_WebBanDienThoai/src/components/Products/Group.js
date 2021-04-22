@@ -77,10 +77,18 @@ class Group extends Component {
   onSave = () =>{
     const {onUpdate, onCreate, group} = this.props;
     const {listProduct, nameGroup} = this.state;
-    onUpdate(group._id, {
-      name: nameGroup,
-      products: listProduct
-    });
+    if(group){
+      onUpdate(group._id, {
+        name: nameGroup,
+        products: listProduct
+      });
+    }
+    else{
+      onCreate({
+        name: nameGroup,
+        products: listProduct
+      })
+    }
   }
 
   onClose = () => {
@@ -90,10 +98,10 @@ class Group extends Component {
   }
 
   render() {
-    const {modal, onCloseModal, group, listSearch} = this.props;
+    const {modal, group, listSearch} = this.props;
     const {keyword, listProduct, name, product, show, nameGroup} = this.state;
     return (
-      <CModal show={modal} onClose={() => onCloseModal("_modal",!modal)} closeOnBackdrop={false} size="lg">
+      <CModal show={modal} onClose={this.onClose} closeOnBackdrop={false} size="lg">
         <CModalHeader closeButton>
           <CModalTitle>
             {group ? `Nhóm sản phẩm ${group._id}` : "Thêm nhóm mới"}

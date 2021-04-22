@@ -58,7 +58,7 @@ const routes = [
 		path: '/product/:pathseo/:productID',
 		exact: true,
 		name: "Detail Page",
-		main: ({match}) => <DetailPage match={match} />
+		main: ({match, history}) => <DetailPage match={match} history={history}/>
 	},
 	{
 		path: '',

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import { Redirect } from 'react-router-dom'
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 import {LOCAL} from '../../constants/index';
@@ -8,6 +9,7 @@ import draftToHtml from 'draftjs-to-html';
 // @Actions
 import ProductsActions from '../../redux/actions/products'
 import ReviewActions from '../../redux/actions/review'
+import GroupActions from '../../redux/actions/group'
 // @Components
 import Rating from 'react-rating'
 import ImageGalleries from './ImageGalleries';
@@ -21,10 +23,12 @@ import {INITIAL_IMAGE} from '../../constants';
 class DetailPage extends Component {
   constructor(props) {
     super(props);
+    const {match} = props;
     this.state = {
       quantity: 1,
       imageColor: "",
       check: 0,
+      _check: match.params.productID,
       rating: 0,
       message: ""
     }
@@ -42,7 +46,6 @@ class DetailPage extends Component {
     const {match, onGetDetailProduct, onGetReviews} = this.props;
     onGetDetailProduct(match.params.productID);
     onGetReviews(match.params.productID)
-    
   }
 
   setColor = (item) =>{
@@ -97,6 +100,12 @@ class DetailPage extends Component {
     console.log( rating, message)
   }
 
+  onReload = (path) => {
+    const {history} = this.props;
+    history.push(path);
+    window.location.reload();
+  }
+
   setAmountRating = (review, star) => {
     var amount = 0;
     review.map(item => {
@@ -106,8 +115,8 @@ class DetailPage extends Component {
   }
 
   render() {
-    const {product, currency, t, review} = this.props;
-    const {quantity, imageColor, check, rating, message} = this.state;
+    const {product, currency, t, review, group } = this.props;
+    const {quantity, imageColor, check, _check, rating, message} = this.state;
     
     return (<>
       <div className="application">
@@ -152,6 +161,21 @@ class DetailPage extends Component {
                         </div>
                       
                       </div>
+                      <div className="row">
+                        {group && group.products.map((item, index)=>{
+                          return(
+                            <div key={index}>
+                              <button type="button" key={item._id} 
+                                className="card text-dark py-2 px-3 m-2"
+                                onClick={()=> this.onReload(`/product/${item.product.pathseo}/${item.product._id}`)}>
+                                <p className="mb-0 h6">{item.name} <span className="fa fa-check" style={{"display": _check===item.product._id ? "inline-block" : "none"}}></span></p>
+                                <p className="mb-0 h7">{item.product.price_min ? this.setPrice(currency, item.product.price_min, item.product.price_min) : 'NaN'} {currency}</p>
+                              </button>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <p className="mb-0 font-weight-bold">Vui lòng chọn màu</p>
                       <div className="row">
                         {product.colors.map((item, index)=>{
                           return(
@@ -336,15 +360,13 @@ const mapStateToProps = (state) =>{
   return {
     product: state.products.detail,
     currency: state.currency,
-    review: state.review.list
+    review: state.review.list,
+    group: state.group.detail
   }
 }
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    onClearDetail: () =>{
-      dispatch(ProductsActions.onClearDetail())
-    },
     onGetDetailProduct: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
     },
