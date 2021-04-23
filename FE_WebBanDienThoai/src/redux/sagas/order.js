@@ -6,11 +6,9 @@ import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, deleteOrder, 
 
 function* handleGetList({payload}) {
   try {
-    console.log(1)
-    console.log(payload)
     const result = yield call(getAllOrder, payload);
     const data = get(result, "data")
-    
+    if (data.code !== 200) throw data;
     yield put(OrdersActions.onGetListSuccess(data.orders));
   } catch (error) {
     yield put(OrdersActions.onGetListError(error));

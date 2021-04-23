@@ -2,15 +2,17 @@
 //Module Product
 import axiosService from '../../utils/AxiosService';
 import {API_ENDPOINT_AUTH} from '../../constants/index';
+import queryString from 'query-string';
 
 const url = '/orders';
 // http://localhost:3000/orders  METHOD = GET
 export const getAllOrder = (params = {}) =>{
+  console.log(params)
     let queryParams = '';
     if(Object.keys(params).length>0){
         queryParams = `?${queryString.stringify(params)}`;
     }
-    return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${queryParams}`);
+    return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
 };
 
 // http://localhost:3000/orders/:id  METHOD = GET

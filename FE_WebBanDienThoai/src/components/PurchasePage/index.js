@@ -22,93 +22,131 @@ class PurchasePage extends Component {
         limit: 12,
         page: 0,
         /* active: 1, */
-        user: authInfo && authInfo._id
+        
       },
 
     }
   }
 
-  componentDidMount(){
+  componentWillReceiveProps(props){
+    const {authInfo} = this.props;
     document.title = "[TellMe] Trang bán hàng"
-    const { onGetList, location } = this.props;
-    const { filter } = this.state;
-    const filters = getFilterParams(location.search);
-    var params = {
-      ...filter,
-      ...filters
-    };
-    onGetList(params);
+    if(props.authInfo !== authInfo){
+      const { onGetList, location } = this.props;
+      const { filter } = this.state;
+      const filters = getFilterParams(location.search);
+      var params = {
+        ...filter,
+        ...filters,
+        user: props.authInfo && props.authInfo._id
+      };
+      if(props.authInfo)onGetList(params);
+    }
+    
+  }
+
+  onList = (type) => {
+    switch (type) {
+      case 0:
+        this.handleUpdateFilter({  });
+        break;
+      case 1:
+        this.handleUpdateFilter({ confirmed:-1 });
+        break;
+      case 2:
+        this.handleUpdateFilter({ confirmed:1,status:-1 });
+        break;
+      case 3:
+        this.handleUpdateFilter({ confirmed:1,status:0 });
+        break;
+      case 4:
+        this.handleUpdateFilter({ confirmed:1,status:1 });
+        break;
+      case 5:
+        this.handleUpdateFilter({ active:-1 });
+        break;
+      default:
+        this.handleUpdateFilter({  });
+        break;
+    }
   }
 
   handleUpdateFilter = (data) => {
     const {location, history} = this.props;
     const {pathname, search} = location;
     let queryParams = getFilterParams(search);
-    queryParams = {
-      ...queryParams,
-      ...data,
-    };
+    queryParams = data;
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
+    window.location.reload();
   };
 
   render() {
+    const {orderList} = this.props;
     return (
       <div className="bg-user-info py-4">
         <div className="container emp-profile p-0 mt-5 mb-2">
           <div className="row">
-            <div className="col-2 text-center py-3">
+            <div className="col-2 text-center py-3" onClick={() => this.onList(0)}>
               Tất cả
             </div>
-            <div className="col-2 text-center py-3">
+            <div className="col-2 text-center py-3" onClick={() => this.onList(1)}>
               Chờ xác nhận
             </div>
-            <div className="col-2 text-center py-3">
+            <div className="col-2 text-center py-3" onClick={() => this.onList(2)}>
               Chờ giao hàng
             </div>
-            <div className="col-2 text-center py-3">
+            <div className="col-2 text-center py-3" onClick={() => this.onList(3)}>
               Đang giao
             </div>
-            <div className="col-2 text-center py-3">
+            <div className="col-2 text-center py-3" onClick={() => this.onList(4)}>
               Đã giao
             </div>
-            <div className="col-2 text-center py-3">
+            <div className="col-2 text-center py-3" onClick={() => this.onList(5)}>
               Đã hủy
             </div>
           </div>
         </div>
         <div className="container emp-profile py-3 mt-2 mb-5">
           <div className="row">
-            <div className="col-12">
-              <div className="card">
-                <div className="card-header bg-primary text-white">
-                  <p className="float-left mb-0">Mã đơn hàng</p>
-                  <p className="float-right mb-0">| Đã giao</p>
-                </div>
-                <div className="card-body">
-                  <div className="row h-120">
-                    <div className="col-3 text-center h-100">
-                      <img className="h-100" src="https://css3menu.com/images/slider-img.png"></img>
+            {orderList && orderList.map((order, index) =>{
+              return (
+                <div className="col-12 my-1" key={index}>
+                  <div className="card">
+                    <div className="card-header bg-primary text-white">
+                      <p className="float-left mb-0">Mã đơn hàng {order._id}</p>
+                      <p className="float-right mb-0">| Đã giao</p>
                     </div>
-                    <div className="col-6">
-                      <p className="font-weight-bold">Iphone X 256GB</p>
-                      <p className="font-italic">Màu xanh</p>
-                      <p >Số lượng 1</p>
+                    <div className="card-body">
+                      {order.order_list.map((product, _index)=>{
+                        return(
+                          <div className="row h-120" key={_index}>
+                          <div className="col-3 text-center h-100">
+                            <img className="h-100" src={product.image}></img>
+                          </div>
+                          <div className="col-6">
+                            <p className="font-weight-bold">{product.name}</p>
+                            <p className="font-italic">{product.color}</p>
+                            <p >Số lượng {product.quantity}</p>
+                          </div>
+                          <div className="col-3 text-right">
+                            <p>{product.quantity*product.price} VND</p>
+                          </div>
+                          </div>
+                        )
+                      })}
                     </div>
-                    <div className="col-3 text-right">
-                      <p>50000000 VND</p>
+                    <div className="card-footer">
+                      <div className="float-left">
+                        <button className="btn btn-success">Xem chi tiết đơn hàng</button>
+                      </div>
+                      <div className="float-right font-weight-bold">
+                        {order.total_price} VND
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="card-footer">
-                  <div className="float-left">
-                    <button className="btn btn-success">Xem chi tiết đơn hàng</button>
-                  </div>
-                  <div className="float-right font-weight-bold">
-                    1000000000 VND
-                  </div>
-                </div>
-              </div>
-            </div>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -119,6 +157,7 @@ class PurchasePage extends Component {
 const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
+    orderList: state.order.list,
   }
 }
 
