@@ -6,7 +6,6 @@ import qs from "query-string";
 import './styles.css';
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
-
 // @Components
 import ProductItem from "../../containers/ProductItem"
 import Pagination from "react-js-pagination";
@@ -91,11 +90,6 @@ class ProductPage extends Component {
     this.handleUpdateFilter({ min_p, max_p, page: 0});
   }
 
-  // Sort name
-  /* handleChangeSortName = (event) =>{
-    this.handleUpdateFilter({ sort_n: event.target.value });
-  } */
-
   // Sort price
   handleChangeSortPrice = (event) =>{
     this.handleUpdateFilter({ sort_p: event.target.value, page : 0 });
@@ -117,8 +111,6 @@ class ProductPage extends Component {
   handlePageChange(pageNumber) {
     this.handleUpdateFilter({ page: pageNumber-1 });
   }
-
-  
 
   render() {
     const {keyword, min_p, max_p} = this.state;
@@ -209,11 +201,6 @@ class ProductPage extends Component {
                         </div>
                         <div className="col-sm-5">
                           <div className="card-body py-md-3 py-2 px-3 px-md-2">
-                            {/* <select className="mr-3" onChange={this.handleChangeSortName}>
-                              <option key={-1} value="0">Tên sản phẩm</option>
-                              <option value="-1">Tên: Từ A - Z</option>
-                              <option value="1">Tên: Từ Z - A</option>
-                            </select> */}
                             <select value={filter.sort_p} className="" onChange={this.handleChangeSortPrice}>
                               <option key={-1} value="0">{t('shop.sort.price')}</option>
                               <option value="1">{t('shop.sort.inc')}</option>

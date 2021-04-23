@@ -10,6 +10,7 @@ import ActiveAccount from '../containers/ActiveAccount';
 import ActiveOrder from '../containers/ActiveOrder';
 import DetailPage from '../components/DetailPage';
 import UserInfoPage from '../components/UserInfoPage';
+import PurchasePage from '../components/PurchasePage';
 
 const routes = [
 	{
@@ -47,6 +48,12 @@ const routes = [
 		exact: true,
 		name: "User Info",
 		main: () => <UserInfoPage/>
+	},
+	{
+		path: '/account/purchase',
+		exact: true,
+		name: "Purchase",
+		main: ({history, location}) => <PurchasePage history={history} location={location}/>
 	},
 	{
 		path: '/order/active/:token',

@@ -29,14 +29,6 @@ function handleUpdate({state, action}) {
 
 export default function(state = init, action) {
   switch (action.type) {
-    case UsersActionTypes.UPDATE_USER_IMAGE:
-      return {...state};
-    case UsersActionTypes.UPDATE_USER_IMAGE_SUCCESS:
-      toastSuccess('Cập nhật ảnh đại diện thành công');
-      return {...state};
-    case UsersActionTypes.UPDATE_USER_IMAGE_ERROR:
-      toastError("Lỗi ảnh");
-      return {...state};
     case UsersActionTypes.UPDATE:
       return {
         ...state,

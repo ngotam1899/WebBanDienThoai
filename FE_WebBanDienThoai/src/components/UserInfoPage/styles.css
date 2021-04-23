@@ -43,16 +43,6 @@
   color: #0062cc;
 }
 
-.proile-rating{
-  font-size: 12px;
-  color: #818182;
-  margin-top: 5%;
-}
-.proile-rating span{
-  color: #495057;
-  font-size: 15px;
-  font-weight: 600;
-}
 .profile-head .nav-tabs{
   margin-bottom:5%;
 }
@@ -89,4 +79,8 @@
 .profile-tab p{
   font-weight: 600;
   color: #0062cc;
+}
+
+.h-120 {
+  height: 120px;
 }

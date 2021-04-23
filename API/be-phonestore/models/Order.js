@@ -49,7 +49,7 @@ const OrderSchema = new Schema({
     note: {
         type: String
     },
-    is_paid: {          // Đã thanh toán chưa ? "DateTime" : ""
+    paid: {          // Đã thanh toán chưa ? "DateTime" : ""
         type: Boolean,
         default: false
     },

@@ -119,17 +119,17 @@ class LoginPage extends Component {
 								</div>
 							</div>
 							<a href="#">Forgot Password?</a>
-							<div classNameName="row">
-								<div classNameName="col-12 col-sm-6">
+							<div className="row">
+								<div className="col-12">
 									<input className="btn" value="Login" onClick={()=> this.onLogin()}/>
 								</div>
-								<div classNameName="col-12 col-sm-6">
+								<div className="col-12 ">
 									<form action="/user/dang-ky">
 										<input type="submit" className="btn" value="Register"/>
 									</form>
 								</div>
-								<form onSubmit={this.onSubmit}>
-								<div classNameName="col-12 col-sm-6">
+								
+								<div className="col-12">
 									<GoogleLogin
 									clientId={GOOGLE_ID}
 									buttonText="Login"
@@ -140,16 +140,19 @@ class LoginPage extends Component {
 									)}
 									/>
 								</div>
-								<div classNameName="col-12 col-sm-6">
-									<FacebookLogin
-									appId={FACEBOOK_ID}
-									autoLoad={false}
-									callback={this.responseFacebook}
-									render={renderProps => (
-											<button onClick={renderProps.onClick}  className="btn-primary"><FontAwesomeIcon icon={faFacebookF} className="mr-1"/>Login with Facebook</button>
-										)}
-									/>
-								</div>
+								<form onSubmit={this.onSubmit} className="col-12">
+									<div className="row">
+										<div className="col-12">
+											<FacebookLogin
+											appId={FACEBOOK_ID}
+											autoLoad={false}
+											callback={this.responseFacebook}
+											render={renderProps => (
+													<button onClick={renderProps.onClick}  className="btn-primary"><FontAwesomeIcon icon={faFacebookF} className="mr-1"/>Login with Facebook</button>
+												)}
+											/>
+										</div>
+									</div>
 								</form>
 							</div>
 						</form>

@@ -15,9 +15,9 @@ export const OrdersActionsTypes = {
   CONFIRM_ORDER_SUCCESS: "CONFIRM_ORDER_SUCCESS",
   CONFIRM_ORDER_ERROR: "CONFIRM_ORDER_ERROR",
 
-  GET_HISTORY_ORDER: "GET_HISTORY_ORDER",
-  GET_HISTORY_ORDER_SUCCESS: "GET_HISTORY_ORDER_SUCCESS",
-  GET_HISTORY_ORDER_ERROR: "GET_HISTORY_ORDER_ERROR",
+  GET_LIST: "GET_LIST",
+  GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
+  GET_LIST_ERROR: "GET_LIST_ERROR",
 
   GET_DETAIL: "GET_DETAIL",
   GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
@@ -83,16 +83,16 @@ const onConfirmOrderError = (error) => ({
   payload: error
 });
 
-const onGetHistoryOrder = (id) => ({
-  type: OrdersActionsTypes.GET_HISTORY_ORDER,
-  payload: id
+const onGetList = (payload) => ({
+  type: OrdersActionsTypes.GET_LIST,
+  payload
 });
-const onGetHistoryOrderSuccess = (data) => ({
-  type: OrdersActionsTypes.GET_HISTORY_ORDER_SUCCESS,
+const onGetListSuccess = (data) => ({
+  type: OrdersActionsTypes.GET_LIST_SUCCESS,
   payload: data
 });
-const onGetHistoryOrderError = (error) => ({
-  type: OrdersActionsTypes.GET_HISTORY_ORDER_ERROR,
+const onGetListError = (error) => ({
+  type: OrdersActionsTypes.GET_LIST_ERROR,
   payload: error
 });
 
@@ -124,9 +124,9 @@ const OrdersActions = {
   onConfirmOrderSuccess,
   onConfirmOrderError,
 
-  onGetHistoryOrder,
-  onGetHistoryOrderSuccess,
-  onGetHistoryOrderError,
+  onGetList,
+  onGetListSuccess,
+  onGetListError,
 
   onGetDetail,
   onGetDetailSuccess,

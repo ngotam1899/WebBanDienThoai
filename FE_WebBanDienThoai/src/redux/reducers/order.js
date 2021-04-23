@@ -8,24 +8,6 @@ const init = {
   processing: false,
 };
 
-function handleUpdate({state, action}) {
-  const list = cloneDeep(state.list);
-  const detailData = get(action, "payload.data");
-  const index = list.findIndex(i => i.id === detailData.id);
-  console.log("index", index);
-  if (index !== -1) {
-    list[index] = {...list[index], ...detailData};
-  }
-  return {
-    ...state,
-    processing: false,
-    list,
-    detail: {
-      ...state.detail,
-      data: { ...state.detail.data, ...detailData },
-    },
-  };
-}
 
 export default function(state = init, action) {
   switch (action.type) {
@@ -55,15 +37,14 @@ export default function(state = init, action) {
       var { message } = action.payload;
       toastError(message)
       return {...state};
-    case OrdersActionsTypes.GET_HISTORY_ORDER:
+    case OrdersActionsTypes.GET_LIST:
       return {...state};
-    case OrdersActionsTypes.GET_HISTORY_ORDER_SUCCESS:
+    case OrdersActionsTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        loadingDetail: false,
         list: action.payload,
       };
-    case OrdersActionsTypes.GET_HISTORY_ORDER_ERROR:
+    case OrdersActionsTypes.GET_LIST_ERROR:
       return {...state};
     case OrdersActionsTypes.GET_DETAIL:
       return {...state};

@@ -4,6 +4,14 @@ import axiosService from '../../utils/AxiosService';
 import {API_ENDPOINT_AUTH} from '../../constants/index';
 
 const url = '/orders';
+// http://localhost:3000/orders  METHOD = GET
+export const getAllOrder = (params = {}) =>{
+    let queryParams = '';
+    if(Object.keys(params).length>0){
+        queryParams = `?${queryString.stringify(params)}`;
+    }
+    return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${queryParams}`);
+};
 
 // http://localhost:3000/orders/:id  METHOD = GET
 export const getDetailOrder  = (orderId) =>{
@@ -23,11 +31,6 @@ export const sendConfirmEmail = (orderId) =>{
 // http://localhost:3000/orders/confirm/:token
 export const confirmOrder = (token) =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/confirm/${token}`);
-}
-
-// http://localhost:3000/orders/:userId/order-list
-export const orderHistory = (userId) =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${userId}/order-list`);
 }
 
 // http://localhost:3000/orders/:orderId

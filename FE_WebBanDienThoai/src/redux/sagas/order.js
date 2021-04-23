@@ -1,18 +1,21 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
 import ProductsActions from "../actions/products";
-import { addOrder, sendConfirmEmail, confirmOrder, orderHistory, getDetailOrder, deleteOrder } from "../apis/order";
-/* function* handleGetList({ payload }) {
+import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, deleteOrder, getAllOrder } from "../apis/order";
+
+function* handleGetList({payload}) {
   try {
-    yield delay(500)
-    const result = yield call(getAllProducts, payload);
-    const data = get(result, "data");
-    yield put(ProductsActions.onGetListSuccess(data.product));
+    console.log(1)
+    console.log(payload)
+    const result = yield call(getAllOrder, payload);
+    const data = get(result, "data")
+    
+    yield put(OrdersActions.onGetListSuccess(data.orders));
   } catch (error) {
-    yield put(ProductsActions.onGetListError(error));
+    yield put(OrdersActions.onGetListError(error));
   }
-} */
+}
 
 function* handleGetDetail({id}) {
   try {
@@ -42,7 +45,6 @@ function* handleReConfirm({ payload }) {
  * create
  */
 function* handleCreate({ payload }) {
-  console.log("load",payload);
   try {
     const result = yield call(addOrder, payload);
     const data = get(result, "data", {});
@@ -84,25 +86,6 @@ function* handleHistoryOrder({ payload}) {
  *
  * update
  */
-/* function* handleUpdateUserImage({payload}) {
-  try {
-    //1. Load User Image lên Cloudinary
-    console.log(payload.id);
-    const result = yield call(addUserImage, payload.data);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    //2. Update user info
-    const detailResult = yield call(updateUserInfo,{"image":data.image._id}, payload.id);
-    yield put(UsersActions.onUpdateUserImageSuccess(get(detailResult, "data")));
-    //3. Get user info
-    
-    
-  } catch (error) {
-    console.log(error);
-    yield put(UsersActions.onUpdateUserImageError(error));
-  }
-} */
-
 /**
  *
  * delete
@@ -124,42 +107,32 @@ function* handleDelete({ payload }) {
 /**
  *
  */
-/* export function* watchGetList() {
-  yield takeEvery(ProductsActionsTypes.GET_LIST, handleGetList);
+export function* watchGetList() {
+  yield takeEvery(OrdersActionsTypes.GET_LIST, handleGetList);
 }
-*/
 export function* watchGetDetail() {
   yield takeEvery(OrdersActionsTypes.GET_DETAIL, handleGetDetail);
 }
 export function* watchCreate() {
   yield takeEvery(OrdersActionsTypes.ADD_ORDER, handleCreate);
 }
-
 export function* watchConfirmOrder() {
   yield takeEvery(OrdersActionsTypes.CONFIRM_ORDER, handleConfirmOrder);
-}
-export function* watchHistoryOrder() {
-  yield takeEvery(OrdersActionsTypes.GET_HISTORY_ORDER, handleHistoryOrder);
 }
 export function* watchReConfirm() {
   yield takeEvery(OrdersActionsTypes.SEND_CONFIRM_EMAIL, handleReConfirm);
 }
-/* export function* watchUpdateUserImage() {
-  yield takeEvery(UsersActionsTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
-} */
 export function* watchDelete() {
   yield takeEvery(OrdersActionsTypes.DISCARD_ORDER, handleDelete);
 }
 
 export default function* rootSaga() {
   yield all([
-    /* fork(watchGetList),*/
+    fork(watchGetList),
     fork(watchGetDetail),
     fork(watchCreate),
     fork(watchConfirmOrder),
-    fork(watchHistoryOrder),
     fork(watchReConfirm),
-    /* fork(watchUpdateUserImage), */
     fork(watchDelete),
   ]);
 }

@@ -9,28 +9,24 @@ import { updateUserInfo, getUser, changePassword } from "../apis/user";
  *
  * update
  */
-function* handleUpdateUserImage({payload}) {
-  try {
-    //1. Load User Image lên Cloudinary
-    console.log(payload.id);
-    const result = yield call(addImage, payload.data);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    //2. Update user info
-    const detailResult = yield call(updateUserInfo,{"image":data.images[0]._id}, payload.id);
-    yield put(UsersActions.onUpdateUserImageSuccess(get(detailResult, "data")));
-  } catch (error) {
-    console.log(error);
-    yield put(UsersActions.onUpdateUserImageError(error));
-  }
-}
-
 function* handleUpdate( {payload} ) {
+  const {firstname, lastname, phonenumber, address, email} = payload.params;
+  var result, detailResult = null;
   try {
-    const result = yield call(updateUserInfo, payload.params, payload.id);
-    const data = get(result, "data", {});
-    if (data.code !== 200) throw data;
-    const detailResult = yield call(getUser, payload.id);
+    if(payload.params.image){
+      var image = yield call(addImage, payload.params.image);
+      result = yield call(updateUserInfo,
+      { firstname, lastname, phonenumber, address, email,
+        "image": image.data.images[0]._id
+      }, payload.id);
+      if (result.data.code !== 200) throw result.data;
+    }
+    else{
+      result = yield call(updateUserInfo, {firstname, lastname, phonenumber, address, email}, payload.id);
+      const data = get(result, "data", {});
+      if (data.code !== 200) throw data;
+    }
+    detailResult = yield call(getUser, payload.id);
     yield put(UsersActions.onUpdateSuccess(detailResult.data.user));
     yield put(AuthorizationActions.onGetProfile());
   } catch (error) {
@@ -55,9 +51,6 @@ function* handleChangePassword( {payload} ) {
 /**
  *
  */
-export function* watchUpdateUserImage() {
-  yield takeEvery(UsersActionTypes.UPDATE_USER_IMAGE, handleUpdateUserImage);
-}
 export function* watchUpdate() {
   yield takeEvery(UsersActionTypes.UPDATE, handleUpdate);
 }
@@ -69,6 +62,5 @@ export default function* rootSaga() {
   yield all([
     fork(watchChangePassword),
     fork(watchUpdate),
-    fork(watchUpdateUserImage),
   ]);
 }

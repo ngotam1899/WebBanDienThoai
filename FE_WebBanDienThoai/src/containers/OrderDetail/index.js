@@ -36,13 +36,13 @@ class OrderDetail extends Component {
     const {orderItem, t} = this.props;
     return (
       <div show="true" className="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog">
-          {orderItem && <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">{t('user.info-bill.card')} {orderItem._id}</h5>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div className="modal-dialog">
+          {orderItem && <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">{t('user.info-bill.card')} {orderItem._id}</h5>
+              <button type="button" className="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <div className="form-group">
                 <label>{t('user.date.input')}:</label>
                 <input type="text" className="form-control" name="createdAt" value={Date(orderItem.createdAt)} disabled/>
@@ -121,9 +121,9 @@ class OrderDetail extends Component {
                 <input type="email" className="form-control" name="email" value={orderItem.email} disabled/>
               </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal" onClick={this.submit}>{t('user.delete.button')}</button>
-              <button type="button" class="btn btn-default" data-dismiss="modal">{t('user.close.button')}</button>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.submit}>{t('user.delete.button')}</button>
+              <button type="button" className="btn btn-default" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }
         </div>

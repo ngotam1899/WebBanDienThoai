@@ -1,8 +1,4 @@
 export const UsersActionTypes = {
-  UPDATE_USER_IMAGE: "UPDATE_USER_IMAGE",
-  UPDATE_USER_IMAGE_SUCCESS: "UPDATE_USER_IMAGE_SUCCESS",
-  UPDATE_USER_IMAGE_ERROR: "UPDATE_USER_IMAGE_ERROR",
-
   UPDATE: "UPDATE",
   UPDATE_SUCCESS: "UPDATE_SUCCESS",
   UPDATE_ERROR: "UPDATE_ERROR",
@@ -16,21 +12,6 @@ Object.keys(UsersActionTypes).forEach((key) => {
   UsersActionTypes[
     key
   ] = `USER_${UsersActionTypes[key]}`;
-});
-
-const onUpdateUserImage = ({ id, data }) => ({
-  type: UsersActionTypes.UPDATE_USER_IMAGE,
-  payload: { id, data },
-});
-
-const onUpdateUserImageSuccess = (detail) => ({
-  type: UsersActionTypes.UPDATE_USER_IMAGE_SUCCESS,
-  payload: detail,
-});
-
-const onUpdateUserImageError = (error) => ({
-  type: UsersActionTypes.UPDATE_USER_IMAGE_ERROR,
-  payload: error,
 });
 
 const onUpdate = ({id, params }) => ({
@@ -64,10 +45,6 @@ const onChangePasswordError = (error) => ({
 });
 
 const UsersAction = {
-  onUpdateUserImage,
-  onUpdateUserImageSuccess,
-  onUpdateUserImageError,
-  
   onUpdate,
   onUpdateSuccess,
   onUpdateError,

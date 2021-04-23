@@ -30,8 +30,8 @@ class HomePage extends Component {
       // Slidder home 4
       if($('#bxslider-home4').length >0){
         var slider = $('#bxslider-home4').bxSlider({
-          nextText:'<i class="fa fa-angle-right"></i>',
-          prevText:'<i class="fa fa-angle-left"></i>',
+          nextText:'<i className="fa fa-angle-right"></i>',
+          prevText:'<i className="fa fa-angle-left"></i>',
           auto: true,
           onSliderLoad:function(currentIndex){
             $('#bxslider-home4 li').find('.caption').each(function(i){
@@ -104,7 +104,7 @@ class HomePage extends Component {
                               <p className="mb-0">{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
                             </div>
                           </div>
-                          <div class="border-bottom"></div>
+                          <div className="border-bottom"></div>
                           </Link>
                         )
                       })}
@@ -132,32 +132,32 @@ class HomePage extends Component {
             </li>
             <li>
               <img src={assets("products/h4-slide2.png")} alt="Slide" />
-              <div class="caption-group">
-                <h2 class="caption title">
-                  by one, get one <span class="primary">50% <strong>off</strong></span>
+              <div className="caption-group">
+                <h2 className="caption title">
+                  by one, get one <span className="primary">50% <strong>off</strong></span>
                 </h2>
-                <h4 class="caption subtitle">school supplies & backpacks.*</h4>
-                <a class="caption button-radius" href="#"><span class="icon"></span>Shop now</a>
+                <h4 className="caption subtitle">school supplies & backpacks.*</h4>
+                <a className="caption button-radius" href="#"><span className="icon"></span>Shop now</a>
               </div>
             </li>
             <li>
               <img src={assets("products/h4-slide3.png")} alt="Slide" />
-              <div class="caption-group">
-                <h2 class="caption title">
-                  Apple <span class="primary">Store <strong>Ipod</strong></span>
+              <div className="caption-group">
+                <h2 className="caption title">
+                  Apple <span className="primary">Store <strong>Ipod</strong></span>
                 </h2>
-                <h4 class="caption subtitle">Select Item</h4>
-                <a class="caption button-radius" href="#"><span class="icon"></span>Shop now</a>
+                <h4 className="caption subtitle">Select Item</h4>
+                <a className="caption button-radius" href="#"><span className="icon"></span>Shop now</a>
               </div>
             </li>
             <li>
               <img src={assets("products/h4-slide4.png")} alt="Slide" />
-              <div class="caption-group">
-                <h2 class="caption title">
-                  Apple <span class="primary">Store <strong>Ipod</strong></span>
+              <div className="caption-group">
+                <h2 className="caption title">
+                  Apple <span className="primary">Store <strong>Ipod</strong></span>
                 </h2>
-                <h4 class="caption subtitle">& Phone</h4>
-                <a class="caption button-radius" href="#"><span class="icon"></span>Shop now</a>
+                <h4 className="caption subtitle">& Phone</h4>
+                <a className="caption button-radius" href="#"><span className="icon"></span>Shop now</a>
               </div>
             </li>
           </ul>

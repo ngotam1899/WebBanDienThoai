@@ -58,7 +58,7 @@ class Search extends Component {
 								<p className="mb-0">{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
 							</div>
 						</div>
-						<div class="border-bottom"></div>
+						<div className="border-bottom"></div>
 						</>
 					)
 				})}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom'
+
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import './styles.css';
@@ -83,7 +84,6 @@ class Header extends Component {
     const {total, totalPrice, currencyCode, language}=this.state;
     const {userInfo, isLogin, listCategories, t} = this.props;
     const notVND = currencyCode=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2);
-    
     return (
       <>
         <div className="header-area">
@@ -162,11 +162,14 @@ class Header extends Component {
                 <div className="collapse navbar-collapse" id="collapsibleNavId">
                   <ul className="navbar-nav mr-auto mt-lg-0">
                     <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true} />
-                    {listCategories && listCategories.map((category, index)=>{
+                    {location.hash.indexOf("account") === -1 && listCategories && listCategories.map((category, index)=>{
                       return (
                         <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
                       )
                     })}
+                    {location.hash.indexOf("account") !== -1 &&<>
+                    <MenuLink label="Tài khoản của tôi" to="/account/detail" activeOnlyWhenExact={true} />
+                    <MenuLink label="Đơn mua" to="/account/purchase" activeOnlyWhenExact={true} /></>}
                   </ul>
                 </div>
               </nav>

@@ -50,13 +50,6 @@ class UserDetail extends Component {
     }
   }
 
-  updateProfile =()=>{
-    const {userInfo, onUpdate} = this.props;
-    const {firstname, lastname, phonenumber, address, ward, city, district, email, password} = this.state;
-    var data = {firstname, lastname, phonenumber, address : `${address}, ${ward}, ${district}, ${city}`, email, password}
-    onUpdate(userInfo._id, data);
-  }
-
   setCity = () => {
     const {listCity, userInfo, onGetListDistrict} = this.props;
     const lastCity = listCity.find(obj => obj.ProvinceName === userInfo.address.split(', ')[3]).ProvinceID
@@ -91,7 +84,6 @@ class UserDetail extends Component {
   }
 
   setAddress = (event) =>{
-    const {city, district} = this.state;
     const {options, selectedIndex, value} = event.target;
     this.setState({
       ward: options[selectedIndex].text,
@@ -108,77 +100,89 @@ class UserDetail extends Component {
     })
   }
 
+
+  updateProfile =()=>{
+    const {userInfo, onUpdate} = this.props;
+    const {firstname, lastname, phonenumber, address, ward, city, district, email} = this.state;
+    /* Xử lý ảnh */
+    const {selectedFile} = this.props;
+    var formData = new FormData();
+    formData.append("image",selectedFile);
+    /* Xử lý ảnh */
+    var data = {firstname, lastname, phonenumber, address : `${address}, ${ward}, ${district}, ${city}`, email, image: selectedFile ? formData : null}
+    onUpdate(userInfo._id, data);
+  }
+
   render() {
     const {firstname, lastname, phonenumber, address, email, cityID, districtID, wardID} = this.state;
     const {t, listCity, listDistrict, listWard} = this.props;
 
     return (  
-      <div show="true" className="modal fade" id="infoModal" role="dialog">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">{t('user.info.card')}</h5>
-              <button type="button" class="close" data-dismiss="modal" onClick={this.setCity}>&times;</button>
+      <div>
+        <div className="row">
+          <div className="col-6">
+            <div className="form-group">
+              <label>{t('checkout.firstname.input')}:</label>
+              <input type="text" className="form-control" name="firstname" value={firstname} onChange={this.onChange}/>
             </div>
-            <div class="modal-body">
-              <div className="form-group">
-                <label>{t('checkout.firstname.input')}:</label>
-                <input type="text" className="form-control" name="firstname" value={firstname} onChange={this.onChange}/>
-              </div>
-              <div className="form-group">
-                <label>{t('checkout.lastname.input')}: </label>
-                <input type="text" className="form-control" name="lastname" value={lastname} onChange={this.onChange}/>
-              </div>
-              <div className="form-group">
-                <label>{t('checkout.phone.input')}: </label>
-                <input type="number" className="form-control" name="phonenumber" value={phonenumber} onChange={this.onChange}/>
-              </div>
-              <div className="form-group">
-                <label>{t('checkout.address.input')}: </label>
-                <input type="text" className="form-control" name="address" value={address} onChange={this.onChange}/>
-                <div className="form-inline form-group">
-                <select  className="form-control" type="text" placeholder="Chọn tỉnh/ thành" value={cityID}
-                onChange={this.setDistrict} required>
-                  {listCity && listCity.map((item, index)=>{
-                      return(
-                        <option key={index} value={item.ProvinceID} name="city">{item.ProvinceName}</option>
-                      )
-                    })
-                  }
-                </select>
-                <select  className="form-control" type="text" placeholder="Chọn quận/ huyện" 
-                value={districtID ? districtID : null}
-                onChange={this.setWard} required>
-                  {listDistrict && listDistrict.map((item, index)=>{
-                        return(
-                          <option key={index} value={item.DistrictID} name="district">{item.DistrictName}</option>
-                        )
-                      })
-                    }
-                </select>
-                <select  className="form-control" type="text" placeholder="Chọn phường xã" 
-                value={wardID ? wardID : null}
-                onChange={this.setAddress} required>
-                  {listWard && listWard.map((item, index)=>{
-                        return(
-                          <option key={index} value={item.WardCode} name="ward">{item.WardName}</option>
-                        )
-                      })
-                    }
-                </select>
-              </div>
-              </div>
-              <div className="form-group">
-                <label>Email: </label>
-                <input type="email" className="form-control" name="email" value={email} onChange={this.onChange}/>
-              </div>
+          </div>
+          <div className="col-6">
+            <div className="form-group">
+              <label>{t('checkout.lastname.input')}: </label>
+              <input type="text" className="form-control" name="lastname" value={lastname} onChange={this.onChange}/>
             </div>
-            <div class="modal-footer">
-              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.updateProfile()}>{t('user.save-change.button')}</button>
-              <button type="button" class="btn btn-default" data-dismiss="modal" onClick={this.setCity}>{t('user.close.button')}</button>
-            </div>
-          </div> 
+          </div>
         </div>
+        <div className="row">
+          <div className="col-6">
+            <div className="form-group">
+              <label>{t('checkout.phone.input')}: </label>
+              <input type="number" className="form-control" name="phonenumber" value={phonenumber} onChange={this.onChange}/>
+            </div>
+          </div>
+          <div className="col-6">
+          <div className="form-group">
+            <label>Email: </label>
+            <input type="email" className="form-control" name="email" value={email} onChange={this.onChange}/>
+          </div>
+          </div>
+        </div>
+        <div className="form-group">
+          <label>{t('checkout.address.input')}: </label>
+          <input type="text" className="form-control" name="address" value={address} onChange={this.onChange}/>
+          <div className="form-inline form-group">
+          <select  className="form-control" type="text" placeholder="Chọn tỉnh/ thành" value={cityID}
+          onChange={this.setDistrict} required>
+            {listCity && listCity.map((item, index)=>{
+                return(
+                  <option key={index} value={item.ProvinceID} name="city">{item.ProvinceName}</option>
+                )
+              })
+            }
+          </select>
+          <select  className="form-control" type="text" placeholder="Chọn quận/ huyện" 
+          value={districtID ? districtID : null}
+          onChange={this.setWard} required>
+            {listDistrict && listDistrict.map((item, index)=>{
+                  return(
+                    <option key={index} value={item.DistrictID} name="district">{item.DistrictName}</option>
+                  )
+                })
+              }
+          </select>
+          <select  className="form-control" type="text" placeholder="Chọn phường xã" 
+          value={wardID ? wardID : null}
+          onChange={this.setAddress} required>
+            {listWard && listWard.map((item, index)=>{
+                  return(
+                    <option key={index} value={item.WardCode} name="ward">{item.WardName}</option>
+                  )
+                })
+              }
+          </select>
+        </div>
+        </div>
+        <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.updateProfile()}>{t('user.save-change.button')}</button>
       </div>
     );
   }

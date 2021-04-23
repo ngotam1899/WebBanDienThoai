@@ -26,7 +26,7 @@ import SpecificationActions from "../../redux/actions/specification";
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
 import {INITIAL_IMAGE} from '../../constants';
-const fields = ['name','image', 'price', 'brand', { key: 'actions', _style: { width: '25%'} }]
+const fields = ['name','image','brand', { key: 'actions', _style: { width: '25%'} }]
 
 class ProductList extends Component {
   constructor(props) {

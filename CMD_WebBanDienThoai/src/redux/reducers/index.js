@@ -10,7 +10,8 @@ import user from "./user";
 import order from "./order";
 import specification from "./specification";
 import ui from "./ui";
+import state from "./state";
 
 export default combineReducers({
-  products, cloudinary, brands, categories, group, operations, color, user, order, specification, ui,
+  products, cloudinary, brands, categories, group, operations, color, user, order, specification, ui, state
 });

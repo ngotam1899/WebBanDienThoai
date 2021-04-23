@@ -54,10 +54,6 @@ class BrandDetail extends Component {
       selectedFile: file,
     })
   }
-  // Khi nhấn nút submit ảnh
-  handleSubmitFile = (e) => {
-
-  };
 
   previewFile = (file) => {
     const reader = new FileReader();
