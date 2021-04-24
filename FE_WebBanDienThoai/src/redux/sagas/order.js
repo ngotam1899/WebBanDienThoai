@@ -2,7 +2,7 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
 import ProductsActions from "../actions/products";
-import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, deleteOrder, getAllOrder } from "../apis/order";
+import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, updateOrder, getAllOrder } from "../apis/order";
 
 function* handleGetList({payload}) {
   try {
@@ -47,7 +47,7 @@ function* handleCreate({ payload }) {
     const result = yield call(addOrder, payload);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
-    yield put(OrdersActions.onCreateAnOrderSuccess(data));
+    yield put(OrdersActions.onCreateSuccess(data));
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
     localStorage.removeItem("CART");
@@ -55,7 +55,7 @@ function* handleCreate({ payload }) {
     const listResult = yield call(orderHistory, data.order.user);
     yield put(OrdersActions.onGetHistoryOrderSuccess(listResult.data.orders));
   } catch (error) {
-    yield put(OrdersActions.onCreateAnOrderError(error));
+    yield put(OrdersActions.onCreateError(error));
   }
 }
 
@@ -70,16 +70,6 @@ function* handleConfirmOrder({ payload}) {
   }
 }
 
-function* handleHistoryOrder({ payload}) {
-  try {
-    const result = yield call(orderHistory, payload);
-    const data = get(result, "data", {});  
-    if (data.code !== 200) throw data;
-    yield put(OrdersActions.onGetHistoryOrderSuccess(data.orders));
-  } catch (error) {
-    yield put(OrdersActions.onGetHistoryOrderSuccess(error));
-  }
-}
 /**
  *
  * update
@@ -88,17 +78,16 @@ function* handleHistoryOrder({ payload}) {
  *
  * delete
  */
-function* handleDelete({ payload }) {
+function* handleUpdate({ payload }) {
   try {
-    const result = yield call(deleteOrder, payload.id);
+    const result = yield call(updateOrder, payload.id, payload.params);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    yield put(OrdersActions.onDeleteSuccess(data));
-    const listResult = yield call(orderHistory, payload.userId);
-    yield put(OrdersActions.onGetHistoryOrderSuccess(listResult.data.orders));
+    const detailResult = yield call(getDetailOrder, payload.id);
+    yield put(OrdersActions.onUpdateSuccess(get(detailResult, "data")));
   } catch (error) {
     console.log(error);
-    yield put(OrdersActions.onDeleteError(error));
+    yield put(OrdersActions.onUpdateError(error));
   }
 }
 
@@ -112,7 +101,7 @@ export function* watchGetDetail() {
   yield takeEvery(OrdersActionsTypes.GET_DETAIL, handleGetDetail);
 }
 export function* watchCreate() {
-  yield takeEvery(OrdersActionsTypes.ADD_ORDER, handleCreate);
+  yield takeEvery(OrdersActionsTypes.CREATE, handleCreate);
 }
 export function* watchConfirmOrder() {
   yield takeEvery(OrdersActionsTypes.CONFIRM_ORDER, handleConfirmOrder);
@@ -120,8 +109,8 @@ export function* watchConfirmOrder() {
 export function* watchReConfirm() {
   yield takeEvery(OrdersActionsTypes.SEND_CONFIRM_EMAIL, handleReConfirm);
 }
-export function* watchDelete() {
-  yield takeEvery(OrdersActionsTypes.DISCARD_ORDER, handleDelete);
+export function* watchUpdate() {
+  yield takeEvery(OrdersActionsTypes.UPDATE, handleUpdate);
 }
 
 export default function* rootSaga() {
@@ -131,6 +120,6 @@ export default function* rootSaga() {
     fork(watchCreate),
     fork(watchConfirmOrder),
     fork(watchReConfirm),
-    fork(watchDelete),
+    fork(watchUpdate),
   ]);
 }

@@ -3,47 +3,27 @@ import OrdersActions from '../../redux/actions/order'
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
-import { confirmAlert } from 'react-confirm-alert'; // Import
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
 
 class OrderDetail extends Component {
   confirmOrder = (id) => {
     const {onSendConfirmEmail} = this.props;
     onSendConfirmEmail(id);
   }
-  onDiscardOrder = (id, userId) => {
-    const {onDelete} = this.props;
-    onDelete(id, userId);
-  }
-  submit = () => {
-    const {orderItem, t} = this.props;
-    confirmAlert({
-      title: t('user.popup.label'),
-      message: t('user.delete.question'),
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () => this.onDiscardOrder(orderItem._id, orderItem.user)
-        },
-        {
-          label: 'No'
-        }
-      ]
-    });
-  };
 
   render() {
     const {orderItem, t} = this.props;
+    console.log(orderItem)
     return (
       <div show="true" className="modal fade" id="myModal" role="dialog">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-lg">
           {orderItem && <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">{t('user.info-bill.card')} {orderItem._id}</h5>
               <button type="button" className="close" data-dismiss="modal">&times;</button>
             </div>
             <div className="modal-body">
-              <div className="form-group">
+            <div className="form-group">
                 <label>{t('user.date.input')}:</label>
                 <input type="text" className="form-control" name="createdAt" value={Date(orderItem.createdAt)} disabled/>
               </div>
@@ -122,7 +102,6 @@ class OrderDetail extends Component {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.submit}>{t('user.delete.button')}</button>
               <button type="button" className="btn btn-default" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }
@@ -141,9 +120,6 @@ const mapDispatchToProps =(dispatch)=> {
   return {
 		onSendConfirmEmail : (id) =>{
 			dispatch(OrdersActions.onSendConfirmEmail(id))
-    },
-    onDelete : (id, userId) =>{
-			dispatch(OrdersActions.onDelete({id, userId}))
     },
 	}
 };

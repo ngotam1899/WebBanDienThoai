@@ -40,11 +40,13 @@ class ChangePassword extends Component {
     }
   }
 
+  
+
   render() {
     const {oldPassword, newPassword, confirmPassword} = this.state;
     const {t} = this.props;
     return (  
-      <div show="true" className="modal fade" id="passwdModal" role="dialog">
+      <div show="true" className="modal fade" id="passwdModal" role="dialog" >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

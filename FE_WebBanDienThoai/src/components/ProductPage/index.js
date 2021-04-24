@@ -114,7 +114,7 @@ class ProductPage extends Component {
 
   render() {
     const {keyword, min_p, max_p} = this.state;
-    const { listProducts,listColor, listBrand, t, location, total } = this.props;
+    const { listProducts, listBrand, t, location, total } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <>

@@ -84,3 +84,7 @@
 .h-120 {
   height: 120px;
 }
+.bg-selected {
+  color: #ee4d2d;
+  border-bottom: 5px solid #ee4d2d;
+}

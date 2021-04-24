@@ -7,7 +7,6 @@ import queryString from 'query-string';
 const url = '/orders';
 // http://localhost:3000/orders  METHOD = GET
 export const getAllOrder = (params = {}) =>{
-  console.log(params)
     let queryParams = '';
     if(Object.keys(params).length>0){
         queryParams = `?${queryString.stringify(params)}`;
@@ -36,6 +35,6 @@ export const confirmOrder = (token) =>{
 }
 
 // http://localhost:3000/orders/:orderId
-export const deleteOrder = (orderId) =>{
-  return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${orderId}`);
+export const updateOrder = (orderId, data) =>{
+  return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${orderId}`, data);
 }

@@ -64,18 +64,17 @@ class OrderDetail extends Component {
                 </div>
                 <div className="form-group">
                   <label>Tình trạng hàng:</label>
-                  <div className="row">
-                    <div className="col-9">
-                      <input type="text" className="form-control" name="status" value={status===true ? 'Đã giao hàng' : 'Chưa giao hàng'} disabled/>
-                    </div>
-                    {status===false
-                    ? <div className="col-3">
-                      <button className="btn btn-success" onClick={() => this.setState({status: true})}>Confirm</button>
-                    </div>
-                    : <div className="col-3">
-                      <button className="btn btn-warning" onClick={() => this.setState({status: false})}>Undo</button>
-                    </div>}
-                  </div>
+                  <select
+                    className="form-control"
+                    name="status"
+                    value={status}
+                    onChange={this.onChange}
+                  >
+
+                    <option value={-1}>Chưa giao hàng</option>
+                    <option value={0}>Đang giao hàng</option>
+                    <option value={1}>Đã giao hàng</option>
+                  </select>
                 </div>
                 <div className="form-group">
                   <label>Phương thức thanh toán:</label>

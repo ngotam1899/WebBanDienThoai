@@ -34,8 +34,11 @@ const getAllOrder = async (req, res, next) => {
 		if (req.query.confirmed != undefined && req.query.confirmed != '0') {
 			condition.confirmed = req.query.confirmed == '1' ? true : false;
 		}
-		if (req.query.status != undefined && req.query.status == '0') {
-			condition.status = req.query.status == '1' ? true : false;
+		if (req.query.active != undefined && req.query.active != '0') {
+			condition.active = req.query.active == '1' ? true : false;
+		}
+		if (req.query.status != undefined) {
+			condition.status = req.query.status;
 		}
 		if (req.query.user != undefined) {
 			condition.user = req.query.user;
@@ -111,8 +114,6 @@ const addOrder = async (req, res, next) => {
 					let product = productFound._id;
 					let name = productFound.name;
 					let price = productFound.price;
-
-					console.log(productFound);
 					let imageFound = await Image.findById(productFound.bigimage);
 					if (imageFound) {
 						var image = imageFound.public_url;
@@ -122,7 +123,6 @@ const addOrder = async (req, res, next) => {
 				}
 			}
 		}
-		//order.order_list = order_list;
 		order.user = userID;
 		await order.save();
 		return res.status(200).json({ success: true, code: 201, message: 'success', order: order });
@@ -145,13 +145,13 @@ const updateOrder = async (req, res, next) => {
 					return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
 				}
 				return res.status(200).json({ success: true, code: 200, message: '' });
-				return res.status(200).json({ success: false, code: 403, message: 'Permission denied' });
 			}
 		} else {
 			return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
 		}
 	} catch (error) {}
 };
+
 const requestSendEmail = async (req, res, next) => {
 	try {
 		const { IDOrder } = req.params;
@@ -194,7 +194,6 @@ const sendEmail = async (email, IDOrder) => {
 const confirmOrder = async (req, res, next) => {
 	try {
 		const { tokenOrder } = req.params;
-		console.log(tokenOrder);
 		if (tokenOrder) {
 			JWT.verify(tokenOrder, JWT_SECRET, async (err, decodeToken) => {
 				if (err) {

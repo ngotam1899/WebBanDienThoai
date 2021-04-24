@@ -11,12 +11,12 @@ const init = {
 
 export default function(state = init, action) {
   switch (action.type) {
-    case OrdersActionsTypes.ADD_ORDER:
+    case OrdersActionsTypes.CREATE:
       return {...state};
-    case OrdersActionsTypes.ADD_ORDER_SUCCESS:
+    case OrdersActionsTypes.CREATE_SUCCESS:
       toastSuccess("Tạo đơn hàng thành công")
       return {...state};
-    case OrdersActionsTypes.ADD_ORDER_ERROR:
+    case OrdersActionsTypes.CREATE_ERROR:
       var { message } = action.payload;
       toastError(message)
       return {...state};
@@ -54,16 +54,16 @@ export default function(state = init, action) {
         loadingDetail: false,
         detail: action.payload,
       };
-    case OrdersActionsTypes.DISCARD_ORDER:
+    case OrdersActionsTypes.UPDATE:
       return {
         ...state,
       };
-    case OrdersActionsTypes.DISCARD_ORDER_SUCCESS:
+    case OrdersActionsTypes.UPDATE_SUCCESS:
       toastSuccess("Hủy đơn hàng thành công")
       return {
         ...state,
       };
-    case OrdersActionsTypes.DISCARD_ORDER_ERROR:
+    case OrdersActionsTypes.UPDATE_ERROR:
       var { message } = action.payload;
       toastError(message)
       return {

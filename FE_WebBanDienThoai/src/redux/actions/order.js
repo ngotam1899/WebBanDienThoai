@@ -1,11 +1,11 @@
 export const OrdersActionsTypes = {
-  ADD_ORDER: "ADD_ORDER",
-  ADD_ORDER_SUCCESS: "ADD_ORDER_SUCCESS",
-  ADD_ORDER_ERROR: "ADD_ORDER_ERROR",
+  CREATE: "CREATE",
+  CREATE_SUCCESS: "CREATE_SUCCESS",
+  CREATE_ERROR: "CREATE_ERROR",
 
-  DISCARD_ORDER: "DISCARD_ORDER",
-  DISCARD_ORDER_SUCCESS: "DISCARD_ORDER_SUCCESS",
-  DISCARD_ORDER_ERROR: "DISCARD_ORDER_ERROR",
+  UPDATE: "UPDATE",
+  UPDATE_SUCCESS: "UPDATE_SUCCESS",
+  UPDATE_ERROR: "UPDATE_ERROR",
 
   SEND_CONFIRM_EMAIL: "SEND_CONFIRM_EMAIL",
   SEND_CONFIRM_EMAIL_SUCCESS: "SEND_CONFIRM_EMAIL_SUCCESS",
@@ -45,16 +45,16 @@ const onGetDetailError = (error) => ({
   payload: error,
 });
 
-const onCreateAnOrder = (payload) => ({
-  type: OrdersActionsTypes.ADD_ORDER, 
+const onCreate = (payload) => ({
+  type: OrdersActionsTypes.CREATE, 
   payload
 });
-const onCreateAnOrderSuccess = (data) => ({
-  type: OrdersActionsTypes.ADD_ORDER_SUCCESS,
+const onCreateSuccess = (data) => ({
+  type: OrdersActionsTypes.CREATE_SUCCESS,
   payload: data
 });
-const onCreateAnOrderError = (error) => ({
-  type: OrdersActionsTypes.ADD_ORDER_ERROR,
+const onCreateError = (error) => ({
+  type: OrdersActionsTypes.CREATE_ERROR,
   payload: error
 });
 const onSendConfirmEmail = (payload) => ({
@@ -96,25 +96,25 @@ const onGetListError = (error) => ({
   payload: error
 });
 
-const onDelete = ({ id, userId}) => ({
-  type: OrdersActionsTypes.DISCARD_ORDER,
-  payload: {id, userId}
+const onUpdate = (id, params) => ({
+  type: OrdersActionsTypes.UPDATE,
+  payload: { id, params },
 });
 
-const onDeleteSuccess = (detail) => ({
-  type: OrdersActionsTypes.DISCARD_ORDER_SUCCESS,
+const onUpdateSuccess = (detail) => ({
+  type: OrdersActionsTypes.UPDATE_SUCCESS,
   payload: detail,
 });
 
-const onDeleteError = (error) => ({
-  type: OrdersActionsTypes.DISCARD_ORDER_ERROR,
+const onUpdateError = (error) => ({
+  type: OrdersActionsTypes.UPDATE_ERROR,
   payload: error,
 });
 
 const OrdersActions = {
-  onCreateAnOrder,
-  onCreateAnOrderError,
-  onCreateAnOrderSuccess,
+  onCreate,
+  onCreateError,
+  onCreateSuccess,
 
   onSendConfirmEmail,
   onSendConfirmEmailSuccess,
@@ -132,9 +132,9 @@ const OrdersActions = {
   onGetDetailSuccess,
   onGetDetailError,
   
-  onDelete,
-  onDeleteSuccess,
-  onDeleteError,
+  onUpdate,
+  onUpdateSuccess,
+  onUpdateError,
 };
 
 export default OrdersActions;

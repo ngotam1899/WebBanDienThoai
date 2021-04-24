@@ -5,12 +5,9 @@ import { withTranslation } from 'react-i18next'
 import {INITIAL_IMAGE} from '../../constants';
 import './styles.css'
 //@Components
-import OrderDetail from '../../containers/OrderDetail';
 import UserDetail from '../../containers/UserDetail';
 import ChangePassword from '../../containers/ChangePassword';
 //@Actions
-import UsersActions from '../../redux/actions/user'
-import OrdersActions from '../../redux/actions/order'
 import AddressActions from "../../redux/actions/address";
 
 class UserInfoPage extends Component {
@@ -51,14 +48,8 @@ class UserInfoPage extends Component {
     };
   };
 
- 
-  getInfoOrder = (id) => {
-    const {onGetDetail} = this.props;
-    onGetDetail(id);
-  }
-
   render() {
-    const {authInfo, orderItem, t, listCity} = this.props;
+    const {authInfo, t, listCity} = this.props;
     const {previewSource, selectedFile} = this.state;
     return (
       <div className="bg-user-info py-4">
@@ -111,7 +102,6 @@ class UserInfoPage extends Component {
               </div>
           </>}
         </div>
-        {orderItem ? <OrderDetail orderItem={orderItem}/> : <OrderDetail/>}
         <ChangePassword/>
       </div>
     );

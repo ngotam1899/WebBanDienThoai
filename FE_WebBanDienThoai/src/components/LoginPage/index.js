@@ -121,11 +121,11 @@ class LoginPage extends Component {
 							<a href="#">Forgot Password?</a>
 							<div className="row">
 								<div className="col-12">
-									<input className="btn" value="Login" onClick={()=> this.onLogin()}/>
+									<button type="button" className="btn" onClick={()=> this.onLogin()}>Login</button>
 								</div>
 								<div className="col-12 ">
 									<form action="/user/dang-ky">
-										<input type="submit" className="btn" value="Register"/>
+										<button type="submit" className="btn" value="Register">Register</button>
 									</form>
 								</div>
 								
