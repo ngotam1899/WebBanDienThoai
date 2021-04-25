@@ -44,7 +44,6 @@ function* handleCreate({ payload }) {
  * update
  */
 function* handleUpdate({ payload }) {
-  console.log(payload)
   try {
     const result = yield call(updateCategory, payload.params, payload.id);
     const data = get(result, "data", {});
@@ -54,7 +53,6 @@ function* handleUpdate({ payload }) {
 
     yield put(CategoryActions.onGetList());
   } catch (error) {
-    console.log(error);
     yield put(CategoryActions.onUpdateError(error));
   }
 }

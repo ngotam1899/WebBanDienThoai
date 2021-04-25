@@ -4,17 +4,14 @@ import OrderActions, { OrderActionTypes } from "../actions/order";
 import { getAllOrders, getDetailOrder, updateOrder, deleteOrder, findOrders } from "../apis/order";
 
 function* handleGetList({ payload }) {
-  console.log(payload)
   try {
     if(payload.phone){
-      console.log("1")
       const result = yield call(findOrders, payload);
       const data = get(result, "data");
       if (data.code !== 200) throw data;
       yield put(OrderActions.onGetListSuccess(data.order, data.total));
     }
     else {
-      console.log("2")
       const result = yield call(getAllOrders, payload);
       const data = get(result, "data");
       if (data.code !== 200) throw data;
@@ -45,7 +42,6 @@ function* handleUpdate({ payload }) {
     yield put(OrderActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(OrderActions.onGetList());
   } catch (error) {
-    console.log(error);
     yield put(OrderActions.onUpdateError(error));
   }
 }

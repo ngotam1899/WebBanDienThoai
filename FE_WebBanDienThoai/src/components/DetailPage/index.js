@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { Redirect } from 'react-router-dom'
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 import {LOCAL} from '../../constants/index';
@@ -9,7 +8,6 @@ import draftToHtml from 'draftjs-to-html';
 // @Actions
 import ProductsActions from '../../redux/actions/products'
 import ReviewActions from '../../redux/actions/review'
-import GroupActions from '../../redux/actions/group'
 // @Components
 import Rating from 'react-rating'
 import ImageGalleries from './ImageGalleries';
@@ -38,7 +36,6 @@ class DetailPage extends Component {
       FB.XFBML.parse();
     }
     catch(err){
-      console.log(err)
     }
   }
 
@@ -97,7 +94,6 @@ class DetailPage extends Component {
 
   onReview = () =>{
     const {rating, message} = this.state;
-    console.log( rating, message)
   }
 
   onReload = (path) => {

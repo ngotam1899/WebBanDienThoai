@@ -52,8 +52,6 @@ function* handleCreate({ payload }) {
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
     localStorage.removeItem("CART");
     yield put(ProductsActions.onClearCart())
-    const listResult = yield call(orderHistory, data.order.user);
-    yield put(OrdersActions.onGetHistoryOrderSuccess(listResult.data.orders));
   } catch (error) {
     yield put(OrdersActions.onCreateError(error));
   }
@@ -86,7 +84,6 @@ function* handleUpdate({ payload }) {
     const detailResult = yield call(getDetailOrder, payload.id);
     yield put(OrdersActions.onUpdateSuccess(get(detailResult, "data")));
   } catch (error) {
-    console.log(error);
     yield put(OrdersActions.onUpdateError(error));
   }
 }

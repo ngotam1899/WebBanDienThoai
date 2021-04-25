@@ -68,7 +68,6 @@ class PurchasePage extends Component {
   }
 
   setStatus = (confirmed, status, active) => {
-    console.log(active)
     if(active==false) return "Đã hủy"
     else{
       if(confirmed==false) return "Chờ xác nhận"
@@ -120,7 +119,7 @@ class PurchasePage extends Component {
   }
 
   render() {
-    const {orderList, orderItem, location} = this.props;
+    const {orderList, orderItem, location, history} = this.props;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
@@ -157,7 +156,7 @@ class PurchasePage extends Component {
                           </div>
                           <div className="col-6">
                             <p className="font-weight-bold">{product.name}</p>
-                            <p className="font-italic">{product.color}</p>
+                            <p className="font-italic">{product.color && product.color.name_vn}</p>
                             <p >Số lượng {product.quantity}</p>
                           </div>
                           <div className="col-3 text-right">
@@ -171,6 +170,7 @@ class PurchasePage extends Component {
                       <div className="float-left">
                         <button type="button" className="btn btn-success mr-2" data-toggle="modal" data-target="#myModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
                         {this.setStatus(order.confirmed, order.status, order.active)==="Chờ xác nhận" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(order._id)}>Hủy đơn hàng</button>}
+                        {this.setStatus(order.confirmed, order.status, order.active)==="Đã hủy" && <button type="button" className="btn btn-warning">Mua lần nữa</button>}
                       </div>
                       <div className="float-right font-weight-bold">
                         {order.total_price} VND
@@ -183,7 +183,7 @@ class PurchasePage extends Component {
           </div>
           
         </div>
-        <OrderDetail orderItem={orderItem}/>
+        <OrderDetail orderItem={orderItem} history={history}/>
       </div>
     )
   }

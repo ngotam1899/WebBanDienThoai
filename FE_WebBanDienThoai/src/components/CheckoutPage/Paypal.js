@@ -56,7 +56,6 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
           const order = await actions.order.capture();
         },
         onError: (err) => {
-          console.log(err);
         },
       })
       .render(paypal.current);

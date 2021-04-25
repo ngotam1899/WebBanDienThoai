@@ -29,7 +29,6 @@ class ColorDetail extends Component {
     const {id, name_vn, name_en, code} = this.state;
     const {onUpdate, onCreate} = this.props;
     var data = {name_vn, name_en, code}
-    //console.log("data: ", data)
     if (id) {
       onUpdate(id, data);
     }

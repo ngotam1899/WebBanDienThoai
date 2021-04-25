@@ -46,7 +46,6 @@ class LoginPage extends Component {
 		document.title = "[TellMe] Đăng nhập"
 		this.improveScreen()
 		const {history} = this.props;
-		console.log("history", history)
 	}
 
 	UNSAFE_componentWillReceiveProps(props){
@@ -81,7 +80,6 @@ class LoginPage extends Component {
   }
 
   responseFacebook = (response) => {
-		console.log(response);
 		const {onLoginFacebook} = this.props;
 		onLoginFacebook(response.accessToken);
   }

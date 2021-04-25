@@ -8,7 +8,6 @@ function* handleGetDetail({id}) {
     const result = yield call(getProductGroup, id);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    console.log(data)
     yield put(GroupActions.onGetDetailSuccess(data.group));
   } catch (error) {
     yield put(GroupActions.onGetDetailError(error));

@@ -33,10 +33,10 @@ class UserList extends Component {
     })
   }
 
-  handleListOrder = (phone) =>{
+  handleListOrder = (id) =>{
     const { history } = this.props;
     const pathname = '/users/order-manage';
-    history.push(`${pathname}?user=${phone}`);
+    history.push(`${pathname}?user=${id}`);
   }
 
   onDetail = (large, item) =>{
@@ -45,7 +45,6 @@ class UserList extends Component {
       large
     })
     if(item){onGetDetail(item)}
-    //onGetDetail(item)
   }
 
   onClose = (large) =>{
@@ -97,7 +96,7 @@ class UserList extends Component {
                     (item)=>(
                       <td>
                         <CButton
-                          onClick={() => this.handleListOrder(item.phonenumber)}
+                          onClick={() => this.handleListOrder(item._id)}
                           className="mr-1 mb-1 mb-xl-0"
                           color="success"
                         >

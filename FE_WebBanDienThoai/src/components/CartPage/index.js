@@ -49,7 +49,6 @@ class CartPage extends Component {
   }
 
   checkoutOrder = () =>{
-    console.log("checked")
     const {history} = this.props;
     history.push('/carts/checkout')
   }

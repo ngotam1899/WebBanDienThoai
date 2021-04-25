@@ -381,7 +381,6 @@ class ProductDetail extends Component {
       // 1. Lưu cloudinary
       var formData1 = new FormData();
       formData1.append("image", selectedFile);
-      console.log(formData1)
       await this.setState({
         bigimage: formData1,
       });
@@ -500,12 +499,10 @@ class ProductDetail extends Component {
         xhr.send(data);
         xhr.addEventListener('load', () => {
           const response = JSON.parse(xhr.responseText);
-          console.log(response)
           resolve(response);
         });
         xhr.addEventListener('error', () => {
           const error = JSON.parse(xhr.responseText);
-          console.log(error)
           reject(error);
         });
       }

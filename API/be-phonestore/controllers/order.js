@@ -64,7 +64,11 @@ const getAllOrder = async (req, res, next) => {
 		if (req.query.sort != undefined && req.query.sort != '0') {
 			sort['createAt'] = req.query.sort == '1' ? 1 : -1;
 		}
-		const orders = await Order.find(condition).sort(sort).limit(limit).skip(limit * page);
+		const orders = await Order.find(condition)
+		.populate({ path: 'order_list.color', select: 'name_vn' })
+		.sort(sort)
+		.limit(limit)
+		.skip(limit * page);
 		let total = await Order.countDocuments(condition);
 		return res
 			.status(200)
@@ -113,13 +117,14 @@ const addOrder = async (req, res, next) => {
 				if (productFound) {
 					let product = productFound._id;
 					let name = productFound.name;
-					let price = productFound.price;
+					let price = productFound.colors.find(i => i._id == item.color).price;
 					let imageFound = await Image.findById(productFound.bigimage);
 					if (imageFound) {
 						var image = imageFound.public_url;
 					}
 					let quantity = item.quantity;
-					await order.order_list.push({ product, name, price, image, quantity });
+					let color = item.color;
+					await order.order_list.push({ product, name, price, image, quantity, color });
 				}
 			}
 		}

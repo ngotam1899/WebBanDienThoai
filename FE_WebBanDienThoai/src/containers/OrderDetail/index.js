@@ -11,9 +11,14 @@ class OrderDetail extends Component {
     onSendConfirmEmail(id);
   }
 
+  onRenderDetail = (id) =>{
+    const {history} = this.props;
+    history.push(`/product/a/${id}`);
+    window.location.reload();
+  }
+
   render() {
     const {orderItem, t} = this.props;
-    console.log(orderItem)
     return (
       <div show="true" className="modal fade" id="myModal" role="dialog">
         <div className="modal-dialog modal-lg">
@@ -73,7 +78,7 @@ class OrderDetail extends Component {
                   return (
                   <div className="card my-1" key={index}>
                     <div className="row no-gutters">
-                        <div className="col-sm-3">
+                        <div className="col-sm-3" onClick={()=>this.onRenderDetail(item.product)}>
                           <img className="card-img" src={item.image ? item.image : "http://www.pha.gov.pk/img/img-02.jpg"} alt={item.name} />
                         </div>
                         <div className="col-sm-5 align-self-center">

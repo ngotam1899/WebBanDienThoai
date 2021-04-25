@@ -23,7 +23,8 @@ class CheckoutPage extends Component {
       var items = cartItem.map((item) => {
         var dataItem = {
           product: item.product._id, 
-          quantity: item.quantity
+          quantity: item.quantity,
+          color: item.color
         }
         return dataItem;
       })
@@ -69,7 +70,7 @@ class CheckoutPage extends Component {
     var { cart } = this.props;
     for (var i = 0; i < cart.length; i++) {
       total = total + cart[i].quantity
-      totalPrice = totalPrice + cart[i].quantity * cart[i].product.price
+      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
     }
     this.setState({
       total,
@@ -81,10 +82,10 @@ class CheckoutPage extends Component {
   UNSAFE_componentWillReceiveProps(props) {
     var total = 0;
     var totalPrice = 0;
-    var { cart } = props;
+    var { cart } = this.props;
     for (var i = 0; i < cart.length; i++) {
       total = total + cart[i].quantity
-      totalPrice = totalPrice + cart[i].quantity * cart[i].product.price
+      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
     }
     this.setState({
       total,
@@ -374,7 +375,7 @@ const mapStateToProps = (state) =>{
 const mapDispatchToProps = (dispatch, props) => {
   return {
     onCreateAnOrder: (data) => {
-      dispatch(OrdersActions.onCreateAnOrder(data))
+      dispatch(OrdersActions.onCreate(data))
     },
     onGetListCity: () => {
       dispatch(AddressActions.onGetCity())

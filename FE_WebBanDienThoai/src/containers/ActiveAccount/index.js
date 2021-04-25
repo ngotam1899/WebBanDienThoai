@@ -6,7 +6,6 @@ import './styles.css';
 class ActiveAccount extends Component {
   componentDidMount(){
     const {match, onActivateAccount} = this.props;
-    console.log("token", match.params.token)
     onActivateAccount(match.params.token)
   }
 

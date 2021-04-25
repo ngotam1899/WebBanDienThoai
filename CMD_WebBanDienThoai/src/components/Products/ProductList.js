@@ -162,13 +162,10 @@ class ProductList extends Component {
 
   onActivate = (id, active)=>{
     const {onActivate, onDeactivate} = this.props;
-
     if(active){
-      console.log(id, active)
       onDeactivate(id);
     }
     else{
-      console.log(id, active)
       onActivate(id)
     }
   }

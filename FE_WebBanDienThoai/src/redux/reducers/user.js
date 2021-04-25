@@ -12,7 +12,6 @@ function handleUpdate({state, action}) {
   const list = cloneDeep(state.list);
   const detailData = get(action, "payload.data");
   const index = list.findIndex(i => i.id === detailData.id);
-  console.log("index", index);
   if (index !== -1) {
     list[index] = {...list[index], ...detailData};
   }

@@ -33,14 +33,12 @@ function* handleGetDetail({ filters, id }) {
  */
 function* handleDelete({ id }) {
   try {
-    console.log("id", id);
     const result = yield call(deleteUser, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(UsersActions.onDeleteSuccess(data));
     yield put(UsersActions.onGetList());
   } catch (error) {
-    console.log(error);
     yield put(UsersActions.onDeleteError(error));
   }
 }

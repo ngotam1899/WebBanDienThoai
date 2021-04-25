@@ -38,7 +38,6 @@ class OperationDetail extends Component {
 	render() {
     const { name } = this.state;
     const { large, onClose, operation} = this.props;
-    console.log("abc: ", operation);
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
 				<CModalHeader closeButton>

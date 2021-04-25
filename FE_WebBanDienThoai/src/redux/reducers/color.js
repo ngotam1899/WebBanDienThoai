@@ -1,4 +1,4 @@
-import { get, omit, cloneDeep } from "lodash";
+import { get } from "lodash";
 import { ColorActionTypes } from "../actions/color";
 
 const init = {
@@ -7,24 +7,6 @@ const init = {
   processing: false,
 };
 
-function handleUpdate({state, action}) {
-  const list = cloneDeep(state.list);
-  const detailData = get(action, "payload.data");
-  const index = list.findIndex(i => i.id === detailData.id);
-  console.log("index", index);
-  if (index !== -1) {
-    list[index] = {...list[index], ...detailData};
-  }
-  return {
-    ...state,
-    processing: false,
-    list,
-    detail: {
-      ...state.detail,
-      data: { ...state.detail.data, ...detailData },
-    },
-  };
-}
 
 export default function(state = init, action) {
   switch (action.type) {
@@ -49,7 +31,6 @@ export default function(state = init, action) {
       return {
         ...state,
          loading: false,
-        /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
       };
 
     case ColorActionTypes.GET_LIST_SUCCESS:
@@ -96,8 +77,6 @@ export default function(state = init, action) {
         processing: false,
       };
     case ColorActionTypes.UPDATE_SUCCESS:
-      return handleUpdate({state, action});
-
     case ColorActionTypes.CREATE_SUCCESS:
     case ColorActionTypes.DELETE_SUCCESS:
       return {

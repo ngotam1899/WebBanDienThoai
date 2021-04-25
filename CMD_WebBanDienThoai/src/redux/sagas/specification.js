@@ -65,7 +65,6 @@ function* handleUpdate({ payload }) {
     yield put(SpecificationActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(SpecificationActions.onGetList());
   } catch (error) {
-    console.log(error);
     yield put(SpecificationActions.onUpdateError(error));
   }
 }

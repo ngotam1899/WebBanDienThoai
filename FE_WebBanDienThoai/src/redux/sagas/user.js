@@ -30,20 +30,17 @@ function* handleUpdate( {payload} ) {
     yield put(UsersActions.onUpdateSuccess(detailResult.data.user));
     yield put(AuthorizationActions.onGetProfile());
   } catch (error) {
-    console.log(error);
     yield put(UsersActions.onUpdateError(error));
   }
 }
 
 function* handleChangePassword( {payload} ) {
   try {
-    console.log(payload);
     const result = yield call(changePassword, payload);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(UsersActions.onChangePasswordSuccess(data.message));
   } catch (error) {
-    console.log(error);
     yield put(UsersActions.onChangePasswordError(error));
   }
 }

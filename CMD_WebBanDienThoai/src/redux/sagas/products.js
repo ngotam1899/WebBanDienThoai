@@ -65,7 +65,6 @@ function* handleCreate( {payload} ) {
     // 2. TH2: Nếu bigimge mới
     else if(payload.params.bigimage){
       bigimage = yield call(addImage, payload.params.bigimage);
-      console.log(bigimage)
       result = yield call(addProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
         "bigimage":bigimage.data.images[0]._id

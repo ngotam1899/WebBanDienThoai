@@ -54,7 +54,6 @@ function* handleUpdate({ payload }) {
     yield put(ColorActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(ColorActions.onGetList());
   } catch (error) {
-    console.log(error);
     yield put(ColorActions.onUpdateError(error));
   }
 }

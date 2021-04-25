@@ -55,7 +55,6 @@ function* handleUpdate({ payload }) {
     yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
     yield put(BrandActions.onGetList());
   } catch (error) {
-    console.log(error);
     yield put(BrandActions.onUpdateError(error));
   }
 }
