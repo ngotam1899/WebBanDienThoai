@@ -66,16 +66,20 @@ class Header extends Component {
     localStorage.removeItem('AUTH_USER')
     onLogout()
   }
-  
+  refreshPage() {
+    setTimeout(()=>{
+      window.location.reload(false);
+  }, 500);
+  }
 
   render() {
-    const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
+    const MenuLink = ({ label, to, activeOnlyWhenExact, onClick }) => {
       return (
         <Route path={to} exact={activeOnlyWhenExact} children={({ match }) => {
           var active = match ? ' active' : 'nav-item';
           return (
             <li className={`nav-item ${active}`}>
-              <Link exact={`${activeOnlyWhenExact}`} className="nav-link px-3" to={to}>{label}</Link>
+              <Link onClick={onClick} exact={`${activeOnlyWhenExact}`} className="nav-link px-3" to={to}>{label}</Link>
             </li>
           )
         }} />
@@ -138,7 +142,7 @@ class Header extends Component {
             <div className="row">
               <div className="col-sm-6 col-md-5 col-lg-4 col-xl-3">
                 <div className="logo">
-                  <Link to="/"><img src={assets("brand.png")} alt="" className="w-100" /></Link>
+                  <Link to="/"  onClick={this.refreshPage}><img src={assets("brand.png")} alt="" className="w-100" /></Link>
                 </div>
               </div>
 
@@ -161,15 +165,15 @@ class Header extends Component {
                 </button>
                 <div className="collapse navbar-collapse" id="collapsibleNavId">
                   <ul className="navbar-nav mr-auto mt-lg-0">
-                    <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true} />
+                    <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true}  onClick={this.refreshPage} />
                     {location.hash.indexOf("account") === -1 && listCategories && listCategories.map((category, index)=>{
                       return (
                         <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
                       )
                     })}
                     {location.hash.indexOf("account") !== -1 &&<>
-                    <MenuLink label="Tài khoản của tôi" to="/account/detail" activeOnlyWhenExact={true} />
-                    <MenuLink label="Đơn mua" to="/account/purchase" activeOnlyWhenExact={true} /></>}
+                    <MenuLink label="Tài khoản của tôi" to={"/account/detail"} activeOnlyWhenExact={true} />
+                    <MenuLink label="Đơn mua" to={"/account/purchase"} onClick={this.refreshPage} activeOnlyWhenExact={true} /></>}
                   </ul>
                 </div>
               </nav>

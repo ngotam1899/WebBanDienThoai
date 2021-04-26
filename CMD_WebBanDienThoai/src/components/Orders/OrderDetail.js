@@ -36,8 +36,6 @@ class OrderDetail extends Component {
   onSubmit = (e) =>{
     const {id, is_paid, confirmed, status} = this.state;
     const {onUpdate} = this.props;
-    /* Xử lý ảnh */
-    // e.preventDefault();
     var data={is_paid, confirmed, status};
     onUpdate(id, data);
   }
@@ -69,8 +67,9 @@ class OrderDetail extends Component {
                     name="status"
                     value={status}
                     onChange={this.onChange}
+                    disabled={confirmed ? false : true}
                   >
-
+                    <option value={-2}>Chọn tình trạng</option>
                     <option value={-1}>Chưa giao hàng</option>
                     <option value={0}>Đang giao hàng</option>
                     <option value={1}>Đã giao hàng</option>
@@ -94,10 +93,10 @@ class OrderDetail extends Component {
                     </div>
                     {confirmed===false
                     ? <div className="col-3">
-                      <button className="btn btn-success" onClick={() => this.setState({confirmed: true})}>Confirm</button>
+                      <button type="button" className="btn btn-success" onClick={() => this.setState({confirmed: true})}>Confirm</button>
                     </div>
                     : <div className="col-3">
-                      <button className="btn btn-warning" onClick={() => this.setState({confirmed: false})}>Undo</button>
+                      <button type="button" className="btn btn-warning" onClick={() => this.setState({confirmed: false})}>Undo</button>
                     </div>}
                   </div>
                 </div>

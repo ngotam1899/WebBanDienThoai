@@ -3,9 +3,16 @@ import OrdersActions from '../../redux/actions/order'
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
-
+import ReviewDetail from '../ReviewDetail'
 
 class OrderDetail extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      modal: false
+    }
+  }
+
   confirmOrder = (id) => {
     const {onSendConfirmEmail} = this.props;
     onSendConfirmEmail(id);
@@ -17,10 +24,17 @@ class OrderDetail extends Component {
     window.location.reload();
   }
 
+  onCloseModal = (name, value) =>{
+    this.setState({
+      [name] : value
+    })
+  }
+
   render() {
     const {orderItem, t} = this.props;
+    const {modal} = this.state;
     return (
-      <div show="true" className="modal fade" id="myModal" role="dialog">
+      <div show="true" className="modal fade" id="myModal" role="dialog" data-keyboard="false" data-backdrop="static">
         <div className="modal-dialog modal-lg">
           {orderItem && <div className="modal-content">
             <div className="modal-header">
@@ -77,16 +91,20 @@ class OrderDetail extends Component {
                 {orderItem.order_list.map((item, index) =>{
                   return (
                   <div className="card my-1" key={index}>
-                    <div className="row no-gutters">
-                        <div className="col-sm-3" onClick={()=>this.onRenderDetail(item.product)}>
-                          <img className="card-img" src={item.image ? item.image : "http://www.pha.gov.pk/img/img-02.jpg"} alt={item.name} />
-                        </div>
-                        <div className="col-sm-5 align-self-center">
-                          <p className="text-dark m-0">{item.name}</p>
-                        </div>
-                        <div className="col-sm-4 align-self-center">
-                          <p className="m-0">{item.price} VND x {item.quantity}</p>
-                        </div>
+                    <div className="row no-gutters text-center">
+                      <div className="col-sm-3 h-120" onClick={()=>this.onRenderDetail(item.product)}>
+                        <img className="h-100" src={item.image ? item.image : "http://www.pha.gov.pk/img/img-02.jpg"} alt={item.name} />
+                      </div>
+                      <div className="col-sm-3 align-self-center text-left">
+                        <p className="text-dark m-0 font-weight-bold">{item.name}</p>
+                        <p className="text-dark m-0">{item.color && item.color.name_vn}</p>
+                      </div>
+                      <div className="col-sm-3 align-self-center">
+                        <p className="m-0">{item.price} VND x {item.quantity}</p>
+                      </div>
+                      {orderItem.status===1 && <div className="col-sm-3 align-self-center">
+                        <button className="btn btn-info" onClick={()=> this.onCloseModal("modal", true)}>Đánh giá</button>
+                      </div>}
                     </div>
                   </div>
                   )
@@ -111,6 +129,7 @@ class OrderDetail extends Component {
             </div>
           </div> }
         </div>
+        {modal && <ReviewDetail modal={modal} onCloseModal={this.onCloseModal}/>}
       </div>
     );
   }

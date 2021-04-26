@@ -237,7 +237,7 @@ const getAnOrder = async (req, res, next) => {
 		const { IDOrder } = req.params;
 		const isValid = await Validator.isValidObjId(IDOrder);
 		if (!isValid) return res.status(200).json({ success: false, code: 400, message: 'ID is not correctly' });
-		const order = await Order.findById(IDOrder);
+		const order = await Order.findById(IDOrder).populate({ path: 'order_list.color', select: 'name_vn' });
 		return res.status(200).json({ success: true, code: 200, message: '', order: order });
 	} catch (error) {
 		return next(error);
