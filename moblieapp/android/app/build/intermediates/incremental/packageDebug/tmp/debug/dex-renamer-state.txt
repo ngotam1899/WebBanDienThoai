@@ -1,0 +1,25 @@
+#Fri Apr 23 22:48:30 ICT 2021
+path.1=classes.dex
+path.0=classes.dex
+renamed.7=classes8.dex
+renamed.6=classes7.dex
+renamed.5=classes6.dex
+renamed.4=classes5.dex
+renamed.3=classes4.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+base.7=C\:\\Users\\thanh\\Documents\\GitHub\\WebBanDienThoai\\moblieapp\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\classes_5.dex
+base.6=C\:\\Users\\thanh\\Documents\\GitHub\\WebBanDienThoai\\moblieapp\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\classes_4.dex
+base.5=C\:\\Users\\thanh\\Documents\\GitHub\\WebBanDienThoai\\moblieapp\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\classes_3.dex
+base.4=C\:\\Users\\thanh\\Documents\\GitHub\\WebBanDienThoai\\moblieapp\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\classes_2.dex
+base.3=C\:\\Users\\thanh\\Documents\\GitHub\\WebBanDienThoai\\moblieapp\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\classes_1.dex
+base.2=C\:\\Users\\thanh\\Documents\\GitHub\\WebBanDienThoai\\moblieapp\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\classes_0.dex
+base.1=C\:\\Users\\thanh\\Documents\\GitHub\\WebBanDienThoai\\moblieapp\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\classes.dex
+base.0=C\:\\Users\\thanh\\Documents\\GitHub\\WebBanDienThoai\\moblieapp\\android\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+path.7=classes_5.dex
+path.6=classes_4.dex
+path.5=classes_3.dex
+path.4=classes_2.dex
+path.3=classes_1.dex
+path.2=classes_0.dex
