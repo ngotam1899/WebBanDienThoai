@@ -142,6 +142,7 @@ class CheckoutPage extends Component {
         email: authInfo.email,
         shipping_address: `${shipping_address}, ${shipping_ward}, ${shipping_district}, ${shipping_city}`,
         note: order_comments,
+        status: -1,
         payment_method,
         is_paid: false
       }
@@ -156,6 +157,7 @@ class CheckoutPage extends Component {
         shipping_address: authInfo.address,
         payment_method,
         note: order_comments,
+        status: -1,
         is_paid: false
       }
     }

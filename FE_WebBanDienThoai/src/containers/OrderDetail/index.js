@@ -3,13 +3,17 @@ import OrdersActions from '../../redux/actions/order'
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
+// Components
 import ReviewDetail from '../ReviewDetail'
+// Actions
+import ReviewActions from '../../redux/actions/review'
 
 class OrderDetail extends Component {
   constructor(props){
     super(props);
     this.state = {
-      modal: false
+      modal: false,
+      product: null,
     }
   }
 
@@ -30,9 +34,21 @@ class OrderDetail extends Component {
     })
   }
 
+  onReview = (product) =>{
+    const {onGetReview, authInfo} = this.props;
+    this.setState({product});
+    var params = {
+      user: authInfo._id,
+      product: product.product,
+      color: product.color._id
+    }
+    onGetReview(params);
+    this.onCloseModal("modal", true)
+  }
+
   render() {
-    const {orderItem, t} = this.props;
-    const {modal} = this.state;
+    const {orderItem, t, review} = this.props;
+    const {modal, product} = this.state;
     return (
       <div show="true" className="modal fade" id="myModal" role="dialog" data-keyboard="false" data-backdrop="static">
         <div className="modal-dialog modal-lg">
@@ -81,7 +97,7 @@ class OrderDetail extends Component {
                 <label>{t('user.payment.label')}:</label>
                 <div className="row">
                   <div className="col-12">
-                    <input type="text" className="form-control" name="is_paid" value={ orderItem.is_paid===true ? `${t('user.payment.true')}` : `${t('user.payment.false')}`} disabled/>
+                    <input type="text" className="form-control" name="paid" value={ orderItem.paid===true ? `${t('user.payment.true')}` : `${t('user.payment.false')}`} disabled/>
                   </div>
                 </div>
               </div>
@@ -97,13 +113,13 @@ class OrderDetail extends Component {
                       </div>
                       <div className="col-sm-3 align-self-center text-left">
                         <p className="text-dark m-0 font-weight-bold">{item.name}</p>
-                        <p className="text-dark m-0">{item.color && item.color.name_vn}</p>
+                        <p className="text-dark m-0">Màu sắc: {item.color && item.color.name_vn}</p>
                       </div>
                       <div className="col-sm-3 align-self-center">
                         <p className="m-0">{item.price} VND x {item.quantity}</p>
                       </div>
                       {orderItem.status===1 && <div className="col-sm-3 align-self-center">
-                        <button className="btn btn-info" onClick={()=> this.onCloseModal("modal", true)}>Đánh giá</button>
+                        <button className="btn btn-info" onClick={()=> this.onReview(item)}>Đánh giá</button>
                       </div>}
                     </div>
                   </div>
@@ -129,7 +145,8 @@ class OrderDetail extends Component {
             </div>
           </div> }
         </div>
-        {modal && <ReviewDetail modal={modal} onCloseModal={this.onCloseModal}/>}
+        {modal && product && <ReviewDetail modal={modal} onCloseModal={this.onCloseModal} product={product}/>}
+        {modal && product && review && <ReviewDetail modal={modal} onCloseModal={this.onCloseModal} product={product} review={review}/>}
       </div>
     );
   }
@@ -137,6 +154,8 @@ class OrderDetail extends Component {
 
 const mapStateToProps = (state) =>{
   return {
+    authInfo: state.auth.detail,
+    review: state.review.detail,
   }
 }
 
@@ -144,6 +163,9 @@ const mapDispatchToProps =(dispatch)=> {
   return {
 		onSendConfirmEmail : (id) =>{
 			dispatch(OrdersActions.onSendConfirmEmail(id))
+    },
+    onGetReview: (params) => {
+      dispatch(ReviewActions.onGetDetail(params));
     },
 	}
 };

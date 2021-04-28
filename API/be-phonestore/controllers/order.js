@@ -28,6 +28,11 @@ const transporter = nodemailer.createTransport(
 const getAllOrder = async (req, res, next) => {
 	try {
 		let condition = {};
+		if (req.query.keyword != undefined && req.query.keyword != '') {
+			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+			condition.order_list = { $elemMatch: {name: { $regex: '.*' + keyword.trim() + '.*', $options: 'i' }} }
+			//elemMatch: duyệt vào mảng chứa object
+		}
 		if (req.query.paid != undefined && req.query.paid != '0') {
 			condition.paid = req.query.paid == '1' ? true : false;
 		}
@@ -72,7 +77,7 @@ const getAllOrder = async (req, res, next) => {
 		let total = await Order.countDocuments(condition);
 		return res
 			.status(200)
-			.json({ success: true, code: 200, message: '', page: page, limit: limit, total: total, orders: orders });
+			.json({ success: true, code: 200, message: '', page, limit, total, orders });
 	} catch (error) {
 		return next(error);
 	}
@@ -133,6 +138,18 @@ const addOrder = async (req, res, next) => {
 		return res.status(200).json({ success: true, code: 201, message: 'success', order: order });
 	} catch (error) {
 		next(error);
+	}
+};
+
+const getAnOrder = async (req, res, next) => {
+	try {
+		const { IDOrder } = req.params;
+		const isValid = await Validator.isValidObjId(IDOrder);
+		if (!isValid) return res.status(200).json({ success: false, code: 400, message: 'ID is not correctly' });
+		const order = await Order.findById(IDOrder).populate({ path: 'order_list.color', select: 'name_vn' });
+		return res.status(200).json({ success: true, code: 200, message: '', order: order });
+	} catch (error) {
+		return next(error);
 	}
 };
 
@@ -232,17 +249,7 @@ const finishOrder = async (req, res, next) => {
 	}
 };
 
-const getAnOrder = async (req, res, next) => {
-	try {
-		const { IDOrder } = req.params;
-		const isValid = await Validator.isValidObjId(IDOrder);
-		if (!isValid) return res.status(200).json({ success: false, code: 400, message: 'ID is not correctly' });
-		const order = await Order.findById(IDOrder).populate({ path: 'order_list.color', select: 'name_vn' });
-		return res.status(200).json({ success: true, code: 200, message: '', order: order });
-	} catch (error) {
-		return next(error);
-	}
-};
+
 const deleteOrder = async (req, res, next) => {
 	const { IDOrder } = req.params;
 	let is_valid = await Validator.isValidObjId(IDOrder);
@@ -255,6 +262,10 @@ const deleteOrder = async (req, res, next) => {
 		return res.status(200).json({ success: false, code: 400, message: 'id is not correctly' });
 	}
 };
+
+// Doanh thu mỗi ngày, mỗi tháng, mỗi quí
+
+
 module.exports = {
 	getAllOrder,
 	getAnOrder,

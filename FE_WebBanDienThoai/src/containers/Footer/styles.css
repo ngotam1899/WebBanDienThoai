@@ -64,7 +64,7 @@ padding: 35px 0 20px;}
     display: inline-block;
     font-size: 18px;
     padding: 7px 20px;
-    text-transform: uppercase;border: 1px solid #5a88ca;
+    border: 1px solid #5a88ca;
 }
 .newsletter-form input[type="submit"]:hover {background: #222;border-color: #666}
 .newsletter-form {

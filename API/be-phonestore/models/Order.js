@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 const OrderSchema = new Schema({
     order_list: [{
+        _id: false,
         product: {
             type: Schema.Types.ObjectId,
             ref: "Product"

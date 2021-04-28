@@ -160,7 +160,6 @@
     padding: 10px;
     position: absolute;
     text-align: center;
-    text-transform: uppercase;
     border: 1px solid #5a88ca;
     width: 80%;z-index: 99;transition: .4s;
 }

@@ -5,7 +5,6 @@ img {
 table.shop_table td.product-remove a {
     display: inline-block;
     padding: 0 5px 2px;
-    text-transform: uppercase;
   }
   
   .quantity {
@@ -42,7 +41,6 @@ table.shop_table th, table.shop_table td {
 table.shop_table th {
     background: none repeat scroll 0 0 #f4f4f4;
     font-size: 15px;
-    text-transform: uppercase;
 }
 td.product-thumbnail img {
     height: auto;
@@ -91,7 +89,6 @@ td.actions div.coupon {
     color: #5a88ca;
     font-size: 25px;
     margin-bottom: 25px;
-    text-transform: uppercase;
 }
 div.cart-collaterals ul.products {
     list-style: outside none none;

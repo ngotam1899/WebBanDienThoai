@@ -37,14 +37,9 @@ class PurchasePage extends Component {
     /*const filter = getFilterParams(location.search); */
     super(props);
     this.state = {
-      /* keyword: filter.keyword ===null ? "" : filter.keyword,
-      min_p: filter.min_p ===null ? "" : filter.min_p,
-      max_p: filter.max_p ===null ? "" : filter.max_p, */
       filter: {
         limit: 12,
         page: 0,
-        /* active: 1, */
-        
       },
 
     }
@@ -154,10 +149,10 @@ class PurchasePage extends Component {
                           <div className="col-3 text-center h-100">
                             <img className="h-100" src={product.image}></img>
                           </div>
-                          <div className="col-6">
-                            <p className="font-weight-bold">{product.name}</p>
-                            <p className="font-italic">{product.color && product.color.name_vn}</p>
-                            <p >Số lượng {product.quantity}</p>
+                          <div className="col-6 align-self-center ">
+                            <p className="font-weight-bold mb-0">{product.name}</p>
+                            <p className="font-italic mb-0">Màu sắc: {product.color && product.color.name_vn}</p>
+                            <p className="mb-0">Số lượng {product.quantity}</p>
                           </div>
                           <div className="col-3 text-right">
                             <p>{product.quantity*product.price} VND</p>
@@ -170,7 +165,7 @@ class PurchasePage extends Component {
                       <div className="float-left">
                         <button type="button" className="btn btn-success mr-2" data-toggle="modal" data-target="#myModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
                         {this.setStatus(order.confirmed, order.status, order.active)==="Chờ xác nhận" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(order._id)}>Hủy đơn hàng</button>}
-                        {this.setStatus(order.confirmed, order.status, order.active)==="Đã hủy" && <button type="button" className="btn btn-warning">Mua lần nữa</button>}
+                        {(this.setStatus(order.confirmed, order.status, order.active)==="Đã hủy" || this.setStatus(order.confirmed, order.status, order.active)==="Đã giao") && <button type="button" className="btn btn-warning">Mua lần nữa</button>}
                       </div>
                       <div className="float-right font-weight-bold">
                         {order.total_price} VND

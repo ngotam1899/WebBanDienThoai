@@ -117,6 +117,8 @@ class HomePage extends Component {
           </div>
         </div>
       </div>
+      <div>SẢN PHẨM ĐƯỢC YÊU THÍCH NHẤT</div>
+      <div>SẢN PHẨM BÁN CHẠY NHẤT</div>
       <div className="slider-area">
         <div className="block-slider block-slider4">
           <ul className="" id="bxslider-home4">

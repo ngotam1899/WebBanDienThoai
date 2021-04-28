@@ -24,7 +24,6 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
           });
         },
         onApprove: async (data, actions) => {
-          //const { onCreateAnOrder, items, note, authInfo, shipping_first_name, shipping_last_name, shipping_address, shipping_phone, shipToDifferentAddress} = this.props;
           // Nếu thành công thì set payment_method = paypal, isPaid = true
           if(shipToDifferentAddress === true) {
             data = {
@@ -35,8 +34,9 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
               email: authInfo.email,
               shipping_address,
               note,
+              status: -1,
               payment_method: "paypal",
-              is_paid: true
+              paid: true
             }
           }
           else{
@@ -47,9 +47,10 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
               shipping_phonenumber: authInfo.phonenumber,
               email: authInfo.email,
               shipping_address: authInfo.address,
+              status: -1,
               payment_method: "paypal",
               note,
-              is_paid: true
+              paid: true
             }
           }
           onCreateAnOrder(data);

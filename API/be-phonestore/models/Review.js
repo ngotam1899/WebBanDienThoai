@@ -15,6 +15,10 @@ const ReviewSchema = new Schema({
     product: {
         type: Schema.Types.ObjectId,
         ref: "Product"
+    },
+    color: {
+        type: Schema.Types.ObjectId,
+        ref: "Color"
     }
 }, {
     timestamps: true

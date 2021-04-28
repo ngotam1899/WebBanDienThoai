@@ -22,7 +22,6 @@
 #customer_details h3 {
     color: #5a88ca;
     font-size: 20px;
-    text-transform: uppercase;
 }
 .woocommerce-billing-fields label, .woocommerce-shipping-fields div.shipping_address label, p#order_comments_field label {font-weight:700}
 .create-account {
@@ -33,7 +32,6 @@
 #order_review_heading {
     color: #5a88ca;
     font-size: 20px;
-    text-transform: uppercase;
 }
 #payment ul.payment_methods {
     list-style: outside none none;

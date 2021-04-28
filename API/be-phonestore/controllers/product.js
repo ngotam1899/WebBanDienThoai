@@ -5,6 +5,7 @@ const Category = require('../models/Category');
 const Color = require('../models/Color');
 const Group = require('../models/group');
 const Image = require('../models/Image');
+const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Specification = require('../models/specification');
 
@@ -308,6 +309,54 @@ const activateProduct = async (req, res, next) => {
 	}
 }
 
+const bestSellerProduct = async (req, res, next) => {
+	const pipeline = [
+		{ 
+			'$unwind': "$order_list",	// lấy ra param order_list[] chia đều thành mảng các object
+			
+		},
+		{ '$project': { 'order_list': 1, '_id' : 0 } },	// chỉ hiển thị field order_list
+		{	'$group': 	
+			{
+				'_id': '$order_list.product',
+				'count': { '$sum': 1 }
+			}
+		},
+		{
+			'$sort': { 'count': -1 }
+		}, {
+			'$limit': 10
+		},
+	];
+	const order = await Order.aggregate(pipeline);
+	await Product.populate(order, {path: "_id", select: ['name', 'bigimage', 'stars', 'price_max', 'reviewCount', 'pathseo', 'active'], 
+	populate : {path : 'bigimage', select: "public_url"} })
+	return res.status(200).json({ success: true, code: 200, products: order });
+}
+
+const newestProduct = async (req, res, next) => {
+	let products = await Product.find({active: true}, {specifications : 0, colors: 0, image:0, warrently: 0, description: 0, group: 0, category: 0, brand: 0, 
+		createdAt: 0, updatedAt: 0, price_max: 0})
+		.populate({ path: 'bigimage', select: 'public_url' })
+		.limit(5)
+		.sort({'createdAt' : -1})
+	return res.status(200).json({ success: true, code: 200, products });
+}
+
+const favoriteProduct = async (req, res, next) => {
+	const pipeline = [
+		{
+			'$sort': { 'stars': -1 }
+		}, {
+			'$limit': 10
+		},
+		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_max': 1, 'reviewCount': 1, 'pathseo': 1, 'active' : 1 } }
+	];
+	const products = await Product.aggregate(pipeline);
+	await Image.populate(products, {path: "bigimage", select: 'public_url'})
+	return res.status(200).json({ success: true, code: 200, products });
+}
+
 module.exports = {
 	getAllProduct,
 	getProductDetail,
@@ -315,5 +364,8 @@ module.exports = {
 	addProduct,
 	deleteProduct,
 	deactivateProduct,
-	activateProduct
+	activateProduct,
+	bestSellerProduct,
+	favoriteProduct,
+	newestProduct
 };

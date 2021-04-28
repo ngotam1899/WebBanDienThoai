@@ -41,6 +41,9 @@ select {border: none;}
 .w-40{
   width:40%
 }
+.h-80{
+  height: 80px;
+}
 .font-size-12{
   font-size: 12px;
 }

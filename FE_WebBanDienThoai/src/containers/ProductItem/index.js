@@ -58,7 +58,7 @@ class ProductItem extends Component {
               emptySymbol="fa fa-star text-secondary"
               fullSymbol="fa fa-star text-warning"
               readonly
-            /><span className="ml-2 text-secondary font-size-12">2 đánh giá</span></>}
+            /><span className="ml-2 text-secondary font-size-12">{product.reviewCount} đánh giá</span></>}
           </div>
         </div>
         </Link>

@@ -42,7 +42,7 @@ class DetailPage extends Component {
   componentDidMount(){
     const {match, onGetDetailProduct, onGetReviews} = this.props;
     onGetDetailProduct(match.params.productID);
-    onGetReviews(match.params.productID)
+    onGetReviews({product: match.params.productID})
   }
 
   setColor = (item) =>{
@@ -63,11 +63,6 @@ class DetailPage extends Component {
     }
   }
   
-  componentWillUnmount(){
-/*     const {onClearDetail} =this.props;
-    onClearDetail() */
-  }
-
   setPrice = (currency, min, max) =>{
     if(currency==="VND"){
       if(min===max){
@@ -111,7 +106,7 @@ class DetailPage extends Component {
   }
 
   render() {
-    const {product, currency, t, review, group } = this.props;
+    const {product, currency, t, review, group, total } = this.props;
     const {quantity, imageColor, check, _check, rating, message} = this.state;
     
     return (<>
@@ -255,12 +250,12 @@ class DetailPage extends Component {
                               <div className="box_total">
                                 <h5>Overall</h5>
                                 <h4>{product.stars ? product.stars : ""}</h4>
-                                <h6>(2 Reviews)</h6>
+                                <h6>({total} Reviews)</h6>
                               </div>
                             </div>
                             <div className="col-6">
                               <div className="rating_list">
-                                <h3>Based on 2 Reviews</h3>
+                                <h3>Based on {total} Reviews</h3>
                                 <ul className="list-unstyled">
                                   <li>5 Star <span className="mx-2"><Rating
                                     initialRating={5}
@@ -296,6 +291,9 @@ class DetailPage extends Component {
                               </div>
                             </div>
                           </div>
+                          
+                        </div>
+                        <div className="col-lg-6">
                           <div className="review_list">
                             {review && review.map((item, index)=>{
                               return (
@@ -312,30 +310,13 @@ class DetailPage extends Component {
                                       fullSymbol="fa fa-star text-warning"
                                       readonly
                                     /> | <span className="font-italic">{item.createdAt}</span></p>
+                                    <p className="text-secondary">Màu sắc: {item.color.name_vn}</p>
                                     <p>{item.content}</p>
                                   </div>
-                                  
                                   </div>
                                 </div>
                               )
                             })}
-                          </div>
-                        </div>
-                        <div className="col-lg-6">
-                          <div className="review_box">
-                            <h5>Add a Review</h5>
-                            <p>Your Rating: <span className="ml-3"><Rating
-                              initialRating={rating}
-                              emptySymbol="fa fa-star text-secondary"
-                              fullSymbol="fa fa-star text-warning"
-                              onChange={(rating)=> this.setState({rating})}
-                              /></span></p>
-                            <div className="form-group">
-                              <textarea className="form-control different-control w-100" name="message" value={message} cols="30" rows="5"  onChange={this.onChange}></textarea>
-                            </div>
-                            <div className="form-group text-center text-md-right mt-3">
-                              <button type="button" className="add_to_cart_button" onClick={this.onReview}>Submit Now</button>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -357,20 +338,24 @@ const mapStateToProps = (state) =>{
     product: state.products.detail,
     currency: state.currency,
     review: state.review.list,
-    group: state.group.detail
+    group: state.group.detail,
+    total: state.review.total,
   }
 }
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    onGetDetailProduct: (id) => {
-      dispatch(ProductsActions.onGetDetail(id))
+    onGetDetailProduct: (payload) => {
+      dispatch(ProductsActions.onGetDetail(payload))
     },
     onAddProductToCart: (product, color, quantity) => {
       dispatch(ProductsActions.onAddProductToCart(product, color, quantity));
     },
-    onGetReviews: (id) => {
-      dispatch(ReviewActions.onGetList(id));
+    onGetReviews: (params) => {
+      dispatch(ReviewActions.onGetList(params));
+    },
+    onClearStateReview: () => {
+      dispatch(ReviewActions.onClearState());
     },
   }
 }
