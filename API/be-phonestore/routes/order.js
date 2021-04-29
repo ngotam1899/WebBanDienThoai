@@ -13,6 +13,4 @@ router.route('/email/:IDOrder')
     .get(passport.authenticate('jwt', { session: false }), orderController.requestSendEmail)
 router.route('/confirm/:tokenOrder')
     .get(orderController.confirmOrder)
-router.route('/finish/:IDOrder')
-    .get(orderController.finishOrder)
 module.exports = router

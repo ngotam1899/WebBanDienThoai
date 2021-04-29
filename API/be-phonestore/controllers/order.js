@@ -171,7 +171,9 @@ const updateOrder = async (req, res, next) => {
 		} else {
 			return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
 		}
-	} catch (error) {}
+	} catch (error) {
+		return next(error);
+	}
 };
 
 const requestSendEmail = async (req, res, next) => {
@@ -232,23 +234,10 @@ const confirmOrder = async (req, res, next) => {
 				return res.status(200).json({ message: true, code: 200, message: 'Confirm Successfull' });
 			});
 		}
-	} catch (error) {}
-};
-
-const finishOrder = async (req, res, next) => {
-	try {
-		const { IDOrder } = req.params;
-		const order = await Order.findById(IDOrder);
-		if (order.confirmed == false)
-			return res.status(200).json({ success: false, code: 400, message: 'Order is not confirm' });
-		order.status = true;
-		await order.save();
-		return res.status(200).json({ success: true, code: 200, message: '', order: order });
 	} catch (error) {
 		return next(error);
 	}
 };
-
 
 const deleteOrder = async (req, res, next) => {
 	const { IDOrder } = req.params;
@@ -264,7 +253,9 @@ const deleteOrder = async (req, res, next) => {
 };
 
 // Doanh thu mỗi ngày, mỗi tháng, mỗi quí
-
+const revenue = async (req, res, next) => {
+	
+};
 
 module.exports = {
 	getAllOrder,
@@ -274,5 +265,4 @@ module.exports = {
 	requestSendEmail,
 	deleteOrder,
 	confirmOrder,
-	finishOrder,
 };

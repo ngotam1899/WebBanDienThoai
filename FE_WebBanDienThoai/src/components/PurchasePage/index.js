@@ -37,11 +37,11 @@ class PurchasePage extends Component {
     /*const filter = getFilterParams(location.search); */
     super(props);
     this.state = {
+      keyword: "",
       filter: {
         limit: 12,
         page: 0,
       },
-
     }
   }
 
@@ -108,13 +108,29 @@ class PurchasePage extends Component {
     window.location.reload();
   };
 
+  // Button search
+  searchKeyWorld = (e) => {
+    const {keyword} = this.state;
+    this.handleUpdateFilter({ keyword, page : 0});
+  }
+
   getInfoOrder = (id) => {
     const {onGetDetail} = this.props;
     onGetDetail(id);
   }
 
+  onChange = (event) =>{
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
+  }
+
   render() {
-    const {orderList, orderItem, location, history} = this.props;
+    const {orderList, orderItem, location, history, t} = this.props;
+    const {keyword} = this.state;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
@@ -132,9 +148,21 @@ class PurchasePage extends Component {
             })}
           </div>
         </div>
+        <div className="container emp-profile py-3 my-2">
+          <div className="row">
+            <div className="col-12">
+            <div className="input-group">
+              <input type="text" className="form-control" name="keyword" value={keyword} onChange={this.onChange} placeholder={t('search.placeholder.input')}></input>
+              <div className="input-group-append">
+                <button className="btn btn-danger h-100" onClick={() => this.searchKeyWorld()}>{t('shop.search.button')}</button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
         <div className="container emp-profile py-3 mt-2 mb-5">
           <div className="row">
-            {orderList && orderList.map((order, index) =>{
+            {orderList && orderList.length > 0 ? orderList.map((order, index) =>{
               return (
                 <div className="col-12 my-1" key={index}>
                   <div className="card">
@@ -174,7 +202,16 @@ class PurchasePage extends Component {
                   </div>
                 </div>
               )
-            })}
+            })
+          : <div className="col-12 my-1">
+              <div className="text-center my-5 py-5">
+                <div className="h-120">
+                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/5fafbb923393b712b96488590b8f781f.png"></img>
+                </div>
+                
+                <p>Chưa có đơn hàng</p>
+              </div>
+            </div>}
           </div>
           
         </div>

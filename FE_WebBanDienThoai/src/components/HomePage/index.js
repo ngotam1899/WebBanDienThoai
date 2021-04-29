@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
-
+import ProductItem from "../../containers/ProductItem"
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 // @Function
@@ -21,8 +21,12 @@ class HomePage extends Component {
   }
 
   componentDidMount(){
+    const {onGetBestSeller, onGetFavorite, onGetNewest} = this.props;
     document.title = "[TellMe] Trang bán hàng"
     this.improveScreen();
+    onGetBestSeller();
+    onGetFavorite();
+    onGetNewest();
   }
 
   improveScreen() {
@@ -80,7 +84,7 @@ class HomePage extends Component {
 
   render() {
     const { keyword } = this.state;
-    const { t, listProducts, currency } = this.props;
+    const { t, listProducts, currency, bestSeller, newest, favorite } = this.props;
     return (<>
       <div className="product-big-title-area search-fixed">
         <div className="container">
@@ -117,8 +121,6 @@ class HomePage extends Component {
           </div>
         </div>
       </div>
-      <div>SẢN PHẨM ĐƯỢC YÊU THÍCH NHẤT</div>
-      <div>SẢN PHẨM BÁN CHẠY NHẤT</div>
       <div className="slider-area">
         <div className="block-slider block-slider4">
           <ul className="" id="bxslider-home4">
@@ -197,7 +199,55 @@ class HomePage extends Component {
           </div>
         </div>
       </div>
-
+      <div className="maincontent-area">
+        <div className="zigzag-bottom"></div>
+        <div className="container">
+          <div className="row">
+            <div className="col-12 my-2">
+              <div className="latest-product">
+                <h2 className="section-title mb-0">Best seller Products</h2>
+                <div className="shadow p-3 mb-5 bg-white rounded">
+                  <div className="row">
+                    {bestSeller && bestSeller.map((product, index) => {
+                      return (
+                          <ProductItem product={product._id} key={index} />
+                        )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-12 my-2">
+              <div className="latest-product">
+                <h2 className="section-title mb-0">Newest Products</h2>
+                <div className="shadow p-3 mb-5 bg-white rounded">
+                  <div className="row">
+                    {newest && newest.map((product, index) => {
+                      return (
+                          <ProductItem product={product} key={index} />
+                        )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-12 my-2">
+              <div className="latest-product">
+                <h2 className="section-title mb-0">Favorite Products</h2>
+                <div className="shadow p-3 mb-5 bg-white rounded">
+                  <div className="row">
+                    {favorite && favorite.map((product, index) => {
+                      return (
+                          <ProductItem product={product} key={index} />
+                        )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="brands-area">
         <div className="zigzag-bottom"></div>
         <div className="container">
@@ -230,6 +280,9 @@ const mapStateToProps = (state) => {
   return {
     listProducts: state.products.list,
     currency: state.currency,
+    bestSeller: state.products.best,
+    favorite: state.products.favorite,
+    newest: state.products.new
   }
 }
 
@@ -240,6 +293,15 @@ const mapDispatchToProps = (dispatch) => {
     },
     onAddProductToCart: (product) => {
       dispatch(ProductsActions.onAddProductToCart(product, 1));
+    },
+    onGetBestSeller: () => {
+      dispatch(ProductsActions.onGetBestSeller());
+    },
+    onGetFavorite: () => {
+      dispatch(ProductsActions.onGetFavorite());
+    },
+    onGetNewest: () => {
+      dispatch(ProductsActions.onGetNewest());
     },
   }
 }
