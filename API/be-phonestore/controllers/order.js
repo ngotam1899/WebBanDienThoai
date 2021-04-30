@@ -162,7 +162,14 @@ const updateOrder = async (req, res, next) => {
 				return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
 			} else {
 				const orderUpdate = req.body;
-				const result = await Order.findByIdAndUpdate(IDOrder, orderUpdate);
+				const {status} = req.body;
+				let result;
+				if(status==1){
+					result = await Order.findByIdAndUpdate(IDOrder, Object.assign(orderUpdate, {paid: true}));
+				}
+				else {
+					result = await Order.findByIdAndUpdate(IDOrder, orderUpdate);
+				}
 				if (!result) {
 					return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
 				}

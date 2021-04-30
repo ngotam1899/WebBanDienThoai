@@ -42,6 +42,7 @@ function* handleUpdate({ payload }) {
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(ReviewActions.onUpdateSuccess(data.review));
+    yield put(ReviewActions.onGetList({product: data.review.product}))
   } catch (error) {
     yield put(ReviewActions.onUpdateError(error));
   }

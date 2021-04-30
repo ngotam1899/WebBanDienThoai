@@ -16,7 +16,6 @@ export default function(state = init, action) {
       return {
         ...init,
       };
-
     case ProductsActionTypes.GET_LIST:
     case ProductsActionTypes.GET_LIST_ERROR:
     case ProductsActionTypes.GET_BEST_SELLER:
@@ -31,7 +30,7 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_BEST_SELLER_SUCCESS:
       return {
         ...state,
-        best: get(action, "payload"),
+        best: get(action, "payload"), 
       };
     case ProductsActionTypes.GET_FAVORITE_SUCCESS:
       return {
@@ -47,7 +46,7 @@ export default function(state = init, action) {
       return {
         ...state,
         total: get(action, "payload.total"),
-        list: get(action, "payload.list", []),
+        list: get(action, "payload.list", []), //list : action.payload.list
       };
     case ProductsActionTypes.GET_DETAIL:
       return {

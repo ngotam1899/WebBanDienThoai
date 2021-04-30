@@ -291,9 +291,6 @@ const mapDispatchToProps = (dispatch) => {
     onFilter: (keyword) => {
       dispatch(ProductsActions.onFilter(keyword));
     },
-    onAddProductToCart: (product) => {
-      dispatch(ProductsActions.onAddProductToCart(product, 1));
-    },
     onGetBestSeller: () => {
       dispatch(ProductsActions.onGetBestSeller());
     },

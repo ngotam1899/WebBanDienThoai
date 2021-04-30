@@ -176,7 +176,7 @@ const updateProduct = async (req, res, next) => {
 
 const addProduct = async(req, res, next) => {
 	try {
-		const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, specifications, description,
+		const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, specifications, description, group,
 			colors,
 			discount } = req.body
 		const product = new Product();

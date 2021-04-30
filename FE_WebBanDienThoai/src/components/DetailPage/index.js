@@ -105,6 +105,22 @@ class DetailPage extends Component {
     return amount;
   }
 
+  onLiked = (id, like) => {
+    const {onUpdateReview, authInfo} = this.props;
+    if(authInfo){
+      if(like.indexOf(authInfo._id) === -1){
+        like.push(authInfo._id)
+      }
+      else{
+        like.splice(like.indexOf(authInfo._id), 1);
+      }
+      onUpdateReview(id, {like})
+    }
+    else{
+      toastError("Bạn chưa đăng nhập")
+    }
+  }
+
   render() {
     const {product, currency, t, review, group, total } = this.props;
     const {quantity, imageColor, check, _check, rating, message} = this.state;
@@ -310,8 +326,9 @@ class DetailPage extends Component {
                                       fullSymbol="fa fa-star text-warning"
                                       readonly
                                     /> | <span className="font-italic">{item.createdAt}</span></p>
-                                    <p className="text-secondary">Màu sắc: {item.color.name_vn}</p>
-                                    <p>{item.content}</p>
+                                    <p className="text-secondary mb-0">Màu sắc: {item.color.name_vn}</p>
+                                    <p className="mb-0">{item.content}</p>
+                                    <p><i onClick={()=>{this.onLiked(item._id, item.like)}} className="fa fa-thumbs-up text-secondary"></i><span className="ml-2 text-secondary">{item.like.length > 0 ? item.like.length : "Hữu ích?"}</span></p>
                                   </div>
                                   </div>
                                 </div>
@@ -340,6 +357,7 @@ const mapStateToProps = (state) =>{
     review: state.review.list,
     group: state.group.detail,
     total: state.review.total,
+    authInfo: state.auth.detail
   }
 }
 
@@ -356,6 +374,9 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onClearStateReview: () => {
       dispatch(ReviewActions.onClearState());
+    },
+    onUpdateReview: (id, params) => {
+      dispatch(ReviewActions.onUpdate(id, params));
     },
   }
 }

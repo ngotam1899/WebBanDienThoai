@@ -111,6 +111,14 @@ const ProductSchema = new Schema(
 );
 
 ProductSchema.pre('findOneAndDelete', function(next) {
+	mongoose
+	.model('Group')
+	.updateMany(
+		{  },
+		{ $pull: { products: {product: this._conditions._id} } },
+		{ multi:true },
+		next
+	);
 	mongoose.model('Review').remove({ product: this._conditions._id }, next);
 });
 
