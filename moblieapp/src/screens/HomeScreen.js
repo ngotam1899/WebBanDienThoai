@@ -23,9 +23,6 @@ const HomeScreen = () => {
       <View style={styles.bodyContainer}>
         <ScrollView>
           <HomeSectionComponent />
-          <HomeSectionComponent />
-          <HomeSectionComponent />
-          <HomeSectionComponent />
         </ScrollView>
       </View>
     </View>

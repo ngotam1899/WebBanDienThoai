@@ -1,14 +1,14 @@
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList
+com/moblieapp/BuildConfig.java
+ com.moblieapp.BuildConfig
 com/moblieapp/ReactNativeFlipper.java
  com.moblieapp.ReactNativeFlipper
  com.moblieapp.ReactNativeFlipper$1
  com.moblieapp.ReactNativeFlipper$2
  com.moblieapp.ReactNativeFlipper$2$1
-com/moblieapp/BuildConfig.java
- com.moblieapp.BuildConfig
 com/moblieapp/MainApplication.java
  com.moblieapp.MainApplication
  com.moblieapp.MainApplication$1
-com/facebook/react/PackageList.java
- com.facebook.react.PackageList
 com/moblieapp/MainActivity.java
  com.moblieapp.MainActivity

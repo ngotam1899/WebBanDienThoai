@@ -8,10 +8,26 @@ import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 
-const Tab = createBottomTabNavigator();
 
-const App = () => {
-  return (
+import { AppRegistry } from 'react-native';
+//Redux
+import { createStore, applyMiddleware } from 'redux';
+import 'localstorage-polyfill';
+import { Provider } from 'react-redux';
+import configureStore from "./src/redux/store";
+import combineReducers from './src/redux/reducers/index';
+//Redux saga
+/* import createSagaMiddleware from 'redux-saga';
+import rootSaga from './src/redux/sagas/index'; 
+
+
+const sagaMiddleware = createSagaMiddleware(); */
+const Tab = createBottomTabNavigator();
+//let store = createStore(combineReducers, applyMiddleware(sagaMiddleware));
+const store = configureStore();
+
+const App = () => (
+  <Provider store={store}>
     <NavigationContainer>
       <Tab.Navigator
         tabBarOptions={{
@@ -50,7 +66,8 @@ const App = () => {
         />
       </Tab.Navigator>
     </NavigationContainer>
-  );
-};
+  </Provider>
+);
+/* sagaMiddleware.run(rootSaga); */
 
 export default App;

@@ -18,3 +18,31 @@ const Header = ({title}) => (
 );
 
 export default Header;
+
+const HEADER_ICON_SIZE = 24;
+
+const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    paddingTop: 50,
+    backgroundColor: '#1e88e5',
+    justifyContent: 'space-between',
+    paddingBottom: 12,
+  },
+  cartContainer: {
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartIcon: {
+    width: HEADER_ICON_SIZE,
+  },
+  headerText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '500',
+  },
+});
