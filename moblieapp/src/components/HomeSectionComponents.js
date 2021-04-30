@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {
   StyleSheet,
   Image,
@@ -6,7 +6,18 @@ import {
   Text,
   Dimensions,
   ScrollView,
+  Link,
 } from 'react-native';
+import Button from 'react-native-button';
+
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+
+// @Actions
+import ProductsSelectors from '../redux/selectors/products';
+import ProductsActions from '../redux/actions/products';
+import BrandActions from '../redux/actions/brands';
+import ColorActions from '../redux/actions/color';
 
 const {width} = Dimensions.get('window');
 
@@ -18,7 +29,7 @@ const item_image_4 = require('../assets/item_image_4.png');
 
 const ProductItem = ({image, name, price}) => (
   <View style={styles.itemContainer}>
-    <Image source={image} style={styles.itemImage} />
+    <Image source={{uri: image}} style={styles.itemImage} />
     <Text style={styles.itemName} numberOfLines={2}>
       {name}
     </Text>
@@ -26,74 +37,102 @@ const ProductItem = ({image, name, price}) => (
   </View>
 );
 
-const HomeSectionComponent = () => {
-  return (
-    <View style={styles.sectionContainer}>
-      {/*  */}
-      <Text style={styles.sectionTitle}>Điện thoại - Máy tính bảng</Text>
-      {/*  */}
-      <Image source={section_banner} style={styles.sectionImage} />
-      {/*  */}
-      <ScrollView horizontal={true}>
-        <View style={styles.filterContainer}>
-          {[
-            'Tất cả',
-            'Điện thoại SmartPhone',
-            'Máy tính bảng',
-            'Điện thoại',
-          ].map((e, index) => (
-            <View
-              key={index.toString()}
-              style={
-                index === 0
-                  ? styles.filterActiveButtonContainer
-                  : styles.filterInactiveButtonContainer
-              }>
-              <Text
+class HomeSectionComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {movieName: '', releaseYear: ''};
+  }
+
+  componentDidMount() {
+    this.props.onGetList();
+  }
+
+  render() {
+    const {listProducts} = this.props;
+    return (
+      <View style={styles.sectionContainer}>
+        {/*  */}
+        <Text style={styles.sectionTitle}>Điện thoại - Máy tính bảng</Text>
+        {/*  */}
+        <Image source={section_banner} style={styles.sectionImage} />
+        {/*  */}
+        <ScrollView horizontal={true}>
+          <View style={styles.filterContainer}>
+            {[
+              'Tất cả',
+              'Điện thoại SmartPhone',
+              'Máy tính bảng',
+              'Điện thoại',
+            ].map((e, index) => (
+              <View
+                key={index.toString()}
                 style={
                   index === 0
-                    ? styles.filterActiveText
-                    : styles.filterInactiveText
+                    ? styles.filterActiveButtonContainer
+                    : styles.filterInactiveButtonContainer
                 }>
-                {e}
-              </Text>
-            </View>
-          ))}
+                <Text
+                  style={
+                    index === 0
+                      ? styles.filterActiveText
+                      : styles.filterInactiveText
+                  }>
+                  {e}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+        <ScrollView horizontal={true}>
+          <View style={styles.listItemContainer}>
+          {listProducts &&
+              listProducts.map((product, index) =>  (
+              <View key={index.toString()}>
+                <ProductItem
+                  name={product.name}
+                      image={product.bigimage.public_url}
+                      price={product.price_min}
+                />
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+        {/*  */}
+        <View style={styles.seeMoreContainer}>
+          <Text style={styles.seeMoreText}>XEM THÊM 636 SẢN PHẨM</Text>
         </View>
-      </ScrollView>
-      {/*  */}
-      <ScrollView horizontal={true}>
-        <View style={styles.listItemContainer}>
-          {[
-            {image1: item_image_1, image2: item_image_2},
-            {image1: item_image_2, image2: item_image_3},
-            {image1: item_image_4, image2: item_image_1},
-            {image1: item_image_1, image2: item_image_2},
-          ].map((e, index) => (
-            <View key={index.toString()}>
-              <ProductItem
-                name="Điện thoại Vsmart Bee (Smart Bee)"
-                image={e.image1}
-                price="699.000đ"
-              />
-              <ProductItem
-                name="Điện thoại Vsmart Joy 2 Vsmart Joy 2"
-                image={e.image2}
-                price="699.000đ"
-              />
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-      {/*  */}
-      <View style={styles.seeMoreContainer}>
-        <Text style={styles.seeMoreText}>XEM THÊM 636 SẢN PHẨM ></Text>
       </View>
-    </View>
-  );
+    );
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    listProducts: ProductsSelectors.getList(state),
+    listColor: state.color.list,
+    listBrand: state.brands.list,
+    total: state.products.total,
+  };
 };
 
-export default HomeSectionComponent;
+const mapDispatchToProps = dispatch => {
+  return {
+    onGetList: params => {
+      dispatch(ProductsActions.onGetList(params));
+    },
+    onGetListBrand: () => {
+      dispatch(BrandActions.onGetList());
+    },
+    onGetListColor: () => {
+      dispatch(ColorActions.onGetList());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomeSectionComponent);
 
 const styles = StyleSheet.create({
   sectionContainer: {
