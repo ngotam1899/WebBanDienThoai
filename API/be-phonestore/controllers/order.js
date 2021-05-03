@@ -123,6 +123,12 @@ const addOrder = async (req, res, next) => {
 					let product = productFound._id;
 					let name = productFound.name;
 					let price = productFound.colors.find(i => i._id == item.color).price;
+					if(productFound.colors.find(i => i._id == item.color).amount < item.quantity){
+						return res.status(200).json({ success: true, code: 400, message: `Sản phẩm ${productFound.name} trong kho chỉ còn lại ${productFound.colors.find(i => i._id == item.color).amount}, không đủ số lượng giao hàng` });
+					}
+					// Đặt hàng thì cập nhật lại số lượng
+					productFound.colors.find(i => i._id == item.color).amount = productFound.colors.find(i => i._id == item.color).amount - item.quantity;
+					await productFound.save();
 					let imageFound = await Image.findById(productFound.bigimage);
 					if (imageFound) {
 						var image = imageFound.public_url;
@@ -162,12 +168,22 @@ const updateOrder = async (req, res, next) => {
 				return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
 			} else {
 				const orderUpdate = req.body;
-				const {status} = req.body;
+				const {status, active} = req.body;
 				let result;
 				if(status==1){
 					result = await Order.findByIdAndUpdate(IDOrder, Object.assign(orderUpdate, {paid: true}));
 				}
 				else {
+					// Hủy đơn hàng thì cập nhật lại số lượng
+					if(active==false){
+						for (let item of order.order_list){
+							let productFound = await Product.findById(item.product);
+							if(productFound){
+								productFound.colors.find(i => i._id.toString() === item.color.toString()).amount = productFound.colors.find(i => i._id.toString() === item.color.toString()).amount + item.quantity;
+								await productFound.save();
+							}
+						}
+					}
 					result = await Order.findByIdAndUpdate(IDOrder, orderUpdate);
 				}
 				if (!result) {
