@@ -8,23 +8,30 @@ import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 
-
-import { AppRegistry } from 'react-native';
+import {AppRegistry} from 'react-native';
 //Redux
-import { createStore, applyMiddleware } from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import 'localstorage-polyfill';
-import { Provider } from 'react-redux';
-import configureStore from "./src/redux/store";
+import {Provider} from 'react-redux';
+import configureStore from './src/redux/store';
 import combineReducers from './src/redux/reducers/index';
-//Redux saga
-/* import createSagaMiddleware from 'redux-saga';
-import rootSaga from './src/redux/sagas/index'; 
-
-
-const sagaMiddleware = createSagaMiddleware(); */
+import HomePage from './src/components/HomePage';
+import DetailPage from './src/components/DetailPage';
 const Tab = createBottomTabNavigator();
-//let store = createStore(combineReducers, applyMiddleware(sagaMiddleware));
 const store = configureStore();
+import {createStackNavigator} from '@react-navigation/stack';
+const HomeStack = createStackNavigator();
+
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator screenOptions={{
+      headerShown: false
+    }}>
+      <HomeStack.Screen name="Home" component={HomePage} />
+      <HomeStack.Screen name="Detail" component={DetailPage} />
+    </HomeStack.Navigator>
+  );
+}
 
 const App = () => (
   <Provider store={store}>
@@ -36,7 +43,7 @@ const App = () => (
         }}>
         <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          component={HomeStackScreen}
           options={{
             tabBarLabel: 'Trang chủ',
             tabBarIcon: ({color}) => (

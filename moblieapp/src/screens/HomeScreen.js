@@ -1,9 +1,10 @@
 import React from 'react';
 import {StyleSheet, View, Text, StatusBar, ScrollView} from 'react-native';
+import 'react-native-gesture-handler';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import HomeSectionComponent from '../components/HomeSectionComponents';
 
+import HomePage from '../components/HomePage'
 const HomeScreen = () => {
   return (
     <View style={styles.screenContainer}>
@@ -21,9 +22,9 @@ const HomeScreen = () => {
       </View>
       {/*  */}
       <View style={styles.bodyContainer}>
-        <ScrollView>
-          <HomeSectionComponent />
-        </ScrollView>
+       <ScrollView>
+       <HomePage />
+       </ScrollView>
       </View>
     </View>
   );

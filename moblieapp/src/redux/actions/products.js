@@ -10,6 +10,18 @@ export const ProductsActionTypes = {
   GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
   GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
 
+  GET_BEST_SELLER: "GET_BEST_SELLER",
+  GET_BEST_SELLER_SUCCESS: "GET_BEST_SELLER_SUCCESS",
+  GET_BEST_SELLER_ERROR: "GET_BEST_SELLER_ERROR",
+
+  GET_FAVORITE: "GET_FAVORITE",
+  GET_FAVORITE_SUCCESS: "GET_FAVORITE_SUCCESS",
+  GET_FAVORITE_ERROR: "GET_FAVORITE_ERROR",
+
+  GET_NEWEST: "GET_NEWEST",
+  GET_NEWEST_SUCCESS: "GET_NEWEST_SUCCESS",
+  GET_NEWEST_ERROR: "GET_NEWEST_ERROR",
+
   CREATE: "CREATE",
   CREATE_SUCCESS: "CREATE_SUCCESS",
   CREATE_ERROR: "CREATE_ERROR",
@@ -60,6 +72,51 @@ const onGetListError = (error) => ({
   payload: error,
 });
 
+
+const onGetBestSeller = (payload) => ({
+  type: ProductsActionTypes.GET_BEST_SELLER,
+  payload,
+});
+
+const onGetBestSellerSuccess = (payload) => ({
+  type: ProductsActionTypes.GET_BEST_SELLER_SUCCESS,
+  payload
+});
+
+const onGetBestSellerError = (error) => ({
+  type: ProductsActionTypes.GET_BEST_SELLER_ERROR,
+  payload: error,
+});
+
+const onGetFavorite = (payload) => ({
+  type: ProductsActionTypes.GET_FAVORITE,
+  payload,
+});
+
+const onGetFavoriteSuccess = (payload) => ({
+  type: ProductsActionTypes.GET_FAVORITE_SUCCESS,
+  payload
+});
+
+const onGetFavoriteError = (error) => ({
+  type: ProductsActionTypes.GET_FAVORITE_ERROR,
+  payload: error,
+});
+
+const onGetNewest = (payload) => ({
+  type: ProductsActionTypes.GET_NEWEST,
+  payload,
+});
+
+const onGetNewestSuccess = (payload) => ({
+  type: ProductsActionTypes.GET_NEWEST_SUCCESS,
+  payload
+});
+
+const onGetNewestError = (error) => ({
+  type: ProductsActionTypes.GET_NEWEST_ERROR,
+  payload: error,
+});
 /**
  *
  * @param String id
@@ -123,12 +180,6 @@ const onUpdateError = (error) => ({
 
 /**
  *
- * delete
- */
-
-
-/**
- *
  * cart _ products
  */
 
@@ -184,6 +235,18 @@ const ProductsActions = {
   onGetDetail,
   onGetDetailSuccess,
   onGetDetailError,
+
+  onGetBestSeller,
+  onGetBestSellerSuccess,
+  onGetBestSellerError,
+
+  onGetFavorite,
+  onGetFavoriteSuccess,
+  onGetFavoriteError,
+
+  onGetNewest,
+  onGetNewestSuccess,
+  onGetNewestError,
 
   onCreate,
   onCreateSuccess,

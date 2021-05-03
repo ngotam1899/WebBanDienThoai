@@ -8,11 +8,11 @@ import queryString from 'query-string';
 const url = '/products';
 //cho params 1 default value là object
 export const getAllProducts = (params = {}) =>{
-    let queryParams = '';
-    if(Object.keys(params).length>0){
-        queryParams = `?${queryString.stringify(params)}`;
-    }
-    return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${queryParams}`);
+  let queryParams = '';
+  if(Object.keys(params).length>0){
+    queryParams = `?${queryString.stringify(params)}`;
+  }
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${queryParams}`);
 };
 
 // http://localhost:3000/products/:id  METHOD = GET
@@ -22,15 +22,30 @@ export const getDetailProduct  = (productId) =>{
 
 // http://localhost:3000/products  METHOD = POST
 export const addProduct = (data) =>{
-    return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}`, data);
 };
 
 // http://localhost:3000/products/:id  METHOD = PUT
 export const updateProduct  = (data, productId) =>{
-    return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${productId}`, data);
+  return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${productId}`, data);
 }
 
 // http://localhost:3000/products/:id  METHOD = DELETE
 export const deleteProduct  = (productId) =>{
-    return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${productId}`);
+  return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${productId}`);
+}
+
+// http://localhost:3000/products/best-seller  METHOD = GET
+export const getBestSeller = () =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/best-seller`);
+}
+
+  // http://localhost:3000/products/favorite  METHOD = GET
+export const getFavorite  = () =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/favorite`);
+}
+
+  // http://localhost:3000/products/newest  METHOD = GET
+export const getNewest  = () =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/newest`);
 }

@@ -16,22 +16,37 @@ export default function(state = init, action) {
       return {
         ...init,
       };
-
     case ProductsActionTypes.GET_LIST:
-      return {
-        ...state,
-      };
-
     case ProductsActionTypes.GET_LIST_ERROR:
+    case ProductsActionTypes.GET_BEST_SELLER:
+    case ProductsActionTypes.GET_BEST_SELLER_ERROR:
+    case ProductsActionTypes.GET_FAVORITE:
+    case ProductsActionTypes.GET_FAVORITE_ERROR:
+    case ProductsActionTypes.GET_NEWEST:
+    case ProductsActionTypes.GET_NEWEST_ERROR:
       return {
         ...state,
       };
-
+    case ProductsActionTypes.GET_BEST_SELLER_SUCCESS:
+      return {
+        ...state,
+        best: get(action, "payload"), 
+      };
+    case ProductsActionTypes.GET_FAVORITE_SUCCESS:
+      return {
+        ...state,
+        favorite: get(action, "payload"),
+      };
+    case ProductsActionTypes.GET_NEWEST_SUCCESS:
+      return {
+        ...state,
+        new: get(action, "payload"),
+      };
     case ProductsActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
         total: get(action, "payload.total"),
-        list: get(action, "payload.list", []),
+        list: get(action, "payload.list", []), //list : action.payload.list
       };
     case ProductsActionTypes.GET_DETAIL:
       return {
