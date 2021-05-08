@@ -1,24 +1,31 @@
-import React from 'react'
+import React, {Component} from 'react';
 import { View, StyleSheet, Text, Image, Dimensions } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
 
 
-const CarouselItem = ({ item }) => {
-    return (
-        <View style={styles.cardView}>
-            <Image style={styles.image} source={{ uri: item.url }} />
-            <View style={styles.textView}>
-                <Text style={styles.itemTitle}> {item.title}</Text>
-                <Text style={styles.itemDescription}>{item.description}</Text>
+class CarouselItem extends Component {
+    constructor(props) {
+        super(props);
+      }
+
+    render() {
+        const {data} = this.props;
+        return (
+            <View style={styles.cardView}>
+                <Image style={styles.image} source={{ uri: data.url }} />
+                <View style={styles.textView}>
+                    <Text style={styles.itemTitle}> {data.title}</Text>
+                    <Text style={styles.itemDescription}>{data.description}</Text>
+                </View>
             </View>
-        </View>
-    )
+        )
+    }
 }
 
 const styles = StyleSheet.create({
     cardView: {
-        flex: 1,
+        flex: 0,
         width: width - 20,
         height: height / 3,
         backgroundColor: 'white',

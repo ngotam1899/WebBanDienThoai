@@ -26,6 +26,7 @@
     "react-native-reanimated": "^2.1.0",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.1.1",
+    "react-native-snap-carousel": "^3.9.1",
     "react-native-vector-icons": "^8.1.0",
     "react-navigation": "^4.4.4",
     "react-redux": "^7.2.4",

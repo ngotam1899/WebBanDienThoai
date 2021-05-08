@@ -29,6 +29,7 @@ function HomeStackScreen() {
     }}>
       <HomeStack.Screen name="Home" component={HomePage} />
       <HomeStack.Screen name="Detail" component={DetailPage} />
+      
     </HomeStack.Navigator>
   );
 }

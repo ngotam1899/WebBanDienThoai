@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
 import 'react-native-gesture-handler';
-import {
-  Image,
-  View,
-  Text,
-  ScrollView,
-} from 'react-native';
-import styles from './style'
+import HeaderComponent from '../HeaderComponent';
+import {Image, View, Text, ScrollView, StatusBar} from 'react-native';
+import styles from './style';
 import {connect} from 'react-redux';
 // @Components
-import ProductItem from '../ProductItem'
+import ProductItem from '../ProductItem';
 // @Actions
 import ProductsSelectors from '../../redux/selectors/products';
 import ProductsActions from '../../redux/actions/products';
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const section_banner = require('../../assets/section_banner.png');
 
 class HomePage extends Component {
@@ -30,114 +26,149 @@ class HomePage extends Component {
   render() {
     const {listProducts, bestSeller, newest, favorite, navigation} = this.props;
     return (
-      <ScrollView>
-        <View style={styles.sectionContainer}>
-        {/*  */}
-        <Text style={styles.sectionTitle}>Điện thoại - Máy tính bảng</Text>
-        {/*  */}
-        <Image source={section_banner} style={styles.sectionImage} />
-        {/*  */}
-        <ScrollView horizontal={true}>
-          <View style={styles.filterContainer}>
-            {[
-              'Tất cả',
-              'Điện thoại SmartPhone',
-              'Máy tính bảng',
-              'Điện thoại',
-            ].map((e, index) => (
-              <View
-                key={index.toString()}
-                style={
-                  index === 0
-                    ? styles.filterActiveButtonContainer
-                    : styles.filterInactiveButtonContainer
-                }>
-                <Text
-                  style={
-                    index === 0
-                      ? styles.filterActiveText
-                      : styles.filterInactiveText
-                  }>
-                  {e}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-        <ScrollView horizontal={true}>
-          <View style={styles.listItemContainer}>
-            {listProducts &&
-              listProducts.map((product, index) => (
-                <View key={index.toString()}>
-                  <ProductItem
-                    name={product.name}
-                    image={product.bigimage ? product.bigimage.public_url : "https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg"}
-                    price={product.price_min}
-                    navigation={navigation}
-                    id_pd = {product._id}
-                  />
-                </View>
-              ))}
-          </View>
-        </ScrollView>
-        {/*  */}
-        <View style={styles.seeMoreContainer}>
-          <Text style={styles.seeMoreText}>XEM THÊM 636 SẢN PHẨM</Text>
+      <View style={styles.screenContainer}>
+      <StatusBar barStyle="light-content" />
+      {/*  */}
+      <View style={styles.headerContainer}>
+        <View style={styles.inputContainer}>
+          <FontAwesome name="search" size={24} color="#969696" />
+          <Text style={styles.inputText}>Bạn tìm gì hôm nay?</Text>
         </View>
-        <Text style={styles.sectionTitle}>Sản phẩm mới</Text>
-        <ScrollView horizontal={true}>
-          <View style={styles.listItemContainer}>
-            {newest &&
-              newest.map((product, index) => (
-                <View key={index.toString()}>
-                  <ProductItem
-                    name={product.name}
-                    image={product.bigimage ? product.bigimage.public_url : "https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg"}
-                    price={product.price_min}
-                    navigation={navigation}
-                  />
-                </View>
-              ))}
-          </View>
-        </ScrollView>
-        <Text style={styles.sectionTitle}>Sản phẩm được đánh giá cao</Text>
-        <ScrollView horizontal={true}>
-          <View style={styles.listItemContainer}>
-            {favorite &&
-              favorite.map((product, index) => (
-                <View key={index.toString()}>
-                  <ProductItem
-                    name={product.name}
-                    image={product.bigimage ? product.bigimage.public_url : "https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg"}
-                    price={product.price_min}
-                    navigation={navigation}
-                  />
-                </View>
-              ))}
-          </View>
-        </ScrollView>
-        <Text style={styles.sectionTitle}>Sản phẩm bán chạy nhất</Text>
-        <ScrollView horizontal={true}>
-          <View style={styles.listItemContainer}>
-            {bestSeller &&
-              bestSeller.map((product, index) => (
-                <View key={index.toString()}>
-                  <ProductItem
-                    name={product.name}
-                    image={product.bigimage ? product.bigimage.public_url : "https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg"}
-                    price={product.price_min}
-                    navigation={navigation}
-                  />
-                </View>
-              ))}
+        {/*  */}
+        <View style={styles.cartContainer}>
+          <FontAwesome name="shopping-cart" size={24} color="#fff" />
+        </View>
+      </View>
+      {/*  */}
+      <View style={styles.bodyContainer}>
+        <ScrollView>
+          <View style={styles.sectionContainer}>
+            {/*  */}
+            <Text style={styles.sectionTitle}>Điện thoại - Máy tính bảng</Text>
+            {/*  */}
+            <Image source={section_banner} style={styles.sectionImage} />
+            {/*  */}
+            <ScrollView horizontal={true}>
+              <View style={styles.filterContainer}>
+                {[
+                  'Tất cả',
+                  'Điện thoại SmartPhone',
+                  'Máy tính bảng',
+                  'Điện thoại',
+                ].map((e, index) => (
+                  <View
+                    key={index}
+                    style={
+                      index === 0
+                        ? styles.filterActiveButtonContainer
+                        : styles.filterInactiveButtonContainer
+                    }>
+                    <Text
+                      style={
+                        index === 0
+                          ? styles.filterActiveText
+                          : styles.filterInactiveText
+                      }>
+                      {e}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+            <ScrollView horizontal={true}>
+              <View style={styles.listItemContainer}>
+                {listProducts &&
+                  listProducts.map((product, index) => (
+                    <View key={index}>
+                      <ProductItem
+                        name={product.name}
+                        image={
+                          product.bigimage
+                            ? product.bigimage.public_url
+                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
+                        }
+                        price={product.price_min}
+                        navigation={navigation}
+                        id={product._id}
+                      />
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
+            {/*  */}
+            <View style={styles.seeMoreContainer}>
+              <Text style={styles.seeMoreText}>XEM THÊM 636 SẢN PHẨM</Text>
+            </View>
+            <Text style={styles.sectionTitle}>Sản phẩm mới</Text>
+            <ScrollView horizontal={true}>
+              <View style={styles.listItemContainer}>
+                {newest &&
+                  newest.map((product, index) => (
+                    <View key={index}>
+                      <ProductItem
+                        name={product.name}
+                        image={
+                          product.bigimage
+                            ? product.bigimage.public_url
+                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
+                        }
+                        price={product.price_min}
+                        navigation={navigation}
+                        id={product._id}
+                      />
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
+            <Text style={styles.sectionTitle}>Sản phẩm được đánh giá cao</Text>
+            <ScrollView horizontal={true}>
+              <View style={styles.listItemContainer}>
+                {favorite &&
+                  favorite.map((product, index) => (
+                    <View key={index}>
+                      <ProductItem
+                        name={product.name}
+                        image={
+                          product.bigimage
+                            ? product.bigimage.public_url
+                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
+                        }
+                        price={product.price_min}
+                        navigation={navigation}
+                        id={product._id}
+                      />
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
+            <Text style={styles.sectionTitle}>Sản phẩm bán chạy nhất</Text>
+            <ScrollView horizontal={true}>
+              <View style={styles.listItemContainer}>
+                {bestSeller &&
+                  bestSeller.map((product, index) => (
+                    <View key={index}>
+                      <ProductItem
+                        name={product.name}
+                        image={
+                          product.bigimage
+                            ? product.bigimage.public_url
+                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
+                        }
+                        price={product.price_min}
+                        navigation={navigation}
+                        id={product._id}
+                      />
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
           </View>
         </ScrollView>
       </View>
-      </ScrollView>
+    </View>
     );
   }
 }
-
 
 const mapStateToProps = state => {
   return {
@@ -165,7 +196,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
