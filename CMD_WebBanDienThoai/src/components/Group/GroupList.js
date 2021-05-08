@@ -12,13 +12,13 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import OperationDetail from './OperationDetail'
+import GroupDetail from './GroupDetail'
 // @Actions
-import OperationActions from "../../redux/actions/operations";
+import GroupActions from "../../redux/actions/group";
 
 const fields = ['name', { key: 'actions', _style: { width: '15%'} }]
 
-class OperationList extends Component {
+class GroupList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -74,7 +74,7 @@ class OperationList extends Component {
 
   render () {
     const {large} = this.state;
-    const {listOperations, operationDetail, onClearDetail} = this.props;
+    const {listGroup, groupDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -92,7 +92,7 @@ class OperationList extends Component {
 
               <CCardBody>
                 <CDataTable
-                  items={listOperations}
+                  items={listGroup}
                   fields={fields}
                   hover
                   striped
@@ -101,7 +101,7 @@ class OperationList extends Component {
                   pagination
                   scopedSlots = {{
                     'name': (item) => (
-                      <td>{item.operation}</td>
+                      <td>{item.name}</td>
                     ),
                     'actions':
                     (item)=>(
@@ -123,9 +123,9 @@ class OperationList extends Component {
                       </td>)
                   }}
                 />
-                {(operationDetail && large) && <OperationDetail large={large} operation={operationDetail} onClose={this.onClose}
+                {(groupDetail && large) && <GroupDetail large={large} group={groupDetail} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
-                {(!operationDetail && large) && <OperationDetail large={large} onClose={this.onClose}
+                {(!groupDetail && large) && <GroupDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>
@@ -138,29 +138,29 @@ class OperationList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listOperations: state.operations.list,
-    operationDetail: state.operations.detail,
+    listGroup: state.group.list,
+    groupDetail: state.group.detail,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetList: () => {
-      dispatch(OperationActions.onGetList())
+      dispatch(GroupActions.onGetList())
     },
     onClearState: () =>{
-      dispatch(OperationActions.onClearState())
+      dispatch(GroupActions.onClearState())
     },
     onClearDetail: () =>{
-      dispatch(OperationActions.onClearDetail())
+      dispatch(GroupActions.onClearDetail())
     },
     onGetDetail: (id) => {
-      dispatch(OperationActions.onGetDetail(id))
+      dispatch(GroupActions.onGetDetail(id))
     },
     onDelete: (id) =>{
-      dispatch(OperationActions.onDelete({id}))
+      dispatch(GroupActions.onDelete({id}))
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OperationList)
+export default connect(mapStateToProps, mapDispatchToProps)(GroupList)

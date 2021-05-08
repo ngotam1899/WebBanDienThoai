@@ -1,28 +1,20 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CDataTable } from '@coreui/react';
 import { connect } from "react-redux";
-// @Components
-import {
-  CButton,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CDataTable
-} from "@coreui/react";
 // @Actions
-import ProductsActions from "../../redux/actions/products";
 import GroupActions from "../../redux/actions/group";
+import ProductsActions from "../../redux/actions/products";
 // @Functions
 import {INITIAL_IMAGE} from '../../constants';
 
 const fields = ['ảnh', 'tên hiển thị', 'tên thật', { key: 'actions', _style: { width: '15%'} }]
 
-class Group extends Component {
+class GroupDetail extends Component {
   constructor(props){
     super(props);
-    const {group} = props
+    const {group} = props;
     this.state = {
+      id: group ? group._id : '',
       keyword: "",
       nameGroup : group ? group.name: "",
       name: "",
@@ -30,6 +22,38 @@ class Group extends Component {
       index: null,
       show: false,
       listProduct: group ? group.products : []
+    }
+  }
+  onChange = (event) =>{
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+        [name]:  value
+    })
+  }
+
+  onDelete = (item) =>{
+    const {listProduct} = this.state;
+    listProduct.splice(listProduct.indexOf(item), 1);
+    this.setState({
+      listProduct
+    })
+  }
+
+  onSubmit = () =>{
+    const {id, nameGroup, listProduct} = this.state;
+    const {onUpdate, onCreate} = this.props;
+    var data = {
+      name: nameGroup,
+      products: listProduct
+    }
+    if (id) {
+      onUpdate(id, data);
+    }
+    else {
+      // 4. Create data
+      onCreate(data);
     }
   }
 
@@ -45,23 +69,6 @@ class Group extends Component {
     onFilter(keyword);
   }
 
-  onChange = (event) => {
-    var target = event.target;
-    var name = target.name;
-    var value = target.value;
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  onDelete = (item) =>{
-    const {listProduct} = this.state;
-    listProduct.splice(listProduct.indexOf(item), 1);
-    this.setState({
-      listProduct
-    })
-  }
-
   onSaveChange = () =>{
     const {name, product, index, listProduct} = this.state;
     if(index){
@@ -74,34 +81,11 @@ class Group extends Component {
     }
   }
 
-  onSave = () =>{
-    const {onUpdate, onCreate, group} = this.props;
-    const {listProduct, nameGroup} = this.state;
-    if(group){
-      onUpdate(group._id, {
-        name: nameGroup,
-        products: listProduct
-      });
-    }
-    else{
-      onCreate({
-        name: nameGroup,
-        products: listProduct
-      })
-    }
-  }
-
-  onClose = () => {
-    const {onCloseModal, onClearDetail, modal} = this.props;
-    onCloseModal("_modal",!modal);
-    onClearDetail();
-  }
-
-  render() {
-    const {modal, group, listSearch} = this.props;
-    const {keyword, listProduct, name, product, show, nameGroup} = this.state;
+	render() {
+    const { keyword, listProduct, name, product, show, nameGroup } = this.state;
+    const { group, listSearch, large, onClose,} = this.props;
     return (
-      <CModal show={modal} onClose={this.onClose} closeOnBackdrop={false} size="lg">
+			<CModal show={large} onClose={() => onClose(!large)}  closeOnBackdrop={false} size="lg">
         <CModalHeader closeButton>
           <CModalTitle>
             {group ? `Nhóm sản phẩm ${group._id}` : "Thêm nhóm mới"}
@@ -239,39 +223,39 @@ class Group extends Component {
           </div>
         </CModalBody>
         <CModalFooter>
-          <CButton color="primary" onClick={this.onSave}>
-            Save group
-          </CButton>{" "}
-          <CButton color="secondary" onClick={this.onClose}>
-            Cancel
-          </CButton>
+          <CButton color="primary" onClick={() => this.onSubmit(!large)}>
+						Save
+					</CButton>{' '}
+					<CButton color="secondary" onClick={() => onClose(!large)}>
+						Cancel
+					</CButton>
         </CModalFooter>
       </CModal>
-    )
-  }
+		);
+	}
 }
 
 const mapStateToProps = (state) => {
   return {
     listSearch: state.products.listSearch,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFilter : (keyword) =>{
-      dispatch(ProductsActions.onFilter(keyword))
-    },
     onCreate: (params) =>{
       dispatch(GroupActions.onCreate({params}))
     },
     onUpdate: (id, params) =>{
       dispatch(GroupActions.onUpdate({id, params}))
     },
+    onFilter : (keyword) =>{
+      dispatch(ProductsActions.onFilter(keyword))
+    },
     onClearDetail: () =>{
       dispatch(GroupActions.onClearDetail())
     },
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Group);
+export default connect(mapStateToProps, mapDispatchToProps)(GroupDetail);

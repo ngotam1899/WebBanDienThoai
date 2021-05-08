@@ -27,13 +27,13 @@ app.use(
 
 // @For tester
 mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
-        useCreateIndex: true,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
-    })
-    .then(() => console.log('Connected to MongoDB!'))
-    .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))
+	useCreateIndex: true,
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useFindAndModify: false
+})
+.then(() => console.log('Connected to MongoDB!'))
+.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))
 
 // @For dev
 /* mongoose

@@ -117,8 +117,8 @@ export default [
       },
       {
         _tag: 'CSidebarNavItem',
-        name: 'Danh sách hệ điều hành',
-        to: '/products/operation-manage',
+        name: 'Danh sách nhóm sản phẩm',
+        to: '/products/group-manage',
       },
       {
         _tag: 'CSidebarNavItem',

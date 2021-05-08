@@ -69,7 +69,7 @@ function* handleUpdate({ payload }) {
     const detailResult = yield call(getDetailGroup, payload.id);
     yield put(GroupActions.onUpdateSuccess(get(detailResult, "data")));
     let product = yield select(state => state.products.detail);
-    yield put(ProductsActions.onGetDetail(product._id));
+    if(product) yield put(ProductsActions.onGetDetail(product._id));
   } catch (error) {
     yield put(GroupActions.onUpdateError(error));
   }

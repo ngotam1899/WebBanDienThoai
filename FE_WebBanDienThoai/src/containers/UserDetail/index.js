@@ -10,19 +10,25 @@ class UserDetail extends Component {
   constructor(props) {
     super(props);
     const {userInfo, listCity} = props;
-    const lastCity = listCity.find(obj => obj.ProvinceName === userInfo.address.split(', ')[3]).ProvinceID;
+    var lastCity;
+    if(userInfo.address){
+      lastCity = listCity.find(obj => obj.ProvinceName === userInfo.address.split(', ')[3]).ProvinceID;
+    }
+    else{
+      lastCity = -1;
+    }
     this.state = {
       firstname: userInfo ? userInfo.firstname :"",
       lastname: userInfo ? userInfo.lastname :"",
       phonenumber: userInfo ? userInfo.phonenumber :"",
-      address: userInfo ? userInfo.address.split(', ')[0] :"",
+      address: userInfo && userInfo.address ? userInfo.address.split(', ')[0] :"",
       email: userInfo ? userInfo.email :"",
       cityID: lastCity,
       districtID: null,
       wardID: null,
-      city: userInfo.address.split(', ')[3],
-      district: userInfo.address.split(', ')[2],
-      ward: userInfo.address.split(', ')[1]
+      city: userInfo && userInfo.address ? userInfo.address.split(', ')[3] : "",
+      district: userInfo && userInfo.address ? userInfo.address.split(', ')[2] : "",
+      ward: userInfo && userInfo.address ? userInfo.address.split(', ')[1] : ""
     }
   }
 
@@ -36,17 +42,23 @@ class UserDetail extends Component {
 
   componentWillReceiveProps(props){
     const {listDistrict, userInfo, listCity} = props;
-    const lastCity = listCity.find(obj => obj.ProvinceName === userInfo.address.split(', ')[3]).ProvinceID
-    const {cityID, districtID, wardID} = this.state;
-    const {onGetListWard,onGetListDistrict} = this.props;
-    if(this.props.listDistrict !== props.listDistrict && cityID == lastCity){
-      onGetListWard(cityID, listDistrict.find(obj => obj.DistrictName === userInfo.address.split(', ')[2]).DistrictID)
+    var lastCity;
+    if(userInfo.address){
+      lastCity = listCity.find(obj => obj.ProvinceName === userInfo.address.split(', ')[3]).ProvinceID;
+      const {cityID, districtID, wardID} = this.state;
+      const {onGetListWard} = this.props;
+      if(this.props.listDistrict !== props.listDistrict && cityID == lastCity){
+        onGetListWard(cityID, listDistrict.find(obj => obj.DistrictName === userInfo.address.split(', ')[2]).DistrictID)
+      }
+      if(districtID===null && wardID===null && props.listWard){
+        this.setState({
+          districtID: this.props.listDistrict.find(obj => obj.DistrictName === userInfo.address.split(', ')[2]).DistrictID,
+          wardID: props.listWard.find(obj => obj.WardName === userInfo.address.split(', ')[1]).WardCode
+        })
+      }
     }
-    if(districtID===null && wardID===null && props.listWard){
-      this.setState({
-        districtID: this.props.listDistrict.find(obj => obj.DistrictName === userInfo.address.split(', ')[2]).DistrictID,
-        wardID: props.listWard.find(obj => obj.WardName === userInfo.address.split(', ')[1]).WardCode
-      })
+    else{
+      lastCity = -1;
     }
   }
 
