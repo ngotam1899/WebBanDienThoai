@@ -1,33 +1,27 @@
 const User = require('../models/User');
 const bcrypts = require('bcryptjs');
-var smtpTransport = require('nodemailer-smtp-transport');
-
 const Validator = require('../validators/validator');
 const service = require('../services/service');
-const os = require('os');
 const nodemailer = require('nodemailer');
-
+const { google } = require('googleapis')
 const JWT = require('jsonwebtoken');
 const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config');
-const { use } = require('passport');
+
 const hashString = async (textString) => {
 	const salt = await bcrypts.genSalt(15);
 	return await bcrypts.hash(textString, salt);
 };
+
 const transporter = nodemailer.createTransport({
 	host: 'smtp.gmail.com',
 	service: 'gmail',
 	port: 465,
-	secure: false,
-	ignoreTLS: false,
+	secure: true,
 	auth: {
 		type: 'login',
 		user: EMAIL_NAME,
 		pass: PASS
 	},
-	tls: {
-		rejectUnauthorized: false
-	}
 });
 
 const authGoogle = async (req, res, next) => {
@@ -149,13 +143,18 @@ const sendEmail = (email) => {
 	const token = service.encodedToken(email, '1h');
 	const url = 'https://localhost:5000/#/account/active/' + token;
 	const at = {
-		from: '"noreply@be-phonestore.herokuapp.com" <noreply@be-phonestore.herokuapp.com/>',
+		from: '"admin@be-phonestore.herokuapp.com" <admin@be-phonestore.herokuapp.com/>',
 		to: email,
 		subject: 'Activate Account',
 		text: 'Click button below to active',
 		html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
 	};
-	transporter.sendMail(at, async (err, response) => {});
+	transporter.sendMail(at, async (err, response) => {
+		if (err) {
+		} else {
+			console.log(response);
+		}
+	});
 };
 
 const getAllUser = async (req, res, next) => {
@@ -225,6 +224,14 @@ const findUserByPhone = async (req, res, next) => {
 	const phone = req.query.phone;
 	const user = await User.findOne({ phonenumber: phone });
 	return res.status(200).json({ success: true, code: 200, message: '', user: user });
+};
+
+const onlineUsers = async (req, res, next) => {
+	
+};
+
+const sessionUsers = async (req, res, next) => {
+	
 };
 
 module.exports = {

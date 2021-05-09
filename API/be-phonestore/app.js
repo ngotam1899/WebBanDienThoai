@@ -70,7 +70,6 @@ app.use(function(req, res, next) {
 });
 app.use(bodyParser.json());
 
-//app.use(passport.initialize())
 
 //Routes
 app.use('/users', routerUser);

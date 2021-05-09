@@ -2,28 +2,25 @@ const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Image = require('../models/Image');
 const Validator = require('../validators/validator');
-
-var smtpTransport = require('nodemailer-smtp-transport');
 const nodemailer = require('nodemailer');
 const createError = require('http-errors');
 const service = require('../services/service');
 const JWT = require('jsonwebtoken');
-
 const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config');
-
-const transporter = nodemailer.createTransport(
-	smtpTransport({
-		host: 'smtp.gmail.com',
-		service: 'gmail',
-		port: 8000,
-		secure: false,
-		auth: {
-			type: 'login',
-			user: EMAIL_NAME,
-			pass: PASS
-		}
-	})
-);
+const transporter = nodemailer.createTransport({
+	host: 'smtp.gmail.com',
+	service: 'gmail',
+	port: 465,
+	secure: true,
+	auth: {
+		type: 'login',
+		user: EMAIL_NAME,
+		pass: PASS
+	},
+	tls: {
+		rejectUnauthorized: false
+	}
+});
 
 const getAllOrder = async (req, res, next) => {
 	try {
@@ -221,7 +218,7 @@ const sendEmail = async (email, IDOrder) => {
 	const token = service.encodedToken(IDOrder, '1h');
 	const url = 'https://localhost:5000/#/order/active/' + token;
 	const at = {
-		from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
+		from: '"admin@be-phonestore.herokuapp.com" <admin@be-phonestore.herokuapp.com/>',
 		to: email,
 		subject: 'Confirm Order',
 		text: '',
@@ -277,7 +274,20 @@ const deleteOrder = async (req, res, next) => {
 
 // Doanh thu mỗi ngày, mỗi tháng, mỗi quí
 const revenue = async (req, res, next) => {
-	
+	try {
+		let condition = {};
+		if (req.query.type != undefined && req.query.type != '') {
+			
+		}
+		const orders = await Order.find(condition)
+		.populate({ path: 'order_list.color', select: 'name_vn' })
+		/* .sort(sort) */
+		return res
+			.status(200)
+			.json({ success: true, code: 200, message: '', orders });
+	} catch (error) {
+		return next(error);
+	}
 };
 
 module.exports = {
@@ -288,4 +298,5 @@ module.exports = {
 	requestSendEmail,
 	deleteOrder,
 	confirmOrder,
+	revenue
 };
