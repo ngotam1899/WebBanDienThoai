@@ -1,7 +1,8 @@
 import { ProductsActionTypes } from "../actions/products";
+import { AsyncStorage } from 'react-native';
 
 // lấy những sản phẩm đã được lưu trong localStorage về
-var data = localStorage.getItem('CURRENCY');
+//var data = AsyncStorage.getItem('CURRENCY');
 
 var initialState = "VND"
 

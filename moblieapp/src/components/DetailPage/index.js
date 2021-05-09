@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import ProductsActions from '../../redux/actions/products';
 import {connect} from 'react-redux';
-import {compose} from 'redux';
-import CarouselItem from './CarouselItem';
-import Carousel from 'react-native-snap-carousel';
+import {CartContext} from '../../context/Cart';
+
 import {
   StyleSheet,
   Text,
@@ -38,6 +37,9 @@ class FlatListItem extends Component {
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      color: ''
+    }
   }
   clickEventListener() {
     Alert.alert('Success', 'Product has beed added to cart');
@@ -45,20 +47,33 @@ class ProductDetail extends Component {
   componentDidMount() {
     const {route, onGetDetailProduct} = this.props;
     onGetDetailProduct(route.params.id);
-    console.log("route.params.id: ", route.params.id)
+    console.log('route.params.id: ', route.params.id);
   }
-  onReload(id){
-    /* const {onGetDetailProduct} = this.props;
-    console.log("id: ", id)
-    onGetDetailProduct(id); */
+  componentDidUpdate(prevProps) {
+    const {route, onGetDetailProduct} = this.props;
+    if (this.props.route !== prevProps.route) {
+      onGetDetailProduct(route.params.id);
+    }
+  }
+  setColor = (item) =>{
+    this.setState({
+      color: item._id
+    })
+  }
+
+  onAddToCart = (product, quantity) => {
+    const  {onAddProductToCart} = this.props;
+    const {color} = this.state;
+    onAddProductToCart(product, color, quantity)
+  }
+  onReload(id) {
     const {navigation, route} = this.props;
-    
-    navigation.setParams({id: id})
-    console.log("id: ", route.params.id)
-    this.forceUpdate();
+    navigation.navigate('Detail', {id});
+    console.log('id: ', route.params.id);
   }
   render() {
     const {product, group} = this.props;
+    const {color} = this.state;
     let screenWidth = Dimensions.get('window').width;
     return (
       <View style={styles.container}>
@@ -91,17 +106,17 @@ class ProductDetail extends Component {
                 ))}
             </ScrollView>
             <View style={{marginHorizontal: 20, marginTop: 10}}>
-              <Text style={styles.name}>
-                
-                {product.name}
-              </Text>
+              <Text style={styles.name}>{product.name}</Text>
               <Text style={styles.price}>{product.price_min} VND</Text>
             </View>
             <Text style={styles.titleName}>Chọn dung lượng sản phẩm</Text>
             <View style={styles.contentGroup}>
               {group &&
                 group.products.map((item, index) => (
-                  <TouchableOpacity key={index} style={styles.btnGroup} onPress={()=>this.onReload(item._id)}>
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.btnGroup}
+                    onPress={() => this.onReload(item._id)}>
                     <Text style={styles.textGroup}>{item.name}</Text>
                   </TouchableOpacity>
                 ))}
@@ -109,16 +124,16 @@ class ProductDetail extends Component {
             <Text style={styles.titleName}>Chọn màu sản phẩm</Text>
             <View style={styles.contentColors}>
               {product.colors &&
-                product.colors.map((product, index) => (
-                  <TouchableOpacity key={index} style={styles.btnColor}>
-                    <Text style={styles.textColor}>{product.name_vn}</Text>
+                product.colors.map((item, index) => (
+                  <TouchableOpacity key={index} style={color === item._id ? [styles.btnColor, styles.colorActive] : styles.btnColor} onPress = {()=>this.setColor(item)}>
+                    <Text style={styles.textColor}>{item.name_vn}</Text>
                   </TouchableOpacity>
                 ))}
             </View>
             <View style={styles.addToCarContainer}>
               <TouchableOpacity
                 style={styles.shareButton}
-                onPress={() => this.clickEventListener()}>
+                onPress={() => this.onAddToCart(product, 1)}>
                 <Text style={styles.shareButtonText}>Chọn Mua</Text>
               </TouchableOpacity>
             </View>
@@ -181,6 +196,9 @@ const mapDispatchToProps = dispatch => {
     onGetDetailProduct: payload => {
       dispatch(ProductsActions.onGetDetail(payload));
     },
+    onAddProductToCart: (product, color, quantity) => {
+      dispatch(ProductsActions.onAddProductToCart(product, color, quantity));
+    },
   };
 };
 
@@ -224,6 +242,9 @@ const styles = StyleSheet.create({
   textDescription: {
     marginLeft: 20,
     marginBottom: 10,
+  },
+  colorActive: {
+    backgroundColor: 'blue'
   },
   price: {
     fontSize: 26,

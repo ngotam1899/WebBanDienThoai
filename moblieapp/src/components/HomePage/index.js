@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
 import 'react-native-gesture-handler';
-import HeaderComponent from '../HeaderComponent';
 import {Image, View, Text, ScrollView, StatusBar} from 'react-native';
 import styles from './style';
 import {connect} from 'react-redux';
 // @Components
 import ProductItem from '../ProductItem';
+import Header from '../HeaderComponent';
 // @Actions
 import ProductsSelectors from '../../redux/selectors/products';
 import ProductsActions from '../../redux/actions/products';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const section_banner = require('../../assets/section_banner.png');
+
+
 
 class HomePage extends Component {
   constructor(props) {
@@ -35,9 +37,7 @@ class HomePage extends Component {
           <Text style={styles.inputText}>Bạn tìm gì hôm nay?</Text>
         </View>
         {/*  */}
-        <View style={styles.cartContainer}>
-          <FontAwesome name="shopping-cart" size={24} color="#fff" />
-        </View>
+        <Header value = "2" navigation={navigation}></Header>
       </View>
       {/*  */}
       <View style={styles.bodyContainer}>

@@ -1,12 +1,24 @@
 import { ProductsActionTypes } from "../actions/products";
 import { toastError, toastSuccess } from '../../utils/toastHelper';
+import { AsyncStorage } from '@react-native-async-storage/async-storage';
 
 // lấy những sản phẩm đã được lưu trong localStorage về
-var data = JSON.parse(localStorage.getItem('CART'));
 
-var initialState = data ? data : [];
+// const getData = async () => {
+//   try {
+//     const jsonValue = await AsyncStorage.getItem('CART')
+//     return jsonValue != null ? JSON.parse(jsonValue) : null;
+//   } catch(e) {
+//     console.log("e",e)
+//   }
+// }
 
-const cart = (state = initialState, action) =>{
+// var data = getData();
+const data = null
+
+var initialState = [];
+
+const cart = async (state = initialState, action) =>{
   var {product, color, quantity} = action;
   var index = -1;
   switch (action.type){
@@ -21,7 +33,8 @@ const cart = (state = initialState, action) =>{
           quantity
         });
       }
-      localStorage.setItem('CART', JSON.stringify(state));
+      
+      await AsyncStorage.setItem('CART', JSON.stringify(state));
       toastSuccess('Đã thêm vào giỏ hàng');
       return [...state];
     case ProductsActionTypes.DELETE_PRODUCT_CART:

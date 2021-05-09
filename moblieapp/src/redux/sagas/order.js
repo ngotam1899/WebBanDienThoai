@@ -3,6 +3,7 @@ import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
 import ProductsActions from "../actions/products";
 import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, updateOrder, getAllOrder } from "../apis/order";
+import { AsyncStorage } from 'react-native';
 
 function* handleGetList({payload}) {
   try {
@@ -42,6 +43,14 @@ function* handleReConfirm({ payload }) {
  *
  * create
  */
+ async function createCart() {
+  try {
+    await AsyncStorage.removeItem("CART");
+  } catch (error) {
+    console.log('AsyncStorage error during token store:', error);
+  }
+}
+
 function* handleCreate({ payload }) {
   try {
     const result = yield call(addOrder, payload);
@@ -50,7 +59,7 @@ function* handleCreate({ payload }) {
     yield put(OrdersActions.onCreateSuccess(data));
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
-    localStorage.removeItem("CART");
+    yield call(createCart)
     yield put(ProductsActions.onClearCart())
   } catch (error) {
     yield put(OrdersActions.onCreateError(error));

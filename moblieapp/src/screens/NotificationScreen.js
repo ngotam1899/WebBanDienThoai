@@ -32,11 +32,11 @@ const NotificationItem = ({item}) => (
   </View>
 );
 
-const NotificationScreen = () => {
+const NotificationScreen = ({navigation}) => {
   return (
     <View style={styles.screenContainer}>
       <StatusBar barStyle="light-content" />
-      <Header title="Thông báo" />
+      <Header value="1" title="Thông báo" navigation={navigation} />
       <View style={styles.bodyContainer}>
         <View>
           <View style={styles.buttonActiveContainer}>

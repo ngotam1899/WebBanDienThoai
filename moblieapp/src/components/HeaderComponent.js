@@ -1,18 +1,25 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {CartContext} from '../context/Cart';
 
-const Header = ({title}) => (
+const Header = ({title, value, navigation}) => (
   <View style={styles.headerContainer}>
-    {/*  */}
-    <View style={styles.cartContainer}>
-      <View style={styles.cartIcon} />
-    </View>
-    {/*  */}
+    {value === '1' ? (
+      <View style={styles.cartContainer}>
+        <View style={styles.cartIcon} />
+      </View>
+    ) : (
+      <></>
+    )}
     <Text style={styles.headerText}>{title}</Text>
-    {/*  */}
     <View style={styles.cartContainer}>
-      <FontAwesome name="shopping-cart" size={HEADER_ICON_SIZE} color="#fff" />
+      <TouchableOpacity onPress={() => 
+        navigation.navigate('Cart', {})
+      }><FontAwesome name="shopping-cart" size={HEADER_ICON_SIZE} color="#fff" /></TouchableOpacity>
+      <CartContext.Consumer>
+        {({cartItems}) => (<Text style={styles.number}>{cartItems.length}</Text>)}
+      </CartContext.Consumer>
     </View>
   </View>
 );
@@ -27,15 +34,26 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    paddingTop: 50,
     backgroundColor: '#1e88e5',
     justifyContent: 'space-between',
     paddingBottom: 12,
+  },
+  number: {
+    fontSize: 12,
+    color: '#fff',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    marginLeft: 2,
+    marginTop: -10,
+    borderRadius: 50,
+    backgroundColor: 'red',
+    color: '#fff',
   },
   cartContainer: {
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   cartIcon: {
     width: HEADER_ICON_SIZE,

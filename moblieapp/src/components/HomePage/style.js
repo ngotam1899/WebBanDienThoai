@@ -6,6 +6,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 12,
   },
+  number: {
+    fontSize: 12,
+    color: '#fff',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    marginLeft: 2,
+    marginTop: -13,
+    borderRadius: 50,
+    backgroundColor: 'red',
+    color: '#fff'
+  },
   sectionTitle: {
     fontWeight: '700',
     fontSize: 16,
@@ -96,6 +107,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 2,
+    height: 40
   },
   inputText: {
     color: '#969696',
@@ -107,6 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row'
   },
   //
   bodyContainer: {

@@ -4,11 +4,13 @@ import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth"
 import OrdersActions, { OrdersActionTypes } from "../actions/order";
 import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, } from "../apis/auth";
 import {orderHistory } from "../apis/order";
+import { AsyncStorage } from 'react-native';
 
 /**
  *
  * create
  */
+
 function* handleRegister({ payload }) {
   try {
     const result = yield call(registerAccount, payload);
@@ -20,12 +22,20 @@ function* handleRegister({ payload }) {
   }
 }
 
+async function storeToken(token) {
+  try {
+    await AsyncStorage.setItem('AUTH_USER', token);
+  } catch (error) {
+    console.log('AsyncStorage error during token store:', error);
+  }
+}
+
 function* handleLogin({ payload }) {
   try {
     const result = yield call(loginAccount, payload);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    localStorage.setItem('AUTH_USER', result.headers.authorization);
+    yield call (storeToken, result.headers.authorization);
     yield put(AuthorizationActions.onLoginSuccess(data.user));
   } catch (error) {
     yield put(AuthorizationActions.onLoginError(error));
@@ -37,7 +47,7 @@ function* handleLoginFacebook({ payload }) {
     const result = yield call(loginFacebook, {"access_token" :payload});
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    localStorage.setItem('AUTH_USER', result.headers.authorization);
+    yield call (storeToken, result.headers.authorization);
     yield put(AuthorizationActions.onLoginFacebookSuccess(data.user));
   } catch (error) {
     yield put(AuthorizationActions.onLoginFacebookError(error));
@@ -49,7 +59,7 @@ function* handleLoginGoogle({ payload }) {
     const result = yield call(loginGoogle, {"access_token":payload});
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    localStorage.setItem('AUTH_USER', result.headers.authorization);
+    yield call (storeToken, result.headers.authorization);
     yield put(AuthorizationActions.onLoginGoogleSuccess(data.user));
   } catch (error) {
     yield put(AuthorizationActions.onLoginGoogleError(error));

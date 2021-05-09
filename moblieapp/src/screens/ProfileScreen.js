@@ -15,12 +15,12 @@ const ProfileItem = ({icon, name}) => (
   </View>
 );
 
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
   return (
     <View style={styles.screenContainer}>
       <StatusBar barStyle="light-content" />
       {/*  */}
-      <Header title="Cá nhân" />
+      <Header value="1" title="Cá nhân"  navigation={navigation}/>
       {/*  */}
       <View style={styles.bodyContainer}>
         <View style={styles.userContainer}>
