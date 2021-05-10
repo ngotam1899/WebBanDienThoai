@@ -22,11 +22,15 @@ export default function(state = init, action) {
       };
 
     case UsersActionTypes.GET_LIST:
+    case UsersActionTypes.GET_ONLINE:
+    case UsersActionTypes.GET_SESSION:
       return {
         ...state,
         loading: true,
       };
     case UsersActionTypes.GET_LIST_ERROR:
+    case UsersActionTypes.GET_ONLINE_ERROR:
+    case UsersActionTypes.GET_SESSION_ERROR:
       return {
         ...state,
          loading: false,
@@ -36,9 +40,19 @@ export default function(state = init, action) {
       return {
         ...state,
         loading: false,
-        list: get(action, "payload", []),
+        list: action.payload.list,
+        total: action.payload.total,
       };
-
+    case UsersActionTypes.GET_ONLINE_SUCCESS:
+      return {
+        ...state,
+        online: action.payload,
+      };
+    case UsersActionTypes.GET_SESSION_SUCCESS:
+      return {
+        ...state,
+        session: action.payload,
+      };
     case UsersActionTypes.GET_DETAIL:
       return {
         ...state,

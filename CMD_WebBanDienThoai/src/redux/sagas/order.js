@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import OrderActions, { OrderActionTypes } from "../actions/order";
-import { getAllOrders, getDetailOrder, updateOrder, deleteOrder, findOrders } from "../apis/order";
+import { getAllOrders, getDetailOrder, updateOrder, deleteOrder, findOrders, getRevenue, getSessionOrder } from "../apis/order";
 
 function* handleGetList({ payload }) {
   try {
@@ -62,6 +62,39 @@ function* handleDelete({ id }) {
   }
 }
 
+function* handleGetRevenue({ payload }) {
+  try {
+    const result = yield call(getRevenue, payload);
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(OrderActions.onGetRevenueSuccess(data.total_price));
+  } catch (error) {
+    yield put(OrderActions.onGetRevenueError(error));
+  }
+}
+
+function* handleGetRevenueList() {
+  try {
+    const result = yield call(getRevenue, {});
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(OrderActions.onGetRevenueListSuccess(data.order));
+  } catch (error) {
+    yield put(OrderActions.onGetRevenueListError(error));
+  }
+}
+
+function* handleGetSession({ payload }) {
+  try {
+    const result = yield call(getSessionOrder, payload);
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(OrderActions.onGetSessionSuccess(data.count));
+  } catch (error) {
+    yield put(OrderActions.onGetSessionError(error));
+  }
+}
+
 export function* watchGetList() {
   yield takeEvery(OrderActionTypes.GET_LIST, handleGetList);
 }
@@ -74,6 +107,15 @@ export function* watchUpdate() {
 export function* watchDelete() {
   yield takeEvery(OrderActionTypes.DELETE, handleDelete);
 }
+export function* watchGetRevenue() {
+  yield takeEvery(OrderActionTypes.GET_REVENUE, handleGetRevenue);
+}
+export function* watchGetRevenueList() {
+  yield takeEvery(OrderActionTypes.GET_REVENUE_LIST, handleGetRevenueList);
+}
+export function* watchGetSession() {
+  yield takeEvery(OrderActionTypes.GET_SESSION, handleGetSession);
+}
 
 export default function* rootSaga() {
   yield all([
@@ -81,5 +123,8 @@ export default function* rootSaga() {
     fork(watchGetDetail),
     fork(watchUpdate),
     fork(watchDelete),
+    fork(watchGetRevenue),
+    fork(watchGetRevenueList),
+    fork(watchGetSession),
   ]);
 }

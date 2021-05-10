@@ -2,25 +2,24 @@ import React from 'react'
 import { CChartLine } from '@coreui/react-chartjs'
 import { getStyle, hexToRgba } from '@coreui/utils/src'
 
-const brandSuccess = getStyle('success') || '#4dbd74'
+//const brandSuccess = getStyle('success') || '#4dbd74'
 const brandInfo = getStyle('info') || '#20a8d8'
-const brandDanger = getStyle('danger') || '#f86c6b'
+//const brandDanger = getStyle('danger') || '#f86c6b'
 
-const MainChartExample = attributes => {
-  const random = (min, max)=>{
-    return Math.floor(Math.random() * (max - min + 1) + min)
+const MainChartExample = (attributes) => {
+  var data1=[]
+  const today = new Date();
+  for(let i = 0; i <= today.getMonth(); i++){
+    attributes.data.map(item => {
+      data1[item._id.month-1]= item.total_price
+      if(i!==item._id.month-1){
+        data1[i]=0;
+      }
+    })
   }
-
+  var maxRevenue = Math.max(...data1)
   const defaultDatasets = (()=>{
-    let elements = 27
-    const data1 = []
-    const data2 = []
-    const data3 = []
-    for (let i = 0; i <= elements; i++) {
-      data1.push(random(50, 200))
-      data2.push(random(80, 100))
-      data3.push(65)
-    }
+
     return [
       {
         label: 'My First dataset',
@@ -30,7 +29,7 @@ const MainChartExample = attributes => {
         borderWidth: 2,
         data: data1
       },
-      {
+      /* {
         label: 'My Second dataset',
         backgroundColor: 'transparent',
         borderColor: brandSuccess,
@@ -46,7 +45,7 @@ const MainChartExample = attributes => {
         borderWidth: 1,
         borderDash: [8, 5],
         data: data3
-      }
+      } */
     ]
   })()
 
@@ -67,7 +66,7 @@ const MainChartExample = attributes => {
               beginAtZero: true,
               maxTicksLimit: 5,
               stepSize: Math.ceil(250 / 5),
-              max: 250
+              max: maxRevenue
             },
             gridLines: {
               display: true
@@ -92,7 +91,7 @@ const MainChartExample = attributes => {
       {...attributes}
       datasets={defaultDatasets}
       options={defaultOptions}
-      labels={['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']}
+      labels={['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']}
     />
   )
 }

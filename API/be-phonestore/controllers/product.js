@@ -70,10 +70,10 @@ const getAllProduct = async (req, res, next) => {
 				success: true,
 				code: 200,
 				message: '',
-				page: page,
-				limit: limit,
+				page,
+				limit,
 				total: count,
-				products: products
+				products
 			});
 	} catch (error) {
 		return next(error);

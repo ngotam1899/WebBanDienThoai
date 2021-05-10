@@ -21,11 +21,13 @@ export default function(state = init, action) {
         ...init,
       };
     case OrderActionTypes.GET_LIST:
-      return {
-        ...state,
-        loading: true,
-      };
     case OrderActionTypes.GET_LIST_ERROR:
+    case OrderActionTypes.GET_REVENUE:
+    case OrderActionTypes.GET_REVENUE_ERROR:
+    case OrderActionTypes.GET_REVENUE_LIST:
+    case OrderActionTypes.GET_REVENUE_LIST_ERROR:
+    case OrderActionTypes.GET_SESSION:
+    case OrderActionTypes.GET_SESSION_ERROR:
       return {
         ...state,
          loading: false,
@@ -36,6 +38,21 @@ export default function(state = init, action) {
         loading: false,
         total: get(action, "payload.total"),
         list: get(action, "payload.list", []),
+      };
+    case OrderActionTypes.GET_REVENUE_SUCCESS:
+      return {
+        ...state,
+        revenue: action.payload,
+      };
+    case OrderActionTypes.GET_REVENUE_LIST_SUCCESS:
+      return {
+        ...state,
+        listRevenue: action.payload,
+      };
+    case OrderActionTypes.GET_SESSION_SUCCESS:
+      return {
+        ...state,
+        session: action.payload,
       };
     case OrderActionTypes.GET_DETAIL:
       return {

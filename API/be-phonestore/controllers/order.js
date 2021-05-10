@@ -274,17 +274,150 @@ const deleteOrder = async (req, res, next) => {
 
 // Doanh thu mỗi ngày, mỗi tháng, mỗi quí
 const revenue = async (req, res, next) => {
+	const today = new Date();
 	try {
 		let condition = {};
-		if (req.query.type != undefined && req.query.type != '') {
-			
+		if (req.query.browse != undefined && req.query.browse != '') {
+			switch(req.query.browse){
+				case 'day':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1, 
+							'_id.day': today.getDate() 
+						}
+					}
+					break;
+				case 'month':
+					condition.browse = { 
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1 
+						}
+					}
+					break;
+				case 'year':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear()
+						}
+					}
+					break;
+				default:
+					condition.browse = {
+						'$project': { 
+							'_id' : 1, 'total_price': 1, 'total_quantity': 1
+						}
+					};
+			}
 		}
-		const orders = await Order.find(condition)
-		.populate({ path: 'order_list.color', select: 'name_vn' })
-		/* .sort(sort) */
+		else{
+			condition.browse = {
+				'$project': { 
+					'_id' : 1, 'total_price': 1, 'total_quantity': 1
+				}
+			};
+		}
+		const pipeline = [
+			{'$match': {'paid': true}},
+			{
+				'$group':
+				{
+					'_id':  {						
+						//day: {'$dayOfMonth': '$createdAt'}, 
+						month: {'$month': '$createdAt'}, 
+						year: {'$year': '$createdAt'}
+					},
+					'total_price': { 
+						'$sum': `$total_price` 
+					},
+					'total_quantity': { 
+						'$sum': `$total_quantity` 
+					}
+				}
+			},
+			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} },
+			condition.browse
+		];
+		const order = await Order.aggregate(pipeline);
+		const total_price = order.reduce((accumulator, currentValue) => accumulator + currentValue.total_price, 0);
+		const total_quantity = order.reduce((accumulator, currentValue) => accumulator + currentValue.total_quantity, 0);
 		return res
 			.status(200)
-			.json({ success: true, code: 200, message: '', orders });
+			.json({ success: true, code: 200, message: '',total_price,total_quantity, order});
+	} catch (error) {
+		return next(error);
+	}
+};
+
+// Số lượng order mỗi ngày, mỗi tháng, mỗi quí
+const sessionOrder = async (req, res, next) => {
+	const today = new Date();
+	try {
+		let condition = {};
+		if (req.query.browse != undefined && req.query.browse != '') {
+			switch(req.query.browse){
+				case 'day':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1, 
+							'_id.day': today.getDate() 
+						}
+					}
+					break;
+				case 'month':
+					condition.browse = { 
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1 
+						}
+					}
+					break;
+				case 'year':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear()
+						}
+					}
+					break;
+				default:
+					condition.browse = {
+						'$project': { 
+							'_id' : 1, 'count': 1
+						}
+					};
+			}
+		}
+		else{
+			condition.browse = {
+				'$project': { 
+					'_id' : 1, 'count': 1
+				}
+			};
+		}
+		const pipeline = [
+			{
+				'$group':
+				{
+					'_id':  {						
+						day: {'$dayOfMonth': '$createdAt'}, 
+						month: {'$month': '$createdAt'}, 
+						year: {'$year': '$createdAt'}
+					},
+					'count': {
+						'$sum': 1
+					}
+				}
+			},
+			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} },
+			condition.browse
+		];
+		const order = await Order.aggregate(pipeline);
+		const count = order.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0);
+		return res
+			.status(200)
+			.json({ success: true, code: 200, message: '', count, order});
 	} catch (error) {
 		return next(error);
 	}
@@ -298,5 +431,6 @@ module.exports = {
 	requestSendEmail,
 	deleteOrder,
 	confirmOrder,
-	revenue
+	revenue,
+	sessionOrder
 };

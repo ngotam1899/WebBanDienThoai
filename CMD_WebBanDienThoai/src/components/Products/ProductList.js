@@ -48,9 +48,9 @@ class ProductList extends Component {
   }
   UNSAFE_componentWillMount() {
     const { onGetList, onGetListBrand, location, onClearState, onGetListCategory, onGetListSpecification } = this.props;
+    const { filter } = this.state;
     onClearState();
     onGetListCategory();
-    const { filter } = this.state;
     onGetListBrand();
     const filters = getFilterParams(location.search);
     var params = {
