@@ -73,17 +73,14 @@ const signIn = async (req, res, next) => {
 			.status(200)
 			.json({ success: false, code: 403, message: 'An email activate have send to' + req.user.email });
 	}
-
 	const token = 'Bearer ' + service.encodedToken(req.user._id, '6h');
-
 	const user = req.user;
 	user.token = token;
 	await user.save();
-	/*res.setHeader('Devide_code', req.user.devide_code)*/
 	res.setHeader('Authorization', token);
-
 	return res.status(200).json({ success: true, code: 200, message: '', user: req.user });
 };
+
 const changePassword = async (req, res, next) => {
 	try {
 		const { password, new_password } = req.body;
@@ -91,20 +88,19 @@ const changePassword = async (req, res, next) => {
 		if (!new_password) return res.status(200).json({ success: false, code: 400, message: 'Pls insert new pwd' });
 		if (password == new_password)
 			res.status(200).json({ success: false, code: 400, message: 'New pwd is incorrectly' });
-
 		const user = await User.findById(req.user._id);
 		const result = await user.isSignin(password);
 		if (!result) return res.status(200).json({ success: false, code: 400, message: 'Old pwd is incorrect' });
 		else {
 			user.password = await hashString(new_password);
 			await user.save();
-
 			return res.status(200).json({ success: true, code: 200, message: 'Password change' });
 		}
 	} catch (error) {
 		next(error);
 	}
 };
+
 const activeAccount = async (req, res, next) => {
 	try {
 		const { tokenUser } = req.params;
@@ -125,10 +121,32 @@ const activeAccount = async (req, res, next) => {
 		}
 	} catch (error) {}
 };
+
+const activePassword = async (req, res, next) => {
+	try {
+		const { tokenUser } = req.params;
+		const { password } = req.body;
+		if (tokenUser) {
+			JWT.verify(tokenUser, JWT_SECRET, async (err, decodeToken) => {
+				if (err) {
+					return res.status(200).json({ success: false, code: 400, message: 'Incorect or Expired link' });
+				}
+				const email = decodeToken.sub;
+				const user = await User.findOne({ email });
+				if (!user) {
+					return res.status(200).json({ success: false, code: 400, message: 'Incorect Link' });
+				}
+				user.password = await hashString(password);
+				await user.save();
+				return res.status(200).json({ success: true, code: 200, message: 'Activate Successfull' });
+			});
+		}
+	} catch (error) {}
+};
+
 const signUp = async (req, res, next) => {
 	try {
 		const { firstname, lastname, phonenumber, address, image, email, password, role } = req.body;
-
 		const foundUser = await User.findOne({ email });
 		if (foundUser) {
 			return res.status(200).json({ success: false, code: 403, message: 'Email is already to use' });
@@ -143,9 +161,6 @@ const signUp = async (req, res, next) => {
 	}
 };
 
-const secret = async (req, res, next) => {
-	return res.status(200).json({ success: true, code: 200, message: '', resources: true });
-};
 const sendEmail = (email) => {
 	const token = service.encodedToken(email, '1h');
 	const url = 'https://localhost:5000/#/account/active/' + token;
@@ -155,6 +170,39 @@ const sendEmail = (email) => {
 		subject: 'Activate Account',
 		text: 'Click button below to active',
 		html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
+	};
+	transporter.sendMail(at, async (err, response) => {
+		if (err) {
+		} else {
+			console.log(response);
+		}
+	});
+};
+
+const forgotPassword = async (req, res, next) => {
+	try {
+		const { email } = req.body;
+		console.log(email)
+		const foundUser = await User.findOne({ email });
+		if (!foundUser) {
+			return res.status(200).json({ success: false, code: 403, message: 'Email is not sign up' });
+		}
+		sendEmailPassword(email);
+		return res.status(200).json({ success: true, code: 200, message: '' });
+	} catch (error) {
+		next(error);
+	}
+};
+
+const sendEmailPassword = (email) => {
+	const token = service.encodedToken(email, '1h');
+	const url = 'https://localhost:5000/#/account/active-password/' + token;
+	const at = {
+		from: '"admin@be-phonestore.herokuapp.com" <admin@be-phonestore.herokuapp.com/>',
+		to: email,
+		subject: 'Activate Password',
+		text: 'Click button below to active',
+		html: '<h2> Activate Password</h2><p>Click <a href="' + url + '">here</a> to activate your account and select a password!</p>'
 	};
 	transporter.sendMail(at, async (err, response) => {
 		if (err) {
@@ -213,22 +261,17 @@ const newUser = async (req, res) => {
 	return res.status(200).json({ success: true, code: 201, message: '', user: newUser });
 };
 
-const replaceUser = async (req, res, next) => {
+const updateUser = async (req, res, next) => {
 	try {
 		const { userID } = req.params;
 		const newUser = req.body;
-
 		const user = await User.findById(userID);
-
 		if (!user) {
 			return res.status(200).json({ success: false, code: 404, message: 'Can not found user need to update' });
 		}
-
 		newUser.email = user.email;
 		newUser.password = user.password;
-
 		await user.update(newUser);
-
 		return res.status(200).json({ success: true, code: 200, message: '' });
 	} catch (error) {}
 };
@@ -238,6 +281,7 @@ const returnUserByToken = async (req, res, next) => {
 		return res.status(200).json({ success: true, code: 200, message: 'success', user: req.user });
 	} catch (error) {}
 };
+
 const deleteUser = async (req, res, next) => {
 	const { userID } = req.params;
 	const isValid = await Validator.isValidObjId(userID);
@@ -265,7 +309,6 @@ const onlineUsers = async (req, res, next) => {
     ...defaults,
 		'metrics': 'rt:activeUsers',
 	})
-	console.log(result.data)
 	return res.status(200).json({ success: true, code: 200, message: '', total: result.data.rows ? result.data.rows[0][0] : 0 });	
 };
 
@@ -312,13 +355,15 @@ module.exports = {
 	getAllUser,
 	getUser,
 	newUser,
-	replaceUser,
+	updateUser,
 	signIn,
 	signUp,
-	secret,
 	logOut,
 	returnUserByToken,
 	activeAccount,
+	activePassword,
+	forgotPassword,
+
 	deleteUser,
 	changePassword,
 	findUserByPhone,

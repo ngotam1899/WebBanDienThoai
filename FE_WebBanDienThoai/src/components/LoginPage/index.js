@@ -3,13 +3,18 @@ import React, { Component } from 'react';
 import './loginStyles.css'
 import { assets } from '../../constants/assetsImage';
 import { connect } from "react-redux";
+
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth'
+
 // @Components
 import { GoogleLogin } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import ForgotPassword from './ForgotPass';
+
+// @Constance
 import { GOOGLE_ID, FACEBOOK_ID } from '../../constants'
 
 class LoginPage extends Component {
@@ -82,7 +87,7 @@ class LoginPage extends Component {
   responseFacebook = (response) => {
 		const {onLoginFacebook} = this.props;
 		onLoginFacebook(response.accessToken);
-  }
+	}
 
 	render() {
 		const {email, password} = this.state;
@@ -116,7 +121,7 @@ class LoginPage extends Component {
 									<input type="password" className="input" name="password" value={password} onChange={this.onChange}/>
 								</div>
 							</div>
-							<a href="#">Forgot Password?</a>
+							<div onClick={()=> this.onForgotPass} className="text-right" data-toggle="modal" data-target="#forgotPassword">Forgot Password?</div>
 							<div className="row">
 								<div className="col-12">
 									<button type="button" className="btn" onClick={()=> this.onLogin()}>Login</button>
@@ -154,8 +159,10 @@ class LoginPage extends Component {
 								</form>
 							</div>
 						</form>
+						<ForgotPassword/>
 					</div>
 				</div>
+				
 			</div>
 		);
 	}
@@ -177,7 +184,8 @@ const mapDispatchToProps =(dispatch)=> {
 		},
 		onLoginGoogle : (token) =>{
 			dispatch(AuthorizationActions.onLoginGoogle(token))
-		}
+		},
+
 	}
 };
 

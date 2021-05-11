@@ -11,6 +11,7 @@ import ActiveOrder from '../containers/ActiveOrder';
 import DetailPage from '../components/DetailPage';
 import UserInfoPage from '../components/UserInfoPage';
 import PurchasePage from '../components/PurchasePage';
+import ActivePassword from '../containers/ActivePassword';
 
 const routes = [
 	{
@@ -42,6 +43,12 @@ const routes = [
 		exact: true,
 		name: "Active Account",
 		main: ({match}) => <ActiveAccount match={match} />
+	},
+	{
+		path: '/account/active-password/:token',
+		exact: true,
+		name: "Active Password",
+		main: ({match}) => <ActivePassword match={match} />
 	},
 	{
 		path: '/account/detail',

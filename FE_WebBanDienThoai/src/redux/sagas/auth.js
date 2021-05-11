@@ -1,9 +1,7 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
-import OrdersActions, { OrdersActionTypes } from "../actions/order";
-import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, } from "../apis/auth";
-import {orderHistory } from "../apis/order";
+import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, forgotPassword, activatePassword} from "../apis/auth";
 
 /**
  *
@@ -81,13 +79,36 @@ function* handleGetProfile() {
     yield put(AuthorizationActions.onGetProfileError(error));
   }
 }
+
+function* handleForgotPassword({ payload}) {
+  try {
+    const result = yield call(forgotPassword, payload);
+    const data = get(result, "data", {});  
+    if (data.code !== 200) throw data;
+    yield put(AuthorizationActions.onForgotPasswordSuccess(data));
+  } catch (error) {
+    yield put(AuthorizationActions.onForgotPasswordError(error));
+  }
+}
+
+
+function* handleActivePassword({ payload}) {
+  try {
+    const result = yield call(activatePassword, payload.token, payload.data);
+    const data = get(result, "data", {});  
+    if (data.code !== 200) throw data;
+    yield put(AuthorizationActions.onActivatePasswordSuccess(data));
+  } catch (error) {
+    yield put(AuthorizationActions.onActivatePasswordError(error));
+  }
+}
 /**
  *
  */
+
 export function* watchRegister() {
   yield takeEvery(AuthorizationActionTypes.REGISTER, handleRegister);
 }
-
 export function* watchLogin() {
   yield takeEvery(AuthorizationActionTypes.LOGIN, handleLogin);
 }
@@ -97,13 +118,17 @@ export function* watchLoginFacebook() {
 export function* watchLoginGoogle() {
   yield takeEvery(AuthorizationActionTypes.LOGIN_GOOGLE, handleLoginGoogle);
 }
-
 export function* watchActivateAccount() {
   yield takeEvery(AuthorizationActionTypes.ACTIVATE_ACCOUNT, handleActiveAccount);
 }
-
+export function* watchForgotPassword() {
+  yield takeEvery(AuthorizationActionTypes.FORGOT_PASSWORD, handleForgotPassword);
+}
 export function* watchGetProfile() {
   yield takeEvery(AuthorizationActionTypes.GET_PROFILE, handleGetProfile);
+}
+export function* watchActivePassword() {
+  yield takeEvery(AuthorizationActionTypes.ACTIVATE_PASSWORD, handleActivePassword);
 }
 
 export default function* rootSaga() {
@@ -113,6 +138,8 @@ export default function* rootSaga() {
     fork(watchLoginFacebook),
     fork(watchLoginGoogle),
     fork(watchActivateAccount),
+    fork(watchForgotPassword),
     fork(watchGetProfile),
+    fork(watchActivePassword),
   ]);
 }

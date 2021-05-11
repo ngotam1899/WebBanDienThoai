@@ -14,17 +14,24 @@ export default function(state = INITIAL_STATE, action) {
       toastSuccess('Đăng ký thành công');
       return {...state};
     case AuthorizationActionTypes.REGISTER_ERROR:
+    case AuthorizationActionTypes.FORGOT_PASSWORD_ERROR:
+    case AuthorizationActionTypes.ACTIVATE_ACCOUNT_ERROR:
+    case AuthorizationActionTypes.ACTIVATE_PASSWORD_ERROR:
       var { message } = action.payload;
       toastError(message);
       return {...state};
+    case AuthorizationActionTypes.ACTIVATE_PASSWORD:
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT:
+    case AuthorizationActionTypes.FORGOT_PASSWORD:
       return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT_SUCCESS:
       toastSuccess('Xác nhận thành công! Chọn "Đăng nhập" để tiếp tục!');
       return {...state};
-    case AuthorizationActionTypes.ACTIVATE_ACCOUNT_ERROR:
-      var { message } = action.payload;
-      toastError(message);
+    case AuthorizationActionTypes.ACTIVATE_PASSWORD_SUCCESS:
+      toastSuccess('Thay đổi mật khẩu thành công');
+      return {...state};
+    case AuthorizationActionTypes.FORGOT_PASSWORD_SUCCESS:
+      toastSuccess('Đã gửi mail đặt lại mật khẩu');
       return {...state};
     case AuthorizationActionTypes.LOGIN:
       return {

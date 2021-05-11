@@ -20,6 +20,14 @@ export const AuthorizationActionTypes = {
   ACTIVATE_ACCOUNT_SUCCESS : "ACTIVATE_ACCOUNT_SUCCESS",
   ACTIVATE_ACCOUNT_ERROR : "ACTIVATE_ACCOUNT_ERROR",
 
+  FORGOT_PASSWORD : "FORGOT_PASSWORD",
+  FORGOT_PASSWORD_SUCCESS : "FORGOT_PASSWORD_SUCCESS",
+  FORGOT_PASSWORD_ERROR : "FORGOT_PASSWORD_ERROR",
+
+  ACTIVATE_PASSWORD : "ACTIVATE_PASSWORD",
+  ACTIVATE_PASSWORD_SUCCESS : "ACTIVATE_PASSWORD_SUCCESS",
+  ACTIVATE_PASSWORD_ERROR : "ACTIVATE_PASSWORD_ERROR",
+
   GET_PROFILE : "GET_PROFILE",
   GET_PROFILE_SUCCESS : "GET_PROFILE_SUCCESS",
   GET_PROFILE_ERROR : "GET_PROFILE_ERROR",
@@ -107,6 +115,32 @@ const onActivateAccountError = (error) => ({
   payload: error
 });
 
+const onForgotPassword = (payload) => ({
+  type: AuthorizationActionTypes.FORGOT_PASSWORD,
+  payload
+});
+const onForgotPasswordSuccess = (data) => ({
+  type: AuthorizationActionTypes.FORGOT_PASSWORD_SUCCESS,
+  payload: data
+});
+const onForgotPasswordError = (error) => ({
+  type: AuthorizationActionTypes.FORGOT_PASSWORD_ERROR,
+  payload: error
+});
+
+const onActivatePassword = (payload) => ({
+  type: AuthorizationActionTypes.ACTIVATE_PASSWORD,
+  payload
+});
+const onActivatePasswordSuccess = (data) => ({
+  type: AuthorizationActionTypes.ACTIVATE_PASSWORD_SUCCESS,
+  payload: data
+});
+const onActivatePasswordError = (error) => ({
+  type: AuthorizationActionTypes.ACTIVATE_PASSWORD_ERROR,
+  payload: error
+});
+
 const onGetProfile = () => ({
   type: AuthorizationActionTypes.GET_PROFILE,
 });
@@ -145,6 +179,14 @@ const AuthorizationActions = {
   onActivateAccount,
   onActivateAccountSuccess,
   onActivateAccountError,
+
+  onForgotPassword,
+  onForgotPasswordSuccess,
+  onForgotPasswordError,
+
+  onActivatePassword,
+  onActivatePasswordSuccess,
+  onActivatePasswordError,
 
   onGetProfile,
   onGetProfileSuccess,

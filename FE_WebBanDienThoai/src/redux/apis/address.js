@@ -1,6 +1,7 @@
 //Nơi chứa các hàm gọi API riêng biệt cho từng module
 import axiosService from '../../utils/AxiosService';
 import queryString from 'query-string';
+//https://online-gateway.ghn.vn/shiip/public-api/master-data
 const API_ENDPOINT = 'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data'
 // 1. 
 export const getAllCity = () =>{

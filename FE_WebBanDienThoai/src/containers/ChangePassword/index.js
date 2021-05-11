@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
+
+// @Functions
 import { toastError } from '../../utils/toastHelper';
+
 // @Actions
 import UsersActions from '../../redux/actions/user'
 

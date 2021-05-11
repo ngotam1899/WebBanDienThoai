@@ -9,7 +9,6 @@ class ActiveAccount extends Component {
     onActivateAccount(match.params.token)
   }
 
-
   render() {
     return (
       <div id="notfound">
