@@ -10,9 +10,9 @@ class CartItem extends Component {
     }
   }
 
-  onDeleteProductInCart = (color) => {
+  onDeleteProductInCart = (product, color) => {
     var {onDeleteProductInCart} = this.props;
-    onDeleteProductInCart(color);
+    onDeleteProductInCart(product, color);
   }
 
   render() {
@@ -22,7 +22,7 @@ class CartItem extends Component {
     <>
       <tr className="cart_item">
         <td className="product-remove">
-          <input value="x" className="btn btn-danger" type="button" onClick={()=> this.onDeleteProductInCart(color)}></input>
+          <input value="x" className="btn btn-danger" type="button" onClick={()=> this.onDeleteProductInCart(product, color)}></input>
         </td>
 
         <td className="product-thumbnail">

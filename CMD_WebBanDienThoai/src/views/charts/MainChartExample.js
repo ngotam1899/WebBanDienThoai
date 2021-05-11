@@ -7,9 +7,17 @@ const brandInfo = getStyle('info') || '#20a8d8'
 //const brandDanger = getStyle('danger') || '#f86c6b'
 
 const MainChartExample = (attributes) => {
-  var data1=[]
+  var data1=[];
   const today = new Date();
-  for(let i = 0; i <= today.getMonth(); i++){
+  var months = today.getMonth();
+
+  if(attributes.year===today.getFullYear()){
+    months = today.getMonth()
+  }
+  else{
+    months=11;
+  }
+  for(let i = 0; i <= months; i++){
     attributes.data.map(item => {
       data1[item._id.month-1]= item.total_price
       if(i!==item._id.month-1){
@@ -22,7 +30,7 @@ const MainChartExample = (attributes) => {
 
     return [
       {
-        label: 'My First dataset',
+        label: 'Doanh thu (VND)',
         backgroundColor: hexToRgba(brandInfo, 10),
         borderColor: brandInfo,
         pointHoverBackgroundColor: brandInfo,

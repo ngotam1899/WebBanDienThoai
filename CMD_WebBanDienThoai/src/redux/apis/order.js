@@ -40,10 +40,10 @@ export const deleteOrder  = (orderID) =>{
 // http://localhost:3000/orders/revenue  METHOD = GET
 export const getRevenue  = (params = {}) =>{
   let queryParams = '';
-    if(Object.keys(params).length>0){
-        queryParams = `?${queryString.stringify(params)}`;
-    }
-    return axiosService.get(`${API_ENDPOINT_AUTH}${url}/revenue${queryParams}`);
+  if(Object.keys(params).length>0){
+    queryParams = `?${queryString.stringify(params)}`;
+  }
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/revenue${queryParams}`);
 }
 
 // http://localhost:3000/orders/session-order  METHOD = GET
@@ -53,4 +53,13 @@ export const getSessionOrder  = (params = {}) =>{
         queryParams = `?${queryString.stringify(params)}`;
     }
     return axiosService.get(`${API_ENDPOINT_AUTH}${url}/session-order${queryParams}`);
+}
+
+// http://localhost:3000/orders/revenue-list  METHOD = GET
+export const getRevenueList  = (params = {}) =>{
+  let queryParams = '';
+  if(Object.keys(params).length>0){
+    queryParams = `?${queryString.stringify(params)}`;
+  }
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/revenue-list${queryParams}`);
 }

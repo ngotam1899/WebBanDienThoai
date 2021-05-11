@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import OrderActions, { OrderActionTypes } from "../actions/order";
-import { getAllOrders, getDetailOrder, updateOrder, deleteOrder, findOrders, getRevenue, getSessionOrder } from "../apis/order";
+import { getAllOrders, getDetailOrder, updateOrder, deleteOrder, findOrders, getRevenue, getRevenueList, getSessionOrder } from "../apis/order";
 
 function* handleGetList({ payload }) {
   try {
@@ -73,9 +73,9 @@ function* handleGetRevenue({ payload }) {
   }
 }
 
-function* handleGetRevenueList() {
+function* handleGetRevenueList({ payload }) {
   try {
-    const result = yield call(getRevenue, {});
+    const result = yield call(getRevenueList, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
     yield put(OrderActions.onGetRevenueListSuccess(data.order));

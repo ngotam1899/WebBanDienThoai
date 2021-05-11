@@ -187,10 +187,10 @@ const onAddProductToCart = (product, color, quantity) =>({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
   product,color, quantity
 })
-const onDeleteProductInCart = (color) =>{
+const onDeleteProductInCart = (product, color) =>{
   return {
     type: ProductsActionTypes.DELETE_PRODUCT_CART,
-    color
+    product, color
   }
 }
 const onUpdateProductInCart = (product,color, quantity) =>{
