@@ -19,6 +19,18 @@ export const OrderActionTypes = {
   DELETE_SUCCESS: "DELETE_SUCCESS",
   DELETE_ERROR: "DELETE_ERROR",
 
+  GET_REVENUE: "GET_REVENUE",
+  GET_REVENUE_SUCCESS: "GET_REVENUE_SUCCESS",
+  GET_REVENUE_ERROR: "GET_REVENUE_ERROR",
+
+  GET_REVENUE_LIST: "GET_REVENUE_LIST",
+  GET_REVENUE_LIST_SUCCESS: "GET_REVENUE_LIST_SUCCESS",
+  GET_REVENUE_LIST_ERROR: "GET_REVENUE_LIST_ERROR",
+
+  GET_SESSION: "GET_SESSION",
+  GET_SESSION_SUCCESS: "GET_SESSION_SUCCESS",
+  GET_SESSION_ERROR: "GET_SESSION_ERROR",
+
   CLEAR_DETAIL: "CLEAR_DETAIL",
   CLEAR_STATE: "CLEAR_STATE",
 };
@@ -118,6 +130,59 @@ const onDeleteError = (error) => ({
   payload: error,
 });
 
+/**
+ *
+ * revenue
+ */
+
+const onGetRevenue = (payload) => ({
+  type: OrderActionTypes.GET_REVENUE,
+  payload,
+});
+
+const onGetRevenueSuccess = (payload) => ({
+  type: OrderActionTypes.GET_REVENUE_SUCCESS,
+  payload
+});
+
+const onGetRevenueError = (error) => ({
+  type: OrderActionTypes.GET_REVENUE_ERROR,
+  payload: error,
+});
+
+const onGetRevenueList = (payload) => ({
+  type: OrderActionTypes.GET_REVENUE_LIST,
+  payload,
+});
+
+const onGetRevenueListSuccess = (payload) => ({
+  type: OrderActionTypes.GET_REVENUE_LIST_SUCCESS,
+  payload
+});
+
+const onGetRevenueListError = (error) => ({
+  type: OrderActionTypes.GET_REVENUE_LIST_ERROR,
+  payload: error,
+});
+/**
+ *
+ * session
+ */
+
+const onGetSession = (payload) => ({
+  type: OrderActionTypes.GET_SESSION,
+  payload,
+});
+
+const onGetSessionSuccess = (payload) => ({
+  type: OrderActionTypes.GET_SESSION_SUCCESS,
+  payload
+});
+
+const onGetSessionError = (error) => ({
+  type: OrderActionTypes.GET_SESSION_ERROR,
+  payload: error,
+});
 
 const OrderActions = {
   onGetList,
@@ -139,6 +204,18 @@ const OrderActions = {
   onDelete,
   onDeleteSuccess,
   onDeleteError,
+
+  onGetRevenue,
+  onGetRevenueSuccess,
+  onGetRevenueError,
+
+  onGetRevenueList,
+  onGetRevenueListSuccess,
+  onGetRevenueListError,
+
+  onGetSession,
+  onGetSessionSuccess,
+  onGetSessionError,
 
   onClearDetail,
   onClearState,

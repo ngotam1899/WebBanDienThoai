@@ -1,33 +1,34 @@
 const User = require('../models/User');
 const bcrypts = require('bcryptjs');
-var smtpTransport = require('nodemailer-smtp-transport');
-
 const Validator = require('../validators/validator');
 const service = require('../services/service');
-const os = require('os');
+/* SEND_EMAIL */
 const nodemailer = require('nodemailer');
-
 const JWT = require('jsonwebtoken');
 const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config');
-const { use } = require('passport');
+/* GOOGLE_ANALYTICS */
+const { google } = require('googleapis')
+const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
+const key = require("../mongodb-api-training-aff257b47418.json")
+const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, key.private_key, scopes)
+const view_id = process.env.VIEW_ID
+
+
 const hashString = async (textString) => {
 	const salt = await bcrypts.genSalt(15);
 	return await bcrypts.hash(textString, salt);
 };
+
 const transporter = nodemailer.createTransport({
 	host: 'smtp.gmail.com',
 	service: 'gmail',
 	port: 465,
-	secure: false,
-	ignoreTLS: false,
+	secure: true,
 	auth: {
 		type: 'login',
 		user: EMAIL_NAME,
 		pass: PASS
 	},
-	tls: {
-		rejectUnauthorized: false
-	}
 });
 
 const authGoogle = async (req, res, next) => {
@@ -149,20 +150,47 @@ const sendEmail = (email) => {
 	const token = service.encodedToken(email, '1h');
 	const url = 'https://localhost:5000/#/account/active/' + token;
 	const at = {
-		from: '"noreply@be-phonestore.herokuapp.com" <noreply@be-phonestore.herokuapp.com/>',
+		from: '"admin@be-phonestore.herokuapp.com" <admin@be-phonestore.herokuapp.com/>',
 		to: email,
 		subject: 'Activate Account',
 		text: 'Click button below to active',
 		html: '<h2> Activate Account</h2><p>Click <a href="' + url + '">here</a> to active your account</p>'
 	};
-	transporter.sendMail(at, async (err, response) => {});
+	transporter.sendMail(at, async (err, response) => {
+		if (err) {
+		} else {
+			console.log(response);
+		}
+	});
 };
 
 const getAllUser = async (req, res, next) => {
 	try {
-		const users = await User.find();
-
-		return res.status(200).json({ success: true, code: 200, message: '', users: users });
+		let limit = 5;
+		let page = 0;
+		if (req.query.limit != undefined && req.query.limit != '') {
+			const number_limit = parseInt(req.query.limit);
+			if (number_limit && number_limit > 0) {
+				limit = number_limit;
+			}
+		}
+		if (req.query.page != undefined && req.query.page != '') {
+			const number_page = parseInt(req.query.page);
+			if (number_page && number_page > 0) {
+				page = number_page;
+			}
+		}
+		const users = await User.find().limit(limit).skip(limit * page);;
+		let total = await User.countDocuments()
+		return res.status(200).json({ 
+			success: true, 
+			code: 200, 
+			message: '',
+			page,
+			limit,
+			total, 
+			users 
+		});
 	} catch (error) {
 		return next(error);
 	}
@@ -227,6 +255,57 @@ const findUserByPhone = async (req, res, next) => {
 	return res.status(200).json({ success: true, code: 200, message: '', user: user });
 };
 
+const onlineUsers = async (req, res, next) => {
+	const defaults = {
+    "auth": jwt,
+    "ids": "ga:" + view_id,
+	}
+  await jwt.authorize()
+	const result = await google.analytics('v3').data.realtime.get({
+    ...defaults,
+		'metrics': 'rt:activeUsers',
+	})
+	console.log(result.data)
+	return res.status(200).json({ success: true, code: 200, message: '', total: result.data.rows ? result.data.rows[0][0] : 0 });	
+};
+
+const sessionUsers = async (req, res, next) => {
+	let condition = {};
+	const today =  new Date();
+	if (req.query.browse != undefined && req.query.browse != '') {
+		switch(req.query.browse){
+			case 'day':
+				condition.browse = 'today'
+				break;
+			case 'month':
+				const thisMonth = today.getMonth()+1 < 10 ? `0${today.getMonth() + 1}` : today.getMonth() + 1;
+				condition.browse = `${today.getFullYear()}-${thisMonth}-01`
+				break;
+			case 'year':
+				condition.browse = `${today.getFullYear()}-01-01`
+				break;
+			default:
+				condition.browse = 'today';
+		}
+	}
+	else {
+		condition.browse = 'today';
+	}
+	const defaults = {
+    "auth": jwt,
+    "ids": "ga:" + view_id,
+	}
+  await jwt.authorize()
+  const result = await google.analytics('v3').data.ga.get({
+    ...defaults,
+    'start-date': condition.browse,
+    'end-date': 'today',
+		'metrics': 'ga:sessions'
+		/* 'metrics': 'ga:users' */
+	})
+	return res.status(200).json({ success: true, code: 200, message: '', total: result.data.rows ? result.data.rows[0][0] : 0 });
+};
+
 module.exports = {
 	authGoogle,
 	authFacebook,
@@ -242,5 +321,8 @@ module.exports = {
 	activeAccount,
 	deleteUser,
 	changePassword,
-	findUserByPhone
+	findUserByPhone,
+
+	sessionUsers,
+	onlineUsers
 };

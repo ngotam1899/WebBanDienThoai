@@ -2,28 +2,25 @@ const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Image = require('../models/Image');
 const Validator = require('../validators/validator');
-
-var smtpTransport = require('nodemailer-smtp-transport');
 const nodemailer = require('nodemailer');
 const createError = require('http-errors');
 const service = require('../services/service');
 const JWT = require('jsonwebtoken');
-
 const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config');
-
-const transporter = nodemailer.createTransport(
-	smtpTransport({
-		host: 'smtp.gmail.com',
-		service: 'gmail',
-		port: 8000,
-		secure: false,
-		auth: {
-			type: 'login',
-			user: EMAIL_NAME,
-			pass: PASS
-		}
-	})
-);
+const transporter = nodemailer.createTransport({
+	host: 'smtp.gmail.com',
+	service: 'gmail',
+	port: 465,
+	secure: true,
+	auth: {
+		type: 'login',
+		user: EMAIL_NAME,
+		pass: PASS
+	},
+	tls: {
+		rejectUnauthorized: false
+	}
+});
 
 const getAllOrder = async (req, res, next) => {
 	try {
@@ -221,7 +218,7 @@ const sendEmail = async (email, IDOrder) => {
 	const token = service.encodedToken(IDOrder, '1h');
 	const url = 'https://localhost:5000/#/order/active/' + token;
 	const at = {
-		from: '"noreply@yourdomain.com" <noreply@yourdomain.com>',
+		from: '"admin@be-phonestore.herokuapp.com" <admin@be-phonestore.herokuapp.com/>',
 		to: email,
 		subject: 'Confirm Order',
 		text: '',
@@ -277,7 +274,197 @@ const deleteOrder = async (req, res, next) => {
 
 // Doanh thu mỗi ngày, mỗi tháng, mỗi quí
 const revenue = async (req, res, next) => {
-	
+	const today = new Date();
+	try {
+		let condition = {};
+		if (req.query.browse != undefined && req.query.browse != '') {
+			switch(req.query.browse){
+				case 'day':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1, 
+							'_id.day': today.getDate() 
+						}
+					}
+					break;
+				case 'month':
+					condition.browse = { 
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1 
+						},
+					}
+					break;
+				case 'year':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear()
+						}
+					}
+					break;
+				default:
+					condition.browse = {
+						'$project': { 
+							'_id' : 1, 'total_price': 1, 'total_quantity': 1
+						}
+					};
+			}
+		}
+		else{
+			condition.browse = {
+				'$project': { 
+					'_id' : 1, 'total_price': 1, 'total_quantity': 1
+				}
+			};
+		}
+		const pipeline = [
+			{'$match': {'paid': true}},
+			{
+				'$group':
+				{
+					'_id':  {						
+						day: {'$dayOfMonth': '$createdAt'}, 
+						month: {'$month': '$createdAt'}, 
+						year: {'$year': '$createdAt'}
+					},
+					'total_price': { 
+						'$sum': `$total_price` 
+					},
+					'total_quantity': { 
+						'$sum': `$total_quantity` 
+					}
+				}
+			},
+			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} },
+			condition.browse
+		];
+		const order = await Order.aggregate(pipeline);
+		const total_price = order.reduce((accumulator, currentValue) => accumulator + currentValue.total_price, 0);
+		const total_quantity = order.reduce((accumulator, currentValue) => accumulator + currentValue.total_quantity, 0);
+		return res
+			.status(200)
+			.json({ success: true, code: 200, message: '',total_price,total_quantity});
+	} catch (error) {
+		return next(error);
+	}
+};
+
+// Số lượng order mỗi ngày, mỗi tháng, mỗi quí
+const sessionOrder = async (req, res, next) => {
+	const today = new Date();
+	try {
+		let condition = {};
+		if (req.query.browse != undefined && req.query.browse != '') {
+			switch(req.query.browse){
+				case 'day':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1, 
+							'_id.day': today.getDate() 
+						}
+					}
+					break;
+				case 'month':
+					condition.browse = { 
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1 
+						}
+					}
+					break;
+				case 'year':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear()
+						}
+					}
+					break;
+				default:
+					condition.browse = {
+						'$project': { 
+							'_id' : 1, 'count': 1
+						}
+					};
+			}
+		}
+		else{
+			condition.browse = {
+				'$project': { 
+					'_id' : 1, 'count': 1
+				}
+			};
+		}
+		const pipeline = [
+			{
+				'$group':
+				{
+					'_id':  {						
+						day: {'$dayOfMonth': '$createdAt'}, 
+						month: {'$month': '$createdAt'}, 
+						year: {'$year': '$createdAt'}
+					},
+					'count': {
+						'$sum': 1
+					}
+				}
+			},
+			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} },
+			condition.browse
+		];
+		const order = await Order.aggregate(pipeline);
+		const count = order.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0);
+		return res
+			.status(200)
+			.json({ success: true, code: 200, message: '', count, order});
+	} catch (error) {
+		return next(error);
+	}
+};
+
+// Danh sách doanh thu trong khoảng thời gian
+const revenueList = async (req, res, next) => {
+	try {
+		let condition = {};
+		if (req.query.browse_from != undefined && req.query.browse_from != '' && req.query.browse_to != undefined && req.query.browse_to != '' ) {
+			condition.browse_from = req.query.browse_from;
+			condition.browse_to = req.query.browse_to;
+		}
+		const pipeline = [
+			{
+				'$match': {
+					'paid': true,
+					'createdAt': {
+						'$lte': new Date(condition.browse_to),
+						'$gte': new Date(condition.browse_from)
+					}
+				}
+			},
+			{
+				'$group':
+				{
+					'_id':  {
+						month: {'$month': '$createdAt'}, 
+						year: {'$year': '$createdAt'}
+					},
+					'total_price': { 
+						'$sum': `$total_price` 
+					},
+					'total_quantity': { 
+						'$sum': `$total_quantity` 
+					}
+				}
+			},
+			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} }
+		];
+		const order = await Order.aggregate(pipeline);
+		return res
+			.status(200)
+			.json({ success: true, code: 200, message: '', order});
+	} catch (error) {
+		return next(error);
+	}
 };
 
 module.exports = {
@@ -288,4 +475,7 @@ module.exports = {
 	requestSendEmail,
 	deleteOrder,
 	confirmOrder,
+	revenue,
+	revenueList,
+	sessionOrder,
 };

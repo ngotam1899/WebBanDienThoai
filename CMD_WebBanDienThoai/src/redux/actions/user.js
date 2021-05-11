@@ -19,6 +19,14 @@ export const UsersActionTypes = {
   DELETE_SUCCESS: "DELETE_SUCCESS",
   DELETE_ERROR: "DELETE_ERROR",
 
+  GET_ONLINE: "GET_ONLINE",
+  GET_ONLINE_SUCCESS: "GET_ONLINE_SUCCESS",
+  GET_ONLINE_ERROR: "GET_ONLINE_ERROR",
+
+  GET_SESSION: "GET_SESSION",
+  GET_SESSION_SUCCESS: "GET_SESSION_SUCCESS",
+  GET_SESSION_ERROR: "GET_SESSION_ERROR",
+
   CLEAR_DETAIL: "CLEAR_DETAIL",
   CLEAR_STATE: "CLEAR_STATE",
 };
@@ -42,9 +50,9 @@ const onGetList = (payload) => ({
   payload,
 });
 
-const onGetListSuccess = (payload) => ({
+const onGetListSuccess = (list, total) => ({
   type: UsersActionTypes.GET_LIST_SUCCESS,
-  payload,
+  payload: {list, total},
 });
 
 const onGetListError = (error) => ({
@@ -128,6 +136,46 @@ const onDeleteError = (error) => ({
   payload: error,
 });
 
+/**
+ *
+ * online
+ */
+
+const onGetOnline = (payload) => ({
+  type: UsersActionTypes.GET_ONLINE,
+  payload,
+});
+
+const onGetOnlineSuccess = (payload) => ({
+  type: UsersActionTypes.GET_ONLINE_SUCCESS,
+  payload
+});
+
+const onGetOnlineError = (error) => ({
+  type: UsersActionTypes.GET_ONLINE_ERROR,
+  payload: error,
+});
+
+/**
+ *
+ * session
+ */
+
+const onGetSession = (payload) => ({
+  type: UsersActionTypes.GET_SESSION,
+  payload,
+});
+
+const onGetSessionSuccess = (payload) => ({
+  type: UsersActionTypes.GET_SESSION_SUCCESS,
+  payload
+});
+
+const onGetSessionError = (error) => ({
+  type: UsersActionTypes.GET_SESSION_ERROR,
+  payload: error,
+});
+
 const UsersActions = {
   onClearDetail,
   onClearState,
@@ -151,6 +199,14 @@ const UsersActions = {
   onDelete,
   onDeleteSuccess,
   onDeleteError,
+
+  onGetOnline,
+  onGetOnlineSuccess,
+  onGetOnlineError,
+
+  onGetSession,
+  onGetSessionSuccess,
+  onGetSessionError,
 };
 
 export default UsersActions;

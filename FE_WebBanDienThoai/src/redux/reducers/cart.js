@@ -11,7 +11,7 @@ const cart = (state = initialState, action) =>{
   var index = -1;
   switch (action.type){
     case ProductsActionTypes.ADD_PRODUCT_TO_CART:
-      index = findProductInCart(state, color);
+      index = findProductInCart(state, product, color);
       if(index !== -1){
         state[index].quantity += quantity;  //cộng với 1
       }else{
@@ -25,7 +25,8 @@ const cart = (state = initialState, action) =>{
       toastSuccess('Đã thêm vào giỏ hàng');
       return [...state];
     case ProductsActionTypes.DELETE_PRODUCT_CART:
-      index = findProductInCart(state, color);
+      index = findProductInCart(state, product, color);
+      console.log(index)
       if(index !== -1){
         state.splice(index, 1);  // cắt đi từ vị trí index, cắt 1 phần tử
       }
@@ -33,7 +34,7 @@ const cart = (state = initialState, action) =>{
       toastSuccess('Đã xóa khỏi giỏ hàng');
       return [...state];
     case ProductsActionTypes.UPDATE_PRODUCT_CART:
-      index = findProductInCart(state, color);
+      index = findProductInCart(state, product, color);
       if(index !== -1){
         state[index].product = product;
         state[index].quantity = quantity;
@@ -46,13 +47,14 @@ const cart = (state = initialState, action) =>{
   }
 }
 
-const findProductInCart = (cart, productColor) => {
+const findProductInCart = (cart, product, productColor) => {
   //Trường hợp không tìm thấy
   var index = -1;
+  console.log(product)
   if(cart.length>0){
     for(var i=0; i<cart.length; i++){
       // xem coi các product trong mảng cart có tồn tại product mới chọn ko?
-      if(cart[i].color === productColor){
+      if(cart[i].color === productColor && cart[i].product == product){
         index = i;  //trả về vị trí
         break;
       }
