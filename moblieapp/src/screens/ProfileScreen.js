@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, StatusBar} from 'react-native';
+import {StyleSheet, View, Text, StatusBar, TouchableOpacity} from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -29,7 +29,10 @@ const ProfileScreen = ({navigation}) => {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.welcomeText}>Chào mừng bạn đến với Tiki</Text>
-            <Text style={styles.authText}>Đăng nhập/Đăng ký</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.authText}>Đăng nhập/Đăng ký</Text>
+            </TouchableOpacity>
+            
           </View>
           <FontAwesome name="angle-right" size={26} color="#1e88e5" />
         </View>

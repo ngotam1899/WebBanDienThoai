@@ -11,7 +11,7 @@ import com.facebook.react.shell.MainReactPackage;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-// @react-native-async-storage/async-storage
+// @react-native-community/async-storage
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // @react-native-community/masked-view
 import org.reactnative.maskedview.RNCMaskedViewPackage;

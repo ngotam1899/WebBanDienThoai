@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
-
+import LoginPage from './src/components/LoginPage'
 import {AppRegistry} from 'react-native';
 //Redux
 import {createStore, applyMiddleware} from 'redux';
@@ -33,6 +33,7 @@ function HomeStackScreen() {
       <HomeStack.Screen name="Cart" component={CartPage} />
       <HomeStack.Screen name="Notification" component={NotificationScreen} />
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
+      <HomeStack.Screen name="Login" component={LoginPage} />
     </HomeStack.Navigator>
   );
 }

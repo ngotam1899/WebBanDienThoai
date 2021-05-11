@@ -1,5 +1,5 @@
 import { ProductsActionTypes } from "../actions/products";
-import { AsyncStorage } from 'react-native';
+//import {AsyncStorage} from '@react-native-community/async-storage';
 
 // lấy những sản phẩm đã được lưu trong localStorage về
 //var data = AsyncStorage.getItem('CURRENCY');

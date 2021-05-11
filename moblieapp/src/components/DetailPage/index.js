@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import ProductsActions from '../../redux/actions/products';
 import {connect} from 'react-redux';
 import {CartContext} from '../../context/Cart';
+import styles from './style';
+import {AsyncStorage} from 'react-native';
 
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -21,6 +22,7 @@ class FlatListItem extends Component {
   render() {
     return (
       <View
+        key={this.props.item._key}
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -33,78 +35,106 @@ class FlatListItem extends Component {
     );
   }
 }
-
+class FlatListImage extends Component {
+  render() {
+    return (
+      <View
+        key={this.props.item._key}
+        style={{
+          backgroundColor: 'white',
+          flex: 1,
+          marginTop: 20,
+          width: width,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image
+          style={styles.productImg}
+          source={{
+            uri: this.props.item.public_url,
+          }}
+        />
+      </View>
+    );
+  }
+}
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: ''
-    }
+      color: '',
+    };
   }
-  clickEventListener() {
-    Alert.alert('Success', 'Product has beed added to cart');
-  }
+
   componentDidMount() {
     const {route, onGetDetailProduct} = this.props;
     onGetDetailProduct(route.params.id);
-    console.log('route.params.id: ', route.params.id);
-  }
-  componentDidUpdate(prevProps) {
-    const {route, onGetDetailProduct} = this.props;
-    if (this.props.route !== prevProps.route) {
-      onGetDetailProduct(route.params.id);
-    }
-  }
-  setColor = (item) =>{
-    this.setState({
-      color: item._id
-    })
   }
 
-  onAddToCart = (product, quantity) => {
-    const  {onAddProductToCart} = this.props;
-    const {color} = this.state;
-    onAddProductToCart(product, color, quantity)
-  }
-  onReload(id) {
-    const {navigation, route} = this.props;
-    navigation.navigate('Detail', {id});
-    console.log('id: ', route.params.id);
-  }
+  setColor = item => {
+    this.setState({
+      color: item._id,
+    });
+  };
+  findProductInCart = (cart, productColor) => {
+    //Trường hợp không tìm thấy
+    var index = -1;
+    if (cart.length > 0) {
+      for (var i = 0; i < cart.length; i++) {
+        // xem coi các product trong mảng cart có tồn tại product mới chọn ko?
+        if (cart[i].color === productColor) {
+          index = i; //trả về vị trí
+          break;
+        }
+      }
+    }
+    return index;
+  };
+
+  onClickAddCart = (data, color, quantity) => {
+    const itemCart = {
+      product: data,
+      quantity: quantity,
+      color: color,
+    };
+    AsyncStorage.getItem('cart').then((datacart)=>{
+      if (datacart !== null) {
+        // We have data!!
+        const cart = JSON.parse(datacart)
+        cart.push(itemCart)
+        AsyncStorage.setItem('cart',JSON.stringify(cart));
+      }
+      else{
+        const cart  = []
+        cart.push(itemCart)
+        AsyncStorage.setItem('cart',JSON.stringify(cart));
+      }
+      alert("Add Cart")
+    })
+    .catch((err)=>{
+      alert(err)
+    })
+  };
   render() {
-    const {product, group} = this.props;
+    const {product, group, navigation, route} = this.props;
     const {color} = this.state;
     let screenWidth = Dimensions.get('window').width;
     return (
-      <View style={styles.container}>
+      <>
         {product && (
-          <ScrollView>
-            <ScrollView
-              horizontal={true}
+          <ScrollView style={styles.container}>
+            <FlatList
+              data={product.image}
               pagingEnabled={true}
               showsHorizontalScrollIndicator={true}
-              scrollEventThrottle={10}>
-              {product.image &&
-                product.image.map((product, index) => (
-                  <View
-                    key={index}
-                    style={{
-                      backgroundColor: 'white',
-                      flex: 1,
-                      marginTop: 20,
-                      width: screenWidth,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      style={styles.productImg}
-                      source={{
-                        uri: product.public_url,
-                      }}
-                    />
-                  </View>
-                ))}
-            </ScrollView>
+              scrollEventThrottle={10}
+              keyExtractor={(item, index) => item._id}
+              horizontal={true}
+              renderItem={({item, index}) => {
+                return (
+                  <FlatListImage item={item} index={index}></FlatListImage>
+                );
+              }}></FlatList>
             <View style={{marginHorizontal: 20, marginTop: 10}}>
               <Text style={styles.name}>{product.name}</Text>
               <Text style={styles.price}>{product.price_min} VND</Text>
@@ -114,9 +144,15 @@ class ProductDetail extends Component {
               {group &&
                 group.products.map((item, index) => (
                   <TouchableOpacity
-                    key={index}
-                    style={styles.btnGroup}
-                    onPress={() => this.onReload(item._id)}>
+                    key={item._id}
+                    style={
+                      route.params.id === item.product._id
+                        ? [styles.btnGroup, styles.btnGroupActive]
+                        : styles.btnGroup
+                    }
+                    onPress={() => {
+                      navigation.replace('Detail', {id: item.product._id});
+                    }}>
                     <Text style={styles.textGroup}>{item.name}</Text>
                   </TouchableOpacity>
                 ))}
@@ -125,7 +161,14 @@ class ProductDetail extends Component {
             <View style={styles.contentColors}>
               {product.colors &&
                 product.colors.map((item, index) => (
-                  <TouchableOpacity key={index} style={color === item._id ? [styles.btnColor, styles.colorActive] : styles.btnColor} onPress = {()=>this.setColor(item)}>
+                  <TouchableOpacity
+                    key={index}
+                    style={
+                      color === item._id
+                        ? [styles.btnColor, styles.colorActive]
+                        : styles.btnColor
+                    }
+                    onPress={() => this.setColor(item)}>
                     <Text style={styles.textColor}>{item.name_vn}</Text>
                   </TouchableOpacity>
                 ))}
@@ -133,7 +176,7 @@ class ProductDetail extends Component {
             <View style={styles.addToCarContainer}>
               <TouchableOpacity
                 style={styles.shareButton}
-                onPress={() => this.onAddToCart(product, 1)}>
+                onPress={() => this.onClickAddCart(product, color, 1)}>
                 <Text style={styles.shareButtonText}>Chọn Mua</Text>
               </TouchableOpacity>
             </View>
@@ -142,6 +185,7 @@ class ProductDetail extends Component {
             <Text style={styles.titleName}>Thông số kỹ thuật</Text>
             <FlatList
               data={product.specifications}
+              keyExtractor={(item, index) => item._id}
               renderItem={({item, index}) => {
                 return <FlatListItem item={item} index={index}></FlatListItem>;
               }}></FlatList>
@@ -180,7 +224,7 @@ class ProductDetail extends Component {
             <View style={styles.separator}></View>
           </ScrollView>
         )}
-      </View>
+      </>
     );
   }
 }
@@ -203,133 +247,3 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 20,
-    backgroundColor: '#fff',
-  },
-  productImg: {
-    width: 200,
-    height: 300,
-  },
-  flatListItemName: {
-    color: 'black',
-    padding: 5,
-    fontSize: 13,
-    marginLeft: 20,
-  },
-  flatListItemValue: {
-    color: 'black',
-    padding: 5,
-    marginRight: 50,
-    fontSize: 12,
-  },
-  name: {
-    fontSize: 20,
-    color: '#696969',
-    fontWeight: 'bold',
-    marginLeft: 0,
-  },
-  titleName: {
-    marginLeft: 20,
-    marginBottom: 5,
-    marginTop: 5,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  textDescription: {
-    marginLeft: 20,
-    marginBottom: 10,
-  },
-  colorActive: {
-    backgroundColor: 'blue'
-  },
-  price: {
-    fontSize: 26,
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  description: {
-    textAlign: 'center',
-    marginTop: 10,
-    color: '#696969',
-  },
-  star: {
-    width: 40,
-    height: 40,
-  },
-  contentColors: {
-    justifyContent: 'flex-start',
-    marginHorizontal: 20,
-    flexDirection: 'row',
-    marginBottom: 5,
-  },
-  btnColor: {
-    height: 40,
-    width: 60,
-    borderRadius: 10,
-    borderColor: '#778899',
-    borderWidth: 2,
-    marginHorizontal: 3,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textColor: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  contentGroup: {
-    justifyContent: 'flex-start',
-    marginHorizontal: 20,
-    flexDirection: 'row',
-  },
-  btnGroup: {
-    height: 30,
-    width: 100,
-    borderRadius: 10,
-    borderColor: '#778899',
-    borderWidth: 2,
-    marginHorizontal: 3,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  textGroup: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  starContainer: {
-    justifyContent: 'center',
-    marginHorizontal: 30,
-    flexDirection: 'row',
-    marginTop: 20,
-  },
-  separator: {
-    height: 2,
-    backgroundColor: '#eeeeee',
-    marginTop: 20,
-    marginHorizontal: 30,
-  },
-  shareButton: {
-    marginVertical: 10,
-    height: 45,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: 'red',
-  },
-  shareButtonText: {
-    color: '#FFFFFF',
-    fontSize: 20,
-  },
-  addToCarContainer: {
-    marginHorizontal: 30,
-  },
-});

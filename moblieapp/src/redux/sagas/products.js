@@ -1,12 +1,10 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
-import UIActions from "../actions/ui";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
 import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest } from "../apis/products";
 import GroupActions from "../actions/group";
 
 function* handleGetList({ payload }) {
-  yield put(UIActions.showLoading());
   try {
     const result = yield call(getAllProducts, payload);
     const data = get(result, "data");
@@ -15,11 +13,10 @@ function* handleGetList({ payload }) {
   } catch (error) {
     yield put(ProductsActions.onGetListError(error));
   }
-  yield put(UIActions.hideLoading());
 }
 
 function* handleGetBestSeller({ payload }) {
-  yield put(UIActions.showLoading());
+  
   try {
     const result = yield call(getBestSeller, payload);
     const data = get(result, "data");
@@ -28,11 +25,9 @@ function* handleGetBestSeller({ payload }) {
   } catch (error) {
     yield put(ProductsActions.onGetBestSellerError(error));
   }
-  yield put(UIActions.hideLoading());
 }
 
 function* handleGetFavorite({ payload }) {
-  yield put(UIActions.showLoading());
   try {
     const result = yield call(getFavorite, payload);
     const data = get(result, "data");
@@ -41,11 +36,9 @@ function* handleGetFavorite({ payload }) {
   } catch (error) {
     yield put(ProductsActions.onGetFavoriteError(error));
   }
-  yield put(UIActions.hideLoading());
 }
 
 function* handleGetNewest({ payload }) {
-  yield put(UIActions.showLoading());
   try {
     const result = yield call(getNewest, payload);
     const data = get(result, "data");
@@ -54,7 +47,6 @@ function* handleGetNewest({ payload }) {
   } catch (error) {
     yield put(ProductsActions.onGetNewestError(error));
   }
-  yield put(UIActions.hideLoading());
 }
 
 function* handleFilter({ payload }) {

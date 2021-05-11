@@ -25,8 +25,8 @@ class AxiosService {
 	}
 
 	//xử lý thất bại
-	handleError(error){
-		return Promise.reject(error);
+	async handleError(error){
+		return await Promise.reject(error);
 	}
 
 	get(url, headers){

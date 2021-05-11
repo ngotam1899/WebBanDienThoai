@@ -185,7 +185,7 @@ const onUpdateError = (error) => ({
 
 const onAddProductToCart = (product, color, quantity) =>({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
-  product,color, quantity
+  product, color, quantity
 })
 const onDeleteProductInCart = (color) =>{
   return {
@@ -196,7 +196,7 @@ const onDeleteProductInCart = (color) =>{
 const onUpdateProductInCart = (product,color, quantity) =>{
   return {
     type: ProductsActionTypes.UPDATE_PRODUCT_CART,
-    product,color, quantity
+    product, color, quantity
   }
 }
 const onChangeCurrency = (unit) =>{
