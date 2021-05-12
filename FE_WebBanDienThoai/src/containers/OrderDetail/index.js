@@ -141,7 +141,7 @@ class OrderDetail extends Component {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-default" data-dismiss="modal">{t('user.close.button')}</button>
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }
         </div>

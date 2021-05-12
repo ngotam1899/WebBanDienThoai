@@ -36,6 +36,7 @@ export const ProductsActionTypes = {
   ADD_PRODUCT_TO_CART: "ADD_PRODUCT_TO_CART",
   UPDATE_PRODUCT_CART: "UPDATE_PRODUCT_CART",
   DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
+  PURCHASE_AGAIN: "PURCHASE_AGAIN",
 
   CLEAR_CART: "CLEAR_CART",
   CHANGE_CURRENCY: "CHANGE_CURRENCY",
@@ -199,12 +200,29 @@ const onUpdateProductInCart = (product,color, quantity) =>{
     product,color, quantity
   }
 }
+const onPurchaseAgain = (order_list) =>{
+  return {
+    type: ProductsActionTypes.PURCHASE_AGAIN,
+    order_list
+  }
+}
+
+/**
+ *
+ * currency
+ */
+
 const onChangeCurrency = (unit) =>{
   return {
     type: ProductsActionTypes.CHANGE_CURRENCY,
     payload: unit
   }
 }
+
+/**
+ *
+ * filter
+ */
 
 const onFilter = keyword => ({
   type: ProductsActionTypes.FILTER,
@@ -259,6 +277,7 @@ const ProductsActions = {
   onAddProductToCart,
   onDeleteProductInCart,
   onUpdateProductInCart,
+  onPurchaseAgain,
   onChangeCurrency,
   
 };

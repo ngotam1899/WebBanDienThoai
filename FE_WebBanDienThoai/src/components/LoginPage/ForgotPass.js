@@ -38,7 +38,7 @@ class ForgotPassword extends Component {
     const {email} = this.state;
     return (  
       <div show="true" className="modal fade" id="forgotPassword" role="dialog" >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Quên mật khẩu</h5>

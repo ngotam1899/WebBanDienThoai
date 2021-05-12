@@ -46,19 +46,21 @@ class Header extends Component {
     this.setState({ language: event.target.value})
     this.props.i18n.changeLanguage(event.target.value)
   }
-
-  UNSAFE_componentWillReceiveProps(props) {
+  
+  componentDidUpdate(prevProps) {
     var total = 0;
     var totalPrice = 0;
     var { cart } = this.props;
-    for (var i = 0; i < cart.length; i++) {
-      total = total + cart[i].quantity
-      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
+    if (cart !== prevProps.cart) {
+      for (var i = 0; i < cart.length; i++) {
+        total = total + cart[i].quantity
+        totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
+      }
+      this.setState({
+        total,
+        totalPrice
+      })
     }
-    this.setState({
-      total,
-      totalPrice
-    })
   }
 
   setLogout= () => {

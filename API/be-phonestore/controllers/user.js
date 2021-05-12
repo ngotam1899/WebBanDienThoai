@@ -13,7 +13,6 @@ const key = require("../mongodb-api-training-aff257b47418.json")
 const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, key.private_key, scopes)
 const view_id = process.env.VIEW_ID
 
-
 const hashString = async (textString) => {
 	const salt = await bcrypts.genSalt(15);
 	return await bcrypts.hash(textString, salt);
@@ -84,17 +83,28 @@ const signIn = async (req, res, next) => {
 const changePassword = async (req, res, next) => {
 	try {
 		const { password, new_password } = req.body;
-		if (!password) return res.status(200).json({ success: false, code: 400, message: 'Pls insert old pwd' });
-		if (!new_password) return res.status(200).json({ success: false, code: 400, message: 'Pls insert new pwd' });
-		if (password == new_password)
-			res.status(200).json({ success: false, code: 400, message: 'New pwd is incorrectly' });
 		const user = await User.findById(req.user._id);
-		const result = await user.isSignin(password);
-		if (!result) return res.status(200).json({ success: false, code: 400, message: 'Old pwd is incorrect' });
-		else {
-			user.password = await hashString(new_password);
-			await user.save();
-			return res.status(200).json({ success: true, code: 200, message: 'Password change' });
+		if(user.password){
+			if (!password) return res.status(200).json({ success: false, code: 400, message: 'Please insert old password' });
+			if (!new_password) return res.status(200).json({ success: false, code: 400, message: 'Please insert new password' });
+			if (password == new_password)
+				res.status(200).json({ success: false, code: 400, message: 'New password is incorrectly' });
+			const result = await user.isSignin(password);
+			if (!result) return res.status(200).json({ success: false, code: 400, message: 'Old password is incorrect' });
+			else {
+				user.password = await hashString(new_password);
+				await user.save();
+				return res.status(200).json({ success: true, code: 200, message: 'Password change' });
+			}
+		}
+		else{
+			if (!new_password) return res.status(200).json({ success: false, code: 400, message: 'Please insert new password' });
+			else {
+				user.password = await hashString(new_password);
+				user.confirmed = true;
+				await user.save();
+				return res.status(200).json({ success: true, code: 200, message: 'Password change' });
+			}
 		}
 	} catch (error) {
 		next(error);

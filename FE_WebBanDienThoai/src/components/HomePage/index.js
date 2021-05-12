@@ -5,7 +5,7 @@ import { withTranslation } from 'react-i18next'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom'
-import $ from 'jquery'
+
 import ProductItem from "../../containers/ProductItem"
 // @Actions
 import ProductsActions from "../../redux/actions/products";

@@ -97,12 +97,10 @@ class UserInfoPage extends Component {
                 <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#passwdModal">{t('user.change-password.button')}</button>
               </div>
             </div>
-            <div className="row">
-              <div className="col-md-4"></div>
-              </div>
+            <ChangePassword userInfo={authInfo}/>
           </>}
         </div>
-        <ChangePassword/>
+        
       </div>
     );
   }

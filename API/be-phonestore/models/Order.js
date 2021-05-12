@@ -15,6 +15,9 @@ const OrderSchema = new Schema({
         name: {
             type: String
         },
+        name_color: {
+            type: String
+        },
         price: {
             type: String
         },

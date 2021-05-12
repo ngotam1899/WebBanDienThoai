@@ -132,7 +132,8 @@ const addOrder = async (req, res, next) => {
 					}
 					let quantity = item.quantity;
 					let color = item.color;
-					await order.order_list.push({ product, name, price, image, quantity, color });
+					let name_color = productFound.colors.find(i => i._id == item.color).name_en
+					await order.order_list.push({ product, name, price, image, quantity, color, name_color });
 				}
 			}
 		}

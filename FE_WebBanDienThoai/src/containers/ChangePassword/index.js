@@ -30,13 +30,19 @@ class ChangePassword extends Component {
 
   changePassword() {
     const {oldPassword, newPassword, confirmPassword} = this.state;
-    const {onChangePassword, t} = this.props
-    const data = {
-      password: oldPassword,
-      new_password: newPassword,
-    }
+    const {onChangePassword, t, userInfo} = this.props
     if(newPassword === confirmPassword && newPassword!== null) {
-      onChangePassword(data);
+      if(userInfo.password){
+        onChangePassword({
+          password: oldPassword,
+          new_password: newPassword,
+        });
+      }
+      else{
+        onChangePassword({
+          new_password: newPassword,
+        });
+      }
     }
     else{
       toastError(t('user.password.error'))
@@ -47,20 +53,20 @@ class ChangePassword extends Component {
 
   render() {
     const {oldPassword, newPassword, confirmPassword} = this.state;
-    const {t} = this.props;
+    const {t, userInfo} = this.props;
     return (  
       <div show="true" className="modal fade" id="passwdModal" role="dialog" >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">{t('user.change-password.card')}</h5>
               <button type="button" className="close" data-dismiss="modal">&times;</button>
             </div>
             <div className="modal-body">
-              <div className="form-group">
+              {userInfo.password && <div className="form-group">
                 <label>{t('user.old.input')}:</label>
                 <input type="password" className="form-control" name="oldPassword" value={oldPassword} onChange={this.onChange}/>
-              </div>
+              </div>}
               <div className="form-group">
                 <label>{t('user.new.input')}:</label>
                 <input type="password" className="form-control" name="newPassword" value={newPassword} onChange={this.onChange}/>
@@ -72,7 +78,7 @@ class ChangePassword extends Component {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.changePassword()}>{t('user.save-password.button')}</button>
-              <button type="button" className="btn btn-danger" data-dismiss="modal">{t('user.close.button')}</button>
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> 
         </div>

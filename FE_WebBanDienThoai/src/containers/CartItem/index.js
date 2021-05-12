@@ -26,7 +26,7 @@ class CartItem extends Component {
         </td>
 
         <td className="product-thumbnail">
-          <a href="single-product.html"><img width="145" height="145" alt="poster_1_up"
+          <a href="single-product.html"><img width="145" height="145" alt=""
             className="shop_thumbnail" src={product.bigimage ? product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"} /></a>
         </td>
 

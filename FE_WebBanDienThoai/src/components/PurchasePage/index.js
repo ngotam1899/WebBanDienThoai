@@ -11,6 +11,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import getFilterParams from "../../utils/getFilterParams";
 // @Actions
 import OrdersActions from "../../redux/actions/order";
+import ProductsActions from "../../redux/actions/products";
 
 const statusList = [
   { 
@@ -128,6 +129,11 @@ class PurchasePage extends Component {
     })
   }
 
+  onBuyAgain = (order_list) =>{
+    const {onPurchaseAgain} = this.props;
+    onPurchaseAgain(order_list)
+  }
+
   render() {
     const {orderList, orderItem, location, history, t} = this.props;
     const {keyword} = this.state;
@@ -193,7 +199,8 @@ class PurchasePage extends Component {
                       <div className="float-left">
                         <button type="button" className="btn btn-success mr-2" data-toggle="modal" data-target="#myModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
                         {this.setStatus(order.confirmed, order.status, order.active)==="Chờ xác nhận" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(order._id)}>Hủy đơn hàng</button>}
-                        {(this.setStatus(order.confirmed, order.status, order.active)==="Đã hủy" || this.setStatus(order.confirmed, order.status, order.active)==="Đã giao") && <button type="button" className="btn btn-warning">Mua lần nữa</button>}
+                        {(this.setStatus(order.confirmed, order.status, order.active)==="Đã hủy" || this.setStatus(order.confirmed, order.status, order.active)==="Đã giao") && 
+                        <button type="button" className="btn btn-warning" onClick={()=>this.onBuyAgain(order.order_list)}>Mua lần nữa</button>}
                       </div>
                       <div className="float-right font-weight-bold">
                         {order.total_price} VND
@@ -239,6 +246,9 @@ const mapDispatchToProps =(dispatch)=> {
     },
     onUpdate : (id, params) =>{
 			dispatch(OrdersActions.onUpdate(id, params))
+    },
+    onPurchaseAgain: (order_list) => {
+      dispatch(ProductsActions.onPurchaseAgain(order_list))
     },
 	}
 };
