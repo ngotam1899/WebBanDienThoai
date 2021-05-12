@@ -97,6 +97,10 @@ const updateProduct = async (req, res, next) => {
 			discount,
 			group,
 			description,
+			weight,
+			height,
+			length,
+			width,
 		} = req.body;
 		const product = await Product.findById(IDProduct);
 		if (!product) return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' });
@@ -109,6 +113,10 @@ const updateProduct = async (req, res, next) => {
 		if (discount) product.discount = discount;
 		if (image) product.image = image;
 		if (description) product.description = description;
+		if (weight) product.weight = weight;
+		if (height) product.height = height;
+		if (length) product.length = length;
+		if (width) product.width = width;
 		if (category) {
 			const is_category = await Category.findById(category);
 			if (!is_category)
@@ -178,6 +186,10 @@ const addProduct = async(req, res, next) => {
 	try {
 		const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, specifications, description, group,
 			colors,
+			weight,
+			height,
+			length,
+			width,
 			discount } = req.body
 		const product = new Product();
 		if (name) {
@@ -197,6 +209,10 @@ const addProduct = async(req, res, next) => {
 		if (discount) product.discount = discount;
 		if (image) product.image = image
 		if (description) product.description = description;
+		if (weight) product.weight = weight;
+		if (height) product.height = height;
+		if (length) product.length = length
+		if (width) product.width = width;
 		if (category) {
 			const is_category = await Category.findById(category)
 			if (!is_category) return res.status(200).json({ success: false, code: 404, message: 'category is identify' })

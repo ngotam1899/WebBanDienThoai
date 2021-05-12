@@ -44,7 +44,10 @@ function* handleFilter({ payload }) {
  * create
  */
 function* handleCreate( {payload} ) {
-  var {name, price, amount, pathseo, warrently, brand, category,bigimage, specifications, colors, description, group} = payload.params;
+  var {name, price, amount, pathseo, warrently, brand, category,bigimage, specifications, colors, description, weight,
+    height,
+    width,
+    length, group} = payload.params;
   try {
     var result,image, imageArray;
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
@@ -55,7 +58,10 @@ function* handleCreate( {payload} ) {
         return item._id
       })
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+        height,
+        width,
+        length,
         "bigimage":bigimage.data.images[0]._id,
         "image": imageArray
       });
@@ -66,7 +72,10 @@ function* handleCreate( {payload} ) {
     else if(payload.params.bigimage){
       bigimage = yield call(addImage, payload.params.bigimage);
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+        height,
+        width,
+        length,
         "bigimage":bigimage.data.images[0]._id
       });
       if (result.data.code !== 201) throw result.data;
@@ -79,14 +88,21 @@ function* handleCreate( {payload} ) {
         return item._id
       })
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+        height,
+        width,
+        length,
         "image": imageArray
       });
       if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     else{
-      result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, group });
+      result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, group,
+        weight,
+        height,
+        width,
+        length, });
       if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
@@ -101,7 +117,10 @@ function* handleCreate( {payload} ) {
  * update
  */
 function* handleUpdateImage( {payload} ) {
-  const {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description, group} = payload.params;
+  const {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description, group, weight,
+      height,
+      width,
+      length,} = payload.params;
   try {
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
     if(payload.params.bigimage._id === undefined && payload.formData){
@@ -111,7 +130,10 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, group,
+      { name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, group,weight,
+        height,
+        width,
+        length,
         "bigimage":bigimage.data.images[0]._id,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
@@ -122,7 +144,10 @@ function* handleUpdateImage( {payload} ) {
     else if(payload.params.bigimage._id === undefined){
       var bigimage = yield call(addImage, payload.params.bigimage);
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+        height,
+        width,
+        length,
         "bigimage":bigimage.data.images[0]._id
       }, payload.id);
       if (result.data.code !== 200) throw result.data;
@@ -135,7 +160,10 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+        height,
+        width,
+        length,
         "image": payload.params.image.concat(imageArray)
       }, payload.id);
       if (result.data.code !== 200) throw result.data;
@@ -143,7 +171,10 @@ function* handleUpdateImage( {payload} ) {
     }
     else{
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+        height,
+        width,
+        length,
         "image": payload.params.image
       }, payload.id);
       if (result.data.code !== 200) throw result.data;

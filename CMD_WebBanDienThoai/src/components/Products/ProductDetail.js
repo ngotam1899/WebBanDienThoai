@@ -38,6 +38,10 @@ class ProductDetail extends Component {
       category: product ? product.category._id : listCategories[0]._id,
       brand: product ? product.brand._id : listBrands[0]._id,
       bigimage: product ? product.bigimage : "",
+      weight: product ? product.weight : 0,
+      height: product ? product.height : 0,
+      width: product ? product.width : 0,
+      length: product ? product.length : 0,
       image: product ? (product.image ? product.image : []) : [],
       modal: false,
       // @Product Color
@@ -408,6 +412,10 @@ class ProductDetail extends Component {
       category,
       brand,
       bigimage,
+      weight,
+      height,
+      width,
+      length,
       image,
       pathseo,
       specifications,
@@ -425,6 +433,10 @@ class ProductDetail extends Component {
         category,
         brand,
         bigimage,
+        weight,
+        height,
+        width,
+        length,
         image,
         pathseo,
         specifications,
@@ -446,6 +458,10 @@ class ProductDetail extends Component {
         category,
         brand,
         bigimage,
+        weight,
+        height,
+        width,
+        length,
         pathseo,
         image,
         specifications,
@@ -529,6 +545,10 @@ class ProductDetail extends Component {
       category,
       brand,
       bigimage,
+      weight,
+      height,
+      width,
+      length,
       image,
       modal,
       previewSource,
@@ -923,8 +943,66 @@ class ProductDetail extends Component {
                   </div>
                 </div>}
               </div>
+              <div className="card text-white mb-3">
+                <div className="card-header bg-primary">
+                  Thông tin vận chuyển
+                </div>
+                <div className="card-body text-dark">
+                  <div className="row">
+                    <div className="col-6">
+                      <div className="form-group">
+                        <label>Khối lượng: (gram)</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="weight"
+                          value={weight}
+                          onChange={this.onChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div className="form-group">
+                        <label>Chiều cao: (cm)</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="height"
+                          value={height}
+                          onChange={this.onChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div className="form-group">
+                        <label>Chiều rộng: (cm)</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="width"
+                          value={width}
+                          onChange={this.onChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-6">
+                      <div className="form-group">
+                        <label>Chiều dài: (cm)</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="length"
+                          value={length}
+                          onChange={this.onChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="col-12 col-lg-6">
+
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">
                   Chi tiết sản phẩm
@@ -932,8 +1010,8 @@ class ProductDetail extends Component {
                 <div className="card-body text-dark">
                   {specifications.map((item, index) => {
                     return (
-                      <div className="form-group" key={index}>
-                        <label key={index + 1}>
+                      <div className="form-group" key={index} className="my-1">
+                        <label key={index + 1} className="my-0">
                           {this.setSpecification(item._id)}
                         </label>
                         <input

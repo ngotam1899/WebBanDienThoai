@@ -11,6 +11,10 @@ export const AddressActionTypes = {
   GET_WARD_SUCCESS: "GET_WARD_SUCCESS",
   GET_WARD_ERROR: "GET_WARD_ERROR",
 
+  CALCULATE_SHIPPING: "CALCULATE_SHIPPING",
+  CALCULATE_SHIPPING_SUCCESS: "CALCULATE_SHIPPING_SUCCESS",
+  CALCULATE_SHIPPING_ERROR: "CALCULATE_SHIPPING_ERROR",
+
   CLEAR_STATE: "CLEAR_STATE",
 }
 
@@ -58,6 +62,20 @@ const onGetWardError = (error) => ({
   payload: error
 });
 
+const onCalculateShipping = (payload) => ({
+  type: AddressActionTypes.CALCULATE_SHIPPING,
+  payload
+});
+const onCalculateShippingSuccess = (payload) => ({
+  type: AddressActionTypes.CALCULATE_SHIPPING_SUCCESS,
+  payload
+});
+const onCalculateShippingError = (error) => ({
+  type: AddressActionTypes.CALCULATE_SHIPPING_ERROR,
+  payload: error
+});
+
+
 const AddressActions = {
   onClearState,
 
@@ -71,7 +89,11 @@ const AddressActions = {
 
   onGetWard,
   onGetWardSuccess,
-  onGetWardError
+  onGetWardError,
+
+  onCalculateShipping,
+  onCalculateShippingSuccess,
+  onCalculateShippingError,
 };
 
 export default AddressActions;

@@ -295,6 +295,17 @@ class CheckoutPage extends Component {
                           </div>
                         </div>
                       </div>
+                      <h3 id="order_review_heading" className="float-left">Shipping types</h3>
+                      <ul className="shipping_types list-unstyled">
+                        <li className="mx-3 float-left font-weight-bold">
+                            <input type="radio" value={1} name="shipping_type" className="input-radio mr-2" id="shipping_type_express" onChange={this.onChange} />
+                            <label htmlFor="shipping_type_express ">Express</label>
+                          </li>
+                        <li className="mx-3 font-weight-bold">
+                          <input type="radio" value={2} name="shipping_type" className="input-radio mr-2" id="shipping_type_standard" onChange={this.onChange}/>
+                          <label htmlFor="shipping_type_standard">Standard</label>
+                        </li>
+                      </ul>
                       <h3 id="order_review_heading">{t('checkout.order.title')}</h3>
                       {authInfo && <div id="order_review" style={{ position: 'relative' }}>
                         <table className="shop_table">
@@ -313,11 +324,6 @@ class CheckoutPage extends Component {
                             </tr>
                           </tbody>
                           <tfoot>
-                            <tr className="cart-subtotal">
-                              <th>{t('cart.cart-sub.table')}</th>
-                              <td><span className="amount">0 {currency}</span>
-                              </td>
-                            </tr>
                             <tr className="shipping">
                               <th>{t('cart.ship.table')}</th>
                               <td>{t('cart.free-ship')}<input type="hidden" className="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]" />
@@ -330,14 +336,15 @@ class CheckoutPage extends Component {
                           </tfoot>
                         </table>
                         {(authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
+                          <h3 id="order_review_heading">Shipping methods</h3>
                           <ul className="payment_methods methods">
-                            <li className="payment_method_paypal">
-                                <input type="radio" value="local" name="payment_method" className="input-radio" id="payment_method_cod" onChange={this.onChange} />
+                            <li className="font-weight-bold float-left">
+                                <input type="radio" value="local" name="payment_method" className="input-radio mr-2" id="payment_method_cod" onChange={this.onChange} />
                                 <label htmlFor="payment_method_cod">{t('checkout.cod.button')} <img alt="Thanh toán tại nhà" src={ assets('cod.svg')}  />
                                 </label>
                               </li>
-                            <li className="payment_method_paypal">
-                              <input type="radio" value="paypal" name="payment_method" className="input-radio" id="payment_method_paypal" onChange={this.onChange}/>
+                            <li className="font-weight-bold">
+                              <input type="radio" value="paypal" name="payment_method" className="input-radio mr-2" id="payment_method_paypal" onChange={this.onChange}/>
                               <label htmlFor="payment_method_paypal">PayPal <img alt="Thanh toán bằng Paypal" src="https://www.paypalobjects.com/webstatic/mktg/Logo/AM_mc_vs_ms_ae_UK.png" />
                               </label>
                             </li>

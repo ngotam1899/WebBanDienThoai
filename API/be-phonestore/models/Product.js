@@ -91,7 +91,7 @@ const ProductSchema = new Schema(
 				},
 				price: {
 					type: Number
-				}
+				},
 			}
 		],
 		group: {
@@ -104,6 +104,18 @@ const ProductSchema = new Schema(
 		reviewCount: {
 			type: Number
 		},
+		weight: {
+			type: Number
+		},
+		length: {
+			type: Number
+		},
+		height:{
+			type: Number
+		},
+		width: {
+			type: Number
+		}
 	},
 	{
 		timestamps: true

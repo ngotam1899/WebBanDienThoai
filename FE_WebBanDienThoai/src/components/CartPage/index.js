@@ -34,18 +34,20 @@ class CartPage extends Component {
     })
   }
 
-  UNSAFE_componentWillReceiveProps(props){
+  componentDidUpdate(prevProps) {
     var total = 0;
     var totalPrice=0;
     var {cart} = this.props;
-    for(var i=0; i< cart.length; i++){
-      total = total+cart[i].quantity
-      totalPrice = totalPrice+ cart[i].quantity* cart[i].product.colors.find(item=> item._id === cart[i].color).price
+    if (cart !== prevProps.cart) {
+      for(var i=0; i< cart.length; i++){
+        total = total+cart[i].quantity
+        totalPrice = totalPrice+ cart[i].quantity* cart[i].product.colors.find(item=> item._id === cart[i].color).price
+      }
+      this.setState({ 
+        total,
+        totalPrice
+      })
     }
-    this.setState({ 
-      total,
-      totalPrice
-    })
   }
 
   checkoutOrder = () =>{
@@ -113,68 +115,6 @@ class CartPage extends Component {
                       </tbody>
                     </table>
                   </form>
-
-                  <div className="cart-collaterals">
-                    <div className="row">
-                    <div className="col-6">
-                      <div className="cart_totals ">
-                        <h2>{t('cart.cart-total.label')}</h2>
-
-                        <table cellSpacing="0">
-                          <tbody>
-                            <tr className="cart-subtotal">
-                              <th>{t('cart.cart-sub.table')}</th>
-                              <td><span className="amount">{cart ? currency ==="VND" ? totalPrice : tryConvert(totalPrice, currency, false) : 0} {currency}</span></td>
-                            </tr>
-
-                            <tr className="shipping">
-                              <th>{t('cart.ship.table')}</th>
-                              <td>{t('cart.free-ship')}</td>
-                            </tr>
-
-                            <tr className="order-total">
-                              <th>{t('cart.order-total.table')}</th>
-                              <td><strong><span className="amount">{cart ? currency ==="VND" ? totalPrice : tryConvert(totalPrice, currency, false) : 0} {currency}</span></strong> </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
-                    <div className="col-6">
-                    <form method="post" action="#" className="shipping_calculator">
-                      <h2><a className="shipping-calculator-button" data-toggle="collapse" href="#calcalute-shipping-wrap"
-                        aria-expanded="false" aria-controls="calcalute-shipping-wrap">{t('cart.cal-ship.label')}</a></h2>
-
-                      <section id="calcalute-shipping-wrap" className="shipping-calculator-form collapse">
-
-                        <p className="form-row form-row-wide m-0">
-                          <select rel="calc_shipping_state" className="country_to_state" id="calc_shipping_country"
-                            name="calc_shipping_country">
-                            <option value="">{t('cart.country.select')}</option>
-                            {ListCountry.map((country, index) => {
-                              return (
-                                <option value={country.value} key={index}>{country.name}</option>
-                              )
-                            })}
-
-                          </select>
-                        </p>
-
-                        <p className="form-row form-row-wide m-0"><input type="text" id="calc_shipping_state"
-                          name="calc_shipping_state" placeholder="State / county" value="" className="input-text" /> </p>
-
-                        <p className="form-row form-row-wide m-0"><input type="text" id="calc_shipping_postcode"
-                          name="calc_shipping_postcode" placeholder="Postcode / Zip" value="" className="input-text" /></p>
-
-
-                        <p><button className="button" value="1" name="calc_shipping" type="submit">{t('cart.total.button')}</button></p>
-
-                      </section>
-                    </form>
-                    </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
