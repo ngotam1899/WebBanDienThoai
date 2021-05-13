@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {CartContext} from '../../context/Cart';
 import styles from './style';
 import {AsyncStorage} from 'react-native';
-
+import {Rating} from 'react-native-ratings';
 import {
   Text,
   View,
@@ -99,37 +99,37 @@ class ProductDetail extends Component {
       quantity: quantity,
       color: color,
     };
-    if(color !== ''){
+    if (color !== '') {
       AsyncStorage.getItem('cart')
-      .then(datacart => {
-        index = this.findProductInCart(JSON.parse(datacart), data, color);
-        if (index !== -1 && datacart !== null) {
-          const cart = JSON.parse(datacart);
-          cart[index].quantity += quantity;
-          AsyncStorage.setItem('cart', JSON.stringify(cart));
-          this.props.onAddProductToCart();
-        } else if (index === -1 && datacart !== null) {
-          const cart = JSON.parse(datacart);
-          cart.push(itemCart);
-          AsyncStorage.setItem('cart', JSON.stringify(cart));
-          this.props.onAddProductToCart();
-        } else {
-          const cart = [];
-          cart.push(itemCart);
-          AsyncStorage.setItem('cart', JSON.stringify(cart));
-          this.props.onAddProductToCart();
-        }
-        alert('Add Cart');
-      })
-      .catch(err => {
-        alert(err);
-      });
-    }else{
+        .then(datacart => {
+          index = this.findProductInCart(JSON.parse(datacart), data, color);
+          if (index !== -1 && datacart !== null) {
+            const cart = JSON.parse(datacart);
+            cart[index].quantity += quantity;
+            AsyncStorage.setItem('cart', JSON.stringify(cart));
+            this.props.onAddProductToCart();
+          } else if (index === -1 && datacart !== null) {
+            const cart = JSON.parse(datacart);
+            cart.push(itemCart);
+            AsyncStorage.setItem('cart', JSON.stringify(cart));
+            this.props.onAddProductToCart();
+          } else {
+            const cart = [];
+            cart.push(itemCart);
+            AsyncStorage.setItem('cart', JSON.stringify(cart));
+            this.props.onAddProductToCart();
+          }
+          alert('Add Cart');
+        })
+        .catch(err => {
+          alert(err);
+        });
+    } else {
       alert('Vui lòng chọn màu bạn muốn mua');
     }
   };
   render() {
-    const {product, group, navigation, route} = this.props;
+    const {product, group, navigation, route, currency, review, total} = this.props;
     const {color} = this.state;
 
     return (
@@ -150,6 +150,15 @@ class ProductDetail extends Component {
               }}></FlatList>
             <View style={{marginHorizontal: 20, marginTop: 10}}>
               <Text style={styles.name}>{product.name}</Text>
+              <Rating
+              type = "star"
+                ratingCount={5}
+                readonly= {true}
+                startingValue = {product.stars}
+                style = {{alignItems:'flex-start'}}
+                size = {15}
+                imageSize ={18}
+              />
               <Text style={styles.price}>
                 {product.price_min === product.price_max
                   ? product.price_min
@@ -214,38 +223,7 @@ class ProductDetail extends Component {
               renderItem={({item, index}) => {
                 return <FlatListItem item={item} index={index}></FlatListItem>;
               }}></FlatList>
-            <View style={styles.starContainer}>
-              <Image
-                style={styles.star}
-                source={{
-                  uri: 'https://img.icons8.com/color/40/000000/star.png',
-                }}
-              />
-              <Image
-                style={styles.star}
-                source={{
-                  uri: 'https://img.icons8.com/color/40/000000/star.png',
-                }}
-              />
-              <Image
-                style={styles.star}
-                source={{
-                  uri: 'https://img.icons8.com/color/40/000000/star.png',
-                }}
-              />
-              <Image
-                style={styles.star}
-                source={{
-                  uri: 'https://img.icons8.com/color/40/000000/star.png',
-                }}
-              />
-              <Image
-                style={styles.star}
-                source={{
-                  uri: 'https://img.icons8.com/color/40/000000/star.png',
-                }}
-              />
-            </View>
+
             <View style={styles.separator}></View>
           </ScrollView>
         )}
@@ -257,6 +235,10 @@ const mapStateToProps = state => {
   return {
     product: state.products.detail,
     group: state.group.detail,
+    currency: state.currency,
+    review: state.review.list,
+    total: state.review.total,
+    authInfo: state.auth.detail
   };
 };
 
@@ -267,6 +249,15 @@ const mapDispatchToProps = dispatch => {
     },
     onAddProductToCart: () => {
       dispatch(ProductsActions.onAddProductToCart());
+    },
+    onGetReviews: (params) => {
+      dispatch(ReviewActions.onGetList(params));
+    },
+    onClearStateReview: () => {
+      dispatch(ReviewActions.onClearState());
+    },
+    onUpdateReview: (id, params) => {
+      dispatch(ReviewActions.onUpdate(id, params));
     },
   };
 };

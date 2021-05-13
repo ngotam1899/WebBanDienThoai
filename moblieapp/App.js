@@ -11,10 +11,8 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 import SignUpPage from './src/components/SignUpPage';
 import SignInPage from './src/components/SignInPage';
-import SplashPage from './src/components/SignUpPage';
 
 //Redux
-import {createStore, applyMiddleware} from 'redux';
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
 import configureStore from './src/redux/store';
@@ -24,6 +22,7 @@ const store = configureStore();
 import {createStackNavigator} from '@react-navigation/stack';
 const HomeStack = createStackNavigator();
 import {CartProvider} from './src/context/Cart';
+
 
 getTabBarVisibility = route => {
   const routeName = route.state
@@ -50,54 +49,56 @@ function HomeStackScreen() {
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
       <HomeStack.Screen name="SignUp" component={SignUpPage} />
       <HomeStack.Screen name="SignIn" component={SignInPage} />
-      <HomeStack.Screen name="Splash" component={SplashPage} />
     </HomeStack.Navigator>
   );
 }
 
-const App = () => (
-  <Provider store={store}>
-    <CartProvider>
-      <NavigationContainer>
-        <Tab.Navigator
-          tabBarOptions={{
-            activeTintColor: '#157cdb',
-            inactiveTintColor: '#262626',
-          }}>
-          <Tab.Screen
-            name="Home"
-            component={HomeStackScreen}
-            options={({route}) => ({
-              tabBarVisible: this.getTabBarVisibility(route),
-              tabBarLabel: 'Trang chủ',
-              tabBarIcon: ({color}) => (
-                <MaterialIcons name="home" size={26} color={color} />
-              ),
-            })}
-          />
-          <Tab.Screen
-            name="Notification"
-            component={NotificationScreen}
-            options={{
-              tabBarLabel: 'Thông báo',
-              tabBarIcon: ({color}) => (
-                <MaterialIcons name="notifications" size={26} color={color} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              tabBarLabel: 'Cá nhân',
-              tabBarIcon: ({color}) => (
-                <MaterialIcons name="person" size={26} color={color} />
-              ),
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </CartProvider>
-  </Provider>
-);
+const App = () => {
+
+  return (
+    <Provider store={store}>
+      <CartProvider>
+        <NavigationContainer>
+          <Tab.Navigator
+            tabBarOptions={{
+              activeTintColor: '#157cdb',
+              inactiveTintColor: '#262626',
+            }}>
+            <Tab.Screen
+              name="Home"
+              component={HomeStackScreen}
+              options={({route}) => ({
+                tabBarVisible: this.getTabBarVisibility(route),
+                tabBarLabel: 'Trang chủ',
+                tabBarIcon: ({color}) => (
+                  <MaterialIcons name="home" size={26} color={color} />
+                ),
+              })}
+            />
+            <Tab.Screen
+              name="Notification"
+              component={NotificationScreen}
+              options={{
+                tabBarLabel: 'Thông báo',
+                tabBarIcon: ({color}) => (
+                  <MaterialIcons name="notifications" size={26} color={color} />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{
+                tabBarLabel: 'Cá nhân',
+                tabBarIcon: ({color}) => (
+                  <MaterialIcons name="person" size={26} color={color} />
+                ),
+              }}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </CartProvider>
+    </Provider>
+  );
+};
 export default App;

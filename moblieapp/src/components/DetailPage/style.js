@@ -23,10 +23,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   name: {
-    fontSize: 20,
-    color: '#696969',
+    fontSize: 22,
+    color: '#101010',
     fontWeight: 'bold',
     marginLeft: 0,
+    marginBottom: 3
   },
   titleName: {
     marginLeft: 20,
@@ -40,8 +41,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   price: {
-    fontSize: 26,
-    color: 'black',
+    marginTop: 3,
+    fontSize: 25,
+    color: '#e82323',
     fontWeight: 'bold',
   },
   description: {
