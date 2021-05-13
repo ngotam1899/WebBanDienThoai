@@ -28,6 +28,7 @@ export default function(state = init, action) {
         ...state,
         list: get(action, "payload.list", []),
         total: get(action, "payload.total"),
+        count: action.payload.count
       };
     case ReviewActionTypes.GET_DETAIL_SUCCESS:
       return {

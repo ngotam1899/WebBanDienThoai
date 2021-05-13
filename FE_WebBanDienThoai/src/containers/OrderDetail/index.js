@@ -7,6 +7,8 @@ import { withTranslation } from 'react-i18next'
 import ReviewDetail from '../ReviewDetail'
 // Actions
 import ReviewActions from '../../redux/actions/review'
+// @Functions
+import numberWithCommas from '../../utils/formatPrice'
 
 class OrderDetail extends Component {
   constructor(props){
@@ -64,7 +66,7 @@ class OrderDetail extends Component {
               </div>
               <div className="form-group">
                 <label>{t('user.total.input')}: (VND)</label>
-                <input type="number" className="form-control" name="total_price" value={orderItem.total_price} disabled/>
+                <input type="number" className="form-control" name="total_price" value={numberWithCommas(orderItem.total_price)} disabled/>
               </div>
               <div className="form-group">
                 <label>{t('user.status.label')}:</label>
@@ -116,7 +118,7 @@ class OrderDetail extends Component {
                         <p className="text-dark m-0">Màu sắc: {item.color && item.color.name_vn}</p>
                       </div>
                       <div className="col-sm-3 align-self-center">
-                        <p className="m-0">{item.price} VND x {item.quantity}</p>
+                        <p className="m-0">{numberWithCommas(item.price)} VND x {item.quantity}</p>
                       </div>
                       {orderItem.status===1 && <div className="col-sm-3 align-self-center">
                         <button className="btn btn-info" onClick={()=> this.onReview(item)}>Đánh giá</button>

@@ -14,6 +14,8 @@ import { withTranslation } from 'react-i18next'
 import AuthorizationActions from '../../redux/actions/auth'
 import CategoryActions from "../../redux/actions/categories";
 import ProductsActions from '../../redux/actions/products'
+// @Functions
+import numberWithCommas from '../../utils/formatPrice'
 
 class Header extends Component {
   constructor(props) {
@@ -89,7 +91,7 @@ class Header extends Component {
     }
     const {total, totalPrice, currencyCode, language}=this.state;
     const {userInfo, isLogin, listCategories, t} = this.props;
-    const notVND = currencyCode=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2);
+    const notVND = currencyCode=="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2));
     return (
       <>
         <div className="header-area">

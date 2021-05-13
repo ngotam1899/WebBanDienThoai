@@ -16,7 +16,7 @@ class OrderDetail extends Component {
       payment_method: order ? order.payment_method: '',
       status: order ? order.status: '',
       confirmed: order ? order.confirmed: '',
-      is_paid: order ? order.is_paid: '',
+      paid: order ? order.paid: '',
       order_list: order ? order.order_list : [],
       shipping_address: order ? order.shipping_address: '',
       shipping_phonenumber: order ? order.shipping_phonenumber: '',
@@ -34,14 +34,14 @@ class OrderDetail extends Component {
   }
 
   onSubmit = (e) =>{
-    const {id, is_paid, confirmed, status} = this.state;
+    const {id, confirmed, status} = this.state;
     const {onUpdate} = this.props;
-    var data={is_paid, confirmed, status};
+    var data={confirmed, status};
     onUpdate(id, data);
   }
 
 	render() {
-    const {total_price, order_list, createdAt, status, payment_method, confirmed, is_paid, shipping_phonenumber, shipping_address, email} = this.state;
+    const {total_price, order_list, createdAt, status, payment_method, confirmed, paid, shipping_phonenumber, shipping_address, email} = this.state;
     const { large, onClose, order} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -93,10 +93,10 @@ class OrderDetail extends Component {
                     </div>
                     {confirmed===false
                     ? <div className="col-3">
-                      <button type="button" className="btn btn-success" onClick={() => this.setState({confirmed: true})}>Confirm</button>
+                      <button type="button" className="btn btn-success" onClick={() => this.setState({confirmed: true, status: -1})}>Confirm</button>
                     </div>
                     : <div className="col-3">
-                      <button type="button" className="btn btn-warning" onClick={() => this.setState({confirmed: false})}>Undo</button>
+                      <button type="button" className="btn btn-warning" onClick={() => this.setState({confirmed: false, status: -1})}>Undo</button>
                     </div>}
                   </div>
                 </div>
@@ -106,7 +106,7 @@ class OrderDetail extends Component {
                   <label>Tình trạng thanh toán:</label>
                   <div className="row">
                     <div className="col-12">
-                      <input type="text" className="form-control" name="is_paid" value={ is_paid===true ? 'Đã thanh toán' : 'Chưa thanh toán'} disabled/>
+                      <input type="text" className="form-control" name="paid" value={ paid===true ? 'Đã thanh toán' : 'Chưa thanh toán'} disabled/>
                     </div>
                   </div>
                 </div>

@@ -26,8 +26,6 @@ const getAllProduct = async (req, res, next) => {
 				condition.category = req.query.category;
 			}
 		}
-		if (req.query.color != undefined && req.query.color != '') {
-		}
 		let limit = 5;
 		let page = 0;
 		if (req.query.limit != undefined && req.query.limit != '') {

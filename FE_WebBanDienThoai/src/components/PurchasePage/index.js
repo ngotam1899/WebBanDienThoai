@@ -9,6 +9,7 @@ import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 // @Functions
 import getFilterParams from "../../utils/getFilterParams";
+import numberWithCommas from '../../utils/formatPrice'
 // @Actions
 import OrdersActions from "../../redux/actions/order";
 import ProductsActions from "../../redux/actions/products";
@@ -189,7 +190,7 @@ class PurchasePage extends Component {
                             <p className="mb-0">Số lượng {product.quantity}</p>
                           </div>
                           <div className="col-3 text-right">
-                            <p>{product.quantity*product.price} VND</p>
+                            <p>{numberWithCommas(product.quantity*product.price)} VND</p>
                           </div>
                           </div>
                         )
@@ -203,7 +204,7 @@ class PurchasePage extends Component {
                         <button type="button" className="btn btn-warning" onClick={()=>this.onBuyAgain(order.order_list)}>Mua lần nữa</button>}
                       </div>
                       <div className="float-right font-weight-bold">
-                        {order.total_price} VND
+                        {numberWithCommas(order.total_price)} VND
                       </div>
                     </div>
                   </div>

@@ -5,35 +5,50 @@ import { withTranslation } from 'react-i18next'
 import {LOCAL} from '../../constants/index';
 import { Helmet } from 'react-helmet'
 import draftToHtml from 'draftjs-to-html';
+import qs from "query-string";
 // @Actions
 import ProductsActions from '../../redux/actions/products'
 import ReviewActions from '../../redux/actions/review'
 // @Components
 import Rating from 'react-rating'
 import ImageGalleries from './ImageGalleries';
+import Pagination from "react-js-pagination";
 import './styles.css';
 // @Functions
 import tryConvert from '../../utils/changeMoney'
 import numberWithCommas from "../../utils/formatPrice";
 import { toastError } from '../../utils/toastHelper';
 import {INITIAL_IMAGE} from '../../constants';
+import getFilterParams from "../../utils/getFilterParams";
 
 class DetailPage extends Component {
   constructor(props) {
     super(props);
-    const {match} = props;
+    const {match, location} = props;
     this.state = {
       quantity: 1,
       imageColor: "",
       check: 0,
       _check: match.params.productID,
-      rating: 0,
-      message: ""
+      filter: {
+        limit: 3,
+        product: match.params.productID,
+        page: 0,
+      }
     }
   }
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     try{
       FB.XFBML.parse();
+      if (prevProps.location.search !== this.props.location.search) {
+        const filters = getFilterParams(this.props.location.search);
+        const { filter } = this.state;
+        var params = {
+          ...filter,
+          ...filters
+        };
+        this.props.onGetReviews(params);
+      }
     }
     catch(err){
     }
@@ -78,6 +93,27 @@ class DetailPage extends Component {
     }
   }
 
+  setPage = (value) =>{
+    this.handleUpdateFilter({ page: value });
+  }
+
+  // Chuyển router (thêm vào params) 
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
+
+  // phân trang
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
   onChange = (event) => {
     var target = event.target;
     var name = target.name;
@@ -87,22 +123,10 @@ class DetailPage extends Component {
     })
   }
 
-  onReview = () =>{
-    const {rating, message} = this.state;
-  }
-
   onReload = (path) => {
     const {history} = this.props;
     history.push(path);
     window.location.reload();
-  }
-
-  setAmountRating = (review, star) => {
-    var amount = 0;
-    review.map(item => {
-      if(item.rating === star) amount++;
-    })
-    return amount;
   }
 
   onLiked = (id, like) => {
@@ -122,8 +146,9 @@ class DetailPage extends Component {
   }
 
   render() {
-    const {product, currency, t, review, group, total } = this.props;
-    const {quantity, imageColor, check, _check, rating, message} = this.state;
+    const {product, currency, t, review, group, total, count, location } = this.props;
+    const {quantity, imageColor, check, _check } = this.state;
+    const filter = getFilterParams(location.search);
     
     return (<>
       <div className="application">
@@ -199,10 +224,6 @@ class DetailPage extends Component {
                         })}
                       </div>
                       <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
-                      <div className="product-inner-category">
-                        <p className="mt-1 mb-0">{t('detail.category.label')}: <a href="">{product.category.name}</a></p>
-                        <p className="mt-1 mb-0">{t('detail.brand.label')}: <a href="">{product.brand.name}</a></p>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -272,38 +293,38 @@ class DetailPage extends Component {
                             <div className="col-6">
                               <div className="rating_list">
                                 <h3>Based on {total} Reviews</h3>
-                                <ul className="list-unstyled">
+                                {count && <ul className="list-unstyled">
                                   <li>5 Star <span className="mx-2"><Rating
                                     initialRating={5}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                    /></span>{review ? this.setAmountRating(review, 5) : 0}</li>
+                                    /></span>{count.find(i => i._id===5) ? count.find(i => i._id===5).count  : 0}</li>
                                   <li>4 Star <span className="mx-2"><Rating
                                     initialRating={4}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                    /></span>{review ? this.setAmountRating(review, 4) : 0}</li>
+                                    /></span>{count.find(i => i._id===4) ? count.find(i => i._id===4).count  : 0}</li>
                                   <li>3 Star <span className="mx-2"><Rating
                                     initialRating={3}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                    /></span>{review ? this.setAmountRating(review,3) : 0}</li>
+                                    /></span>{count.find(i => i._id===3) ? count.find(i => i._id===3).count  : 0}</li>
                                   <li>2 Star <span className="mx-2"><Rating
                                     initialRating={2}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                  /></span>{review ? this.setAmountRating(review,2) : 0}</li>
+                                  /></span>{count.find(i => i._id===2) ? count.find(i => i._id===2).count  : 0}</li>
                                   <li>1 Star <span className="mx-2"><Rating
                                     initialRating={1}
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                  /></span>{review ? this.setAmountRating(review,1) : 0}</li>
-                                </ul>
+                                  /></span>{count.find(i => i._id===1) ? count.find(i => i._id===1).count  : 0}</li>
+                                </ul>}
                               </div>
                             </div>
                           </div>
@@ -335,6 +356,22 @@ class DetailPage extends Component {
                               )
                             })}
                           </div>
+                          {review && review.length>0 && <div className="product-pagination text-center">
+                            <nav className="float-right">
+                              <Pagination
+                                activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                                itemsCountPerPage={3}
+                                totalItemsCount={total ? total : 10}
+                                pageRangeDisplayed={3}
+                                linkClass="page-link"
+                                itemClass="page-item"
+                                prevPageText={t('shop.pagination.prev')}
+                                nextPageText={t('shop.pagination.next')}
+                                hideFirstLastPages={true}
+                                onChange={this.handlePageChange.bind(this)}
+                              />
+                              </nav>
+                            </div>}
                         </div>
                       </div>
                     </div>
@@ -357,7 +394,8 @@ const mapStateToProps = (state) =>{
     review: state.review.list,
     group: state.group.detail,
     total: state.review.total,
-    authInfo: state.auth.detail
+    authInfo: state.auth.detail,
+    count: state.review.count,
   }
 }
 

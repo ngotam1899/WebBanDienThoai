@@ -11,7 +11,7 @@ import Search from '../../containers/Search';
 import Paypal from './Paypal';
 // @Functions
 import tryConvert from '../../utils/changeMoney'
-
+import numberWithCommas from "../../utils/formatPrice";
 import './styles.css'
 
 class CheckoutPage extends Component {
@@ -320,7 +320,7 @@ class CheckoutPage extends Component {
                               <td className="product-name">
                               {t('checkout.total.label')} <strong className="product-quantity">× {total}</strong> </td>
                               <td className="product-total">
-                              <span className="amount">{currency=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2)} {currency}</span> </td>
+                              <span className="amount">{currency=="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span> </td>
                             </tr>
                           </tbody>
                           <tfoot>
@@ -331,7 +331,7 @@ class CheckoutPage extends Component {
                             </tr>
                             <tr className="order-total">
                               <th>{t('cart.order-total.table')}</th>
-                              <td><strong><span className="amount">{currency=="VND" ? totalPrice : parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2)} {currency}</span></strong> </td>
+                              <td><strong><span className="amount">{currency=="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span></strong> </td>
                             </tr>
                           </tfoot>
                         </table>
@@ -339,7 +339,7 @@ class CheckoutPage extends Component {
                           <h3 id="order_review_heading">Shipping methods</h3>
                           <ul className="payment_methods methods">
                             <li className="font-weight-bold float-left">
-                                <input type="radio" value="local" name="payment_method" className="input-radio mr-2" id="payment_method_cod" onChange={this.onChange} />
+                                <input type="radio" value="local" defaultChecked name="payment_method" className="input-radio mr-2" id="payment_method_cod" onChange={this.onChange} />
                                 <label htmlFor="payment_method_cod">{t('checkout.cod.button')} <img alt="Thanh toán tại nhà" src={ assets('cod.svg')}  />
                                 </label>
                               </li>

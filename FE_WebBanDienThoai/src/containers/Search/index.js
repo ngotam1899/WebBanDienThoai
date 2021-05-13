@@ -29,11 +29,6 @@ class Search extends Component {
     onFilter(keyword);
 	}
 	
-	onAddToCart = (product) =>{
-		const { onAddProductToCart } = this.props;
-		onAddProductToCart(product);
-	}
-
 	render() {
 		const {keyword} = this.state;
 		const {t, listProducts, currency} = this.props;
@@ -80,9 +75,6 @@ const mapDispatchToProps = (dispatch) => {
 		onFilter: (keyword) => {
       dispatch(ProductsActions.onFilter(keyword))
 		},
-		onAddProductToCart: (product) => {
-      dispatch(ProductsActions.onAddProductToCart(product, 1));
-    },
   }
 }
 

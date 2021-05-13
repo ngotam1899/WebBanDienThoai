@@ -7,8 +7,6 @@ import Search from '../../containers/Search';
 import CartItem from '../../containers/CartItem'
 import ProductsActions from '../../redux/actions/products'
 import './styles.css';
-// @Functions
-import tryConvert from '../../utils/changeMoney'
 
 class CartPage extends Component {
   constructor(props) {

@@ -35,6 +35,7 @@ class OrderList extends Component {
       filter: {
         limit: 5,
         page: 0,
+        active: true
       },
     }
   }

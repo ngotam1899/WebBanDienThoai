@@ -1,7 +1,7 @@
 const Review = require('../models/Review')
 const Product = require('../models/Product');
-
-const Validator = require('../validators/validator')
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const getAllProductReView = async(req, res, next) => {
   try {
@@ -12,7 +12,7 @@ const getAllProductReView = async(req, res, next) => {
     if (req.query.user != undefined) {
 			condition.user = req.query.user;
     }
-    let limit = 10;
+    let limit = 3;
 		let page = 0;
 		if (req.query.limit != undefined && req.query.limit != '') {
 			const number_limit = parseInt(req.query.limit);
@@ -31,9 +31,18 @@ const getAllProductReView = async(req, res, next) => {
     .populate({ path: 'color', select: "name_vn"})
     .limit(limit)
     .skip(limit * page)
-    .sort({'like' : -1});
+    const pipeline = [
+      {'$match': {'product': ObjectId(condition.product)}},
+      {	'$group': 	
+        {
+          '_id': '$rating',
+          'count': { '$sum': 1 }
+        }
+      },
+    ];
+    const count = await Review.aggregate(pipeline)
 		let total = await Review.countDocuments(condition);
-    return res.status(200).json({ success: true, code: 200, page, limit, total, reviews })
+    return res.status(200).json({ success: true, code: 200, page, limit, total,count, reviews })
   } catch {
     new next(error)
   }

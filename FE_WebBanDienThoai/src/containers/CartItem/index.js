@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // @Functions
 import tryConvert from '../../utils/changeMoney'
+import numberWithCommas from "../../utils/formatPrice";
 
 class CartItem extends Component {
   onUpdateQuantity = (product, color, quantity) => {
@@ -35,7 +36,7 @@ class CartItem extends Component {
         </td>
 
         <td className="product-price">
-          <span className="amount">{currency ==="VND" ? product.colors.find(i => i._id === color).price : parseFloat(tryConvert(product.colors.find(i => i._id === color).price, currency, false)).toFixed(2)}</span>
+          <span className="amount">{currency ==="VND" ? numberWithCommas(product.colors.find(i => i._id === color).price) : numberWithCommas(parseFloat(tryConvert(product.colors.find(i => i._id === color).price, currency, false)).toFixed(2))}</span>
           
         </td>
 
@@ -48,7 +49,7 @@ class CartItem extends Component {
         </td>
 
         <td className="product-subtotal">
-          <span className="amount">{currency ==="VND" ? quantity*product.colors.find(i => i._id === color).price : parseFloat(quantity*tryConvert(product.colors.find(i => i._id === color).price, currency, false)).toFixed(2)}</span>
+          <span className="amount">{currency ==="VND" ? numberWithCommas(quantity*product.colors.find(i => i._id === color).price) : numberWithCommas(parseFloat(quantity*tryConvert(product.colors.find(i => i._id === color).price, currency, false)).toFixed(2))}</span>
           
         </td>
       </tr>
