@@ -29,7 +29,7 @@ const ProfileScreen = ({navigation}) => {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.welcomeText}>Chào mừng bạn đến với Tiki</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
               <Text style={styles.authText}>Đăng nhập/Đăng ký</Text>
             </TouchableOpacity>
             

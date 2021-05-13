@@ -76,13 +76,16 @@ class ProductDetail extends Component {
       color: item._id,
     });
   };
-  findProductInCart = (cart, productColor) => {
+  findProductInCart = (datacart, product, productColor) => {
     //Trường hợp không tìm thấy
     var index = -1;
-    if (cart.length > 0) {
-      for (var i = 0; i < cart.length; i++) {
+    if (datacart !== null && datacart.length > 0) {
+      for (var i = 0; i < datacart.length; i++) {
         // xem coi các product trong mảng cart có tồn tại product mới chọn ko?
-        if (cart[i].color === productColor) {
+        if (
+          datacart[i].product._id === product._id &&
+          datacart[i].color === productColor
+        ) {
           index = i; //trả về vị trí
           break;
         }
@@ -90,35 +93,45 @@ class ProductDetail extends Component {
     }
     return index;
   };
-
   onClickAddCart = (data, color, quantity) => {
     const itemCart = {
       product: data,
       quantity: quantity,
       color: color,
     };
-    AsyncStorage.getItem('cart').then((datacart)=>{
-      if (datacart !== null) {
-        // We have data!!
-        const cart = JSON.parse(datacart)
-        cart.push(itemCart)
-        AsyncStorage.setItem('cart',JSON.stringify(cart));
-      }
-      else{
-        const cart  = []
-        cart.push(itemCart)
-        AsyncStorage.setItem('cart',JSON.stringify(cart));
-      }
-      alert("Add Cart")
-    })
-    .catch((err)=>{
-      alert(err)
-    })
+    if(color !== ''){
+      AsyncStorage.getItem('cart')
+      .then(datacart => {
+        index = this.findProductInCart(JSON.parse(datacart), data, color);
+        if (index !== -1 && datacart !== null) {
+          const cart = JSON.parse(datacart);
+          cart[index].quantity += quantity;
+          AsyncStorage.setItem('cart', JSON.stringify(cart));
+          this.props.onAddProductToCart();
+        } else if (index === -1 && datacart !== null) {
+          const cart = JSON.parse(datacart);
+          cart.push(itemCart);
+          AsyncStorage.setItem('cart', JSON.stringify(cart));
+          this.props.onAddProductToCart();
+        } else {
+          const cart = [];
+          cart.push(itemCart);
+          AsyncStorage.setItem('cart', JSON.stringify(cart));
+          this.props.onAddProductToCart();
+        }
+        alert('Add Cart');
+      })
+      .catch(err => {
+        alert(err);
+      });
+    }else{
+      alert('Vui lòng chọn màu bạn muốn mua');
+    }
   };
   render() {
     const {product, group, navigation, route} = this.props;
     const {color} = this.state;
-    let screenWidth = Dimensions.get('window').width;
+
     return (
       <>
         {product && (
@@ -137,26 +150,37 @@ class ProductDetail extends Component {
               }}></FlatList>
             <View style={{marginHorizontal: 20, marginTop: 10}}>
               <Text style={styles.name}>{product.name}</Text>
-              <Text style={styles.price}>{product.price_min} VND</Text>
+              <Text style={styles.price}>
+                {product.price_min === product.price_max
+                  ? product.price_min
+                  : `${product.price_min}-${product.price_max}`}{' '}
+                VND
+              </Text>
             </View>
-            <Text style={styles.titleName}>Chọn dung lượng sản phẩm</Text>
-            <View style={styles.contentGroup}>
-              {group &&
-                group.products.map((item, index) => (
-                  <TouchableOpacity
-                    key={item._id}
-                    style={
-                      route.params.id === item.product._id
-                        ? [styles.btnGroup, styles.btnGroupActive]
-                        : styles.btnGroup
-                    }
-                    onPress={() => {
-                      navigation.replace('Detail', {id: item.product._id});
-                    }}>
-                    <Text style={styles.textGroup}>{item.name}</Text>
-                  </TouchableOpacity>
-                ))}
-            </View>
+            {group ? (
+              <>
+                <Text style={styles.titleName}>Chọn dung lượng sản phẩm</Text>
+                <View style={styles.contentGroup}>
+                  {group.products.map((item, index) => (
+                    <TouchableOpacity
+                      key={item._id}
+                      style={
+                        route.params.id === item.product._id
+                          ? [styles.btnGroup, styles.btnGroupActive]
+                          : styles.btnGroup
+                      }
+                      onPress={() => {
+                        navigation.replace('Detail', {id: item.product._id});
+                      }}>
+                      <Text style={styles.textGroup}>{item.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </>
+            ) : (
+              <></>
+            )}
+
             <Text style={styles.titleName}>Chọn màu sản phẩm</Text>
             <View style={styles.contentColors}>
               {product.colors &&
@@ -170,6 +194,7 @@ class ProductDetail extends Component {
                     }
                     onPress={() => this.setColor(item)}>
                     <Text style={styles.textColor}>{item.name_vn}</Text>
+                    <Text style={styles.textColor}>{item.price}</Text>
                   </TouchableOpacity>
                 ))}
             </View>
@@ -240,8 +265,8 @@ const mapDispatchToProps = dispatch => {
     onGetDetailProduct: payload => {
       dispatch(ProductsActions.onGetDetail(payload));
     },
-    onAddProductToCart: (product, color, quantity) => {
-      dispatch(ProductsActions.onAddProductToCart(product, color, quantity));
+    onAddProductToCart: () => {
+      dispatch(ProductsActions.onAddProductToCart());
     },
   };
 };

@@ -14,7 +14,6 @@ export class CartProvider extends Component {
   }
 
   addToCart(product) {
-    console.log(product)
     this.setState({
       cartItems: this.state.cartItems.concat(product),
     });

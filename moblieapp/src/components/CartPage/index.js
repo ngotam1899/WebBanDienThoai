@@ -1,24 +1,37 @@
 import React, {Component} from 'react';
 import {AsyncStorage, ScrollView} from 'react-native';
-import {
-  Text,
-  View,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import ProductsActions from '../../redux/actions/products';
+import {connect} from 'react-redux';
+import {Text, View, Image, TouchableOpacity, Dimensions} from 'react-native';
 var {width} = Dimensions.get('window');
 // import icons
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default class Cart extends Component {
+class Cart extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataCart: [],
+      total: 0,
+      totalPrice: 0,
     };
+  }
+  setTotalPrice(dataCart) {
+    var total = 0;
+    var totalPrice = 0;
+    for (var i = 0; i < dataCart.length; i++) {
+      total = total + dataCart[i].quantity;
+      totalPrice =
+        totalPrice +
+        dataCart[i].quantity *
+          dataCart[i].product.colors.find(
+            item => item._id === dataCart[i].color,
+          ).price;
+    }
+    this.setState({
+      total,
+      totalPrice,
+    });
   }
   componentDidMount() {
     AsyncStorage.getItem('cart')
@@ -27,43 +40,57 @@ export default class Cart extends Component {
           // We have data!!
           const cartData = JSON.parse(cart);
           this.setState({dataCart: cartData});
+          this.setTotalPrice(cartData);
         }
       })
       .catch(err => {
         alert(err);
       });
   }
-  onChangeQual(i,type)
-  {
-    AsyncStorage.getItem('cart').then((datacart)=>{
-      const data = JSON.parse(datacart)
+
+  onChangeQual(i, type) {
+    AsyncStorage.getItem('cart').then(datacart => {
+      const data = JSON.parse(datacart);
       let cantd = data[i].quantity;
       if (type === true) {
-        cantd = cantd + 1
-        data[i].quantity = cantd
-        this.setState({dataCart:data})
-        AsyncStorage.setItem('cart',JSON.stringify(data));
-       }
-       else if (type==false&&cantd>=2){
-        cantd = cantd - 1
-        data[i].quantity = cantd
-        this.setState({dataCart:data})
-        AsyncStorage.setItem('cart',JSON.stringify(data));
-       }
-       else if (type==false&&cantd==1){
-        data.splice(i,1)
-        this.setState({dataCart:data})
-        AsyncStorage.setItem('cart',JSON.stringify(data));
-       } 
-       console.log('Adddd:')
-    })
+        cantd = cantd + 1;
+        data[i].quantity = cantd;
+        this.setState({dataCart: data});
+        this.setTotalPrice(data);
+        AsyncStorage.setItem('cart', JSON.stringify(data));
+        this.props.onAddProductToCart();
+      } else if (type == false && cantd >= 2) {
+        cantd = cantd - 1;
+        data[i].quantity = cantd;
+        this.setState({dataCart: data});
+        this.setTotalPrice(data);
+        AsyncStorage.setItem('cart', JSON.stringify(data));
+        this.props.onDeleteProductToCart();
+      } else if (type == false && cantd == 1) {
+        if(data.length === 1){
+          data.splice(i, 1);
+          this.setState({dataCart: data});
+          this.setTotalPrice(data);
+          AsyncStorage.removeItem('cart');
+          this.props.onDeleteProductToCart();
+        }else{
+          data.splice(i, 1);
+          this.setState({dataCart: data});
+          this.setTotalPrice(data);
+          AsyncStorage.setItem('cart', JSON.stringify(data));
+          this.props.onDeleteProductToCart();
+        }
+      }
+
+    });
   }
+
   render() {
     return (
       <ScrollView>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <View style={{height: 20}} />
-          <Text style={{fontSize: 28, color: 'gray'}}>Cart Detail</Text>
+          <Text style={{fontSize: 28, color: '#277cdb'}}>Cart Detail</Text>
           <View style={{height: 10}} />
           {this.state.dataCart.map((item, index) => {
             return (
@@ -96,7 +123,12 @@ export default class Cart extends Component {
                       <Text style={{fontWeight: 'bold', fontSize: 20}}>
                         {item.product.name}
                       </Text>
-                      <Text>Descripcion de food</Text>
+                      <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                        {
+                          item.product.colors.find(i => i._id === item.color)
+                            .name_en
+                        }
+                      </Text>
                     </View>
                     <View
                       style={{
@@ -109,7 +141,8 @@ export default class Cart extends Component {
                           color: '#9fd236',
                           fontSize: 20,
                         }}>
-                        {item.product.price_min*item.quantity}
+                        {item.product.colors.find(i => i._id === item.color)
+                          .price * item.quantity}
                       </Text>
                       <View
                         style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -118,7 +151,7 @@ export default class Cart extends Component {
                           <Icon
                             name="ios-remove-circle"
                             size={35}
-                            color={'#33c37d'}
+                            color={'#1e88e5'}
                           />
                         </TouchableOpacity>
                         <Text
@@ -134,7 +167,7 @@ export default class Cart extends Component {
                           <Icon
                             name="ios-add-circle"
                             size={35}
-                            color={'#33c37d'}
+                            color={'#1e88e5'}
                           />
                         </TouchableOpacity>
                       </View>
@@ -146,10 +179,17 @@ export default class Cart extends Component {
           })}
 
           <View style={{height: 20}} />
-
+          <View style={{width:width , marginLeft:20}}>
+            <Text style={{fontWeight: 'bold'}}>
+              Tạm tính: {this.state.totalPrice}
+            </Text>
+            <Text style={{fontWeight: 'bold'}}>Phí ship: Free</Text>
+            <Text style={{fontWeight: 'bold'}}>Thành tiền: {this.state.totalPrice}</Text>
+          </View>
+          <View style={{height: 20}} />
           <TouchableOpacity
             style={{
-              backgroundColor: '#9fd236',
+              backgroundColor: '#1e88e5',
               width: width - 40,
               alignItems: 'center',
               padding: 10,
@@ -171,3 +211,22 @@ export default class Cart extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    product: state.products.detail,
+    group: state.group.detail,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onDeleteProductToCart: () => {
+      dispatch(ProductsActions.onDeleteProductToCart());
+    },
+    onAddProductToCart: () => {
+      dispatch(ProductsActions.onAddProductToCart());
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);

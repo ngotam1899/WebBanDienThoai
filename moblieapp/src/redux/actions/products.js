@@ -37,6 +37,8 @@ export const ProductsActionTypes = {
   UPDATE_PRODUCT_CART: "UPDATE_PRODUCT_CART",
   DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
 
+  
+
   CLEAR_CART: "CLEAR_CART",
   CHANGE_CURRENCY: "CHANGE_CURRENCY",
 };
@@ -183,11 +185,10 @@ const onUpdateError = (error) => ({
  * cart _ products
  */
 
-const onAddProductToCart = (product, color, quantity) =>({
+const onAddProductToCart = () =>({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
-  product, color, quantity
 })
-const onDeleteProductInCart = (color) =>{
+const onDeleteProductToCart = (color) =>{
   return {
     type: ProductsActionTypes.DELETE_PRODUCT_CART,
     color
@@ -257,7 +258,7 @@ const ProductsActions = {
   onUpdateError,
 
   onAddProductToCart,
-  onDeleteProductInCart,
+  onDeleteProductToCart,
   onUpdateProductInCart,
   onChangeCurrency,
   

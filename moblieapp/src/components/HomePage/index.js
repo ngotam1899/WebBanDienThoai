@@ -29,7 +29,7 @@ class HomePage extends Component {
     const {listProducts, bestSeller, newest, favorite, navigation} = this.props;
     return (
       <View style={styles.screenContainer}>
-      <StatusBar barStyle="light-content" />
+                <StatusBar backgroundColor='#1e88e5' barStyle="light-content"/>
       {/*  */}
       <View style={styles.headerContainer}>
         <View style={styles.inputContainer}>

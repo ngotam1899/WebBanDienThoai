@@ -12,7 +12,7 @@ export default class ProductItem extends Component {
     const {image, name, price, navigation, id} = this.props;
     return (
       <TouchableOpacity style={styles.itemContainer} onPress={() => {
-        navigation.navigate('Detail',{id});
+        navigation.push('Detail',{id});
       }}>
         <Image source={{uri: image}} style={styles.itemImage} />
         <Text style={styles.itemName} numberOfLines={2}>

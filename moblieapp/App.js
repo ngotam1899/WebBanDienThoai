@@ -4,24 +4,39 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import HomeScreen from './src/screens/HomeScreen';
+import HomePage from './src/components/HomePage';
+import DetailPage from './src/components/DetailPage';
+import CartPage from './src/components/CartPage';
 import ProfileScreen from './src/screens/ProfileScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
-import LoginPage from './src/components/LoginPage'
-import {AppRegistry} from 'react-native';
+import SignUpPage from './src/components/SignUpPage';
+import SignInPage from './src/components/SignInPage';
+import SplashPage from './src/components/SignUpPage';
+
 //Redux
 import {createStore, applyMiddleware} from 'redux';
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
 import configureStore from './src/redux/store';
-import HomePage from './src/components/HomePage';
-import DetailPage from './src/components/DetailPage';
-import CartPage from './src/components/CartPage';
+
 const Tab = createBottomTabNavigator();
 const store = configureStore();
 import {createStackNavigator} from '@react-navigation/stack';
 const HomeStack = createStackNavigator();
 import {CartProvider} from './src/context/Cart';
+
+getTabBarVisibility = route => {
+  const routeName = route.state
+    ? route.state.routes[route.state.index].name
+    : '';
+
+  if (routeName === 'SignIn' || routeName === 'SignUp') {
+    return false;
+  }
+
+  return true;
+};
+
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator
@@ -33,14 +48,16 @@ function HomeStackScreen() {
       <HomeStack.Screen name="Cart" component={CartPage} />
       <HomeStack.Screen name="Notification" component={NotificationScreen} />
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
-      <HomeStack.Screen name="Login" component={LoginPage} />
+      <HomeStack.Screen name="SignUp" component={SignUpPage} />
+      <HomeStack.Screen name="SignIn" component={SignInPage} />
+      <HomeStack.Screen name="Splash" component={SplashPage} />
     </HomeStack.Navigator>
   );
 }
 
 const App = () => (
   <Provider store={store}>
-      <CartProvider>
+    <CartProvider>
       <NavigationContainer>
         <Tab.Navigator
           tabBarOptions={{
@@ -50,12 +67,13 @@ const App = () => (
           <Tab.Screen
             name="Home"
             component={HomeStackScreen}
-            options={{
+            options={({route}) => ({
+              tabBarVisible: this.getTabBarVisibility(route),
               tabBarLabel: 'Trang chủ',
               tabBarIcon: ({color}) => (
                 <MaterialIcons name="home" size={26} color={color} />
               ),
-            }}
+            })}
           />
           <Tab.Screen
             name="Notification"
@@ -79,7 +97,7 @@ const App = () => (
           />
         </Tab.Navigator>
       </NavigationContainer>
-      </CartProvider>
+    </CartProvider>
   </Provider>
 );
 export default App;

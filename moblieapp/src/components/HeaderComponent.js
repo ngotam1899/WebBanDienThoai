@@ -1,38 +1,52 @@
-import React, {useState} from 'react';
+import React, {Component, useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useSelector } from 'react-redux';
-import {CartContext} from '../context/Cart';
+import {AsyncStorage} from 'react-native';
+import {connect} from 'react-redux';
 
-const Header = ({title, value, navigation}) => {
-  //const {cart} = useSelector(state => state.cart);
-  return (
-    <View style={styles.headerContainer}>
-      {value === '1' ? (
+class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      quantity: null,
+    };
+  }
+  
+  render() {
+    const {title, value, navigation, quantity} = this.props;
+    return (
+      <View style={styles.headerContainer}>
+        {value === '1' ? (
+          <View style={styles.cartContainer}>
+            <View style={styles.cartIcon} />
+          </View>
+        ) : (
+          <></>
+        )}
+        <Text style={styles.headerText}>{title}</Text>
         <View style={styles.cartContainer}>
-          <View style={styles.cartIcon} />
+          <TouchableOpacity onPress={() => navigation.navigate('Cart', {})}>
+            <FontAwesome
+              name="shopping-cart"
+              size={HEADER_ICON_SIZE}
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <Text style={styles.number}>{quantity}</Text>
         </View>
-      ) : (
-        <></>
-      )}
-      <Text style={styles.headerText}>{title}</Text>
-      <View style={styles.cartContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Cart', {})}>
-          <FontAwesome
-            name="shopping-cart"
-            size={HEADER_ICON_SIZE}
-            color="#fff"
-          />
-        </TouchableOpacity>
-        <CartContext.Consumer>
-        {({cartItems}) => (<Text style={styles.number}>{cartItems.length}</Text>)}
-      </CartContext.Consumer>
       </View>
-    </View>
-  );
+    );
+  }
 };
 
-export default Header;
+const mapStateToProps = state => {
+  return {
+    quantity: state.cart.quantity,
+  };
+};
+
+
+export default connect(mapStateToProps)(Header);
 
 const HEADER_ICON_SIZE = 24;
 
