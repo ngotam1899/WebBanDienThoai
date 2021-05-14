@@ -35,7 +35,7 @@ class OrderList extends Component {
       filter: {
         limit: 5,
         page: 0,
-        active: true
+        active: 1
       },
     }
   }
@@ -228,10 +228,10 @@ class OrderList extends Component {
                       <td>{item.payment_method=== "local" ? '(COD) Tiền mặt' : 'Paypal'}</td>
                     ),
                     'Payment Status': (item) => (
-                      <td>{item.is_paid=== true ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
+                      <td>{item.paid=== true ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
                     ),
                     'Bill Status': (item) => (
-                      <td>{item.status=== true ? 'Đã giao hàng' : 'Chưa giao hàng'}</td>
+                      <td>{item.status=== 1 ? 'Đã giao hàng' : 'Chưa giao hàng'}</td>
                     ),
                     'Total': (item) => (
                       <td>{item.total_price}</td>

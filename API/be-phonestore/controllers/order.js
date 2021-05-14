@@ -251,6 +251,7 @@ const confirmOrder = async (req, res, next) => {
 					return res.status(200).json({ success: false, code: 400, message: 'Incorect Link' });
 				}
 				order.confirmed = true;
+				order.status = -1;
 				await order.save();
 				return res.status(200).json({ message: true, code: 200, message: 'Confirm Successfull' });
 			});
@@ -285,7 +286,7 @@ const revenue = async (req, res, next) => {
 						'$match': { 
 							'_id.year' : today.getFullYear(), 
 							'_id.month' : today.getMonth() + 1, 
-							'_id.day': today.getDate() 
+							'_id.day': today.getDate() -1
 						}
 					}
 					break;
@@ -363,7 +364,7 @@ const sessionOrder = async (req, res, next) => {
 						'$match': { 
 							'_id.year' : today.getFullYear(), 
 							'_id.month' : today.getMonth() + 1, 
-							'_id.day': today.getDate() 
+							'_id.day': today.getDate() -1
 						}
 					}
 					break;

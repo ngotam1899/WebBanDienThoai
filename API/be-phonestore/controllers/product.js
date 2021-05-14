@@ -46,7 +46,7 @@ const getAllProduct = async (req, res, next) => {
 		}
 
 		if (req.query.sort_p != undefined && req.query.sort_p != '0') {
-			sort['price'] = req.query.sort_p == '1' ? 1 : -1;
+			sort['price_min'] = req.query.sort_p == '1' ? 1 : -1;
 		}
 		if (req.query.active != undefined && req.query.active != '0') {
 			condition.active = req.query.active=='1' ? true : false || undefined;

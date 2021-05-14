@@ -271,7 +271,7 @@ class ProductList extends Component {
                       </td>
                     ),
                     'brand': (item) => (
-                      <td><img src={item.brand.image ? item.brand.image.public_url: INITIAL_IMAGE} style={{width:'8vw'}} alt={item.name}></img></td>
+                      <td><img src={item.brand && item.brand.image ? item.brand.image.public_url: INITIAL_IMAGE} style={{width:'8vw'}} alt={item.name}></img></td>
                     ),
                     'actions':
                     (item)=>(

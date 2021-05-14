@@ -192,7 +192,6 @@ const sendEmail = (email) => {
 const forgotPassword = async (req, res, next) => {
 	try {
 		const { email } = req.body;
-		console.log(email)
 		const foundUser = await User.findOne({ email });
 		if (!foundUser) {
 			return res.status(200).json({ success: false, code: 403, message: 'Email is not sign up' });

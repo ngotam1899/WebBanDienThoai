@@ -106,6 +106,7 @@ function* handleCreate( {payload} ) {
       if (result.data.code !== 201) throw result.data;
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
+    yield put(ProductsActions.onGetDetail(result.data.product._id));
     yield put(ProductsActions.onGetList());
   } catch (error) {
     yield put(ProductsActions.onCreateError(error));
@@ -180,6 +181,7 @@ function* handleUpdateImage( {payload} ) {
       if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
+    yield put(ProductsActions.onGetDetail(payload.id));
     yield put(ProductsActions.onGetList());
   } catch (error) {
     yield put(ProductsActions.onUpdateImageError(error));
