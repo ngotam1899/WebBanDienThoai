@@ -1,45 +1,45 @@
 const Brand = require('../models/Brand');
 const Product = require('../models/Product');
 const Image = require('../models/Image');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
 const imageController = require('./image');
 const Validator = require('../validators/validator');
 
 const getAllBrand = async (req, res, next) => {
 	try {
+		var condition = {
+			'active': true
+		}
 		if (req.query.keyword != undefined && req.query.keyword != '') {
 			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
 			condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
 		}
 		if (req.query.category != undefined && req.query.category != '') {
 			if (Validator.isValidObjId(req.query.category)) {
-				condition.category = req.query.category;
+				condition['category'] = ObjectId(req.query.category);
 			}
 		}
-		let sort = {};
-		if (req.query.sort_n != undefined && req.query.sort_n != '0') {
-			sort['name'] = req.query.sort_n == '1' ? 1 : -1;
-		}
-
-		if (req.query.sort_p != undefined && req.query.sort_p != '0') {
-			sort['price'] = req.query.sort_p == '1' ? 1 : -1;
-		}
-		if (req.query.active != undefined && req.query.active != '0') {
-			condition.active = req.query.active=='1' ? true : false || undefined;
-		}
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
-			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
+			condition['price_min'] = { $lte: parseInt(req.query.max_p) || 10000000, $gte: parseInt(req.query.min_p) || 0 };
 		}
+		console.log(condition)
 		const pipeline = [
-/* 			{	'$group': 	
+			{
+				'$match': condition
+			},
+			{	'$group': 	
 				{
-					'_id': '$order_list.product',
+					'_id': '$brand',
 					'count': { '$sum': 1 }
 				}
-			}, */
+			},
 		];
-		//const brands = await Product.aggregate(pipeline);
-		const brands = await Brand.find().populate({path : 'image', select: "public_url"});
-		return res.status(200).json({ success: true, code: 200, message: '', brands });
+		const count = await Product.aggregate(pipeline);
+		await Brand.populate(count, {path: "_id", select: ['name']});
+		const brands = await Brand.find().populate({path: 'image', select: 'public_url'});
+		return res.status(200).json({ success: true, code: 200, message: '', count, brands });
 	} catch (error) {
 		return next(error);
 	}

@@ -8,7 +8,7 @@ function* handleGetList({ payload }) {
     const result = yield call(getAllBrands, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(BrandActions.onGetListSuccess(data.brands));
+    yield put(BrandActions.onGetListSuccess(data.brands, data.count));
   } catch (error) {
     yield put(BrandActions.onGetListError(error));
   }

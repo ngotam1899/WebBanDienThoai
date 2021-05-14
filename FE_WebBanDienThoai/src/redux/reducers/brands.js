@@ -24,7 +24,8 @@ export default function(state = init, action) {
       return {
         ...state,
         loading: false,
-        list: get(action, "payload", []),
+        list: action.payload.brands,
+        total: action.payload.count
       };
     default:
       return state;

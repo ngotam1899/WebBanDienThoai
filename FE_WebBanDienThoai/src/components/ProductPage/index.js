@@ -13,7 +13,6 @@ import Pagination from "react-js-pagination";
 import ProductsSelectors from "../../redux/selectors/products";
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
-import ColorActions from "../../redux/actions/color";
 
 class ProductPage extends Component {
   constructor(props) {
@@ -50,15 +49,14 @@ class ProductPage extends Component {
   //??
   UNSAFE_componentWillMount() {
     document.title = "[TellMe] Trang bán hàng"
-    const { onGetList, onGetListColor, onGetListBrand, location } = this.props;
+    const { onGetList, onGetListBrand, location } = this.props;
     const { filter } = this.state;
-    onGetListColor();
-    onGetListBrand();
     const filters = getFilterParams(location.search);
     var params = {
       ...filter,
       ...filters
     };
+    onGetListBrand(params);
     onGetList(params);
   }
 
@@ -114,7 +112,7 @@ class ProductPage extends Component {
 
   render() {
     const {keyword, min_p, max_p} = this.state;
-    const { listProducts, listBrand, t, location, total } = this.props;
+    const { listProducts, totalBrand, t, location, total } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <>
@@ -156,12 +154,12 @@ class ProductPage extends Component {
                             <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(null)} 
                             checked={(filter.brand === null || filter.brand === undefined) && "checked"}/>{t('shop.all.radio-button')}</label>
                           </div>
-                          {listBrand && 
-                          listBrand.map((brand, index) =>{
+                          {totalBrand && 
+                          totalBrand.map((brand, index) =>{
                           return(
                           <div className="radio" key={index}>
-                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(brand._id)} 
-                            checked={filter.brand === brand._id && "checked"}/>{brand.name} (0)</label>
+                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(brand._id._id)} 
+                            checked={filter.brand === brand._id._id && "checked"}/>{brand._id.name} ({brand.count})</label>
                           </div>
                           )})}
                         </form>
@@ -281,6 +279,7 @@ const mapStateToProps = (state) => {
     listProducts: ProductsSelectors.getList(state),
     listColor: state.color.list,
     listBrand: state.brands.list,
+    totalBrand: state.brands.total,
     total: state.products.total,
   }
 }
@@ -290,11 +289,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetList: (params) => {
       dispatch(ProductsActions.onGetList(params))
     },
-    onGetListBrand: () => {
-      dispatch(BrandActions.onGetList())
-    },
-    onGetListColor: () => {
-      dispatch(ColorActions.onGetList())
+    onGetListBrand: (params) => {
+      dispatch(BrandActions.onGetList(params))
     },
   }
 }

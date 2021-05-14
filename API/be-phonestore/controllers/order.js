@@ -3,10 +3,10 @@ const Product = require('../models/Product');
 const Image = require('../models/Image');
 const Validator = require('../validators/validator');
 const nodemailer = require('nodemailer');
-const createError = require('http-errors');
 const service = require('../services/service');
 const JWT = require('jsonwebtoken');
 const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config');
+
 const transporter = nodemailer.createTransport({
 	host: 'smtp.gmail.com',
 	service: 'gmail',
@@ -286,7 +286,7 @@ const revenue = async (req, res, next) => {
 						'$match': { 
 							'_id.year' : today.getFullYear(), 
 							'_id.month' : today.getMonth() + 1, 
-							'_id.day': today.getDate() -1
+							'_id.day': today.getDate()
 						}
 					}
 					break;
@@ -364,7 +364,7 @@ const sessionOrder = async (req, res, next) => {
 						'$match': { 
 							'_id.year' : today.getFullYear(), 
 							'_id.month' : today.getMonth() + 1, 
-							'_id.day': today.getDate() -1
+							'_id.day': today.getDate()
 						}
 					}
 					break;
