@@ -17,6 +17,7 @@
         "express-fileupload": "^1.2.0",
         "express-promise-router": "^4.0.1",
         "googleapis": "^73.0.0",
+        "http": "0.0.1-security",
         "http-errors": "^1.8.0",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.12.8",
@@ -27,7 +28,8 @@
         "passport-facebook-token": "^4.0.0",
         "passport-google-token": "^0.1.2",
         "passport-jwt": "^4.0.0",
-        "passport-local": "^1.0.0"
+        "passport-local": "^1.0.0",
+        "socket.io": "^4.1.1"
     },
     "devDependencies": {
         "morgan": "^1.10.0"

@@ -3,6 +3,7 @@ import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
 import ProductsActions from "../actions/products";
 import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, updateOrder, getAllOrder } from "../apis/order";
+import io from 'socket.io-client';
 
 function* handleGetList({payload}) {
   try {
@@ -51,6 +52,10 @@ function* handleCreate({ payload }) {
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
     localStorage.removeItem("CART");
+    /*  */
+    const socket = io('http://localhost:3000');
+    socket.emit('order', { email, order: data.order._id });
+    /*  */
     yield put(ProductsActions.onClearCart())
   } catch (error) {
     yield put(OrdersActions.onCreateError(error));

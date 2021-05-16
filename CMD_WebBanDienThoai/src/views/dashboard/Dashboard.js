@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import {compose} from 'redux';
 import { withRouter } from "react-router";
 import MainChartExample from '../charts/MainChartExample.js'
+import io from 'socket.io-client';
 // @Actions
 import OrderActions from "../../redux/actions/order";
 
@@ -37,6 +38,9 @@ class Dashboard extends Component {
     const {browse_from, browse_to} = this.state;
     const params  = {browse_from, browse_to}
     onGetRevenueList(params);
+    const socket = io('http://localhost:3000');
+    console.log(socket)
+    socket.emit('login');
   }
 
 

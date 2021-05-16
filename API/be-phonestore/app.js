@@ -4,8 +4,6 @@ const cors = require('cors');
 
 const express = require('express');
 const cloudinary = require('cloudinary').v2;
-const passport = require('passport');
-//const logger = require('morgan');
 
 const routerUser = require('./routes/user');
 const routerReview = require('./routes/review');
@@ -17,8 +15,19 @@ const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const http = require('http')
+const socketIO = require('socket.io')
 
 const app = express();
+const server = http.createServer(app)
+const io = socketIO(server,{
+	cors: {
+		origin: '*',
+		methods: ["GET", "POST"],
+		credentials: true
+	}
+})
+
 app.use(
 	fileUpload({
 		useTempFiles: true
@@ -78,6 +87,34 @@ app.use('/products', routerProduct);
 app.use('/orders', routerOrder);
 app.use('/image', routerImage);
 
+
+io.on('connection', (socket) => {
+	var admin;
+	socket.on("login", ()=>{
+		console.log('test', socket.id)
+		admin = socket.id;
+		//Lấy giá trị order mới nhất từ database
+  })
+  socket.on('order', ({ email, order }) => {
+		// Nếu bắt đc trạng thái join
+    // Thêm order vào danh sách order mới
+		socket.join(order);
+		// Trả về toàn bộ order cho admin
+		var orders = [];
+    orders.push(order);
+		io.sockets.emit("newOrder", {newOrders: orders.length})
+		console.log(orders)
+    // "Chào mừng user vào phòng"
+    //socket.emit('message', { user: 'admin', text: `${user.name}, welcome to room ${user.room}.`});
+    // Cho mọi người trong phòng cùng biết, ko cho mình
+    //socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
+
+    //io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+
+    //callback(); // lặp lại mỗi lần bắt đc sự kiện join
+  });
+});
+
 //Catch 404 error and forward them to error handler
 app.use((req, res, next) => {
 	const err = new HttpError('Not Found');
@@ -100,6 +137,6 @@ app.use((err, req, res, next) => {
 
 //Start server
 app.set('port', process.env.PORT || 3000);
-app.listen(app.get('port'), function() {
+server.listen(app.get('port'), function() {
 	console.log('Server is listening at port ' + app.get('port'));
 });

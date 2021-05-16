@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {
   CBadge,
   CDropdown,
@@ -8,9 +8,21 @@ import {
   CProgress
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import io from 'socket.io-client';
+
+
 
 const TheHeaderDropdownNotif = () => {
-  const itemsCount = 5
+  const [itemsCount, setItemsCount] = useState(5);
+  const ENDPOINT = 'http://localhost:3000';
+  let socket = io(ENDPOINT);
+
+  useEffect(() => {
+    socket.on('newOrder', res => {
+      setItemsCount(itemsCount+res.newOrders);
+    });
+  }, [itemsCount]);
+
   return (
     <CDropdown
       inNav
@@ -34,34 +46,6 @@ const TheHeaderDropdownNotif = () => {
         <CDropdownItem><CIcon name="cil-chart-pie" className="mr-2 text-info" /> Sales report is ready</CDropdownItem>
         <CDropdownItem><CIcon name="cil-basket" className="mr-2 text-primary" /> New client</CDropdownItem>
         <CDropdownItem><CIcon name="cil-speedometer" className="mr-2 text-warning" /> Server overloaded</CDropdownItem>
-        <CDropdownItem
-          header
-          tag="div"
-          color="light"
-        >
-          <strong>Server</strong>
-        </CDropdownItem>
-        <CDropdownItem className="d-block">
-          <div className="text-uppercase mb-1">
-            <small><b>CPU Usage</b></small>
-          </div>
-          <CProgress size="xs" color="info" value={25} />
-          <small className="text-muted">348 Processes. 1/4 Cores.</small>
-        </CDropdownItem>
-        <CDropdownItem className="d-block">
-          <div className="text-uppercase mb-1">
-            <small><b>Memory Usage</b></small>
-          </div>
-          <CProgress size="xs" color="warning" value={70} />
-          <small className="text-muted">11444GB/16384MB</small>
-        </CDropdownItem>
-        <CDropdownItem className="d-block">
-          <div className="text-uppercase mb-1">
-            <small><b>SSD 1 Usage</b></small>
-          </div>
-          <CProgress size="xs" color="danger" value={90} />
-          <small className="text-muted">243GB/256GB</small>
-        </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
   )

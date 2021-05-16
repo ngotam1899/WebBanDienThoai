@@ -14,7 +14,7 @@ const getAllBrand = async (req, res, next) => {
 		}
 		if (req.query.keyword != undefined && req.query.keyword != '') {
 			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
-			condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
+			condition['name'] = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
 		}
 		if (req.query.category != undefined && req.query.category != '') {
 			if (Validator.isValidObjId(req.query.category)) {
@@ -24,7 +24,6 @@ const getAllBrand = async (req, res, next) => {
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
 			condition['price_min'] = { $lte: parseInt(req.query.max_p) || 10000000, $gte: parseInt(req.query.min_p) || 0 };
 		}
-		console.log(condition)
 		const pipeline = [
 			{
 				'$match': condition
