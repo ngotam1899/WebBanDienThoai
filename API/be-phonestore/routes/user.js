@@ -1,7 +1,6 @@
-const express = require('express')
+
 const router = require("express-promise-router")()
 const userController = require('../controllers/user')
-const imageController = require('../controllers/image')
 
 const passport = require('passport')
 const { session } = require('passport')

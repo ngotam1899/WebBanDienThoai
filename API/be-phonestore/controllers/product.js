@@ -343,7 +343,6 @@ const bestSellerProduct = async (req, res, next) => {
 		},
 	];
 	const order = await Order.aggregate(pipeline);
-	console.log(order)
 	await Product.populate(order, {path: "_id", select: ['name', 'bigimage', 'stars', 'price_min', 'reviewCount', 'pathseo', 'active'], 
 	populate : {path : 'bigimage', select: "public_url"} })
 	return res.status(200).json({ success: true, code: 200, products: order });

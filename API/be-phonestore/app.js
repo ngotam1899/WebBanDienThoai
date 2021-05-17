@@ -62,7 +62,6 @@ cloudinary.config({
 });
 
 //Middlewares
-//app.use(logger('dev'))
 app.use(cors());
 app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
@@ -87,7 +86,7 @@ app.use('/products', routerProduct);
 app.use('/orders', routerOrder);
 app.use('/image', routerImage);
 
-
+//SocketIO Realtime
 io.on('connection', (socket) => {
 	var admin;
 	socket.on("login", ()=>{

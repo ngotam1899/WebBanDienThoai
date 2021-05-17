@@ -184,7 +184,6 @@ const sendEmail = (email) => {
 	transporter.sendMail(at, async (err, response) => {
 		if (err) {
 		} else {
-			console.log(response);
 		}
 	});
 };
@@ -216,7 +215,6 @@ const sendEmailPassword = (email) => {
 	transporter.sendMail(at, async (err, response) => {
 		if (err) {
 		} else {
-			console.log(response);
 		}
 	});
 };

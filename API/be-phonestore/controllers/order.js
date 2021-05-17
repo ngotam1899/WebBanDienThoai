@@ -5,6 +5,7 @@ const Validator = require('../validators/validator');
 const nodemailer = require('nodemailer');
 const service = require('../services/service');
 const JWT = require('jsonwebtoken');
+const CronJob = require('cron').CronJob;
 const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config');
 
 const transporter = nodemailer.createTransport({
@@ -139,6 +140,34 @@ const addOrder = async (req, res, next) => {
 		}
 		order.user = userID;
 		await order.save();
+
+		// Sau 20s, nếu người dùng chưa confirm order thì xóa order đó và trả lại sản phẩm
+		const thisTime = new Date();
+		var job = new CronJob(' * * * * *', async() => {
+			// Kiểm tra đã hết hạn thì dừng Job
+			var expire = new Date();
+			if(expire - thisTime >= 20*1000){
+				await job.stop();
+			}
+			},async () => {
+				const orderNow = await Order.findById(order._id);
+				// Kiểm tra confirm = false, xóa order đó
+				if(!orderNow.confirmed){
+					await Order.findByIdAndDelete(order._id);
+					// Cập nhật lại số lượng sản phẩm
+					for (let item of orderNow.order_list){
+						let productFound = await Product.findById(item.product);
+						if(productFound){
+							productFound.colors.find(i => i._id.toString() === item.color.toString()).amount = productFound.colors.find(i => i._id.toString() === item.color.toString()).amount + item.quantity;
+							await productFound.save();
+						}
+					}
+				}
+			},
+			true, /* Start the job right now */
+			'Asia/Ho_Chi_Minh' /* Time zone of this job. */
+		);
+
 		return res.status(200).json({ success: true, code: 201, message: 'success', order: order });
 	} catch (error) {
 		next(error);
@@ -231,7 +260,6 @@ const sendEmail = async (email, IDOrder) => {
 	transporter.sendMail(at, async (err, response) => {
 		if (err) {
 		} else {
-			console.log(response);
 		}
 	});
 };
@@ -265,7 +293,6 @@ const deleteOrder = async (req, res, next) => {
 	const { IDOrder } = req.params;
 	let is_valid = await Validator.isValidObjId(IDOrder);
 	if (!is_valid) return res.status(200).json({ success: false, code: 400, message: 'id is not correctly' });
-
 	let result = await Order.findByIdAndDelete(IDOrder);
 	if (result) {
 		return res.status(200).json({ success: true, code: 200, message: 'removed' });
