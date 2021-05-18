@@ -1,11 +1,22 @@
 import React from 'react';
-import {StyleSheet, View, Text, StatusBar, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  StatusBar,
+  TouchableOpacity,
+} from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Header from '../components/HeaderComponent';
+import AuthorizationActions from '../redux/actions/auth';
+import {AsyncStorage} from 'react-native';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {Component} from 'react';
 
 const ProfileItem = ({icon, name}) => (
   <View style={styles.itemContainer}>
@@ -15,46 +26,87 @@ const ProfileItem = ({icon, name}) => (
   </View>
 );
 
-const ProfileScreen = ({navigation}) => {
-  return (
-    <View style={styles.screenContainer}>
-      <StatusBar barStyle="light-content" />
-      {/*  */}
-      <Header value="1" title="Cá nhân"  navigation={navigation}/>
-      {/*  */}
-      <View style={styles.bodyContainer}>
-        <View style={styles.userContainer}>
-          <View style={styles.avatarContainer}>
-            <MaterialIcons name="person" size={26} color="#fff" />
+class ProfileScreen extends Component {
+  componentDidMount = async () => {
+    const token = await AsyncStorage.getItem('AUTH_USER').then(data => {});
+    const {onGetProfile} = this.props;
+    onGetProfile(null, token);
+  };
+
+  render() {
+    const {navigation, userInfo} = this.props;
+    return (
+      <View style={styles.screenContainer}>
+        <StatusBar barStyle="light-content" />
+        {/*  */}
+        <Header value="1" title="Cá nhân" navigation={navigation} />
+        {/*  */}
+        <View style={styles.bodyContainer}>
+          <View style={styles.userContainer}>
+            <View style={styles.avatarContainer}>
+              <MaterialIcons name="person" size={26} color="#fff" />
+            </View>
+
+            <View style={styles.textContainer}>
+              {userInfo ? (
+                <>
+                <Text style={styles.username}> Xin chào {userInfo.lastname} {userInfo.firstname}</Text>         
+                </>
+              ) : (
+                <>
+                <Text style={styles.welcomeText}>
+                    Chào mừng bạn đến với Tiki
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('SignIn')}>
+                    <Text style={styles.authText}>Đăng nhập/Đăng ký</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+            <FontAwesome name="angle-right" size={26} color="#1e88e5" />
           </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.welcomeText}>Chào mừng bạn đến với Tiki</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
-              <Text style={styles.authText}>Đăng nhập/Đăng ký</Text>
-            </TouchableOpacity>
-            
-          </View>
-          <FontAwesome name="angle-right" size={26} color="#1e88e5" />
+          {/*  */}
+          <View style={styles.divider} />
+          <ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" />
+          <ProfileItem icon="cart-outline" name="Sản phẩm đã mua" />
+          <ProfileItem icon="eye-outline" name="Sản phẩm đã xem" />
+          <ProfileItem icon="heart-outline" name="Sản phẩm yêu thích" />
+          <ProfileItem icon="bookmark-outline" name="Sản phẩm mua sau" />
+          <ProfileItem icon="star-outline" name="Sản phẩm đánh giá" />
+          {/*  */}
+          <View style={styles.divider} />
+          <ProfileItem name="Ưu đãi cho chủ thẻ ngân hàng" />
+          <ProfileItem name="Cài đặt" />
+          {/*  */}
+          <View style={styles.divider} />
+          <ProfileItem icon="headphones" name="Hỗ trợ" />
         </View>
-        {/*  */}
-        <View style={styles.divider} />
-        <ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" />
-        <ProfileItem icon="cart-outline" name="Sản phẩm đã mua" />
-        <ProfileItem icon="eye-outline" name="Sản phẩm đã xem" />
-        <ProfileItem icon="heart-outline" name="Sản phẩm yêu thích" />
-        <ProfileItem icon="bookmark-outline" name="Sản phẩm mua sau" />
-        <ProfileItem icon="star-outline" name="Sản phẩm đánh giá" />
-        {/*  */}
-        <View style={styles.divider} />
-        <ProfileItem name="Ưu đãi cho chủ thẻ ngân hàng" />
-        <ProfileItem name="Cài đặt" />
-        {/*  */}
-        <View style={styles.divider} />
-        <ProfileItem icon="headphones" name="Hỗ trợ" />
       </View>
-    </View>
-  );
+    );
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    userInfo: state.auth.detail,
+    isLogin: state.auth.loggedIn,
+  };
 };
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onGetProfile: (data, headers) => {
+      dispatch(AuthorizationActions.onGetProfile(data, headers));
+    },
+    onLogout: () => {
+      dispatch(AuthorizationActions.onLogout());
+    },
+  };
+};
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(withConnect)(ProfileScreen);
 
 const styles = StyleSheet.create({
   screenContainer: {
@@ -87,6 +139,11 @@ const styles = StyleSheet.create({
   welcomeText: {
     color: '#828282',
   },
+  username: {
+    color: '#1e88e5',
+    fontSize: 20,
+    fontWeight: '600',
+  },
   authText: {
     color: '#1e88e5',
     fontSize: 18,
@@ -109,5 +166,3 @@ const styles = StyleSheet.create({
     height: 10,
   },
 });
-
-export default ProfileScreen;

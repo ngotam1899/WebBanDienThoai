@@ -34,6 +34,7 @@ function* handleLogin({ payload }) {
   try {
     const result = yield call(loginAccount, payload);
     const data = get(result, "data", {});
+    console.log("data: ", data)
     if (data.code !== 200) throw data;
     yield call (storeToken, result.headers.authorization);
     yield put(AuthorizationActions.onLoginSuccess(data.user));
@@ -57,6 +58,7 @@ function* handleLoginFacebook({ payload }) {
 function* handleLoginGoogle({ payload }) {
   try {
     const result = yield call(loginGoogle, {"access_token":payload});
+    console.log("test: ",result)
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield call (storeToken, result.headers.authorization);

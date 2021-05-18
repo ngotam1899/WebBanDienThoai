@@ -15,10 +15,14 @@ import {
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
+import {connect} from 'react-redux';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+// @Actions
+import AuthorizationActions from '../../redux/actions/auth';
+
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -28,38 +32,38 @@ import {
 GoogleSignin.configure({
   scopes: [],
   webClientId:
-    '66829264659-07n3208p778ai83rldvls9niq8vhahi0.apps.googleusercontent.com',
+    '6829264659-07n3208p778ai83rldvls9niq8vhahi0.apps.googleusercontent.com',
   offlineAccess: true,
-  //forceConsentPrompt: true,
 });
 
-export default class SignInPage extends Component {
+class SignInPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: {
-        username: '',
+        email: '',
         password: '',
         check_textInputChange: false,
         secureTextEntry: true,
         isValidUser: true,
         isValidPassword: true,
       },
-      userInfo: {},
+      userFacebookInfo: {},
       userGoogleInfo: {},
       loaded: false,
     };
   }
-  signIn = async () => {
+  signInGoogle = async () => {
+    const {onLoginGoogle, navigation} = this.props;
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log('asdsad: ', userInfo);
+      onLoginGoogle(userInfo.idToken);
       this.setState({
         userGoogleInfo: userInfo,
         loaded: true,
       });
-      console.log(this.state.userGoogleInfo);
+      //navigation.navigate('Home');
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('e 1');
@@ -85,35 +89,85 @@ export default class SignInPage extends Component {
         if (error) {
           console.log('login info has error: ' + error);
         } else {
-          this.setState({userInfo: result});
+          const {onLoginFacebook, navigation} = this.props;
+          this.setState({userFacebookInfo: result});
+          onLoginFacebook(token);
           console.log('result:', result);
           console.log('Token: ', token);
+          navigation.navigate('Home');
         }
       },
     );
     new GraphRequestManager().addRequest(profileRequest).start();
   };
-  loginWithFacebook = () => {
-    LoginManager.logInWithPermissions(['email']).then(
-      function (result) {
-        if (result.isCancelled) {
-          console.log('Login cancelled');
-        } else {
-          console.log(
-            'Login success with permissions: ' +
-              result.grantedPermissions.toString(),
-          );
-          AccessToken.getCurrentAccessToken().then(data => {
-            console.log(data.accessToken.toString());
-            console.log('result-->', result);
-          });
-        }
-      },
-      function (error) {
-        console.log('Login fail with error: ' + error);
-      },
-    );
+  
+
+  onClickLogin = () => {
+    const {email, password, isValidPassword, isValidUser} = this.state.data;
+    const {onLogin} = this.props;
+    const data = {email, password};
+    if (data && isValidUser && isValidPassword) {
+      onLogin(data);
+    }
   };
+
+  textInputChange = val => {
+    const data = this.state.data;
+    if (val.trim().length >= 4) {
+      this.setState(prevState => ({
+        data: {
+          ...prevState.data,
+          email: val,
+          check_textInputChange: true,
+          isValidUser: true,
+        },
+      }));
+    } else {
+      this.setState(prevState => ({
+        data: {
+          ...prevState.data,
+          email: val,
+          check_textInputChange: false,
+          isValidUser: false,
+        },
+      }));
+    }
+  };
+  handlePasswordChange = val => {
+    const data = this.state.data;
+    if (val.trim().length >= 6) {
+      this.setState(prevState => ({
+        data: {
+          ...prevState.data,
+          password: val,
+          isValidPassword: true,
+        },
+      }));
+    } else {
+      this.setState(prevState => ({
+        data: {...prevState.data, password: val, isValidPassword: false},
+      }));
+    }
+  };
+  updateSecureTextEntry = () => {
+    const data = this.state.data;
+    this.setState(prevState => ({
+      data: {
+        ...prevState.data,
+        secureTextEntry: !data.secureTextEntry,
+      },
+    }));
+  };
+
+  UNSAFE_componentWillReceiveProps(props) {
+    const {loggedIn, navigation} = props;
+    console.log('loggedin: ', loggedIn);
+    if (loggedIn && loggedIn === true) {
+      navigation.navigate('Home');
+    }
+  }
+  componentDidMount() {}
+
   render() {
     const {navigation} = this.props;
     const {data} = this.state;
@@ -127,9 +181,7 @@ export default class SignInPage extends Component {
           <Animatable.View
             animation="fadeInUpBig"
             style={[{backgroundColor: '#fff'}, styles.footer]}>
-            <Text style={[styles.text_footer, {color: '#05375a'}]}>
-              Username
-            </Text>
+            <Text style={[styles.text_footer, {color: '#05375a'}]}>Email</Text>
             <View style={styles.action}>
               <FontAwesome name="user-o" color={{color: '#05375a'}} size={20} />
               <TextInput
@@ -142,6 +194,7 @@ export default class SignInPage extends Component {
                   },
                 ]}
                 autoCapitalize="none"
+                onChangeText={val => this.textInputChange(val)}
               />
               {data.check_textInputChange ? (
                 <Animatable.View animation="bounceIn">
@@ -173,6 +226,8 @@ export default class SignInPage extends Component {
                 placeholder="Your Password"
                 placeholderTextColor="#666666"
                 secureTextEntry={data.secureTextEntry ? true : false}
+                //secureTextEntry={true}
+                onChangeText={val => this.handlePasswordChange(val)}
                 style={[
                   styles.textInput,
                   {
@@ -181,7 +236,7 @@ export default class SignInPage extends Component {
                 ]}
                 autoCapitalize="none"
               />
-              <TouchableOpacity>
+              <TouchableOpacity onPress={this.updateSecureTextEntry}>
                 {data.secureTextEntry ? (
                   <Feather name="eye-off" color="grey" size={20} />
                 ) : (
@@ -192,7 +247,7 @@ export default class SignInPage extends Component {
             {data.isValidPassword ? null : (
               <Animatable.View animation="fadeInLeft" duration={500}>
                 <Text style={styles.errorMsg}>
-                  Password must be 8 characters long.
+                  Password must be 6 characters long.
                 </Text>
               </Animatable.View>
             )}
@@ -202,7 +257,15 @@ export default class SignInPage extends Component {
                 Forgot password?
               </Text>
             </TouchableOpacity>
-            <View style={{flex: 1, flexDirection:'row', margin: 20, marginTop: 30, alignItems:'center', justifyContent:'center'}}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                margin: 20,
+                marginTop: 30,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
               <View
                 style={{
                   width: 160, // whatever you want
@@ -230,24 +293,20 @@ export default class SignInPage extends Component {
                       });
                     }
                   }}
-                  onLogoutFinished={() => this.setState({userInfo: {}})}
+                  onLogoutFinished={() => this.setState({userFacebookInfo: {}})}
                 />
               </View>
-
-              {this.state.userInfo.name && (
-                <Text style={{fontSize: 16, marginVertical: 16}}>
-                  Logged in As {this.state.userInfo.name}
-                </Text>
-              )}
               <GoogleSigninButton
                 style={{width: 200, height: 50}}
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Dark}
-                onPress={this.signIn}
+                onPress={this.signInGoogle}
               />
             </View>
             <View style={styles.button}>
-              <TouchableOpacity style={styles.signIn}>
+              <TouchableOpacity
+                style={styles.signIn}
+                onPress={this.onClickLogin}>
                 <LinearGradient
                   colors={['#1F7cdb', '#1e88e5']}
                   style={styles.signIn}>
@@ -289,6 +348,32 @@ export default class SignInPage extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    loggedIn: state.auth.loggedIn,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onLogin: data => {
+      dispatch(AuthorizationActions.onLogin(data));
+    },
+    onLoginFacebook: token => {
+      dispatch(AuthorizationActions.onLoginFacebook(token));
+    },
+    onLoginGoogle: token => {
+      dispatch(AuthorizationActions.onLoginGoogle(token));
+    },
+    onGetProfile : (data, headers) =>{
+			dispatch(AuthorizationActions.onGetProfile(data, headers))
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignInPage);
+
 export const COLOR_PINK = 'rgb(221, 97, 97)';
 export const COLOR_PINK_LIGHT = 'rgb(234, 195, 176)';
 export const COLOR_FACEBOOK = '#3b5998';

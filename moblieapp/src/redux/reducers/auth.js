@@ -11,35 +11,32 @@ export default function(state = INITIAL_STATE, action) {
     case AuthorizationActionTypes.REGISTER:
       return {...state};
     case AuthorizationActionTypes.REGISTER_SUCCESS:
-      toastSuccess('Đăng ký thành công');
       return {...state};
     case AuthorizationActionTypes.REGISTER_ERROR:
       var { message } = action.payload;
-      toastError(message);
       return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT:
       return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT_SUCCESS:
-      toastSuccess('Xác nhận thành công! Chọn "Đăng nhập" để tiếp tục!');
       return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT_ERROR:
       var { message } = action.payload;
-      toastError(message);
       return {...state};
     case AuthorizationActionTypes.LOGIN:
+      console.log('1')
       return {
         ...state,
         loggedIn: false,
+        detail: null
       };
     case AuthorizationActionTypes.LOGIN_SUCCESS:
-      toastSuccess('Đăng nhập thành công');
+      console.log('2')
       return {  
         ...state,
         loggedIn: true,
+        detail: action.payload,
       };
     case AuthorizationActionTypes.LOGIN_ERROR:
-      var { message } = action.payload;
-      toastError(message);
       return {
         ...state,
         loggedIn: false,
@@ -50,7 +47,6 @@ export default function(state = INITIAL_STATE, action) {
         loggedIn: false,
       };
     case AuthorizationActionTypes.LOGIN_FACEBOOK_SUCCESS:
-      toastSuccess('Đăng nhập thành công');
       return {  
         ...state,
         loggedIn: true,
@@ -61,12 +57,13 @@ export default function(state = INITIAL_STATE, action) {
         loggedIn: false,
       };
     case AuthorizationActionTypes.LOGIN_GOOGLE:
+      console.log('on success');
       return {
         ...state,
         loggedIn: false,
       };
     case AuthorizationActionTypes.LOGIN_GOOGLE_SUCCESS:
-      toastSuccess('Đăng nhập thành công');
+      console.log('login success');
       return {  
         ...state,
         loggedIn: true,
