@@ -7,7 +7,6 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
-  Alert,
   ScrollView,
 } from 'react-native';
 import {
@@ -24,12 +23,12 @@ import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-} from '@react-native-community/google-signin';
+} from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
   scopes: [],
   webClientId:
-    '520786358832-90jh3dlb0b1r4j7g9i6p4njehi5irf9g.apps.googleusercontent.com',
+    '66829264659-07n3208p778ai83rldvls9niq8vhahi0.apps.googleusercontent.com',
   offlineAccess: true,
   //forceConsentPrompt: true,
 });
@@ -118,7 +117,6 @@ export default class SignInPage extends Component {
   render() {
     const {navigation} = this.props;
     const {data} = this.state;
-    console.log('data', data);
     return (
       <ScrollView style={{backgroundColor: '#fff'}}>
         <View style={styles.container}>
