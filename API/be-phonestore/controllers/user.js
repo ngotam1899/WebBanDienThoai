@@ -5,13 +5,17 @@ const service = require('../services/service');
 /* SEND_EMAIL */
 const nodemailer = require('nodemailer');
 const JWT = require('jsonwebtoken');
-const { JWT_SECRET, EMAIL_NAME, PASS } = require('../configs/config');
+const { JWT_SECRET, EMAIL_NAME, PASS, GoogleID } = require('../configs/config');
 /* GOOGLE_ANALYTICS */
 const { google } = require('googleapis')
 const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
 const key = require("../mongodb-api-training-aff257b47418.json")
 const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, key.private_key, scopes)
 const view_id = process.env.VIEW_ID
+/* GOOGLE_OAUTH2 */
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(GoogleID);
+
 
 const hashString = async (textString) => {
 	const salt = await bcrypts.genSalt(15);
@@ -39,6 +43,60 @@ const authGoogle = async (req, res, next) => {
 
 	res.setHeader('authorization', token);
 	return res.status(200).json({ success: true, code: 200, message: '', user: user });
+};
+
+const authGoogleMobile = async (req, res, next) => {
+	try{
+		const ticket = await client.verifyIdToken({
+			idToken: req.body.access_token,
+			audience: GoogleID,  
+		});
+		const payload = ticket.getPayload();
+		const user = await User.findOne({
+			auth_google_id: payload.sub,
+			auth_type: 'google'
+		}).populate({
+			path: 'image',
+			select: 'public_url'
+		});
+		if (user) {
+			return res.status(200).json({ success: true, code: 200, message: '', user });
+		} else {
+			const user = await User.findOne({ email: payload.email }).populate({
+				path: 'image',
+				select: 'public_url'
+			});
+			if (user) {
+				user.auth_google_id = payload.sub;
+				user.auth_type = 'google';
+				await user.save();
+				return res.status(200).json({ success: true, code: 200, message: '', user });
+			} else {
+				const image = new Image({
+					//name: profile.displayName,
+					public_url: payload.picture
+				});
+				await image.save();
+				const newUser = new User({
+					firstname: payload.given_name,
+					lastname: payload.family_name,
+					image: image._id,
+					email: payload.email,
+					auth_google_id: payload.sub,
+					auth_type: 'google',
+					confirmed: true,
+					role: '1'
+				});
+				await newUser.save();
+				done(null, newUser);
+			}
+		}
+		return res.status(200).json({ success: true, code: 200, message: '', user });
+	} catch(error){
+		next(error);
+	}
+	
+	
 };
 
 const authFacebook = async (req, res, next) => {
@@ -358,14 +416,18 @@ const sessionUsers = async (req, res, next) => {
 
 module.exports = {
 	authGoogle,
+	authGoogleMobile,
 	authFacebook,
+
 	getAllUser,
 	getUser,
 	newUser,
 	updateUser,
+
 	signIn,
 	signUp,
 	logOut,
+
 	returnUserByToken,
 	activeAccount,
 	activePassword,

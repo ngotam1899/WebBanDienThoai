@@ -50,7 +50,6 @@ class LoginPage extends Component {
 	componentDidMount(){ 
 		document.title = "[TellMe] Đăng nhập"
 		this.improveScreen()
-		const {history} = this.props;
 	}
 
 	UNSAFE_componentWillReceiveProps(props){

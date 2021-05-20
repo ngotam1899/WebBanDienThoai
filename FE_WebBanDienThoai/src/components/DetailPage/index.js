@@ -149,7 +149,11 @@ class DetailPage extends Component {
     const {product, currency, t, review, group, total, count, location } = this.props;
     const {quantity, imageColor, check, _check } = this.state;
     const filter = getFilterParams(location.search);
-    
+    var des= []
+    if(product) JSON.parse(product.description).blocks.map((i)=>{
+      if(i.text !="" && i.text !=" ")des.push(i.text)
+    })
+    console.log(des)
     return (<>
       <div className="application">
         <Helmet>
@@ -337,10 +341,10 @@ class DetailPage extends Component {
                                 <div className="row" key={index}>
                                   <div className="col-12">
                                   <div className="float-left mr-3">
-                                    <img className="rounded-circle square-60" src={item.user.image ? item.user.image.public_url : INITIAL_IMAGE} alt=""/>
+                                    <img className="rounded-circle square-60" src={item.user && item.user.image ? item.user.image.public_url : INITIAL_IMAGE} alt=""/>
                                   </div>
                                   <div className="">
-                                    <p className="font-weight-bold mb-0">{item.user.firstname} {item.user.lastname}</p>
+                                    <p className="font-weight-bold mb-0">{item.user && item.user.firstname} {item.user && item.user.lastname}</p>
                                     <p className="mb-0"><Rating
                                       initialRating={item.rating}
                                       emptySymbol="fa fa-star text-secondary"
@@ -356,7 +360,7 @@ class DetailPage extends Component {
                               )
                             })}
                           </div>
-                          {review && review.length>0 && <div className="product-pagination text-center">
+                          {review && review.length>3 && <div className="product-pagination text-center">
                             <nav className="float-right">
                               <Pagination
                                 activePage={filter.page ? parseInt(filter.page)+1 : 1}

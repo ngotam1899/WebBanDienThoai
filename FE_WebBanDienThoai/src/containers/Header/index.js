@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom'
-
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import './styles.css';
@@ -183,6 +183,10 @@ class Header extends Component {
               </nav>
             </div>
           </div>
+          <MessengerCustomerChat
+            pageId="104334418256109"
+            appId="804609327113718"
+          />
         </div>
       </>
     );

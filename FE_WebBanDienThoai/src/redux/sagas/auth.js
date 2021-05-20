@@ -45,6 +45,7 @@ function* handleLoginFacebook({ payload }) {
 function* handleLoginGoogle({ payload }) {
   try {
     const result = yield call(loginGoogle, {"access_token":payload});
+    console.log(payload)
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     localStorage.setItem('AUTH_USER', result.headers.authorization);
