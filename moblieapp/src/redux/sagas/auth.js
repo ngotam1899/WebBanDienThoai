@@ -2,7 +2,7 @@ import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
 import OrdersActions, { OrdersActionTypes } from "../actions/order";
-import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, } from "../apis/auth";
+import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, forgotPassword, activatePassword} from "../apis/auth";
 import {orderHistory } from "../apis/order";
 import { AsyncStorage } from 'react-native';
 
@@ -34,7 +34,6 @@ function* handleLogin({ payload }) {
   try {
     const result = yield call(loginAccount, payload);
     const data = get(result, "data", {});
-    console.log("data: ", data)
     if (data.code !== 200) throw data;
     yield call (storeToken, result.headers.authorization);
     yield put(AuthorizationActions.onLoginSuccess(data.user));
@@ -58,7 +57,6 @@ function* handleLoginFacebook({ payload }) {
 function* handleLoginGoogle({ payload }) {
   try {
     const result = yield call(loginGoogle, {"access_token":payload});
-    console.log("test: ",result)
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield call (storeToken, result.headers.authorization);
@@ -93,6 +91,28 @@ function* handleGetProfile() {
     yield put(AuthorizationActions.onGetProfileError(error));
   }
 }
+function* handleForgotPassword({ payload}) {
+  try {
+    const result = yield call(forgotPassword, payload);
+    const data = get(result, "data", {});  
+    if (data.code !== 200) throw data;
+    yield put(AuthorizationActions.onForgotPasswordSuccess(data));
+  } catch (error) {
+    yield put(AuthorizationActions.onForgotPasswordError(error));
+  }
+}
+
+
+function* handleActivePassword({ payload}) {
+  try {
+    const result = yield call(activatePassword, payload.token, payload.data);
+    const data = get(result, "data", {});  
+    if (data.code !== 200) throw data;
+    yield put(AuthorizationActions.onActivatePasswordSuccess(data));
+  } catch (error) {
+    yield put(AuthorizationActions.onActivatePasswordError(error));
+  }
+}
 /**
  *
  */
@@ -113,7 +133,12 @@ export function* watchLoginGoogle() {
 export function* watchActivateAccount() {
   yield takeEvery(AuthorizationActionTypes.ACTIVATE_ACCOUNT, handleActiveAccount);
 }
-
+export function* watchForgotPassword() {
+  yield takeEvery(AuthorizationActionTypes.FORGOT_PASSWORD, handleForgotPassword);
+}
+export function* watchActivePassword() {
+  yield takeEvery(AuthorizationActionTypes.ACTIVATE_PASSWORD, handleActivePassword);
+}
 export function* watchGetProfile() {
   yield takeEvery(AuthorizationActionTypes.GET_PROFILE, handleGetProfile);
 }
@@ -126,5 +151,7 @@ export default function* rootSaga() {
     fork(watchLoginGoogle),
     fork(watchActivateAccount),
     fork(watchGetProfile),
+    fork(watchForgotPassword),
+    fork(watchActivePassword),
   ]);
 }

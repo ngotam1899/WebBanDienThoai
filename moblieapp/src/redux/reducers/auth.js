@@ -1,5 +1,4 @@
 import { AuthorizationActionTypes } from "../actions/auth";
-import { toastError, toastSuccess } from '../../utils/toastHelper';
 
 const INITIAL_STATE = {
   loading: true,
@@ -13,14 +12,18 @@ export default function(state = INITIAL_STATE, action) {
     case AuthorizationActionTypes.REGISTER_SUCCESS:
       return {...state};
     case AuthorizationActionTypes.REGISTER_ERROR:
-      var { message } = action.payload;
+      return {...state};
+    case AuthorizationActionTypes.FORGOT_PASSWORD_ERROR:
+    case AuthorizationActionTypes.FORGOT_PASSWORD_SUCCESS:
+    case AuthorizationActionTypes.FORGOT_PASSWORD_SUCCESS:
+      return {...state}
+    case AuthorizationActionTypes.ACTIVATE_PASSWORD:
+    case AuthorizationActionTypes.ACTIVATE_PASSWORD_ERROR:
+    case AuthorizationActionTypes.ACTIVATE_PASSWORD_SUCCESS:
       return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT:
-      return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT_SUCCESS:
-      return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT_ERROR:
-      var { message } = action.payload;
       return {...state};
     case AuthorizationActionTypes.LOGIN:
       console.log('1')
@@ -61,12 +64,14 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         loggedIn: false,
+        data: null
       };
     case AuthorizationActionTypes.LOGIN_GOOGLE_SUCCESS:
       console.log('login success');
       return {  
         ...state,
         loggedIn: true,
+        data: action.payload
       };
     case AuthorizationActionTypes.LOGIN_GOOGLE_ERROR:
       return {

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   StatusBar,
   ScrollView,
+  Button,
 } from 'react-native';
 import {
   LoginButton,
@@ -16,10 +17,13 @@ import {
   GraphRequestManager,
 } from 'react-native-fbsdk';
 import {connect} from 'react-redux';
+
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import Modal from 'react-native-modal';
+
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth';
 
@@ -32,7 +36,7 @@ import {
 GoogleSignin.configure({
   scopes: [],
   webClientId:
-    '6829264659-07n3208p778ai83rldvls9niq8vhahi0.apps.googleusercontent.com',
+    '66829264659-07n3208p778ai83rldvls9niq8vhahi0.apps.googleusercontent.com',
   offlineAccess: true,
 });
 
@@ -50,18 +54,19 @@ class SignInPage extends Component {
       },
       userFacebookInfo: {},
       userGoogleInfo: {},
-      loaded: false,
+      isModalVisible: false,
+      email: '',
     };
   }
+
   signInGoogle = async () => {
-    const {onLoginGoogle, navigation} = this.props;
+    const {onLoginGoogle} = this.props;
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       onLoginGoogle(userInfo.idToken);
       this.setState({
         userGoogleInfo: userInfo,
-        loaded: true,
       });
       //navigation.navigate('Home');
     } catch (error) {
@@ -100,7 +105,6 @@ class SignInPage extends Component {
     );
     new GraphRequestManager().addRequest(profileRequest).start();
   };
-  
 
   onClickLogin = () => {
     const {email, password, isValidPassword, isValidUser} = this.state.data;
@@ -161,16 +165,36 @@ class SignInPage extends Component {
 
   UNSAFE_componentWillReceiveProps(props) {
     const {loggedIn, navigation} = props;
-    console.log('loggedin: ', loggedIn);
     if (loggedIn && loggedIn === true) {
       navigation.navigate('Home');
     }
   }
   componentDidMount() {}
 
+  toggleModal = () => {
+    const {isModalVisible} = this.state;
+    this.setState({
+      isModalVisible: !isModalVisible,
+    });
+  };
+
+  sendEmail() {
+    const {email,isModalVisible} = this.state;
+    console.log('email: ', email);
+    const {onForgotPassword} = this.props;
+    if (email) {
+      onForgotPassword({email});
+      this.setState({
+        isModalVisible: !isModalVisible,
+      });
+    } else {
+      toastError('Vui lòng nhập email để đặt lại mật khẩu');
+    }
+  }
+
   render() {
     const {navigation} = this.props;
-    const {data} = this.state;
+    const {data, isModalVisible} = this.state;
     return (
       <ScrollView style={{backgroundColor: '#fff'}}>
         <View style={styles.container}>
@@ -226,7 +250,6 @@ class SignInPage extends Component {
                 placeholder="Your Password"
                 placeholderTextColor="#666666"
                 secureTextEntry={data.secureTextEntry ? true : false}
-                //secureTextEntry={true}
                 onChangeText={val => this.handlePasswordChange(val)}
                 style={[
                   styles.textInput,
@@ -252,11 +275,61 @@ class SignInPage extends Component {
               </Animatable.View>
             )}
 
-            <TouchableOpacity>
-              <Text style={{color: '#009387', marginTop: 15}}>
+            <TouchableOpacity onPress={this.toggleModal}>
+              <Text style={{color: '#1877F2', marginTop: 15}}>
                 Forgot password?
               </Text>
             </TouchableOpacity>
+            <Modal isVisible={isModalVisible}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <View
+                  style={{height: 220, backgroundColor: '#fff', padding: 50}}>
+                  <Text style={[styles.text_footer]}>
+                    Nhập email để xác thực
+                  </Text>
+                  <View style={styles.action}>
+                    <FontAwesome name="user-o" color="#05375a" size={20} />
+                    <TextInput
+                      placeholder="Your Email"
+                      style={styles.textInput}
+                      autoCapitalize="none"
+                      onChangeText={val => {
+                        this.setState({
+                          email: val,
+                        });
+                      }}
+                    />
+                  </View>
+                  <View style={styles.button}>
+                    <TouchableOpacity
+                      style={[
+                        styles.signIn,
+                        {paddingBottom: 50, paddingTop: 20},
+                      ]}
+                      onPress={() => this.sendEmail()}>
+                      <LinearGradient
+                        colors={['#1F7cdb', '#1e88e5']}
+                        style={styles.signIn}>
+                        <Text
+                          style={[
+                            styles.textSign,
+                            {
+                              color: '#fff',
+                            },
+                          ]}>
+                          Xác nhận
+                        </Text>
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
             <View
               style={{
                 flex: 1,
@@ -357,6 +430,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onForgotPassword: data => {
+      dispatch(AuthorizationActions.onForgotPassword(data));
+    },
     onLogin: data => {
       dispatch(AuthorizationActions.onLogin(data));
     },
@@ -366,8 +442,8 @@ const mapDispatchToProps = dispatch => {
     onLoginGoogle: token => {
       dispatch(AuthorizationActions.onLoginGoogle(token));
     },
-    onGetProfile : (data, headers) =>{
-			dispatch(AuthorizationActions.onGetProfile(data, headers))
+    onGetProfile: (data, headers) => {
+      dispatch(AuthorizationActions.onGetProfile(data, headers));
     },
   };
 };

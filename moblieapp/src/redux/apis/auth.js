@@ -19,17 +19,29 @@ export const activateAccount = (token) =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/authentication/activate/${token}`);
 }
 
-//4. Từ token lấy thông tin người dùng
+//4. Forgot Password tại {{url}}/users/forgot-password
+export const forgotPassword = (data) =>{
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}/forgot-password`, data);
+}
+
+//5. Từ token lấy thông tin người dùng
 export const getProfile = (data) =>{
   return axiosService.post(`${API_ENDPOINT_AUTH}${url}/api/auth/profile`, data);
 };
 
-//5. Đăng nhập với Gooogle http://localhost:3000/users/auth/google
+//6. Đăng nhập với Gooogle http://localhost:3000/users/auth/google
 export const loginGoogle = (token) =>{
   return axiosService.post(`${API_ENDPOINT_AUTH}${url}/auth/google`, token);
 };
 
-//6. Đăng nhập với Facebook http://localhost:3000/users/auth/facebook
+//7. Đăng nhập với Facebook http://localhost:3000/users/auth/facebook
 export const loginFacebook = (token) =>{
   return axiosService.post(`${API_ENDPOINT_AUTH}${url}/auth/facebook`, token);
 };
+
+//8. Active Password tại {{url}}/users/activate-password/:token
+export const activatePassword = (token, data) =>{
+  console.log("token",token)
+  console.log("data",data)
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}/activate-password/${token}`, data);
+}

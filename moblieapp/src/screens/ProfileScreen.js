@@ -35,6 +35,7 @@ class ProfileScreen extends Component {
 
   render() {
     const {navigation, userInfo} = this.props;
+    console.log("user info: ",userInfo)
     return (
       <View style={styles.screenContainer}>
         <StatusBar barStyle="light-content" />

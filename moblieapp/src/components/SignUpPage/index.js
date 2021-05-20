@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -15,65 +15,151 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import {Component} from 'react';
+import {Picker} from '@react-native-community/picker';
+
+import AuthorizationActions from '../../redux/actions/auth';
+import AddressActions from '../../redux/actions/address';
+
+import {connect} from 'react-redux';
 
 class SignUpPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
-      confirm_password: '',
+      email: null,
+      firstname: null,
+      lastname: null,
+      phonenumber: null,
+      cityInfo: '',
+      city: '',
+      cityID: '',
+      districtInfo: '',
+      district: '',
+      ward: '',
+      password: null,
+      confirmPassword: '',
       check_textInputChange: false,
       secureTextEntry: true,
       confirm_secureTextEntry: true,
     };
   }
+  componentDidMount() {
+    const {onGetListCity} = this.props;
+    onGetListCity();
+  }
+  setDistrict = (value, index) => {
+    const {onGetListDistrict} = this.props;
+    this.setState({
+      cityInfo: value,
+      city: value.ProvinceName,
+      cityID: value.ProvinceID,
+    });
+    onGetListDistrict({province_id: value.ProvinceID});
+  };
+
+  setWard = (value, index) => {
+    const {onGetListWard} = this.props;
+    const {cityID} = this.state.cityID;
+    this.setState({
+      districtInfo: value,
+      district: value.DistrictName,
+    });
+    onGetListWard(cityID, value.DistrictID);
+  };
+
+  setAddress = (value, index) => {
+    this.setState({
+      ward: value,
+    });
+  };
 
   textInputChange = val => {
-    if (val.length !== 0) {
-      this.setState( prevState => ({
-        ...data,
-        username: val,
+    if (val.trim().length >= 4) {
+      this.setState({
+        email: val,
         check_textInputChange: true,
-      }));
+        isValidUser: true,
+      });
     } else {
-      this.setState = {
-        ...data,
-        username: val,
+      this.setState({
+        email: val,
         check_textInputChange: false,
-      };
+        isValidUser: false,
+      });
     }
   };
 
   handlePasswordChange = val => {
-    setData({
-      ...data,
-      password: val,
-    });
-  };
-
-  handleConfirmPasswordChange = val => {
-    setData({
-      ...data,
-      confirm_password: val,
-    });
+    if (val.trim().length >= 6) {
+      this.setState({
+        password: val,
+        isValidPassword: true,
+      });
+    } else {
+      this.setState({
+        password: val,
+        isValidPassword: false,
+      });
+    }
   };
 
   updateSecureTextEntry = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry,
+    const {secureTextEntry} = this.state;
+    this.setState({
+      secureTextEntry: !secureTextEntry,
     });
   };
 
   updateConfirmSecureTextEntry = () => {
-    setData({
-      ...data,
-      confirm_secureTextEntry: !data.confirm_secureTextEntry,
+    const confirm_secureTextEntry = this.state.confirm_secureTextEntry;
+    this.setState({
+      confirm_secureTextEntry: !confirm_secureTextEntry,
     });
   };
+  onChangeFirstname = val => {
+    this.setState({
+      firstname: val,
+    });
+  };
+  onChangeLastname = val => {
+    this.setState({
+      lastname: val,
+    });
+  };
+  onRegister() {
+    const {
+      firstname,
+      lastname,
+      phonenumber,
+      address,
+      city,
+      district,
+      ward,
+      email,
+      password,
+      confirmPassword,
+    } = this.state;
+    const {onRegister, t} = this.props;
+
+    const data = {firstname, lastname, phonenumber, address : `${address}, ${ward}, ${district}, ${city}`, email, password};
+
+    if(password === confirmPassword){
+    	onRegister(data);
+    }else{
+    	toastError(t('user.password.error'))
+    }
+  }
+
   render() {
+    const {
+      check_textInputChange,
+      cityInfo,
+      districtInfo,
+      ward,
+      secureTextEntry,
+      confirm_secureTextEntry,
+    } = this.state;
+    const {listCity, listDistrict, listWard, navigation} = this.props;
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#1e88e5" barStyle="light-content" />
@@ -84,14 +170,14 @@ class SignUpPage extends Component {
           <ScrollView>
             <Text style={styles.text_footer}>Username</Text>
             <View style={styles.action}>
-              <FontAwesome name="user-o" color="#05375a" size={20} />
+              <FontAwesome name="envelope" color="#05375a" size={20} />
               <TextInput
                 placeholder="Your Username"
                 style={styles.textInput}
                 autoCapitalize="none"
-                onChangeText={val => textInputChange(val)}
+                onChangeText={val => this.textInputChange(val)}
               />
-              {data.check_textInputChange ? (
+              {check_textInputChange ? (
                 <Animatable.View animation="bounceIn">
                   <Feather name="check-circle" color="green" size={20} />
                 </Animatable.View>
@@ -102,7 +188,146 @@ class SignUpPage extends Component {
               style={[
                 styles.text_footer,
                 {
-                  marginTop: 35,
+                  marginTop: 20,
+                },
+              ]}>
+              First Name
+            </Text>
+            <View style={styles.action}>
+              <FontAwesome name="user-o" color="#05375a" size={20} />
+              <TextInput
+                placeholder="Your First Name"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={val => this.onChangeFirstname(val)}
+              />
+            </View>
+
+            <Text
+              style={[
+                styles.text_footer,
+                {
+                  marginTop: 20,
+                },
+              ]}>
+              Last Name
+            </Text>
+            <View style={styles.action}>
+              <FontAwesome name="user-o" color="#05375a" size={20} />
+              <TextInput
+                placeholder="Your Last Name"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={val => this.onChangeLastname(val)}
+              />
+            </View>
+
+            <Text
+              style={[
+                styles.text_footer,
+                {
+                  marginTop: 20,
+                },
+              ]}>
+              Phone Number
+            </Text>
+            <View style={styles.action}>
+              <FontAwesome name="phone" color="#05375a" size={20} />
+              <TextInput
+                placeholder="Your Phone Number"
+                style={styles.textInput}
+                autoCapitalize="none"
+                keyboardType="numeric"
+                onChangeText={val => {
+                  this.setState({
+                    phonenumber: val,
+                  });
+                }}
+              />
+            </View>
+
+            <Text
+              style={[
+                styles.text_footer,
+                {
+                  marginTop: 20,
+                },
+              ]}>
+              Your Address
+            </Text>
+            <View style={styles.action}>
+              <FontAwesome name="home" color="#05375a" size={20} />
+              <TextInput
+                placeholder="Your Address"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={val =>
+                  this.setState({
+                    address: val,
+                  })
+                }
+              />
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Picker
+                selectedValue={cityInfo}
+                style={{height: 50, width: 180}}
+                onValueChange={(itemValue, index) =>
+                  this.setDistrict(itemValue, index)
+                }>
+                {listCity &&
+                  listCity.map((item, index) => {
+                    return (
+                      <Picker.Item
+                        key={index}
+                        label={item.ProvinceName}
+                        value={item}
+                      />
+                    );
+                  })}
+              </Picker>
+              <Picker
+                selectedValue={districtInfo}
+                style={{height: 50, width: 180}}
+                onValueChange={(itemValue, index) =>
+                  this.setWard(itemValue, index)
+                }>
+                {listDistrict &&
+                  listDistrict.map((item, index) => {
+                    return (
+                      <Picker.Item
+                        key={index}
+                        label={item.DistrictName}
+                        value={item}
+                      />
+                    );
+                  })}
+              </Picker>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Picker
+                selectedValue={ward}
+                style={{height: 50, width: 220}}
+                onValueChange={(itemValue, index) =>
+                  this.setAddress(itemValue, index)
+                }>
+                {listWard &&
+                  listWard.map((item, index) => {
+                    return (
+                      <Picker.Item
+                        key={index}
+                        label={item.WardName}
+                        value={item.WardName}
+                      />
+                    );
+                  })}
+              </Picker>
+            </View>
+            <Text
+              style={[
+                styles.text_footer,
+                {
+                  marginTop: 20,
                 },
               ]}>
               Password
@@ -111,13 +336,13 @@ class SignUpPage extends Component {
               <Feather name="lock" color="#05375a" size={20} />
               <TextInput
                 placeholder="Your Password"
-                secureTextEntry={data.secureTextEntry ? true : false}
+                secureTextEntry={secureTextEntry ? true : false}
                 style={styles.textInput}
                 autoCapitalize="none"
-                onChangeText={val => handlePasswordChange(val)}
+                onChangeText={val => this.handlePasswordChange(val)}
               />
-              <TouchableOpacity onPress={updateSecureTextEntry}>
-                {data.secureTextEntry ? (
+              <TouchableOpacity onPress={this.updateSecureTextEntry}>
+                {secureTextEntry ? (
                   <Feather name="eye-off" color="grey" size={20} />
                 ) : (
                   <Feather name="eye" color="grey" size={20} />
@@ -129,7 +354,7 @@ class SignUpPage extends Component {
               style={[
                 styles.text_footer,
                 {
-                  marginTop: 35,
+                  marginTop: 20,
                 },
               ]}>
               Confirm Password
@@ -138,13 +363,18 @@ class SignUpPage extends Component {
               <Feather name="lock" color="#05375a" size={20} />
               <TextInput
                 placeholder="Confirm Your Password"
-                secureTextEntry={data.confirm_secureTextEntry ? true : false}
+                secureTextEntry={confirm_secureTextEntry ? true : false}
                 style={styles.textInput}
                 autoCapitalize="none"
-                onChangeText={val => handleConfirmPasswordChange(val)}
+                onChangeText={val =>
+                  this.setState({
+                    confirmPassword: val,
+                  })
+                }
               />
-              <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-                {data.secureTextEntry ? (
+              <TouchableOpacity
+                onPress={() => this.updateConfirmSecureTextEntry()}>
+                {secureTextEntry ? (
                   <Feather name="eye-off" color="grey" size={20} />
                 ) : (
                   <Feather name="eye" color="grey" size={20} />
@@ -166,7 +396,9 @@ class SignUpPage extends Component {
               </Text>
             </View>
             <View style={styles.button}>
-              <TouchableOpacity style={styles.signIn} onPress={() => {}}>
+              <TouchableOpacity
+                style={styles.signIn}
+                onPress={() => this.onRegister()}>
                 <LinearGradient
                   colors={['#1F7cdb', '#1e88e5']}
                   style={styles.signIn}>
@@ -187,7 +419,7 @@ class SignUpPage extends Component {
                 style={[
                   styles.signIn,
                   {
-                    borderColor: '#009387',
+                    borderColor: '#1e88e5',
                     borderWidth: 1,
                     marginTop: 15,
                   },
@@ -196,7 +428,7 @@ class SignUpPage extends Component {
                   style={[
                     styles.textSign,
                     {
-                      color: '#009387',
+                      color: '#1e88e5',
                     },
                   ]}>
                   Sign In
@@ -210,7 +442,32 @@ class SignUpPage extends Component {
   }
 }
 
-export default SignUpPage;
+const mapStateToProps = state => {
+  return {
+    listCity: state.address.city,
+    listDistrict: state.address.district,
+    listWard: state.address.ward,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onRegister: data => {
+      dispatch(AuthorizationActions.onRegister(data));
+    },
+    onGetListCity: () => {
+      dispatch(AddressActions.onGetCity());
+    },
+    onGetListDistrict: cityID => {
+      dispatch(AddressActions.onGetDistrict(cityID));
+    },
+    onGetListWard: (cityID, districtID) => {
+      dispatch(AddressActions.onGetWard(cityID, districtID));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpPage);
 
 const styles = StyleSheet.create({
   container: {

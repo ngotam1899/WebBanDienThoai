@@ -35,12 +35,16 @@ export default function(state = init, action) {
         district: get(action, "payload", []),
         ward: null,
       };
+    case AddressActionTypes.CALCULATE_SHIPPING_SUCCESS:
+      return {
+        ...state,
+        ship: action.payload
+      };
+    case AddressActionTypes.CALCULATE_SHIPPING:
+    case AddressActionTypes.CALCULATE_SHIPPING_ERROR:
     case AddressActionTypes.GET_DISTRICT_ERROR:
     case AddressActionTypes.GET_CITY_ERROR:
     case AddressActionTypes.GET_WARD_ERROR:
-      return {
-        ...state,
-      };
     case AddressActionTypes.GET_WARD:
       return {
         ...state,

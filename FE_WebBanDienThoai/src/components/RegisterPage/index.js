@@ -151,7 +151,6 @@ class RegisterPage extends Component {
 												<div className="div">
 													<h5>Address</h5>
 													<input type="text" className="input" name="address" value={address} onChange={this.onChange}/>
-													
 												</div>
 											</div>
                     </div>
