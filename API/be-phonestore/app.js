@@ -17,6 +17,7 @@ const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const http = require('http')
 const socketIO = require('socket.io')
+const Product = require('./models/Product');
 
 const app = express();
 const server = http.createServer(app)
@@ -113,6 +114,27 @@ io.on('connection', (socket) => {
     //callback(); // lặp lại mỗi lần bắt đc sự kiện join
   });
 });
+
+const recommendProducts = (req, res, next) => {
+	try {
+		var spawn = require('child_process').spawn;
+		var process = spawn('python', [
+			'./python.py',
+			req.query.product,
+		]);
+		process.stdout.on("data", async (data) => {
+			// Convert string to JSON
+			var _data = JSON.stringify(data.toString())
+			var result = JSON.parse(JSON.parse(_data));
+			await Product.populate(result, { path: 'data'});
+			return res.status(200).json({ success: true, code: 200, result });
+		})
+	} catch(error){
+		console.log(error)
+		next(error)
+	}
+}
+app.get('/products-recommend', recommendProducts);
 
 //Catch 404 error and forward them to error handler
 app.use((req, res, next) => {

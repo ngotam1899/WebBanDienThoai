@@ -371,6 +371,8 @@ const favoriteProduct = async (req, res, next) => {
 	return res.status(200).json({ success: true, code: 200, products });
 }
 
+
+
 module.exports = {
 	getAllProduct,
 	getProductDetail,
@@ -381,5 +383,5 @@ module.exports = {
 	activateProduct,
 	bestSellerProduct,
 	favoriteProduct,
-	newestProduct
+	newestProduct,
 };
