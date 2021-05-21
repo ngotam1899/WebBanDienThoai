@@ -149,11 +149,7 @@ class DetailPage extends Component {
     const {product, currency, t, review, group, total, count, location } = this.props;
     const {quantity, imageColor, check, _check } = this.state;
     const filter = getFilterParams(location.search);
-    var des= []
-    if(product) JSON.parse(product.description).blocks.map((i)=>{
-      if(i.text !="" && i.text !=" ")des.push(i.text)
-    })
-    console.log(des)
+    
     return (<>
       <div className="application">
         <Helmet>

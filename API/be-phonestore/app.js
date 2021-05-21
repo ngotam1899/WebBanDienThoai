@@ -119,15 +119,16 @@ const recommendProducts = (req, res, next) => {
 	try {
 		var spawn = require('child_process').spawn;
 		var process = spawn('python', [
-			'./python.py',
+			'./recommend.py',
 			req.query.product,
 		]);
 		process.stdout.on("data", async (data) => {
 			// Convert string to JSON
 			var _data = JSON.stringify(data.toString())
 			var result = JSON.parse(JSON.parse(_data));
-			await Product.populate(result, { path: 'data'});
-			return res.status(200).json({ success: true, code: 200, result });
+			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active'],
+			populate : {path : 'bigimage', select: "public_url"} });
+			return res.status(200).json({ success: true, code: 200, result: result.data });
 		})
 	} catch(error){
 		console.log(error)

@@ -27,7 +27,7 @@ decomposed_matrix = SVD.fit_transform(X)
 decomposed_matrix
 correlation_matrix = np.corrcoef(decomposed_matrix)
 correlation_matrix
-i = '5ff327792554fe1b34d9241a'
+i = sys.argv[1]
 
 product_names = list(X.index)
 product_ID = product_names.index(i)

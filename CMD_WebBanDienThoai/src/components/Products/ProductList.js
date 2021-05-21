@@ -306,10 +306,10 @@ class ProductList extends Component {
                 listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail} listSpecification={listSpecification}/>}
               </CCardBody>}
               <div className="row justify-content-center">
-              <Pagination
+              {total && <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
                   itemsCountPerPage={5}
-                  totalItemsCount={total ? total : 0}
+                  totalItemsCount={total}
                   pageRangeDisplayed={2}
                   linkClass="page-link"
                   itemClass="page-item"
@@ -317,7 +317,7 @@ class ProductList extends Component {
                   nextPageText="Next"
                   hideFirstLastPages={true}
                   onChange={this.handlePageChange.bind(this)}
-                />
+                />}
               </div>
             </CCard>
           </CCol>

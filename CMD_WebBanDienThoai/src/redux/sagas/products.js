@@ -44,7 +44,7 @@ function* handleFilter({ payload }) {
  * create
  */
 function* handleCreate( {payload} ) {
-  var {name, price, amount, pathseo, warrently, brand, category,bigimage, specifications, colors, description, weight,
+  var {name, price, amount, pathseo, warrently, brand, category,bigimage, specifications, colors, description, desc_text, weight,
     height,
     width,
     length, group} = payload.params;
@@ -58,7 +58,7 @@ function* handleCreate( {payload} ) {
         return item._id
       })
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
         height,
         width,
         length,
@@ -72,7 +72,7 @@ function* handleCreate( {payload} ) {
     else if(payload.params.bigimage){
       bigimage = yield call(addImage, payload.params.bigimage);
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
         height,
         width,
         length,
@@ -88,7 +88,7 @@ function* handleCreate( {payload} ) {
         return item._id
       })
       result = yield call(addProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group,weight,
         height,
         width,
         length,
@@ -98,7 +98,7 @@ function* handleCreate( {payload} ) {
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     else{
-      result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, group,
+      result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, desc_text, group,
         weight,
         height,
         width,
@@ -118,7 +118,7 @@ function* handleCreate( {payload} ) {
  * update
  */
 function* handleUpdateImage( {payload} ) {
-  const {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description, group, weight,
+  const {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description, desc_text, group, weight,
       height,
       width,
       length,} = payload.params;
@@ -131,7 +131,7 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, group,weight,
+      { name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, desc_text, group, weight,
         height,
         width,
         length,
@@ -145,7 +145,7 @@ function* handleUpdateImage( {payload} ) {
     else if(payload.params.bigimage._id === undefined){
       var bigimage = yield call(addImage, payload.params.bigimage);
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
         height,
         width,
         length,
@@ -161,7 +161,7 @@ function* handleUpdateImage( {payload} ) {
         return item._id
       })
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
         height,
         width,
         length,
@@ -172,7 +172,7 @@ function* handleUpdateImage( {payload} ) {
     }
     else{
       var result = yield call(updateProduct,
-      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, group,weight,
+      { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group,weight,
         height,
         width,
         length,

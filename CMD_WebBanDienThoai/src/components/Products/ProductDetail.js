@@ -444,7 +444,8 @@ class ProductDetail extends Component {
         group: group && group._id ? group._id : group,
         description: JSON.stringify(
           convertToRaw(description.getCurrentContent())
-        )
+        ),
+        desc_text: description.getCurrentContent().getPlainText('\u0001')
       };
       onUpdateImage(id, data, formData);
     } else {
@@ -469,7 +470,8 @@ class ProductDetail extends Component {
         group: group && group._id ? group._id : group,
         description: JSON.stringify(
           convertToRaw(description.getCurrentContent())
-        )
+        ),
+        desc_text: description.getCurrentContent().getPlainText('\u0001')
       };
       onCreate(data, formData);
     }
