@@ -44,6 +44,7 @@ class ImageGalleries extends Component {
   }
 
   //Đưa vào mảng ảnh
+  /* eslint-disable */
   _getStaticImages() {
     let images = [];
     const {imageDetail} = this.props;
@@ -63,7 +64,7 @@ class ImageGalleries extends Component {
     }
     return images;
   }
-
+/* eslint-disable */
   _resetVideo() {
     this.setState({showVideo: {}});
 

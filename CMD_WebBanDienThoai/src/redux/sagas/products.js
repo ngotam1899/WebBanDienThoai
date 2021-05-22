@@ -142,6 +142,7 @@ function* handleUpdateImage( {payload} ) {
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     // 2. TH2: Nếu bigimge mới
+    /* eslint-disable */
     else if(payload.params.bigimage._id === undefined){
       var bigimage = yield call(addImage, payload.params.bigimage);
       var result = yield call(updateProduct,
@@ -170,6 +171,7 @@ function* handleUpdateImage( {payload} ) {
       if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
+    /* eslint-disable */
     else{
       var result = yield call(updateProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group,weight,

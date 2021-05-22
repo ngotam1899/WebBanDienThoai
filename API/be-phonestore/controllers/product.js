@@ -9,12 +9,16 @@ const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Specification = require('../models/specification');
 
+
 const getAllProduct = async (req, res, next) => {
 	try {
 		let condition = {};
 		if (req.query.keyword != undefined && req.query.keyword != '') {
 			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
-			condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
+			condition = {$or:[
+				{name:{$regex: '.*' + keyword.trim() + '.*', $options: 'i'}},
+				{desc_text:{$regex: '.*' + keyword.trim() + '.*', $options: 'i'}}
+			]};
 		}
 		if (req.query.brand != undefined && req.query.brand != '') {
 			if (Validator.isValidObjId(req.query.brand)) {
@@ -356,7 +360,7 @@ const bestSellerProduct = async (req, res, next) => {
 		{
 			'$sort': { 'count': -1 }
 		}, {
-			'$limit': 2
+			'$limit': 3
 		},
 	];
 	const order = await Order.aggregate(pipeline);
@@ -368,7 +372,7 @@ const bestSellerProduct = async (req, res, next) => {
 const newestProduct = async (req, res, next) => {
 	let products = await Product.find({active: true}, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
 		.populate({ path: 'bigimage', select: 'public_url' })
-		.limit(2)
+		.limit(3)
 		.sort({'createdAt' : -1})
 	return res.status(200).json({ success: true, code: 200, products });
 }
@@ -378,7 +382,7 @@ const favoriteProduct = async (req, res, next) => {
 		{
 			'$sort': { 'stars': -1 }
 		}, {
-			'$limit': 2
+			'$limit': 3
 		},
 		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_min': 1, 'pathseo': 1, 'active' : 1 } }
 	];
@@ -388,10 +392,12 @@ const favoriteProduct = async (req, res, next) => {
 }
 
 const clusterData = async (req, res, next) => {
-	var products = await Product.find({active: true}, {
-		name:1,
-		desc_text: 1
-	}).limit(100);
+	var products = await Product.find({$or:[
+		{name:{$regex: "Oppo"}},
+		{desc_text:{$regex:"Oppo"}}
+	]});
+	//const products = await Product.aggregate(pipeline);
+	//await Image.populate(products, {path: "bigimage", select: 'public_url'})
 	return res.status(200).json({ success: true, code: 200, products });
 }
 

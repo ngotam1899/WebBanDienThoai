@@ -24,9 +24,7 @@ X1 = X
 
 SVD = TruncatedSVD(n_components=4)
 decomposed_matrix = SVD.fit_transform(X)
-decomposed_matrix
 correlation_matrix = np.corrcoef(decomposed_matrix)
-correlation_matrix
 i = sys.argv[1]
 
 product_names = list(X.index)

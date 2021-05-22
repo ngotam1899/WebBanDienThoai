@@ -8,6 +8,7 @@ import queryString from 'query-string';
 const url = '/products';
 //cho params 1 default value là object
 export const getAllProducts = (params = {}) =>{
+  console.log(params)
   let queryParams = '';
   if(Object.keys(params).length>0){
     queryParams = `?${queryString.stringify(params)}`;

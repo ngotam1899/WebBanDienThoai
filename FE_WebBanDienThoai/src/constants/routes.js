@@ -12,6 +12,7 @@ import DetailPage from '../components/DetailPage';
 import UserInfoPage from '../components/UserInfoPage';
 import PurchasePage from '../components/PurchasePage';
 import ActivePassword from '../containers/ActivePassword';
+import SearchPage from '../components/SearchPage';
 
 const routes = [
 	{
@@ -61,6 +62,12 @@ const routes = [
 		exact: true,
 		name: "Purchase",
 		main: ({history, location}) => <PurchasePage history={history} location={location}/>
+	},
+	{
+		path: '/search',
+		exact: true,
+		name: "Search",
+		main: ({match}) => <SearchPage match={match}/>
 	},
 	{
 		path: '/order/active/:token',

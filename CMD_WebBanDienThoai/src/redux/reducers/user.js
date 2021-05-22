@@ -1,4 +1,3 @@
-import { get, /*  cloneDeep */ } from "lodash";
 import { UsersActionTypes } from "../actions/user";
 
 const init = {

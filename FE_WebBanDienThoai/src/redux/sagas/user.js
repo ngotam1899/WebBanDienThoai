@@ -1,7 +1,7 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import UsersActions, { UsersActionTypes } from "../actions/user";
-import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
+import AuthorizationActions from "../actions/auth";
 import { addImage } from "../apis/cloudinary";
 import { updateUserInfo, getUser, changePassword } from "../apis/user";
 

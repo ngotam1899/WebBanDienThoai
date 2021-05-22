@@ -76,11 +76,11 @@ class ProductPage extends Component {
   onSetBrand = (value) => {
     this.handleUpdateFilter({ brand: value, page: 0 });
   }
-  // Button search
+/*   // Button search
   searchKeyWorld = (e) => {
     const {keyword} = this.state;
     this.handleUpdateFilter({ keyword, page : 0});
-  }
+  } */
 
   // Change distance price
   distancePrice = (e) => {

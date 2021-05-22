@@ -6,17 +6,16 @@ import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest
 import GroupActions from "../actions/group";
 
 function* handleGetList({ payload }) {
-  yield put(UIActions.showLoading());
+  //yield put(UIActions.showLoading());
   try {
     const result = yield call(getAllProducts, payload);
-    console.log("result", result)
     const data = get(result, "data");
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetListSuccess(data.products, data.total));
   } catch (error) {
     yield put(ProductsActions.onGetListError(error));
   }
-  yield put(UIActions.hideLoading());
+  //yield put(UIActions.hideLoading());
 }
 
 function* handleGetBestSeller({ payload }) {
@@ -59,15 +58,20 @@ function* handleGetNewest({ payload }) {
 }
 
 function* handleFilter({ payload }) {
-  yield delay(2000);
-  const { keyword } = payload;
-  yield put(
-    ProductsActions.onGetList({
+  try {
+    yield delay(1000);
+    const { keyword } = payload;
+    const result = yield call(getAllProducts, {
       keyword,
       limit: 4,
       active: 1
-    }),
-  );
+    });
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onFilterSuccess(data.products));
+  } catch (error) {
+    
+  }
 }
 
 function* handleGetDetail({ filters, id }) {

@@ -47,7 +47,7 @@ class UserDetail extends Component {
       lastCity = listCity.find(obj => obj.ProvinceName === userInfo.address.split(', ')[3]).ProvinceID;
       const {cityID, districtID, wardID} = this.state;
       const {onGetListWard} = this.props;
-      if(this.props.listDistrict !== props.listDistrict && cityID == lastCity){
+      if(this.props.listDistrict !== props.listDistrict && cityID === lastCity){
         onGetListWard(cityID, listDistrict.find(obj => obj.DistrictName === userInfo.address.split(', ')[2]).DistrictID)
       }
       if(districtID===null && wardID===null && props.listWard){

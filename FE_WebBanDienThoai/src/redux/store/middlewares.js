@@ -1,4 +1,3 @@
-import _ from "lodash";
 import axiosService from '../../utils/AxiosService';
 
 export default function createApiAuthMiddle({ dispatch, getState }) {

@@ -1,4 +1,4 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
 import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, forgotPassword, activatePassword} from "../apis/auth";

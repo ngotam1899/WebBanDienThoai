@@ -1,4 +1,4 @@
-import { get, omit, cloneDeep } from "lodash";
+import { get } from "lodash";
 import { CategoryActionTypes } from "../actions/categories";
 
 const init = {

@@ -77,10 +77,8 @@ z-index: 999;}
   }    
 .navbar { padding: 0 }
 .shopping-item {
-    border: 1px solid #ddd;
     float: right;
     font-size: 18px;
-    margin-top: 40px;
     padding: 10px;
     position: relative;
 }

@@ -48,6 +48,11 @@ export default function(state = init, action) {
         total: get(action, "payload.total"),
         list: get(action, "payload.list", []), //list : action.payload.list
       };
+    case ProductsActionTypes.FILTER_SUCCESS:
+      return {
+        ...state,
+        filter: get(action, "payload", []),
+      };
     case ProductsActionTypes.GET_DETAIL:
       return {
         ...state,
@@ -80,7 +85,6 @@ export default function(state = init, action) {
         ...state,
       };
     case ProductsActionTypes.UPDATE_SUCCESS:
-    case ProductsActionTypes.FILTER_SUCCESS:
     case ProductsActionTypes.CREATE_SUCCESS:
     case ProductsActionTypes.DELETE_SUCCESS:
       return {

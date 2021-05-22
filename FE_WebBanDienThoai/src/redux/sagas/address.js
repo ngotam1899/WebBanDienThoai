@@ -1,4 +1,4 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import AddressActions, { AddressActionTypes } from "../actions/address";
 import { getAllCity, getDistrictByCity, getWardByCityAndDistrict, getShippingFee } from "../apis/address";

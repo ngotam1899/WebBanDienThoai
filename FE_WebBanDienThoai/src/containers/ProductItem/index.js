@@ -11,10 +11,10 @@ import numberWithCommas from "../../utils/formatPrice";
 
 class ProductItem extends Component {
   render() {
-    const { product, currency, t } = this.props;
+    const { product, currency } = this.props;
     return (
       <div className="col-md-3 col-6 my-2">
-        <Link to={`/product/${product.pathseo}/${product._id}`} style={{textDecoration: 'none'}}>
+        {product && <Link to={`/product/${product.pathseo}/${product._id}`} style={{textDecoration: 'none'}}>
         <div className="single-shop-product">
           <div className="product-upper text-center">
               <img
@@ -61,7 +61,7 @@ class ProductItem extends Component {
             /><span className="ml-2 text-secondary font-size-12">{product.reviewCount} đánh giá</span></>}
           </div>
         </div>
-        </Link>
+        </Link>}
       </div>
     );
   }

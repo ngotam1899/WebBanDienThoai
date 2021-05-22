@@ -1,12 +1,10 @@
 import React, { useRef, useEffect } from "react";
-import {useDispatch} from "react-redux";
 // @Functions
 import tryConvert from '../../utils/changeMoney'
 
-export default function Paypal({total_price,total, onCreateAnOrder, order_list, note, authInfo, shipping_first_name, shipping_last_name, shipping_address, shipping_phone, shipToDifferentAddress}) {
+export default function Paypal({total_price,total, onCreateAnOrder, order_list, note, authInfo,  shipping_address, shipping_phone, shipToDifferentAddress}) {
   const paypal = useRef();
-  const dispatch = useDispatch();
-
+  /* eslint-disable */
   useEffect(() => {
     window.paypal.Buttons({
         createOrder: (data, actions, err) => {
@@ -54,14 +52,14 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
             }
           }
           onCreateAnOrder(data);
-          const order = await actions.order.capture();
+          await actions.order.capture();
         },
         onError: (err) => {
         },
       })
       .render(paypal.current);
   }, []);
-
+/* eslint-disable */
   return (
     <div>
       <div ref={paypal}></div>

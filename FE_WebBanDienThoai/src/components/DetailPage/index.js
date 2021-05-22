@@ -24,7 +24,7 @@ import getFilterParams from "../../utils/getFilterParams";
 class DetailPage extends Component {
   constructor(props) {
     super(props);
-    const {match, location} = props;
+    const {match} = props;
     this.state = {
       quantity: 1,
       imageColor: "",
@@ -39,6 +39,7 @@ class DetailPage extends Component {
   }
   componentDidUpdate(prevProps) {
     try{
+      /*global FB*/
       FB.XFBML.parse();
       if (prevProps.location.search !== this.props.location.search) {
         const filters = getFilterParams(this.props.location.search);
@@ -260,13 +261,16 @@ class DetailPage extends Component {
                         <table className="table">
                           <tbody>
                             {product && product.specifications.map((item,index)=>{
+                              /* eslint-disable */
                                 return (
                                 <tr key={index}>
                                   <td className="font-weight-bold" scope="row">{item.name}</td>
                                   <td>{item.value}</td>
                                 </tr>
                                 )
+                              /* eslint-disable */
                               })}
+                              
                           </tbody>
                         </table>
                       </div>

@@ -4,22 +4,12 @@ import { assets } from '../../constants/assetsImage';
 import { withTranslation } from 'react-i18next'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Link } from 'react-router-dom'
 
 import ProductItem from "../../containers/ProductItem"
 // @Actions
 import ProductsActions from "../../redux/actions/products";
-// @Function
-import tryConvert from '../../utils/changeMoney'
 
 class HomePage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      keyword: ""
-    }
-  }
-
   componentDidMount(){
     const {onGetBestSeller, onGetFavorite, onGetNewest} = this.props;
     document.title = "[TellMe] Trang bán hàng"
@@ -32,6 +22,7 @@ class HomePage extends Component {
   improveScreen() {
     (function($){
       // Slidder home 4
+      /*global jQuery*/
       if($('#bxslider-home4').length >0){
         var slider = $('#bxslider-home4').bxSlider({
           nextText:'<i className="fa fa-angle-right"></i>',
@@ -61,30 +52,14 @@ class HomePage extends Component {
             }, 500);                                
           }
         });
-        //slider.reloadSlider();
+        slider.reloadSlider();
       }
     })(jQuery); // End of use strict
   }
 
-  handleFilter = (event) => {
-    var target = event.target;
-    var name = target.name;
-    var value = target.value;
-    this.setState({
-      [name]: value
-    })
-    const { onFilter } = this.props;
-    onFilter(value);
-  }
-
-  onAddToCart = (product) => {
-    const { onAddProductToCart } = this.props;
-    onAddProductToCart(product);
-  }
 
   render() {
-    const { keyword } = this.state;
-    const { t, listProducts, currency, bestSeller, newest, favorite } = this.props;
+    const { t, bestSeller, newest, favorite } = this.props;
     return (<>
       <div className="product-big-title-area search-fixed">
         <div className="container">
@@ -92,29 +67,7 @@ class HomePage extends Component {
             <div className="col-md-12">
               <div className="product-bit-title text-center">
                 <div className="row my-5 justify-content-center">
-                  <div className="col-md-6 col-9">
-                    <input type="text" className="w-100 form-control" value={keyword} name="keyword" onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
-                    <div style={{ position: "absolute", width: "95%" }}>
-                      <div className="card">
-                      {listProducts && keyword && listProducts.map((product, index) =>{
-                        return (
-                          <Link to={`/product/${product.pathseo}/${product._id}`}>
-                          <div className="row text-dark text-decoration-none" style={{height: "80px"}} key={index}>
-                            <div className="col-3 my-auto">
-                              <><img style={{height: "80px"}} src={product.bigimage.public_url}></img></>
-                            </div>
-                            <div className="col-9 text-left my-auto">
-                              <p className="mb-0">{product.name}</p>
-                              <p className="mb-0">{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
-                            </div>
-                          </div>
-                          <div className="border-bottom"></div>
-                          </Link>
-                        )
-                      })}
-                      </div>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -131,7 +84,7 @@ class HomePage extends Component {
                   iPhone <span className="primary">6 <strong>Plus</strong></span>
                 </h2>
                 <h4 className="caption subtitle">Dual SIM</h4>
-                <a className="caption button-radius" href="#"><span className="icon"></span>{t('home.shop.button')}</a>
+                <a className="caption button-radius" href="/#"><span className="icon"></span>{t('home.shop.button')}</a>
               </div>
             </li>
             <li>
@@ -141,7 +94,7 @@ class HomePage extends Component {
                   by one, get one <span className="primary">50% <strong>off</strong></span>
                 </h2>
                 <h4 className="caption subtitle">school supplies & backpacks.*</h4>
-                <a className="caption button-radius" href="#"><span className="icon"></span>Shop now</a>
+                <a className="caption button-radius" href="/#"><span className="icon"></span>Shop now</a>
               </div>
             </li>
             <li>
@@ -151,7 +104,7 @@ class HomePage extends Component {
                   Apple <span className="primary">Store <strong>Ipod</strong></span>
                 </h2>
                 <h4 className="caption subtitle">Select Item</h4>
-                <a className="caption button-radius" href="#"><span className="icon"></span>Shop now</a>
+                <a className="caption button-radius" href="/#"><span className="icon"></span>Shop now</a>
               </div>
             </li>
             <li>
@@ -161,7 +114,7 @@ class HomePage extends Component {
                   Apple <span className="primary">Store <strong>Ipod</strong></span>
                 </h2>
                 <h4 className="caption subtitle">& Phone</h4>
-                <a className="caption button-radius" href="#"><span className="icon"></span>Shop now</a>
+                <a className="caption button-radius" href="/#"><span className="icon"></span>Shop now</a>
               </div>
             </li>
           </ul>
@@ -278,8 +231,6 @@ class HomePage extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listProducts: state.products.list,
-    currency: state.currency,
     bestSeller: state.products.best,
     favorite: state.products.favorite,
     newest: state.products.new
@@ -288,9 +239,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFilter: (keyword) => {
-      dispatch(ProductsActions.onFilter(keyword));
-    },
     onGetBestSeller: () => {
       dispatch(ProductsActions.onGetBestSeller());
     },

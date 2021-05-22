@@ -2,7 +2,6 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import BrandActions, { BrandActionTypes } from "../actions/brands";
 import { getAllBrands, getDetailBrand, addBrand, updateBrand, deleteBrand } from "../apis/brands";
-import { addImage} from "../apis/cloudinary";
 
 function* handleGetList({ payload }) {
   try {

@@ -1,4 +1,5 @@
 import React from 'react'
+/* eslint-disable */
 import {
   CBadge,
   CDropdown,
@@ -8,7 +9,7 @@ import {
   CImg
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-
+/* eslint-disable */
 const TheHeaderDropdown = () => {
   return (
     <CDropdown

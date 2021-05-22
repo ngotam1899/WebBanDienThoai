@@ -45,8 +45,10 @@ export default function(state = init, action) {
         ...state,
       };
     case ReviewActionTypes.UPDATE_ERROR:
+      /* eslint-disable */
       var { message } = action.payload;
       toastError(message)
+      /* eslint-disable */
       return {
         ...state,
       };
@@ -56,8 +58,10 @@ export default function(state = init, action) {
       toastSuccess("Tạo đánh giá thành công")
       return {...state};
     case ReviewActionTypes.CREATE_ERROR:
+      /* eslint-disable */
       var { message } = action.payload;
       toastError(message)
+      /* eslint-disable */
       return {...state};
     default:
       return state;

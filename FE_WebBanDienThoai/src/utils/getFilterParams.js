@@ -1,4 +1,3 @@
-import { isEmpty } from "lodash";
 import qs from "query-string";
 
 export default function getFilterParams(search) {

@@ -231,11 +231,9 @@ const onFilter = keyword => ({
   },
 });
 
-const onFilterSuccess = data => ({
+const onFilterSuccess = payload => ({
   type: ProductsActionTypes.FILTER_SUCCESS,
-  payload: {
-    data,
-  },
+  payload
 });
 
 const ProductsActions = {
