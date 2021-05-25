@@ -71,7 +71,7 @@ class ReviewDetail extends Component {
         <CModalBody>
           <div className="row mb-2">
             <div className="col-3 h-80 text-center">
-              <img className="h-100" src={product.image}></img>
+              <img className="h-100" src={product.image} alt={product.name}></img>
             </div>
             <div className="col-9  align-self-center">
               <p className="font-weight-bold mb-0">{product.name}</p>

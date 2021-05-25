@@ -1,4 +1,4 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
 import { registerAccount, loginAccount, activateAccount, getProfile, loginGoogle, loginFacebook, forgotPassword, activatePassword} from "../apis/auth";
@@ -45,6 +45,7 @@ function* handleLoginFacebook({ payload }) {
 function* handleLoginGoogle({ payload }) {
   try {
     const result = yield call(loginGoogle, {"access_token":payload});
+    console.log(payload)
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     localStorage.setItem('AUTH_USER', result.headers.authorization);

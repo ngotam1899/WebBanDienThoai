@@ -46,11 +46,11 @@ class Search extends Component {
 						<>
 						<div className="row" key={index}>
 							<div className="col-3 my-auto">
-								<Link to={`/product/${product.pathseo}/${product._id}`}><img className="w-100" src={product.bigimage.public_url}></img></Link>
+								<Link to={`/product/${product.pathseo}/${product._id}`}><img className="w-100" src={product.bigimage.public_url} alt={product.name}></img></Link>
 							</div>
 							<div className="col-9">
 								<p className="mb-0">{product.name}</p>
-								<p className="mb-0">{currency=="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
+								<p className="mb-0">{currency==="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
 							</div>
 						</div>
 						<div className="border-bottom"></div>

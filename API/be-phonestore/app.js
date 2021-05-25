@@ -17,6 +17,7 @@ const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const http = require('http')
 const socketIO = require('socket.io')
+const Product = require('./models/Product');
 
 const app = express();
 const server = http.createServer(app)
@@ -35,25 +36,25 @@ app.use(
 );
 
 // @For tester
-  mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
+/*   mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
 	useCreateIndex: true,
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false
 })
 .then(() => console.log('Connected to MongoDB!'))
-.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))  
+.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))   */
 
 // @For dev
-// mongoose
-//  	.connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
-//  		useCreateIndex: true,
-//  		useNewUrlParser: true,
-//  		useUnifiedTopology: true,
-//  		useFindAndModify: false
-//  	})
-//  	.then(() => console.log('Connected to MongoDB!'))
-//  	.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`));
+mongoose
+  	.connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
+  		useCreateIndex: true,
+  		useNewUrlParser: true,
+  		useUnifiedTopology: true,
+  		useFindAndModify: false
+  	})
+  	.then(() => console.log('Connected to MongoDB!'))
+  	.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`));
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_NAME,
@@ -113,6 +114,28 @@ io.on('connection', (socket) => {
     //callback(); // lặp lại mỗi lần bắt đc sự kiện join
   });
 });
+
+const recommendProducts = (req, res, next) => {
+	try {
+		var spawn = require('child_process').spawn;
+		var process = spawn('python', [
+			'./recommend.py',
+			req.query.product,
+		]);
+		process.stdout.on("data", async (data) => {
+			// Convert string to JSON
+			var _data = JSON.stringify(data.toString())
+			var result = JSON.parse(JSON.parse(_data));
+			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active'],
+			populate : {path : 'bigimage', select: "public_url"} });
+			return res.status(200).json({ success: true, code: 200, result: result.data });
+		})
+	} catch(error){
+		console.log(error)
+		next(error)
+	}
+}
+app.get('/products-recommend', recommendProducts);
 
 //Catch 404 error and forward them to error handler
 app.use((req, res, next) => {

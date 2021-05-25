@@ -4,8 +4,7 @@ import {
   CDropdown,
   CDropdownItem,
   CDropdownMenu,
-  CDropdownToggle,
-  CProgress
+  CDropdownToggle
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import io from 'socket.io-client';
@@ -16,13 +15,13 @@ const TheHeaderDropdownNotif = () => {
   const [itemsCount, setItemsCount] = useState(5);
   const ENDPOINT = 'http://localhost:3000';
   let socket = io(ENDPOINT);
-
+/* eslint-disable */
   useEffect(() => {
     socket.on('newOrder', res => {
       setItemsCount(itemsCount+res.newOrders);
     });
   }, [itemsCount]);
-
+/* eslint-disable */
   return (
     <CDropdown
       inNav

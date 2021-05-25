@@ -42,6 +42,7 @@ const cart = (state = initialState, action) =>{
       return [...state];
     case ProductsActionTypes.PURCHASE_AGAIN:
       // order_list : cart=[] mới truyền vào
+      /* eslint-disable */
       order_list.map((item, index) => {
         order_list[index].color = item.color._id;
         order_list[index].product = {
@@ -69,8 +70,9 @@ const cart = (state = initialState, action) =>{
       state = order_list
       localStorage.setItem('CART', JSON.stringify(state));
       return [...state]
+      /* eslint-disable */
     case ProductsActionTypes.CLEAR_CART:
-      return [];
+      return state
     default : return [...state]
   }
 }

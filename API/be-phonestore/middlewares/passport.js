@@ -5,7 +5,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const GoogleTokenStrategy = require('passport-google-token').Strategy;
 const FacebookTokenStrategy = require('passport-facebook-token');
 const { JWT_SECRET, GoogleID, GoogleSecret, FacebookID, FacebookSecret } = require('../configs/config');
-
 const User = require('../models/User');
 const Image = require('../models/Image');
 
@@ -62,6 +61,9 @@ passport.use(
 				let user = await User.findOne({
 					auth_facebook_id: profile.id,
 					auth_type: 'facebook'
+				}).populate({
+					path: 'image',
+					select: 'public_url'
 				});
 				if (user) {
 					done(null, user);
@@ -115,6 +117,9 @@ passport.use(
 				const user = await User.findOne({
 					auth_google_id: profile.id,
 					auth_type: 'google'
+				}).populate({
+					path: 'image',
+					select: 'public_url'
 				});
 				if (user) {
 					done(null, user);

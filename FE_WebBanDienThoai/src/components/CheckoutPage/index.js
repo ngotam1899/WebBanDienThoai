@@ -44,7 +44,6 @@ class CheckoutPage extends Component {
       payment_method: "local",
       //address
       cityID: null,
-      shipping_city: "",
       shipping_district:"",
       shipping_ward: "",
     }
@@ -68,7 +67,7 @@ class CheckoutPage extends Component {
     var total = 0;
     var totalPrice = 0;
     var { cart } = this.props;
-    for (var i = 0; i < cart.length; i++) {
+    for (let i = 0; i < cart.length; i++) {
       total = total + cart[i].quantity
       totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
     }
@@ -83,7 +82,7 @@ class CheckoutPage extends Component {
     var total = 0;
     var totalPrice = 0;
     var { cart } = this.props;
-    for (var i = 0; i < cart.length; i++) {
+    for (let i = 0; i < cart.length; i++) {
       total = total + cart[i].quantity
       totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
     }
@@ -320,7 +319,7 @@ class CheckoutPage extends Component {
                               <td className="product-name">
                               {t('checkout.total.label')} <strong className="product-quantity">× {total}</strong> </td>
                               <td className="product-total">
-                              <span className="amount">{currency=="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span> </td>
+                              <span className="amount">{currency==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span> </td>
                             </tr>
                           </tbody>
                           <tfoot>
@@ -331,7 +330,7 @@ class CheckoutPage extends Component {
                             </tr>
                             <tr className="order-total">
                               <th>{t('cart.order-total.table')}</th>
-                              <td><strong><span className="amount">{currency=="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span></strong> </td>
+                              <td><strong><span className="amount">{currency==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span></strong> </td>
                             </tr>
                           </tfoot>
                         </table>
@@ -349,10 +348,10 @@ class CheckoutPage extends Component {
                               </label>
                             </li>
                           </ul>
-                          { payment_method == "paypal" && <Paypal total_price={parseFloat(tryConvert(totalPrice, "USD", false)).toFixed(2)} onCreateAnOrder={onCreateAnOrder} 
+                          { payment_method === "paypal" && <Paypal total_price={parseFloat(tryConvert(totalPrice, "USD", false)).toFixed(2)} onCreateAnOrder={onCreateAnOrder} 
                           shipToDifferentAddress={shipToDifferentAddress}
                           shipping_address={shipping_address} shipping_phone={shipping_phone} authInfo={authInfo} total={total} order_list={order_list} note={order_comments} /> }
-                          { payment_method == "local" && <div className="form-row place-order">
+                          { payment_method === "local" && <div className="form-row place-order">
                             <input type="button" data-value="PLACE ORDER" value={t('checkout.order.button')} id="place_order" name="woocommerce_checkout_place_order" className="button alt" onClick={() => this.placeOrder()}/>
                           </div>}
                           <div className="clear"></div>

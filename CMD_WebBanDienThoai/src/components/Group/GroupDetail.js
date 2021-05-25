@@ -182,7 +182,7 @@ class GroupDetail extends Component {
                           <div key={index}>
                             <div className="row text-dark text-decoration-none" style={{height: "80px"}} key={index}>
                               <div className="col-3 my-auto">
-                                <><img style={{height: "80px"}} src={product.bigimage ? product.bigimage.public_url : INITIAL_IMAGE}></img></>
+                                <><img style={{height: "80px"}} src={product.bigimage ? product.bigimage.public_url : INITIAL_IMAGE} alt={product.name}></img></>
                               </div>
                               <div className="col-6 text-left my-auto">
                                 <p className="mb-0">{product.name}</p>
@@ -199,7 +199,7 @@ class GroupDetail extends Component {
                       <div className="card mb-0">
                         <div className="row text-dark text-decoration-none" style={{height: "80px"}}>
                           <div className="col-3 my-auto">
-                            <><img style={{height: "80px"}} src={product.bigimage.public_url}></img></>
+                            <><img style={{height: "80px"}} src={product.bigimage.public_url} alt={product.name}></img></>
                           </div>
                           <div className="col-9 text-left my-auto">
                             <p className="mb-0">{product.name}</p>

@@ -67,6 +67,9 @@ const ProductSchema = new Schema(
 		description: {
 			type: String
 		},
+		desc_text: {
+			type: String
+		},
 		colors: [
 			{
 				_id: {

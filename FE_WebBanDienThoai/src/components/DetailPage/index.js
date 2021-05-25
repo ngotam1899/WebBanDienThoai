@@ -24,7 +24,7 @@ import getFilterParams from "../../utils/getFilterParams";
 class DetailPage extends Component {
   constructor(props) {
     super(props);
-    const {match, location} = props;
+    const {match} = props;
     this.state = {
       quantity: 1,
       imageColor: "",
@@ -39,6 +39,7 @@ class DetailPage extends Component {
   }
   componentDidUpdate(prevProps) {
     try{
+      /*global FB*/
       FB.XFBML.parse();
       if (prevProps.location.search !== this.props.location.search) {
         const filters = getFilterParams(this.props.location.search);
@@ -260,13 +261,16 @@ class DetailPage extends Component {
                         <table className="table">
                           <tbody>
                             {product && product.specifications.map((item,index)=>{
+                              /* eslint-disable */
                                 return (
                                 <tr key={index}>
                                   <td className="font-weight-bold" scope="row">{item.name}</td>
                                   <td>{item.value}</td>
                                 </tr>
                                 )
+                              /* eslint-disable */
                               })}
+                              
                           </tbody>
                         </table>
                       </div>
@@ -337,10 +341,10 @@ class DetailPage extends Component {
                                 <div className="row" key={index}>
                                   <div className="col-12">
                                   <div className="float-left mr-3">
-                                    <img className="rounded-circle square-60" src={item.user.image ? item.user.image.public_url : INITIAL_IMAGE} alt=""/>
+                                    <img className="rounded-circle square-60" src={item.user && item.user.image ? item.user.image.public_url : INITIAL_IMAGE} alt=""/>
                                   </div>
                                   <div className="">
-                                    <p className="font-weight-bold mb-0">{item.user.firstname} {item.user.lastname}</p>
+                                    <p className="font-weight-bold mb-0">{item.user && item.user.firstname} {item.user && item.user.lastname}</p>
                                     <p className="mb-0"><Rating
                                       initialRating={item.rating}
                                       emptySymbol="fa fa-star text-secondary"
@@ -356,7 +360,7 @@ class DetailPage extends Component {
                               )
                             })}
                           </div>
-                          {review && review.length>0 && <div className="product-pagination text-center">
+                          {review && review.length>3 && <div className="product-pagination text-center">
                             <nav className="float-right">
                               <Pagination
                                 activePage={filter.page ? parseInt(filter.page)+1 : 1}

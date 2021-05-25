@@ -35,8 +35,6 @@ const statusList = [
 
 class PurchasePage extends Component {
   constructor(props){
-    const {/* match, location, */ authInfo} = props;
-    /*const filter = getFilterParams(location.search); */
     super(props);
     this.state = {
       keyword: "",
@@ -65,12 +63,12 @@ class PurchasePage extends Component {
   }
 
   setStatus = (confirmed, status, active) => {
-    if(active==false) return "Đã hủy"
+    if(active===false) return "Đã hủy"
     else{
-      if(confirmed==false) return "Chờ xác nhận"
+      if(confirmed===false) return "Chờ xác nhận"
       else{
-        if(status==-1) return "Chờ giao hàng";
-        else if(status==0) return "Đang giao";
+        if(status===-1) return "Chờ giao hàng";
+        else if(status===0) return "Đang giao";
         else return "Đã giao";
       }
     }
@@ -143,12 +141,12 @@ class PurchasePage extends Component {
       <div className="bg-user-info py-4">
         <div className="container emp-profile p-0 mt-5 mb-2">
           <div className="row mx-3">
-            <div className={filter.type==0 || filter.type==undefined ? "col-2 text-center py-3 bg-selected" : "col-2 text-center py-3"} onClick={() => this.onList(0, null)}>
+            <div className={filter.type===0 || filter.type===undefined ? "col-2 text-center py-3 bg-selected" : "col-2 text-center py-3"} onClick={() => this.onList(0, null)}>
               Tất cả
             </div>
             {statusList.map((status, index)=>{
               return (
-                <div key={index} className={filter.type==index+1 ? "col-2 text-center py-3 bg-selected" : "col-2 text-center py-3"} onClick={() => this.onList(index+1, status.state)}>
+                <div key={index} className={filter.type===index+1 ? "col-2 text-center py-3 bg-selected" : "col-2 text-center py-3"} onClick={() => this.onList(index+1, status.state)}>
                   {status.name}
                 </div>
               )
@@ -182,7 +180,7 @@ class PurchasePage extends Component {
                         return(
                           <div className="row h-120" key={_index}>
                           <div className="col-3 text-center h-100">
-                            <img className="h-100" src={product.image}></img>
+                            <img className="h-100" src={product.image} alt={product.name}></img>
                           </div>
                           <div className="col-6 align-self-center ">
                             <p className="font-weight-bold mb-0">{product.name}</p>
@@ -214,7 +212,7 @@ class PurchasePage extends Component {
           : <div className="col-12 my-1">
               <div className="text-center my-5 py-5">
                 <div className="h-120">
-                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/5fafbb923393b712b96488590b8f781f.png"></img>
+                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/5fafbb923393b712b96488590b8f781f.png" alt="404 not found"></img>
                 </div>
                 
                 <p>Chưa có đơn hàng</p>

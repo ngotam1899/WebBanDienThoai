@@ -17,6 +17,7 @@ const MainChartExample = (attributes) => {
   else{
     months=11;
   }
+  /* eslint-disable */
   for(let i = 0; i <= months; i++){
     attributes.data.map(item => {
       data1[item._id.month-1]= item.total_price
@@ -25,9 +26,10 @@ const MainChartExample = (attributes) => {
       }
     })
   }
+  /* eslint-disable */
   var maxRevenue = Math.max(...data1)
-  const defaultDatasets = (()=>{
 
+  const defaultDatasets = (()=>{
     return [
       {
         label: 'Doanh thu (VND)',

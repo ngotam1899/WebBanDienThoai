@@ -89,6 +89,7 @@ router
 router.route('/best-seller').get(productController.bestSellerProduct)
 router.route('/favorite').get(productController.favoriteProduct)
 router.route('/newest').get(productController.newestProduct)
+router.route('/cluster').get(productController.clusterData)
 router.route('/').get(productController.getAllProduct).post(productController.addProduct);
 router.route('/:IDProduct')
   .get(productController.getProductDetail)

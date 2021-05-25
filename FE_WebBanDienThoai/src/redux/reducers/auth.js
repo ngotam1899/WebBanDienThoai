@@ -45,8 +45,10 @@ export default function(state = INITIAL_STATE, action) {
         loggedIn: true,
       };
     case AuthorizationActionTypes.LOGIN_ERROR:
+      /* eslint-disable */
       var { message } = action.payload;
       toastError(message);
+      /* eslint-disable */
       return {
         ...state,
         loggedIn: false,

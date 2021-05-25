@@ -5,16 +5,17 @@ import Footer from './Footer';
 import MainRouters from '../components/MainRouters';
 
 class Main extends Component {
- render() {
-  return (
-    <>
-    <HashRouter>
-      <Header/>
-      <MainRouters/>
-    </HashRouter>
-    <Footer/>
-    </>
-  );
- }
+  render() {
+    const {history, location} = this.props;
+    return (
+      <>
+      <HashRouter>
+        <Header history={history} location={location}/>
+        <MainRouters/>
+      </HashRouter>
+      <Footer/>
+      </>
+    );
+  }
 }
 export default Main;

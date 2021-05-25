@@ -9,12 +9,16 @@ const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Specification = require('../models/specification');
 
+
 const getAllProduct = async (req, res, next) => {
 	try {
 		let condition = {};
 		if (req.query.keyword != undefined && req.query.keyword != '') {
 			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
-			condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
+			condition = {$or:[
+				{name:{$regex: '.*' + keyword.trim() + '.*', $options: 'i'}},
+				{desc_text:{$regex: '.*' + keyword.trim() + '.*', $options: 'i'}}
+			]};
 		}
 		if (req.query.brand != undefined && req.query.brand != '') {
 			if (Validator.isValidObjId(req.query.brand)) {
@@ -55,7 +59,7 @@ const getAllProduct = async (req, res, next) => {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
 		}
 		let products;
-		products = await Product.find(condition, {specifications : 0, colors: 0, image:0, warrently: 0, description: 0, group: 0})
+		products = await Product.find(condition, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
 			.populate({ path: 'bigimage', select: 'public_url' })
 			.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
 			.sort(sort)
@@ -95,6 +99,7 @@ const updateProduct = async (req, res, next) => {
 			discount,
 			group,
 			description,
+			desc_text,
 			weight,
 			height,
 			length,
@@ -111,6 +116,7 @@ const updateProduct = async (req, res, next) => {
 		if (discount) product.discount = discount;
 		if (image) product.image = image;
 		if (description) product.description = description;
+		if (desc_text) product.desc_text = desc_text;
 		if (weight) product.weight = weight;
 		if (height) product.height = height;
 		if (length) product.length = length;
@@ -182,13 +188,27 @@ const updateProduct = async (req, res, next) => {
 
 const addProduct = async(req, res, next) => {
 	try {
-		const { name, price, amount, pathseo, warrently, bigimage, image, category, brand, specifications, description, group,
+		const { 
+			name, 
+			price, 
+			amount, 
+			pathseo, 
+			warrently, 
+			bigimage, 
+			image, 
+			category, 
+			brand, 
+			specifications, 
+			description, 
+			group, 
+			desc_text,
 			colors,
 			weight,
 			height,
 			length,
 			width,
-			discount } = req.body
+			discount 
+		} = req.body
 		const product = new Product();
 		if (name) {
 			const productFound = await Product.findOne({ name })
@@ -207,6 +227,7 @@ const addProduct = async(req, res, next) => {
 		if (discount) product.discount = discount;
 		if (image) product.image = image
 		if (description) product.description = description;
+		if (desc_text) product.desc_text = desc_text;
 		if (weight) product.weight = weight;
 		if (height) product.height = height;
 		if (length) product.length = length
@@ -339,20 +360,19 @@ const bestSellerProduct = async (req, res, next) => {
 		{
 			'$sort': { 'count': -1 }
 		}, {
-			'$limit': 2
+			'$limit': 3
 		},
 	];
 	const order = await Order.aggregate(pipeline);
-	await Product.populate(order, {path: "_id", select: ['name', 'bigimage', 'stars', 'price_min', 'reviewCount', 'pathseo', 'active'], 
+	await Product.populate(order, {path: "_id", select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active'], 
 	populate : {path : 'bigimage', select: "public_url"} })
 	return res.status(200).json({ success: true, code: 200, products: order });
 }
 
 const newestProduct = async (req, res, next) => {
-	let products = await Product.find({active: true}, {specifications : 0, colors: 0, image:0, warrently: 0, description: 0, group: 0, category: 0, brand: 0, 
-		createdAt: 0, updatedAt: 0, price_max: 0})
+	let products = await Product.find({active: true}, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
 		.populate({ path: 'bigimage', select: 'public_url' })
-		.limit(2)
+		.limit(3)
 		.sort({'createdAt' : -1})
 	return res.status(200).json({ success: true, code: 200, products });
 }
@@ -362,12 +382,22 @@ const favoriteProduct = async (req, res, next) => {
 		{
 			'$sort': { 'stars': -1 }
 		}, {
-			'$limit': 2
+			'$limit': 3
 		},
-		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_min': 1, 'reviewCount': 1, 'pathseo': 1, 'active' : 1 } }
+		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_min': 1, 'pathseo': 1, 'active' : 1 } }
 	];
 	const products = await Product.aggregate(pipeline);
 	await Image.populate(products, {path: "bigimage", select: 'public_url'})
+	return res.status(200).json({ success: true, code: 200, products });
+}
+
+const clusterData = async (req, res, next) => {
+	var products = await Product.find({$or:[
+		{name:{$regex: "Oppo"}},
+		{desc_text:{$regex:"Oppo"}}
+	]});
+	//const products = await Product.aggregate(pipeline);
+	//await Image.populate(products, {path: "bigimage", select: 'public_url'})
 	return res.status(200).json({ success: true, code: 200, products });
 }
 
@@ -381,5 +411,6 @@ module.exports = {
 	activateProduct,
 	bestSellerProduct,
 	favoriteProduct,
-	newestProduct
+	newestProduct,
+	clusterData
 };

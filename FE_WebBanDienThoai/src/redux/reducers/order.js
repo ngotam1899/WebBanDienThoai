@@ -33,8 +33,10 @@ export default function(state = init, action) {
       toastSuccess("Xác nhận đơn hàng thành công")
       return {...state};
     case OrdersActionsTypes.CONFIRM_ORDER_ERROR:
+      /* eslint-disable */
       var { message } = action.payload;
       toastError(message)
+      /* eslint-disable */
       return {...state};
     case OrdersActionsTypes.GET_LIST:
       return {...state};
@@ -63,8 +65,10 @@ export default function(state = init, action) {
         ...state,
       };
     case OrdersActionsTypes.UPDATE_ERROR:
+      /* eslint-disable */
       var { message } = action.payload;
       toastError(message)
+      /* eslint-disable */
       return {
         ...state,
       };

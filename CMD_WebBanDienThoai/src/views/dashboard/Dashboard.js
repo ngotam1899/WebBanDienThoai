@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { lazy, Component } from 'react'
 import {
   CButton,
@@ -10,6 +11,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+/* eslint-disable */
 import { connect } from "react-redux";
 import {compose} from 'redux';
 import { withRouter } from "react-router";

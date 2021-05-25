@@ -25,7 +25,7 @@ export default class Images extends Component {
           {image.map((item, index)=>{
             return (
               <button key={index} className="btn" onClick={()=> setImage(item)}>
-                <img src={item.public_url} style={{"width": 100, "height":100}} className="rounded"></img>
+                <img src={item.public_url} style={{"width": 100, "height":100}} className="rounded" alt="Ảnh mẫu"></img>
               </button>
             )
           })}

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { ListCountry } from '../../constants/common';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
@@ -22,7 +21,7 @@ class CartPage extends Component {
     var total = 0;
     var totalPrice = 0;
     var { cart } = this.props;
-    for (var i = 0; i < cart.length; i++) {
+    for (let i = 0; i < cart.length; i++) {
       total = total + cart[i].quantity
       totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
     }
@@ -37,7 +36,7 @@ class CartPage extends Component {
     var totalPrice=0;
     var {cart} = this.props;
     if (cart !== prevProps.cart) {
-      for(var i=0; i< cart.length; i++){
+      for(let i=0; i< cart.length; i++){
         total = total+cart[i].quantity
         totalPrice = totalPrice+ cart[i].quantity* cart[i].product.colors.find(item=> item._id === cart[i].color).price
       }
@@ -55,7 +54,6 @@ class CartPage extends Component {
 
   render() {
     var {cart, onDeleteProductInCart, onUpdateProductInCart, currency, userInfo, t} = this.props;
-    var {totalPrice} = this.state;
     return (<>
       <div className="product-big-title-area">
         <div className="container">

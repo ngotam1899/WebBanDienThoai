@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom'
-
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
+import qs from "query-string";
 import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,6 +17,7 @@ import CategoryActions from "../../redux/actions/categories";
 import ProductsActions from '../../redux/actions/products'
 // @Functions
 import numberWithCommas from '../../utils/formatPrice'
+import getFilterParams from "../../utils/getFilterParams";
 
 class Header extends Component {
   constructor(props) {
@@ -24,7 +26,8 @@ class Header extends Component {
       total: 0,
       totalPrice: 0,
       currencyCode: "VND",
-      language: "en"
+      language: "en",
+      keyword: ""
     }
     this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
@@ -54,7 +57,7 @@ class Header extends Component {
     var totalPrice = 0;
     var { cart } = this.props;
     if (cart !== prevProps.cart) {
-      for (var i = 0; i < cart.length; i++) {
+      for (let i = 0; i < cart.length; i++) {
         total = total + cart[i].quantity
         totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
       }
@@ -76,6 +79,35 @@ class Header extends Component {
   }, 500);
   }
 
+  handleFilter = (event) => {
+    var target = event.target;
+    var name = target.name;
+    var value = target.value;
+    this.setState({
+      [name]: value
+    })
+    const { onFilter } = this.props;
+    onFilter(value);
+  }
+
+  // Chuyển router (thêm vào params) 
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`https://localhost:5000/#/products/dien-thoai/?${qs.stringify(queryParams)}`);
+  };
+
+  // Button search
+  searchKeyWorld = (e) => {
+    const {keyword} = this.state;
+    this.handleUpdateFilter({ keyword, page : 0});
+  }
+
   render() {
     const MenuLink = ({ label, to, activeOnlyWhenExact, onClick }) => {
       return (
@@ -89,9 +121,9 @@ class Header extends Component {
         }} />
       )
     }
-    const {total, totalPrice, currencyCode, language}=this.state;
-    const {userInfo, isLogin, listCategories, t} = this.props;
-    const notVND = currencyCode=="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2));
+    const {total, totalPrice, currencyCode, language, keyword}=this.state;
+    const {userInfo, isLogin, listCategories, t, listProducts, currency, location} = this.props;
+    const notVND = currencyCode==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2));
     return (
       <>
         <div className="header-area">
@@ -149,9 +181,36 @@ class Header extends Component {
                   <Link to="/"  onClick={this.refreshPage}><img src={assets("brand.png")} alt="" className="w-100" /></Link>
                 </div>
               </div>
-
-              <div className="col-sm-6 col-md-7 col-lg-8 col-xl-9">
-                <div className="shopping-item">
+              <div className="col-md-6 col-9 align-self-center">
+                <div className="input-group shadow">
+                  <input type="text" className="form-control" value={keyword} name="keyword" onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
+                  <div className="input-group-append">
+                    <button className="btn btn-danger h-100" onClick={() => this.searchKeyWorld()}><i className="fa fa-search"></i></button>
+                  </div>
+                </div>
+                <div style={{ position: "absolute", width: "95%" }}>
+                  <div className="card">
+                  {listProducts && keyword && listProducts.map((product, index) =>{
+                    return (
+                      <Link to={`/product/${product.pathseo}/${product._id}`}>
+                      <div className="row text-dark text-decoration-none " style={{height: "80px"}} key={index}>
+                        <div className="col-3 my-auto">
+                          <><img style={{height: "80px"}} src={product.bigimage.public_url} alt={product.name}></img></>
+                        </div>
+                        <div className="col-9 text-left my-auto">
+                          <p className="mb-0">{product.name}</p>
+                          <p className="mb-0">{currency==="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
+                        </div>
+                      </div>
+                      <div className="border-bottom"></div>
+                      </Link>
+                    )
+                  })}
+                  </div>
+                </div>
+              </div>
+              <div className="col-3 align-self-center">
+                <div className="shopping-item rounded shadow">
                   <Link to="/carts">{t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> <i className="fa fa-shopping-cart"></i><span className="product-count">{total}</span></Link>
                 </div>
               </div>
@@ -183,6 +242,10 @@ class Header extends Component {
               </nav>
             </div>
           </div>
+          <MessengerCustomerChat
+            pageId="104334418256109"
+            appId="804609327113718"
+          />
         </div>
       </>
     );
@@ -192,6 +255,8 @@ class Header extends Component {
 const mapStateToProps = (state) =>{
   return {
     cart: state.cart,
+    listProducts: state.products.filter,
+    currency: state.currency,
     userInfo: state.auth.detail,
     isLogin: state.auth.loggedIn,
     listCategories: state.categories.list
@@ -200,6 +265,9 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps =(dispatch)=> {
 	return {
+    onFilter: (keyword) => {
+      dispatch(ProductsActions.onFilter(keyword));
+    },
 		onGetProfile : (data, headers) =>{
 			dispatch(AuthorizationActions.onGetProfile(data, headers))
     },

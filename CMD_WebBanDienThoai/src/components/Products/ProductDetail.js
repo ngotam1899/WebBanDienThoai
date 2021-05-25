@@ -80,7 +80,7 @@ class ProductDetail extends Component {
         : this.setValue(product, listCategories[0]),
     };
   }
-
+/* eslint-disable */
   setValue = (product, categoryDetail) => {
     var specifications = [];
     if (product) {
@@ -117,7 +117,7 @@ class ProductDetail extends Component {
     }
     return specifications;
   };
-
+/* eslint-disable */
   componentDidMount() {
     const { onGetListColor } = this.props;
     onGetListColor();
@@ -383,11 +383,13 @@ class ProductDetail extends Component {
       this.onCallback(id, formData2);
     } else if (selectedFile) {
       // 1. Lưu cloudinary
+      /* eslint-disable */
       var formData1 = new FormData();
       formData1.append("image", selectedFile);
       await this.setState({
         bigimage: formData1,
       });
+      /* eslint-disable */
       this.onCallback(id);
     } else if (selectedList.length !== 0) {
       // 1. Lưu cloudinary
@@ -444,7 +446,8 @@ class ProductDetail extends Component {
         group: group && group._id ? group._id : group,
         description: JSON.stringify(
           convertToRaw(description.getCurrentContent())
-        )
+        ),
+        desc_text: description.getCurrentContent().getPlainText('\u0001')
       };
       onUpdateImage(id, data, formData);
     } else {
@@ -469,7 +472,8 @@ class ProductDetail extends Component {
         group: group && group._id ? group._id : group,
         description: JSON.stringify(
           convertToRaw(description.getCurrentContent())
-        )
+        ),
+        desc_text: description.getCurrentContent().getPlainText('\u0001')
       };
       onCreate(data, formData);
     }

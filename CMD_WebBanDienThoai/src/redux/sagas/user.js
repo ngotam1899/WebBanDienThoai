@@ -1,4 +1,4 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import UsersActions, { UsersActionTypes } from "../actions/user";
 import { getAllUsers, getDetailUser,  deleteUser, getOnlineUsers, getSessionUsers } from "../apis/user";

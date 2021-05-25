@@ -15,7 +15,6 @@ import {
 import BrandDetail from './BrandDetail'
 // @Actions
 import BrandActions from "../../redux/actions/brands";
-import {INITIAL_IMAGE} from '../../constants';
 const fields = ['name', 'image',{ key: 'actions', _style: { width: '30%'} }]
 
 class BrandList extends Component {
