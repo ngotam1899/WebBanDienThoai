@@ -5,6 +5,7 @@ import {
   Text,
   StatusBar,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -35,7 +36,6 @@ class ProfileScreen extends Component {
 
   render() {
     const {navigation, userInfo} = this.props;
-    console.log("user info: ",userInfo)
     return (
       <View style={styles.screenContainer}>
         <StatusBar barStyle="light-content" />
@@ -43,30 +43,45 @@ class ProfileScreen extends Component {
         <Header value="1" title="Cá nhân" navigation={navigation} />
         {/*  */}
         <View style={styles.bodyContainer}>
-          <View style={styles.userContainer}>
-            <View style={styles.avatarContainer}>
-              <MaterialIcons name="person" size={26} color="#fff" />
+          {userInfo ? (
+            <View style={styles.userContainer}>
+              <View style={styles.avatarContainer}>
+                <Image
+                  style={styles.avatarImg}
+                  source={{
+                    uri: userInfo.image.public_url,
+                  }}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('UserDetail')}>
+                  <Text style={styles.username}>
+                    {userInfo.lastname} {userInfo.firstname}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <FontAwesome name="angle-right" size={26} color="#1e88e5" />
             </View>
-
-            <View style={styles.textContainer}>
-              {userInfo ? (
-                <>
-                <Text style={styles.username}> Xin chào {userInfo.lastname} {userInfo.firstname}</Text>         
-                </>
-              ) : (
-                <>
-                <Text style={styles.welcomeText}>
+          ) : (
+            <>
+              <View style={styles.userContainer}>
+                <View style={styles.avatarContainer}>
+                  <MaterialIcons name="person" size={26} color="#fff" />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.welcomeText}>
                     Chào mừng bạn đến với Tiki
                   </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('SignIn')}>
                     <Text style={styles.authText}>Đăng nhập/Đăng ký</Text>
                   </TouchableOpacity>
-                </>
-              )}
-            </View>
-            <FontAwesome name="angle-right" size={26} color="#1e88e5" />
-          </View>
+                </View>
+                <FontAwesome name="angle-right" size={26} color="#1e88e5" />
+              </View>
+            </>
+          )}
           {/*  */}
           <View style={styles.divider} />
           <ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" />
@@ -133,6 +148,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#1e88e5',
   },
+  avatarImg: {
+    borderRadius: 50,
+    height: 50,
+    width: 50,
+  },
   textContainer: {
     flex: 1,
     marginLeft: 20,
@@ -142,7 +162,7 @@ const styles = StyleSheet.create({
   },
   username: {
     color: '#1e88e5',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
   },
   authText: {

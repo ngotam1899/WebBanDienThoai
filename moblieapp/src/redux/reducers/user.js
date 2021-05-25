@@ -39,7 +39,6 @@ export default function(state = init, action) {
         processing: false,
       };
     case UsersActionTypes.UPDATE_SUCCESS:
-      toastSuccess('Cập nhật thông tin thành công');
       return {
         ...state,
         processing: false,
@@ -52,13 +51,13 @@ export default function(state = init, action) {
       };
     case UsersActionTypes.CHANGE_PASSWORD_ERROR:
       var { message } = action.payload;
-      toastError(message);
+      console.log('err')
       return {
         ...state,
         processing: false,
       };
     case UsersActionTypes.CHANGE_PASSWORD_SUCCESS:
-      toastSuccess('Cập nhật thông tin thành công');
+      console.log('success')
       return {
         ...state,
         processing: false,

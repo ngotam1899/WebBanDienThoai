@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import ProductsActions from '../../redux/actions/products';
 import {connect} from 'react-redux';
-import {CartContext} from '../../context/Cart';
 import styles from './style';
 import {AsyncStorage} from 'react-native';
 import {Rating} from 'react-native-ratings';
@@ -10,7 +9,6 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Alert,
   ScrollView,
   Dimensions,
   FlatList,
@@ -129,9 +127,9 @@ class ProductDetail extends Component {
     }
   };
   render() {
-    const {product, group, navigation, route, currency, review, total} = this.props;
+    const {product, group, navigation, route} = this.props;
     const {color} = this.state;
-
+    console.log('product: ',product)
     return (
       <>
         {product && (
