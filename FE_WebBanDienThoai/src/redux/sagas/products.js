@@ -9,7 +9,6 @@ function* handleGetList({ payload }) {
   yield put(UIActions.showLoading());
   try {
     const result = yield call(getAllProducts, payload);
-    console.log("result", result)
     const data = get(result, "data");
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetListSuccess(data.products, data.total));

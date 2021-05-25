@@ -8,7 +8,7 @@ import {
   StyleSheet,
   StatusBar,
   ScrollView,
-  Button,
+  Dimensions,
 } from 'react-native';
 import {
   LoginButton,
@@ -40,6 +40,8 @@ GoogleSignin.configure({
   offlineAccess: true,
 });
 
+
+const {width} = Dimensions.get('window');
 class SignInPage extends Component {
   constructor(props) {
     super(props);
@@ -179,7 +181,7 @@ class SignInPage extends Component {
   };
 
   sendEmail() {
-    const {email,isModalVisible} = this.state;
+    const {email, isModalVisible} = this.state;
     console.log('email: ', email);
     const {onForgotPassword} = this.props;
     if (email) {
@@ -288,7 +290,7 @@ class SignInPage extends Component {
                   justifyContent: 'center',
                 }}>
                 <View
-                  style={{height: 220, backgroundColor: '#fff', padding: 50}}>
+                  style={{height: 220, width:width - 40,borderRadius: 10, backgroundColor: '#fff', padding: 50}}>
                   <Text style={[styles.text_footer]}>
                     Nhập email để xác thực
                   </Text>
@@ -305,27 +307,52 @@ class SignInPage extends Component {
                       }}
                     />
                   </View>
-                  <View style={styles.button}>
-                    <TouchableOpacity
-                      style={[
-                        styles.signIn,
-                        {paddingBottom: 50, paddingTop: 20},
-                      ]}
-                      onPress={() => this.sendEmail()}>
-                      <LinearGradient
-                        colors={['#1F7cdb', '#1e88e5']}
-                        style={styles.signIn}>
-                        <Text
-                          style={[
-                            styles.textSign,
-                            {
-                              color: '#fff',
-                            },
-                          ]}>
-                          Xác nhận
-                        </Text>
-                      </LinearGradient>
-                    </TouchableOpacity>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                    }}>
+
+                    <View style={styles.button}>
+                      <TouchableOpacity
+                        style={styles.btnExit}
+                        onPress={() => this.sendEmail()}>
+                        <LinearGradient
+                          colors={['#1F7cdb', '#1e88e5']}
+                          style={styles.btnExit}>
+                          <Text
+                            style={[
+                              styles.textSign,
+                              {
+                                color: '#fff',
+                              },
+                            ]}>
+                            Xác nhận
+                          </Text>
+                        </LinearGradient>
+                      </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.button}>
+                      <TouchableOpacity
+                        style={styles.btnExit}
+                        onPress={() => this.toggleModal()}>
+                        <LinearGradient
+                          colors={['#ccd', '#ccc']}
+                          style={styles.btnExit}>
+                          <Text
+                            style={[
+                              styles.textSign,
+                              {
+                                color: '#000',
+                              },
+                            ]}>
+                            Thoát
+                          </Text>
+                        </LinearGradient>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -510,6 +537,15 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     marginTop: 20,
+  },
+
+  btnExit: {
+    height: 50,
+    paddingVertical: 5,
+    paddingHorizontal: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
   },
   signIn: {
     width: '100%',

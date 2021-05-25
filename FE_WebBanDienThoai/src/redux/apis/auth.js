@@ -41,7 +41,5 @@ export const loginFacebook = (token) =>{
 
 //8. Active Password tại {{url}}/users/activate-password/:token
 export const activatePassword = (token, data) =>{
-  console.log("token",token)
-  console.log("data",data)
   return axiosService.post(`${API_ENDPOINT_AUTH}${url}/activate-password/${token}`, data);
 }

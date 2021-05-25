@@ -11,7 +11,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 import SignUpPage from './src/components/SignUpPage';
 import SignInPage from './src/components/SignInPage';
-
+import UserDetailPage from './src/components/UserDetailPage'
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -32,7 +32,6 @@ getTabBarVisibility = route => {
   if (routeName === 'SignIn' || routeName === 'SignUp') {
     return false;
   }
-
   return true;
 };
 
@@ -49,6 +48,18 @@ function HomeStackScreen() {
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
       <HomeStack.Screen name="SignUp" component={SignUpPage} />
       <HomeStack.Screen name="SignIn" component={SignInPage} />
+      <HomeStack.Screen name="UserDetail" component={UserDetailPage} 
+      options={{
+        headerShown: true, 
+        title: 'TRANG CÁ NHÂN',
+        headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 20
+          },
+      }} />
     </HomeStack.Navigator>
   );
 }

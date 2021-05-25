@@ -145,8 +145,6 @@ class SignUpPage extends Component {
 
     if(password === confirmPassword){
     	onRegister(data);
-    }else{
-    	toastError(t('user.password.error'))
     }
   }
 
