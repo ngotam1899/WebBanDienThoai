@@ -13,6 +13,7 @@ import ReviewActions from '../../redux/actions/review'
 import Rating from 'react-rating'
 import ImageGalleries from './ImageGalleries';
 import Pagination from "react-js-pagination";
+import ProductItem from "../../containers/ProductItem"
 import './styles.css';
 // @Functions
 import tryConvert from '../../utils/changeMoney'
@@ -56,8 +57,10 @@ class DetailPage extends Component {
   }
 
   componentDidMount(){
-    const {match, onGetDetailProduct, onGetReviews} = this.props;
+    const { match, onGetDetailProduct, onGetReviews, onGetLike, onGetRelate } = this.props;
     onGetDetailProduct(match.params.productID);
+    onGetLike(match.params.productID);
+    onGetRelate(match.params.productID);
     onGetReviews({product: match.params.productID})
   }
 
@@ -147,7 +150,7 @@ class DetailPage extends Component {
   }
 
   render() {
-    const {product, currency, t, review, group, total, count, location } = this.props;
+    const {product, currency, t, review, group, total, count, location, relate, like } = this.props;
     const {quantity, imageColor, check, _check } = this.state;
     const filter = getFilterParams(location.search);
     
@@ -233,7 +236,47 @@ class DetailPage extends Component {
           </div>
           <div className="row">
             <div className="col-12">
-              <section className="product_description_area">
+            <section className="product_description_area pb-0">
+                <div className="container">
+                  <ul className="nav nav-tabs" id="myTab" role="tablist">
+                    <li className="nav-item">
+                      <a className="nav-link" id="recent-tab" data-toggle="tab" href="#recent" role="tab" aria-controls="recent">Recent viewed</a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link" id="like-tab" data-toggle="tab" href="#like" role="tab" aria-controls="like"
+                      aria-selected="false">You may also like</a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link active" id="relate-tab" data-toggle="tab" href="#relate" role="tab" aria-controls="relate"
+                      aria-selected="false">Related products</a>
+                    </li>
+                  </ul>
+                  <div className="tab-content" id="myTabContent">
+                    <div className="tab-pane fade" id="recent" role="tab" aria-labelledby="recent-tab">
+                      a
+                    </div>
+                    <div className="tab-pane fade" id="like" role="tab" aria-labelledby="like-tab">
+                      <div className="row">
+                        {like && like.map((product, index) => {
+                          return (
+                              <ProductItem product={product} key={index} />
+                            )
+                        })}
+                      </div>
+                    </div>
+                    <div className="tab-pane fade show active" id="relate" role="tab" aria-labelledby="relate-tab">
+                      <div className="row">
+                        {relate && relate.map((product, index) => {
+                          return (
+                              <ProductItem product={product} key={index} />
+                            )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <section className="product_description_area mt-1">
                 <div className="container">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
@@ -400,6 +443,8 @@ const mapStateToProps = (state) =>{
     total: state.review.total,
     authInfo: state.auth.detail,
     count: state.review.count,
+    like: state.products.like,
+    relate: state.products.relate,
   }
 }
 
@@ -407,6 +452,12 @@ const mapDispatchToProps = (dispatch, props) => {
   return {
     onGetDetailProduct: (payload) => {
       dispatch(ProductsActions.onGetDetail(payload))
+    },
+    onGetLike: (payload) => {
+      dispatch(ProductsActions.onGetLike(payload))
+    },
+    onGetRelate: (payload) => {
+      dispatch(ProductsActions.onGetRelate(payload))
     },
     onAddProductToCart: (product, color, quantity) => {
       dispatch(ProductsActions.onAddProductToCart(product, color, quantity));

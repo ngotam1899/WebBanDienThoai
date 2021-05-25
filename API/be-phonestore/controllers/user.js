@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const Product = require('../models/Product');
+
 const bcrypts = require('bcryptjs');
 const Validator = require('../validators/validator');
 const service = require('../services/service');

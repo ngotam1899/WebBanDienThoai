@@ -50,7 +50,11 @@ const UserSchema = new Schema(
 		},
 		token: {
 			type: String
-		}
+		},
+		history: [{
+			type: Schema.Types.ObjectId,
+			ref: 'Product'
+    }]
 	},
 	{
 		timestamps: true

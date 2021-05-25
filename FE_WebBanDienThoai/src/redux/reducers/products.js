@@ -24,6 +24,10 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_FAVORITE_ERROR:
     case ProductsActionTypes.GET_NEWEST:
     case ProductsActionTypes.GET_NEWEST_ERROR:
+    case ProductsActionTypes.GET_LIKE:
+    case ProductsActionTypes.GET_LIKE_ERROR:
+    case ProductsActionTypes.GET_RELATE:
+    case ProductsActionTypes.GET_RELATE_ERROR:
       return {
         ...state,
       };
@@ -41,6 +45,16 @@ export default function(state = init, action) {
       return {
         ...state,
         new: get(action, "payload"),
+      };
+    case ProductsActionTypes.GET_LIKE_SUCCESS:
+      return {
+        ...state,
+        like: get(action, "payload"),
+      };
+    case ProductsActionTypes.GET_RELATE_SUCCESS:
+      return {
+        ...state,
+        relate: get(action, "payload"),
       };
     case ProductsActionTypes.GET_LIST_SUCCESS:
       return {

@@ -115,11 +115,31 @@ io.on('connection', (socket) => {
   });
 });
 
-const recommendProducts = (req, res, next) => {
+const likeProducts = (req, res, next) => {
 	try {
 		var spawn = require('child_process').spawn;
 		var process = spawn('python', [
-			'./recommend.py',
+			'./middlewares/like.py',
+			req.query.product,
+		]);
+		process.stdout.on("data", async (data) => {
+			// Convert string to JSON
+			var _data = JSON.stringify(data.toString())
+			var result = JSON.parse(JSON.parse(_data));
+			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active'],
+			populate : {path : 'bigimage', select: "public_url"} });
+			return res.status(200).json({ success: true, code: 200, result: result.data });
+		})
+	} catch(error){
+		next(error)
+	}
+}
+
+const relateProducts = (req, res, next) => {
+	try {
+		var spawn = require('child_process').spawn;
+		var process = spawn('python', [
+			'./middlewares/relate.py',
 			req.query.product,
 		]);
 		process.stdout.on("data", async (data) => {
@@ -135,7 +155,9 @@ const recommendProducts = (req, res, next) => {
 		next(error)
 	}
 }
-app.get('/products-recommend', recommendProducts);
+
+app.get('/products-like', likeProducts);
+app.get('/products-relate', relateProducts);
 
 //Catch 404 error and forward them to error handler
 app.use((req, res, next) => {

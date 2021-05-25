@@ -8,7 +8,6 @@ import queryString from 'query-string';
 const url = '/products';
 //cho params 1 default value là object
 export const getAllProducts = (params = {}) =>{
-  console.log(params)
   let queryParams = '';
   if(Object.keys(params).length>0){
     queryParams = `?${queryString.stringify(params)}`;
@@ -41,12 +40,22 @@ export const getBestSeller = () =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/best-seller`);
 }
 
-  // http://localhost:3000/products/favorite  METHOD = GET
+// http://localhost:3000/products/favorite  METHOD = GET
 export const getFavorite  = () =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/favorite`);
 }
 
-  // http://localhost:3000/products/newest  METHOD = GET
+// http://localhost:3000/products/newest  METHOD = GET
 export const getNewest  = () =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/newest`);
 }
+
+// http://localhost:3000/products-like?product=6069f4fa8fa8a12d34256498  METHOD = GET
+export const getLikeProducts = (productId) =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}/products-like?product=${productId}`);
+};
+
+// http://localhost:3000/products-relate?product=6069f4fa8fa8a12d34256498  METHOD = GET
+export const getRelateProducts = (productId) =>{
+  return axiosService.get(`${API_ENDPOINT_AUTH}/products-relate?product=${productId}`);
+};

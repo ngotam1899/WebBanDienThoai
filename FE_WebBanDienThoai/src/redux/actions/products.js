@@ -22,6 +22,14 @@ export const ProductsActionTypes = {
   GET_NEWEST_SUCCESS: "GET_NEWEST_SUCCESS",
   GET_NEWEST_ERROR: "GET_NEWEST_ERROR",
 
+  GET_LIKE: "GET_LIKE",
+  GET_LIKE_SUCCESS: "GET_LIKE_SUCCESS",
+  GET_LIKE_ERROR: "GET_LIKE_ERROR",
+
+  GET_RELATE: "GET_RELATE",
+  GET_RELATE_SUCCESS: "GET_RELATE_SUCCESS",
+  GET_RELATE_ERROR: "GET_RELATE_ERROR",
+
   CREATE: "CREATE",
   CREATE_SUCCESS: "CREATE_SUCCESS",
   CREATE_ERROR: "CREATE_ERROR",
@@ -48,6 +56,10 @@ Object.keys(ProductsActionTypes).forEach((key) => {
   ] = `PRODUCTS_${ProductsActionTypes[key]}`;
 });
 
+/**
+ * common
+ **/
+
 const onClearDetail = () => ({
   type: ProductsActionTypes.CLEAR_DETAIL,
 });
@@ -57,6 +69,10 @@ const onClearCart = () => ({
 const onClearState = () => ({
   type: ProductsActionTypes.CLEAR_STATE,
 });
+
+/**
+ * get_list
+ **/
 
 const onGetList = (payload) => ({
   type: ProductsActionTypes.GET_LIST,
@@ -73,6 +89,9 @@ const onGetListError = (error) => ({
   payload: error,
 });
 
+/**
+ * best_seller
+ **/
 
 const onGetBestSeller = (payload) => ({
   type: ProductsActionTypes.GET_BEST_SELLER,
@@ -89,6 +108,10 @@ const onGetBestSellerError = (error) => ({
   payload: error,
 });
 
+/**
+ * favorite
+ **/
+
 const onGetFavorite = (payload) => ({
   type: ProductsActionTypes.GET_FAVORITE,
   payload,
@@ -104,6 +127,10 @@ const onGetFavoriteError = (error) => ({
   payload: error,
 });
 
+/**
+ * newest
+ **/
+
 const onGetNewest = (payload) => ({
   type: ProductsActionTypes.GET_NEWEST,
   payload,
@@ -118,6 +145,45 @@ const onGetNewestError = (error) => ({
   type: ProductsActionTypes.GET_NEWEST_ERROR,
   payload: error,
 });
+
+/**
+ * like
+ **/
+
+const onGetLike = (id) => ({
+  type: ProductsActionTypes.GET_LIKE,
+  id,
+});
+
+const onGetLikeSuccess = (payload) => ({
+  type: ProductsActionTypes.GET_LIKE_SUCCESS,
+  payload
+});
+
+const onGetLikeError = (error) => ({
+  type: ProductsActionTypes.GET_LIKE_ERROR,
+  payload: error,
+});
+
+/**
+ * relate
+ **/
+
+const onGetRelate = (id) => ({
+  type: ProductsActionTypes.GET_RELATE,
+  id,
+});
+
+const onGetRelateSuccess = (payload) => ({
+  type: ProductsActionTypes.GET_RELATE_SUCCESS,
+  payload
+});
+
+const onGetRelateError = (error) => ({
+  type: ProductsActionTypes.GET_RELATE_ERROR,
+  payload: error,
+});
+
 /**
  *
  * @param String id
@@ -138,9 +204,8 @@ const onGetDetailError = (error) => ({
 });
 
 /**
- *
  * create
- */
+ **/
 const onCreate = ({ params, filters, callback }) => ({
   type: ProductsActionTypes.CREATE,
   payload: { params },
@@ -263,6 +328,14 @@ const ProductsActions = {
   onGetNewest,
   onGetNewestSuccess,
   onGetNewestError,
+
+  onGetLike,
+  onGetLikeSuccess,
+  onGetLikeError,
+
+  onGetRelate,
+  onGetRelateSuccess,
+  onGetRelateError,
 
   onCreate,
   onCreateSuccess,

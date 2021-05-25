@@ -2,7 +2,7 @@ import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import UIActions from "../actions/ui";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest } from "../apis/products";
+import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest, getLikeProducts, getRelateProducts } from "../apis/products";
 import GroupActions from "../actions/group";
 
 function* handleGetList({ payload }) {
@@ -70,11 +70,33 @@ function* handleFilter({ payload }) {
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onFilterSuccess(data.products));
   } catch (error) {
-    
+    console.log(error)
   }
 }
 
-function* handleGetDetail({ filters, id }) {
+function* handleGetLike({ id }) {
+  try {
+    const result = yield call(getLikeProducts, id);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onGetLikeSuccess(data.result));
+  } catch (error) {
+    yield put(ProductsActions.onGetLikeError(error));
+  }
+}
+
+function* handleGetRelate({ id }) {
+  try {
+    const result = yield call(getRelateProducts, id);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onGetRelateSuccess(data.result));
+  } catch (error) {
+    yield put(ProductsActions.onGetRelateError(error));
+  }
+}
+
+function* handleGetDetail({ id }) {
   try {
     const result = yield call(getDetailProduct, id);
     const data = get(result, "data", {});
@@ -85,6 +107,7 @@ function* handleGetDetail({ filters, id }) {
     yield put(ProductsActions.onGetDetailError(error));
   }
 }
+
 
 /**
  *
@@ -97,6 +120,12 @@ export function* watchGetBestSeller() {
 }
 export function* watchGetFavorite() {
   yield takeEvery(ProductsActionTypes.GET_FAVORITE, handleGetFavorite);
+}
+export function* watchGetRelate() {
+  yield takeEvery(ProductsActionTypes.GET_RELATE, handleGetRelate);
+}
+export function* watchGetLike() {
+  yield takeEvery(ProductsActionTypes.GET_LIKE, handleGetLike);
 }
 export function* watchGetNewest() {
   yield takeEvery(ProductsActionTypes.GET_NEWEST, handleGetNewest);
@@ -114,6 +143,8 @@ export default function* rootSaga() {
     fork(watchGetBestSeller),
     fork(watchGetFavorite),
     fork(watchGetNewest),
+    fork(watchGetLike),
+    fork(watchGetRelate),
     fork(watchGetDetail),
     fork(watchFilter),
   ]);

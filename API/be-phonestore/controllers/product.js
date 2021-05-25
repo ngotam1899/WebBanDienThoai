@@ -392,12 +392,7 @@ const favoriteProduct = async (req, res, next) => {
 }
 
 const clusterData = async (req, res, next) => {
-	var products = await Product.find({$or:[
-		{name:{$regex: "Oppo"}},
-		{desc_text:{$regex:"Oppo"}}
-	]});
-	//const products = await Product.aggregate(pipeline);
-	//await Image.populate(products, {path: "bigimage", select: 'public_url'})
+	const products = await Product.find({}, { name: 1, desc_text: 1});
 	return res.status(200).json({ success: true, code: 200, products });
 }
 
