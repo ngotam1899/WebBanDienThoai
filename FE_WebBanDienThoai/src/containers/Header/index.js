@@ -103,9 +103,11 @@ class Header extends Component {
   };
 
   // Button search
-  searchKeyWorld = (e) => {
+  searchKeyWorld = () => {
     const {keyword} = this.state;
-    this.handleUpdateFilter({ keyword, page : 0});
+    const {history} = this.props;
+    history.push(`/#/search?keyword=${keyword}`)
+    window.location.reload()
   }
 
   render() {

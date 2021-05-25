@@ -22,6 +22,12 @@ const routes = [
 		main: () => <HomePage />
 	},
 	{
+		path: '/search',
+		exact: true,
+		name: "Search",
+		main: ({match, location}) => <SearchPage match={match} location={location}/>
+	},
+	{
 		path: '/products/:pathseo/:categoryID',
 		exact: true,
 		name: "Product Page",
@@ -62,12 +68,6 @@ const routes = [
 		exact: true,
 		name: "Purchase",
 		main: ({history, location}) => <PurchasePage history={history} location={location}/>
-	},
-	{
-		path: '/search',
-		exact: true,
-		name: "Search",
-		main: ({match}) => <SearchPage match={match}/>
 	},
 	{
 		path: '/order/active/:token',

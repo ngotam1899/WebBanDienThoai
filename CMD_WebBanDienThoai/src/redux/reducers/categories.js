@@ -40,28 +40,19 @@ export default function(state = init, action) {
         loading: false,
         list: get(action, "payload", []),
       };
-
     case CategoryActionTypes.GET_DETAIL:
+    case CategoryActionTypes.GET_DETAIL_ERROR:
       return {
         ...state,
         loadingDetail: true,
         detail: null,
       };
-
     case CategoryActionTypes.GET_DETAIL_SUCCESS:
       return {
         ...state,
         loadingDetail: false,
         detail: action.payload,
       };
-
-    case CategoryActionTypes.GET_DETAIL_ERROR:
-      return {
-        ...state,
-        loadingDetail: false,
-        detail: action.payload,
-      };
-
     case CategoryActionTypes.CREATE:
     case CategoryActionTypes.UPDATE:
     case CategoryActionTypes.DELETE:

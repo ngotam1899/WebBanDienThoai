@@ -2,7 +2,7 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import UIActions from "../actions/ui";
 import CategoryActions, { CategoryActionTypes } from "../actions/categories";
-import { getAllCategories } from "../apis/categories";
+import { getAllCategories, getDetailCategory } from "../apis/categories";
 
 function* handleGetList({ payload }) {
   yield put(UIActions.showLoading());
@@ -17,6 +17,15 @@ function* handleGetList({ payload }) {
   yield put(UIActions.hideLoading());
 }
 
+function* handleGetDetail({ id }) {
+  try {
+    const result = yield call(getDetailCategory, id);
+    const data = get(result, "data", {});
+    yield put(CategoryActions.onGetDetailSuccess(data.category));
+  } catch (error) {
+    yield put(CategoryActions.onGetDetailError(error));
+  }
+}
 
 /**
  *
@@ -25,9 +34,13 @@ function* handleGetList({ payload }) {
 export function* watchGetList() {
   yield takeEvery(CategoryActionTypes.GET_LIST, handleGetList);
 }
+export function* watchGetDetail() {
+  yield takeEvery(CategoryActionTypes.GET_DETAIL, handleGetDetail);
+}
 
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
+    fork(watchGetDetail),
   ]);
 }

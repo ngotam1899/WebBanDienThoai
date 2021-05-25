@@ -10,3 +10,7 @@ export const getAllCategories = (params = {}) =>{
     return axiosService.get(`${API_ENDPOINT_AUTH}${url}`);
 };
 
+// http://localhost:3000/products/categorys/:id  METHOD = GET
+export const getDetailCategory  = (productId) =>{
+    return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${productId}`);
+  }

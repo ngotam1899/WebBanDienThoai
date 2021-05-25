@@ -51,6 +51,9 @@ class DetailPage extends Component {
         };
         this.props.onGetReviews(params);
       }
+      if (prevProps.match !== this.props.match) {
+        this.onReload(`/product/a/${this.props.match.params.productID}`)
+      }
     }
     catch(err){
     }

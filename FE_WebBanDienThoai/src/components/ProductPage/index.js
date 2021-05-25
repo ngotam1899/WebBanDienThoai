@@ -13,6 +13,7 @@ import Pagination from "react-js-pagination";
 import ProductsSelectors from "../../redux/selectors/products";
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
+import CategoryActions from "../../redux/actions/categories";
 
 class ProductPage extends Component {
   constructor(props) {
@@ -48,8 +49,7 @@ class ProductPage extends Component {
   
   //??
   UNSAFE_componentWillMount() {
-    document.title = "[TellMe] Trang bán hàng"
-    const { onGetList, onGetListBrand, location } = this.props;
+    const { onGetList, onGetListBrand, onGetCategory, location, match } = this.props;
     const { filter } = this.state;
     const filters = getFilterParams(location.search);
     var params = {
@@ -58,17 +58,22 @@ class ProductPage extends Component {
     };
     onGetListBrand(params);
     onGetList(params);
+    onGetCategory(match.params.categoryID);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.location.search !== this.props.location.search) {
-      const filters = getFilterParams(this.props.location.search);
+    const {location, category} = this.props
+    if (prevProps.location.search !== location.search) {
+      const filters = getFilterParams(location.search);
       const { filter } = this.state;
       var params = {
         ...filter,
         ...filters
       };
       this.props.onGetList(params);
+    }
+    if(prevProps.category !== category && category){
+      document.title = `${category.name} | ${category.name_en}`
     }
   }
 
@@ -111,34 +116,11 @@ class ProductPage extends Component {
   }
 
   render() {
-    const {keyword, min_p, max_p} = this.state;
+    const {min_p, max_p} = this.state;
     const { listProducts, totalBrand, t, location, total } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <>
-        <div className="product-big-title-area">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="product-bit-title text-center">
-                  <div className="row my-5 justify-content-center">
-                    <div className="col-8">
-                      <div className="row input-group">
-                        <input type="text" className="form-control" name="keyword" value={keyword} onChange={this.onChange} placeholder={t('search.placeholder.input')}></input>
-                        <div className="input-group-append">
-                          <button className="btn btn-danger h-100" onClick={() => this.searchKeyWorld()}>{t('shop.search.button')}</button>
-                        </div>
-                      </div>
-                      
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
         <div className="single-product-area">
           <div className="zigzag-bottom"></div>
           <div className="container">
@@ -281,6 +263,7 @@ const mapStateToProps = (state) => {
     listBrand: state.brands.list,
     totalBrand: state.brands.total,
     total: state.products.total,
+    category : state.categories.detail
   }
 }
 
@@ -291,6 +274,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onGetListBrand: (params) => {
       dispatch(BrandActions.onGetList(params))
+    },
+    onGetCategory: (id) => {
+      dispatch(CategoryActions.onGetDetail(id))
     },
   }
 }

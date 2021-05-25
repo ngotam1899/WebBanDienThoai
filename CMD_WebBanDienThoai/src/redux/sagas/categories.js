@@ -83,7 +83,6 @@ export function* watchGetList() {
 export function* watchGetDetail() {
   yield takeEvery(CategoryActionTypes.GET_DETAIL, handleGetDetail);
 }
-
 export function* watchCreate() {
   yield takeEvery(CategoryActionTypes.CREATE, handleCreate);
 }

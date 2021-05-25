@@ -19,22 +19,26 @@ export default function(state = init, action) {
         ...state,
          loading: false,
       };
-
     case CategoryActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
         loading: false,
         list: get(action, "payload", []), // list: action.payload
       };
+    case CategoryActionTypes.GET_DETAIL:
+    case CategoryActionTypes.GET_DETAIL_ERROR:
+      return {
+        ...state,
+        loadingDetail: true,
+        detail: null,
+      };
+    case CategoryActionTypes.GET_DETAIL_SUCCESS:
+      return {
+        ...state,
+        loadingDetail: false,
+        detail: action.payload,
+      };
     default:
       return state;
   }
 }
-/* category: {
-      productLength: [
-        {
-          categoryId,
-          productLengthByCat
-        }
-      ]
-}*/

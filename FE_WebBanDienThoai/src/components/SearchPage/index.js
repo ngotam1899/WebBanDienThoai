@@ -1,12 +1,60 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import { withTranslation } from 'react-i18next'
+// @Actions
+import ProductsActions from '../../redux/actions/products'
+// @Functions
+import getFilterParams from "../../utils/getFilterParams";
+// @Components
+import ProductItem from "../../containers/ProductItem"
 
 class SearchPage extends Component {
+  constructor(props){
+    super(props);
+    const {location} = props;
+    const filter = getFilterParams(location.search);
+    this.state = {
+      keyword: filter.keyword ===null ? "" : filter.keyword,
+      filter: {
+        limit: 12,
+        page: 0,
+      }
+    }
+  }
+
+  UNSAFE_componentWillMount() {
+    const { onGetList, location } = this.props;
+    const { filter, keyword } = this.state;
+    document.title = `Kết quả tìm kiếm '${keyword}'`
+    const filters = getFilterParams(location.search);
+    var params = {
+      ...filter,
+      ...filters
+    };
+    onGetList(params);
+  }
+
   render() {
+    const {location, listProducts} = this.props;
+    const filter = getFilterParams(location.search);
     return (
       <div className="single-product-area">
-          {/* <div className="container">
-            <div className="row">
-              <div className="col-md-9 col-12">
+        <div className="container">
+          <div className="row">
+            <div className="col-12">
+              <h3 className="border-bottom pb-2">Kết quả tìm kiếm: '{filter.keyword}'</h3> 
+            </div>
+            <div className="col-12">
+              <div className="row">
+                {listProducts && listProducts.map((product, index) => {
+                  return (
+                      <ProductItem product={product} key={index} />
+                    )
+                })}
+              </div>
+            </div>
+              {/* <div className="col-md-9 col-12">
                 <div className="row">
                   <div className="col-6 col-md-5">
                     <div className="card border-info mb-3 w-100">
@@ -83,13 +131,32 @@ class SearchPage extends Component {
                 />
                 </nav>
                 </div>
-              </div>
-            </div>
-          </div> */}
+              </div> */}
+          </div>
         </div>
-    
+      </div>
     )
   }
 }
 
-export default SearchPage;
+
+const mapStateToProps = (state) =>{
+  return {
+    listProducts: state.products.list
+  }
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    onGetList: (params) => {
+      dispatch(ProductsActions.onGetList(params))
+    },
+  }
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+
+export default compose(
+  withConnect,
+  withTranslation()
+)(SearchPage);
