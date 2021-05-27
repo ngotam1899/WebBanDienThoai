@@ -62,17 +62,6 @@ class UserDetail extends Component {
     }
   }
 
-  setCity = () => {
-    const {listCity, userInfo, onGetListDistrict} = this.props;
-    const lastCity = listCity.find(obj => obj.ProvinceName === userInfo.address.split(', ')[3]).ProvinceID
-    this.setState({
-      cityID: lastCity,
-      districtID: null,
-      wardID: null
-    })
-    onGetListDistrict({province_id: lastCity })
-  }
-
   setDistrict = (event) =>{
     const {value, options, selectedIndex} = event.target;
     const {onGetListDistrict} = this.props;

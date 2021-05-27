@@ -53,7 +53,7 @@ const getAllProduct = async (req, res, next) => {
 			sort['price_min'] = req.query.sort_p == '1' ? 1 : -1;
 		}
 		if (req.query.active != undefined && req.query.active != '0') {
-			condition.active = req.query.active=='1' ? true : false || undefined;
+			condition.active = req.query.active=='1' ? true : false;
 		}
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };

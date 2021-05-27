@@ -18,7 +18,7 @@ function* handleGetList({ payload }) {
   yield put(UIActions.hideLoading());
 }
 
-function* handleGetDetail({ filters, id }) {
+function* handleGetDetail({ id }) {
   try {
     const result = yield call(getDetailProduct, id);
     const data = get(result, "data", {});
@@ -47,12 +47,13 @@ function* handleCreate( {payload} ) {
   var {name, price, amount, pathseo, warrently, brand, category,bigimage, specifications, colors, description, desc_text, weight,
     height,
     width,
-    length, group} = payload.params;
+    length, group} = payload.data;
+  var params = payload.params;
   try {
     var result,image, imageArray;
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
-    if(payload.params.bigimage && payload.formData){
-      bigimage = yield call(addImage, payload.params.bigimage);
+    if(payload.data.bigimage && payload.formData){
+      bigimage = yield call(addImage, payload.data.bigimage);
       image = yield call(addImage, payload.formData);
       imageArray = image.data.images.map((item)=>{
         return item._id
@@ -69,8 +70,8 @@ function* handleCreate( {payload} ) {
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     // 2. TH2: Nếu bigimge mới
-    else if(payload.params.bigimage){
-      bigimage = yield call(addImage, payload.params.bigimage);
+    else if(payload.data.bigimage){
+      bigimage = yield call(addImage, payload.data.bigimage);
       result = yield call(addProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
         height,
@@ -107,7 +108,7 @@ function* handleCreate( {payload} ) {
       yield put(ProductsActions.onCreateSuccess(get(result, "data.product")));
     }
     yield put(ProductsActions.onGetDetail(result.data.product._id));
-    yield put(ProductsActions.onGetList());
+    yield put(ProductsActions.onGetList(params));
   } catch (error) {
     yield put(ProductsActions.onCreateError(error));
   }
@@ -118,14 +119,15 @@ function* handleCreate( {payload} ) {
  * update
  */
 function* handleUpdateImage( {payload} ) {
-  const {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description, desc_text, group, weight,
-      height,
-      width,
-      length,} = payload.params;
+  var {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description, desc_text, group, weight,
+    height,
+    width,
+    length,} = payload.data;
+  var params = payload.params;
   try {
     // 1. TH1: Nếu có bigimge mới và image mới thì tạo mới cả 2 rồi thêm thông tin mới cho cả 2
-    if(payload.params.bigimage._id === undefined && payload.formData){
-      var bigimage = yield call(addImage, payload.params.bigimage);
+    if(payload.data.bigimage._id === undefined && payload.formData){
+      var bigimage = yield call(addImage, payload.data.bigimage);
       var image = yield call(addImage, payload.formData);
       var imageArray = image.data.images.map((item)=>{
         return item._id
@@ -136,15 +138,15 @@ function* handleUpdateImage( {payload} ) {
         width,
         length,
         "bigimage":bigimage.data.images[0]._id,
-        "image": payload.params.image.concat(imageArray)
+        "image": payload.data.image.concat(imageArray)
       }, payload.id);
       if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     // 2. TH2: Nếu bigimge mới
     /* eslint-disable */
-    else if(payload.params.bigimage._id === undefined){
-      var bigimage = yield call(addImage, payload.params.bigimage);
+    else if(payload.data.bigimage._id === undefined){
+      var bigimage = yield call(addImage, payload.data.bigimage);
       var result = yield call(updateProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
         height,
@@ -166,7 +168,7 @@ function* handleUpdateImage( {payload} ) {
         height,
         width,
         length,
-        "image": payload.params.image.concat(imageArray)
+        "image": payload.data.image.concat(imageArray)
       }, payload.id);
       if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
@@ -178,13 +180,13 @@ function* handleUpdateImage( {payload} ) {
         height,
         width,
         length,
-        "image": payload.params.image
+        "image": payload.data.image
       }, payload.id);
       if (result.data.code !== 200) throw result.data;
       yield put(ProductsActions.onUpdateImageSuccess(get(result, "data.product")));
     }
     yield put(ProductsActions.onGetDetail(payload.id));
-    yield put(ProductsActions.onGetList());
+    yield put(ProductsActions.onGetList(params));
   } catch (error) {
     yield put(ProductsActions.onUpdateImageError(error));
   }
@@ -194,37 +196,37 @@ function* handleUpdateImage( {payload} ) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteProduct, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onDeleteSuccess(data));
-    yield put(ProductsActions.onGetList());
+    yield put(ProductsActions.onGetList(params));
   } catch (error) {
     yield put(ProductsActions.onDeleteError(error));
   }
 }
 
-function* handleActivate({payload}) {
+function* handleActivate({id, params}) {
   try {
-    const result = yield call(activateProduct, payload);
+    const result = yield call(activateProduct, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onActivateSuccess(data));
-    yield put(ProductsActions.onGetList());
+    yield put(ProductsActions.onGetList(params));
   } catch (error) {
     yield put(ProductsActions.onActivateError(error));
   }
 }
 
-function* handleDeactivate({payload}) {
+function* handleDeactivate({id, params}) {
   try {
-    const result = yield call(deactivateProduct, payload);
+    const result = yield call(deactivateProduct, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onDeactivateSuccess(data));
-    yield put(ProductsActions.onGetList());
+    yield put(ProductsActions.onGetList(params));
   } catch (error) {
     yield put(ProductsActions.onDeactivateError(error));
   }

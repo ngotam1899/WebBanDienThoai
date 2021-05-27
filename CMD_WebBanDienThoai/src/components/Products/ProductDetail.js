@@ -405,7 +405,8 @@ class ProductDetail extends Component {
   };
 
   onCallback = (id, formData) => {
-    const { onCreate, onUpdateImage } = this.props;
+    const { onCreate, onUpdateImage, queryParams } = this.props;
+    console.log(queryParams)
     const {
       name,
       price,
@@ -449,7 +450,7 @@ class ProductDetail extends Component {
         ),
         desc_text: description.getCurrentContent().getPlainText('\u0001')
       };
-      onUpdateImage(id, data, formData);
+      onUpdateImage(id, data, formData, queryParams);
     } else {
       // 4. Create data
       // eslint-disable-next-line
@@ -475,7 +476,7 @@ class ProductDetail extends Component {
         ),
         desc_text: description.getCurrentContent().getPlainText('\u0001')
       };
-      onCreate(data, formData);
+      onCreate(data, formData, queryParams);
     }
   };
 
@@ -1072,11 +1073,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params, formData) => {
-      dispatch(ProductsActions.onCreate({ params, formData }));
+    onCreate: (data, formData, params) => {
+      dispatch(ProductsActions.onCreate({ data, formData, params }));
     },
-    onUpdateImage: (id, params, formData) => {
-      dispatch(ProductsActions.onUpdateImage({ id, params, formData }));
+    onUpdateImage: (id, data, formData, params) => {
+      dispatch(ProductsActions.onUpdateImage({ id, data, formData, params }));
     },
     onGetListColor: () => {
       dispatch(ColorActions.onGetList());

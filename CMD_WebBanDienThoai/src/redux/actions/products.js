@@ -86,9 +86,9 @@ const onGetDetailError = (error) => ({
  *
  * create
  */
-const onCreate = ({params, formData}) => ({
+const onCreate = ({data, formData, params}) => ({
   type: ProductsActionTypes.CREATE,
-  payload: {params, formData}
+  payload: {data, formData, params}
 });
 
 const onCreateSuccess = (detail) => ({
@@ -105,9 +105,9 @@ const onCreateError = (error) => ({
  *
  * update
  */
-const onUpdateImage = ({ id, params, formData }) => ({
+const onUpdateImage = ({ id, data, formData, params }) => ({
   type: ProductsActionTypes.UPDATE_IMAGE,
-  payload: { id, params, formData },
+  payload: { id, data, formData, params },
 });
 
 const onUpdateImageSuccess = (detail) => ({
@@ -124,9 +124,9 @@ const onUpdateImageError = (error) => ({
  *
  * delete
  */
-const onDelete = ({ id }) => ({
+const onDelete = ({ id, params }) => ({
   type: ProductsActionTypes.DELETE,
-  id,
+  id, params
 });
 
 const onDeleteSuccess = (detail) => ({
@@ -142,9 +142,9 @@ const onDeleteError = (error) => ({
  *
  * activate
  */
-const onActivate = (id) => ({
+const onActivate = ({id, params}) => ({
   type: ProductsActionTypes.ACTIVATE,
-  payload: id,
+  id, params
 });
 
 const onActivateSuccess = (detail) => ({
@@ -160,9 +160,9 @@ const onActivateError = (error) => ({
  *
  * deactivate
  */
-const onDeactivate = (id) => ({
+const onDeactivate = ({id, params}) => ({
   type: ProductsActionTypes.DEACTIVATE,
-  payload: id,
+  id, params
 });
 
 const onDeactivateSuccess = (detail) => ({

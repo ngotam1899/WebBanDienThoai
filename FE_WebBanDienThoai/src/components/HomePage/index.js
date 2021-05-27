@@ -13,48 +13,9 @@ class HomePage extends Component {
   componentDidMount(){
     const {onGetBestSeller, onGetFavorite, onGetNewest} = this.props;
     document.title = "[TellMe] Trang bán hàng"
-    this.improveScreen();
     onGetBestSeller();
     onGetFavorite();
     onGetNewest();
-  }
-
-  improveScreen() {
-    (function($){
-      // Slidder home 4
-      /*global jQuery*/
-      if($('#bxslider-home4').length >0){
-        var slider = $('#bxslider-home4').bxSlider({
-          nextText:'<i className="fa fa-angle-right"></i>',
-          prevText:'<i className="fa fa-angle-left"></i>',
-          auto: true,
-          onSliderLoad:function(currentIndex){
-            $('#bxslider-home4 li').find('.caption').each(function(i){
-              $(this).show().addClass('animated fadeInRight').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                $(this).removeClass('fadeInRight animated');
-              });
-            })                      
-          },
-          onSlideBefore:function(slideElement, oldIndex, newIndex){
-            //slideElement.find('.sl-description').hide();
-            slideElement.find('.caption').each(function(){                    
-              $(this).hide().removeClass('animated fadeInRight'); 
-            });                
-          },
-          onSlideAfter: function(slideElement, oldIndex, newIndex){  
-              //slideElement.find('.sl-description').show();
-            setTimeout(function(){
-              slideElement.find('.caption').each(function(){                    
-                $(this).show().addClass('animated fadeInRight').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-                  $(this).removeClass('fadeInRight animated');
-                }); 
-              });
-            }, 500);                                
-          }
-        });
-        slider.reloadSlider();
-      }
-    })(jQuery); // End of use strict
   }
 
 
@@ -67,60 +28,12 @@ class HomePage extends Component {
             <div className="col-md-12">
               <div className="product-bit-title text-center">
                 <div className="row my-5 justify-content-center">
-                  
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="slider-area">
-        <div className="block-slider block-slider4">
-          <ul className="" id="bxslider-home4">
-            <li>
-              <img src={assets("products/h4-slide.png")} alt="Slide" />
-              <div className="caption-group">
-                <h2 className="caption title">
-                  iPhone <span className="primary">6 <strong>Plus</strong></span>
-                </h2>
-                <h4 className="caption subtitle">Dual SIM</h4>
-                <a className="caption button-radius" href="/#"><span className="icon"></span>{t('home.shop.button')}</a>
-              </div>
-            </li>
-            <li>
-              <img src={assets("products/h4-slide2.png")} alt="Slide" />
-              <div className="caption-group">
-                <h2 className="caption title">
-                  by one, get one <span className="primary">50% <strong>off</strong></span>
-                </h2>
-                <h4 className="caption subtitle">school supplies & backpacks.*</h4>
-                <a className="caption button-radius" href="/#"><span className="icon"></span>Shop now</a>
-              </div>
-            </li>
-            <li>
-              <img src={assets("products/h4-slide3.png")} alt="Slide" />
-              <div className="caption-group">
-                <h2 className="caption title">
-                  Apple <span className="primary">Store <strong>Ipod</strong></span>
-                </h2>
-                <h4 className="caption subtitle">Select Item</h4>
-                <a className="caption button-radius" href="/#"><span className="icon"></span>Shop now</a>
-              </div>
-            </li>
-            <li>
-              <img src={assets("products/h4-slide4.png")} alt="Slide" />
-              <div className="caption-group">
-                <h2 className="caption title">
-                  Apple <span className="primary">Store <strong>Ipod</strong></span>
-                </h2>
-                <h4 className="caption subtitle">& Phone</h4>
-                <a className="caption button-radius" href="/#"><span className="icon"></span>Shop now</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-
       <div className="promo-area">
         <div className="zigzag-bottom"></div>
         <div className="container">
@@ -247,7 +160,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     onGetNewest: () => {
       dispatch(ProductsActions.onGetNewest());
-    },
+    }
   }
 }
 

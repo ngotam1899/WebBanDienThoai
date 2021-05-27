@@ -25,5 +25,5 @@ export const getWardByCityAndDistrict = (cityID, districtID) =>{
 // 4. Calculate shipping fee
 // https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee
 export const getShippingFee = (data) =>{
-  return axiosService.get(`${API_ENDPOINT}/v2/shipping-order/fee`, data);
+  return axiosService.post(`${API_ENDPOINT}/v2/shipping-order/fee`, data);
 };

@@ -39,6 +39,7 @@ class ProductList extends Component {
       min_p: filter.min_p ===null ? "" : filter.min_p,
       max_p: filter.max_p ===null ? "" : filter.max_p,
       active: filter.active ===null ? "" : filter.active,
+      queryParams: {},
       filter: {
         limit: 5,
         page: 0,
@@ -57,6 +58,7 @@ class ProductList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onGetList(params);
     onGetListSpecification();
   }
@@ -69,6 +71,7 @@ class ProductList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -130,7 +133,6 @@ class ProductList extends Component {
       large
     })
     if(item){onGetDetail(item)}
-    //onGetDetail(item)
   }
 
   onClose = (large) =>{
@@ -156,22 +158,24 @@ class ProductList extends Component {
     });
   };
   onDelete = (_id)=>{
+    const {queryParams} = this.state
     const {onDelete} = this.props;
-    onDelete(_id);
+    onDelete(_id, queryParams);
   }
 
   onActivate = (id, active)=>{
+    const {queryParams} = this.state
     const {onActivate, onDeactivate} = this.props;
     if(active){
-      onDeactivate(id);
+      onDeactivate(id, queryParams);
     }
     else{
-      onActivate(id)
+      onActivate(id, queryParams)
     }
   }
 
   render () {
-    const {large, keyword, min_p, max_p} = this.state;
+    const {large, keyword, min_p, max_p, queryParams} = this.state;
     const {listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location} = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -299,10 +303,10 @@ class ProductList extends Component {
                       </td>)
                   }}
                 />
-                {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose}
+                {(productDetail && large) && <ProductDetail large={large} product={productDetail} onClose={this.onClose} queryParams={queryParams}
                 listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail} listSpecification={listSpecification}/>}
 
-                {(!productDetail && large) && <ProductDetail large={large} onClose={this.onClose}
+                {(!productDetail && large) && <ProductDetail large={large} onClose={this.onClose} queryParams={queryParams}
                 listCategories={listCategories} listBrands={listBrands} onClearDetail={onClearDetail} listSpecification={listSpecification}/>}
               </CCardBody>}
               <div className="row justify-content-center">
@@ -349,11 +353,11 @@ const mapDispatchToProps = (dispatch) => {
     onGetListBrand: () => {
       dispatch(BrandActions.onGetList())
     },
-    onActivate: (id) => {
-      dispatch(ProductsActions.onActivate(id));
+    onActivate: (id, params) => {
+      dispatch(ProductsActions.onActivate({id, params}));
     },
-    onDeactivate: (id) => {
-      dispatch(ProductsActions.onDeactivate(id));
+    onDeactivate: (id, params) => {
+      dispatch(ProductsActions.onDeactivate({id, params}));
     },
     onGetListCategory: () => {
       dispatch(CategoryActions.onGetList())
@@ -367,8 +371,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetListSpecification : (params) => {
       dispatch(SpecificationActions.onGetList(params))
     },
-    onDelete: (id) =>{
-      dispatch(ProductsActions.onDelete({id}))
+    onDelete: (id, params) =>{
+      dispatch(ProductsActions.onDelete({id, params}))
     },
   }
 }

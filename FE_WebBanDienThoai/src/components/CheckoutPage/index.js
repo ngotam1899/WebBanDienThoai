@@ -9,7 +9,10 @@ import Paypal from './Paypal';
 // @Functions
 import tryConvert from '../../utils/changeMoney'
 import numberWithCommas from "../../utils/formatPrice";
+import { SHIPPING_EXPRESS, SHIPPING_STANDARD } from '../../constants'
 import './styles.css'
+// @Components
+import ChangeExpress from './ChangeExpress';
 
 class CheckoutPage extends Component {
   constructor(props) {
@@ -38,11 +41,18 @@ class CheckoutPage extends Component {
       order_comments: '',
       total: 0,
       totalPrice: 0,
+      totalWeight: 0,
+      totalHeight: 0,
+      totalWidth: 0,
+      totalLength: 0,
       payment_method: "local",
-      //address
+      // address
       cityID: null,
+      districtID: null,
       shipping_district:"",
       shipping_ward: "",
+      // shipping
+      service_type_id: "1",
     }
   }
   onChange = (event) =>{
@@ -54,39 +64,68 @@ class CheckoutPage extends Component {
     })
   }
 
-  componentDidMount() {
-    const {onGetListCity} = this.props;
-    onGetListCity();
+  componentWillReceiveProps(props){
+    const{service_type_id, totalHeight, totalLength, totalWeight, totalWidth} = this.state;
+    const {authInfo, onGetListDistrict, listCity, listDistrict, onGetListCity} = this.props;
+    if(authInfo !== props.authInfo){
+      onGetListCity();
+    }
+    if(authInfo && authInfo.address){
+      if(listCity !== props.listCity){
+        onGetListDistrict({province_id:props.listCity.find(obj => obj.ProvinceName === authInfo.address.split(', ')[3]).ProvinceID})
+      }
+      if(listDistrict !== props.listDistrict && listDistrict===null){
+        var districtID = props.listDistrict.find(obj => obj.DistrictName === authInfo.address.split(', ')[2]).DistrictID
+        this.setState({
+          districtID
+        })
+        this.calculateShipping(service_type_id, districtID, totalHeight, totalLength, totalWeight, totalWidth)
+      }
+    }
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     document.title = "[TellMe] Trang bán hàng"
     var total = 0;
     var totalPrice = 0;
+    var totalWeight = 0;
+    var totalHeight = 0;
+    var totalWidth = 0;
+    var totalLength = 0;
     var { cart } = this.props;
     for (let i = 0; i < cart.length; i++) {
-      total = total + cart[i].quantity
-      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
+      total = total + cart[i].quantity;
+      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price;
+      totalWeight = totalWeight + cart[i].quantity * cart[i].product.weight;
+      totalHeight = totalHeight + cart[i].quantity * cart[i].product.height;
+      totalWidth = totalWidth < cart[i].product.width ? cart[i].product.width : totalWidth;
+      totalLength = totalLength < cart[i].product.width ? cart[i].product.width : totalLength
     }
     this.setState({
       total,
-      totalPrice
+      totalPrice,
+      totalWeight,
+      totalHeight,
+      totalWidth,
+      totalLength
     })
+    
   }
   
-
-  UNSAFE_componentWillReceiveProps(props) {
-    var total = 0;
-    var totalPrice = 0;
-    var { cart } = this.props;
-    for (let i = 0; i < cart.length; i++) {
-      total = total + cart[i].quantity
-      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
+  calculateShipping (service_type_id, to, height, length, weight, width){
+    const {onCalculateShipping} = this.props;
+    var data = {
+      service_type_id : parseInt(service_type_id),
+      insurance_value : 0,
+      coupon: null,
+      from_district_id : 1450,
+      to_district_id : Math.round(to),
+      height: Math.round(height),
+      length: Math.round(length),
+      weight: Math.round(weight),
+      width: Math.round(width)
     }
-    this.setState({
-      total,
-      totalPrice
-    })
+    onCalculateShipping(data)
   }
 
   componentWillUnmount(){
@@ -101,18 +140,20 @@ class CheckoutPage extends Component {
       cityID: value,
       shipping_city: options[selectedIndex].text,
       shipping_district: "",
+
     })
     onGetListDistrict({province_id: event.target.value });
   }
 
   setWard = (event) => {
-    const {options, selectedIndex} = event.target;
+    const {options, selectedIndex, value} = event.target;
     const {onGetListWard} = this.props;
-    const {cityID} = this.state;
+    const {cityID, service_type_id, totalHeight, totalLength, totalWeight, totalWidth} = this.state;
     this.setState({
       shipping_district: options[selectedIndex].text,
     })
     onGetListWard(cityID, event.target.value);
+    this.calculateShipping(service_type_id, value, totalHeight, totalLength, totalWeight, totalWidth)
   }
 
   setAddress = (event) =>{
@@ -121,9 +162,17 @@ class CheckoutPage extends Component {
       shipping_ward: options[selectedIndex].text
     })
   }
+
+  setService = (service_type_id) => {
+    this.setState({
+      service_type_id
+    })
+    const {totalHeight, districtID, totalLength, totalWeight, totalWidth} = this.state
+    this.calculateShipping(service_type_id, districtID, totalHeight, totalLength, totalWeight, totalWidth)
+  }
   
   placeOrder(){
-    const {onCreateAnOrder, authInfo} = this.props;
+    const {onCreateAnOrder, authInfo, ship} = this.props;
     const {shipToDifferentAddress, order_comments, total, totalPrice, shipping_phone, 
       shipping_address, shipping_city, shipping_district, shipping_ward, payment_method, order_list} = this.state;
     var data = {};
@@ -132,7 +181,7 @@ class CheckoutPage extends Component {
     if(shipToDifferentAddress === true){
       data = {
         order_list,
-        total_price: totalPrice,
+        total_price: totalPrice+ship.total,
         total_quantity: total,
         shipping_phonenumber: shipping_phone,
         email: authInfo.email,
@@ -146,7 +195,7 @@ class CheckoutPage extends Component {
     else {
       data = {
         order_list,
-        total_price: totalPrice,
+        total_price: totalPrice+ship.total,
         total_quantity: total,
         shipping_phonenumber: authInfo.phonenumber,
         email: authInfo.email,
@@ -161,13 +210,39 @@ class CheckoutPage extends Component {
   }
 
   shipDifferentAddress (shipToDifferentAddress) {
-    this.setState({ shipToDifferentAddress});
+    const {service_type_id, districtID, totalHeight, totalLength, totalWeight, totalWidth} = this.state;
+    this.setState({ 
+      shipToDifferentAddress
+    });
+    if(shipToDifferentAddress === false){
+      this.calculateShipping(service_type_id, districtID, totalHeight, totalLength, totalWeight, totalWidth)
+    }
   }
 
   render() {
-    const {shipToDifferentAddress, shipping_phone, shipping_address, shipping_first_name, shipping_last_name, order_comments, payment_method, totalPrice, total, order_list} = this.state;
-    const {authInfo, currency, t, onCreateAnOrder, listCity, listDistrict, listWard, cart} = this.props;
-    console.log(cart)
+    const {
+      shipToDifferentAddress, 
+      shipping_phone, 
+      shipping_address, 
+      shipping_first_name, 
+      shipping_last_name, 
+      order_comments, 
+      payment_method, 
+      totalPrice, 
+      total, 
+      order_list,
+      service_type_id
+    } = this.state;
+    const {
+      authInfo, 
+      currency, t, 
+      onCreateAnOrder, 
+      listCity, 
+      listDistrict, 
+      listWard, 
+      cart,
+      ship
+    } = this.props;
     return (
       <>
         <div className="product-big-title-area">
@@ -208,9 +283,17 @@ class CheckoutPage extends Component {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="col-2 align-self-center text-center">{item.product.colors.find(i => i._id === item.color).price} VND</div>
+                                <div className="col-2 align-self-center text-center">
+                                {currency==="VND" 
+                                ? numberWithCommas(item.product.colors.find(i => i._id === item.color).price) 
+                                : numberWithCommas(parseFloat(tryConvert(item.product.colors.find(i => i._id === item.color).price, currency, false)).toFixed(2))} {currency}
+                                 </div>
                                 <div className="col-2 align-self-center text-center">x {item.quantity}</div>
-                                <div className="col-2 align-self-center text-right font-weight-bold">{item.quantity * item.product.colors.find(i => i._id === item.color).price} VND</div>
+                                <div className="col-2 align-self-center text-right font-weight-bold">
+                                {currency==="VND" 
+                                ? numberWithCommas(item.quantity * item.product.colors.find(i => i._id === item.color).price) 
+                                : numberWithCommas(parseFloat(tryConvert(item.quantity * item.product.colors.find(i => i._id === item.color).price)).toFixed(2))} {currency}
+                                </div>
                               </div>
                             )
                           })}
@@ -231,17 +314,20 @@ class CheckoutPage extends Component {
                                   </div>
                                   <div className="float-start ml-2">
                                     <p className="mb-0">Giao hàng nhanh</p>
-                                    <p className="mb-0 text-secondary smaller">Express</p>
+                                    <p className="mb-0 text-secondary smaller">{service_type_id === "2" ? SHIPPING_EXPRESS : SHIPPING_STANDARD}</p>
                                   </div>
                                 </div>
                                 <div className="col-3 text-center">
-                                  <button type="button" className="btn btn-secondary" onClick={()=>this.changeExpress()}>Thay đổi</button>
+                                  <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#expressModal">Thay đổi</button>
                                 </div>
-                                <div className="col-4 text-right font-weight-bold">
-                                  54153212 VND
-                                </div>
+                                {ship && <div className="col-4 text-right font-weight-bold">
+                                {currency==="VND" 
+                                ? numberWithCommas(ship.total) 
+                                : numberWithCommas(parseFloat(tryConvert(ship.total)).toFixed(2))} {currency}
+                                </div>}
                               </div>
                             </div>
+                            <ChangeExpress service_type_id={service_type_id} setService={this.setService}/>
                           </div>
                         </div>
                       </div>
@@ -284,20 +370,20 @@ class CheckoutPage extends Component {
                       <div className="px-3 py-2">
                         <div className="form-inline">
                           <h3 className="w-100">{t('checkout.shipping.label')}</h3>
-                          <div class="form-check form-switch float-end">
-                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" value={shipToDifferentAddress} onChange={()=>this.shipDifferentAddress(!shipToDifferentAddress)}></input>
+                          <div className="form-check form-switch float-end">
+                            <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" value={shipToDifferentAddress} onChange={()=>this.shipDifferentAddress(!shipToDifferentAddress)}></input>
                           </div>
                         </div>
                         {shipToDifferentAddress && <div className="" style={{ display: 'block' }}>
                           <div className="row">
                             <div className="col">
-                              <div class="form-floating mb-3">
+                              <div className="form-floating mb-3">
                                 <input type="text" className="form-control"  name="shipping_first_name" placeholder="Nhập họ" value={shipping_first_name} onChange={this.onChange}/>
                                 <label >{t('checkout.firstname.input')}</label>
                               </div>
                             </div>
                             <div className="col">
-                              <div class="form-floating mb-3">
+                              <div className="form-floating mb-3">
                                 <input type="text" className="form-control"  name="shipping_last_name" placeholder="Nhập tên" value={shipping_last_name} onChange={this.onChange}/>
                                 <label >{t('checkout.lastname.input')}</label>
                               </div>
@@ -305,7 +391,7 @@ class CheckoutPage extends Component {
                           </div>
                           <div className="row">
                             <div className="col-lg-12 col-md-6 col-12">
-                              <div class="form-floating mb-3">
+                              <div className="form-floating mb-3">
                               <input type="text" className="form-control"  name="shipping_address" placeholder="Nhập địa chỉ" value={shipping_address} onChange={this.onChange}/>
                               <label >{t('checkout.address.input')}</label>
                             </div>
@@ -321,7 +407,7 @@ class CheckoutPage extends Component {
                                     })
                                   }
                                 </select>
-                                <label for="floatingSelect">Tỉnh thành</label>
+                                <label htmlFor="floatingSelect">Tỉnh thành</label>
                               </div>
                             </div>
                             <div className="col-lg-4 col-md-6 col-12">
@@ -335,7 +421,7 @@ class CheckoutPage extends Component {
                                     })
                                   }
                                 </select>
-                                <label for="floatingSelect">Quận huyện</label>
+                                <label htmlFor="floatingSelect">Quận huyện</label>
                               </div>
                             </div>
                             <div className="col-lg-4 col-md-6 col-12">
@@ -349,11 +435,11 @@ class CheckoutPage extends Component {
                                     })
                                   }
                                 </select>
-                                <label for="floatingSelect">Phường xã</label>
+                                <label htmlFor="floatingSelect">Phường xã</label>
                               </div>
                             </div>
                           </div>
-                          <div class="form-floating mb-3">
+                          <div className="form-floating mb-3">
                             <input type="tel" className="form-control"  name="shipping_phone" placeholder="Nhập số điện thoại" value={shipping_phone} onChange={this.onChange}/>
                             <label >{t('checkout.phone.input')}</label>
                           </div>
@@ -362,7 +448,7 @@ class CheckoutPage extends Component {
                     </div>
                   </div>
                   <div className="col-12 col-lg-6">
-                    <div className="rounded shadow-sm mt-2 mb-3">
+                    {ship && <div className="rounded shadow-sm mt-2 mb-3">
                       <div className="px-3 py-2">
                         <h3>{t('checkout.order.title')}</h3>
                         <div id="order_review" style={{ position: 'relative' }}>
@@ -384,37 +470,36 @@ class CheckoutPage extends Component {
                             <tfoot>
                               <tr className="shipping">
                                 <th>{t('cart.ship.table')}</th>
-                                <td>{t('cart.free-ship')}<input type="hidden" className="shipping_method" value="free_shipping" id="shipping_method_0" data-index="0" name="shipping_method[0]" />
-                                </td>
+                                <td>{currency==="VND" ? numberWithCommas(ship.total) : numberWithCommas(parseFloat(tryConvert(ship.total, currency, false)).toFixed(2))} {currency}</td>
                               </tr>
                               <tr className="order-total">
                                 <th>{t('cart.order-total.table')}</th>
-                                <td><strong><span className="amount">{currency==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span></strong> </td>
+                                <td><strong><span className="amount">{currency==="VND" ? numberWithCommas(totalPrice + ship.total) : numberWithCommas(parseFloat(tryConvert(totalPrice + ship.total, currency, false)).toFixed(2))} {currency}</span></strong> </td>
                               </tr>
                             </tfoot>
                           </table>
                         </div>
                       </div>
-                    </div>
+                    </div>}
                     <div className="rounded shadow-sm my-2">
                       <div className="px-3 py-2">
-                      {authInfo && (authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
+                      {authInfo && ship && (authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
                         <h3>Shipping methods</h3>
                         <div className="row">
                           <div className="col">
                             <ul className="payment_methods methods">
                               <li className="form-check">
                                   <input type="radio" value="local" id="local" defaultChecked name="payment_method" className="form-check-input" onChange={this.onChange} />
-                                  <label for="local" className="form-check-label">{t('checkout.cod.button')}</label>
+                                  <label htmlFor="local" className="form-check-label">{t('checkout.cod.button')}</label>
                                 </li>
                               <li className="form-check">
                                 <input type="radio" value="paypal" id="paypal" name="payment_method" className="form-check-input" onChange={this.onChange}/>
-                                <label for="paypal" className="form-check-label"><img alt="" className="w-50 rounded border p-2" src="https://www.thoushallfind.com/design/public/Img/accepted-payment-methods.png"></img></label>
+                                <label htmlFor="paypal" className="form-check-label"><img alt="" className="w-50 rounded border p-2" src="https://www.thoushallfind.com/design/public/Img/accepted-payment-methods.png"></img></label>
                               </li>
                             </ul>
                           </div>
                           <div className="col align-self-end">
-                            { payment_method === "paypal" && <Paypal total_price={parseFloat(tryConvert(totalPrice, "USD", false)).toFixed(2)} onCreateAnOrder={onCreateAnOrder} 
+                            { payment_method === "paypal" && <Paypal total_price={parseFloat(tryConvert(totalPrice + ship.total, "USD", false)).toFixed(2)} onCreateAnOrder={onCreateAnOrder} 
                             shipToDifferentAddress={shipToDifferentAddress}
                             shipping_address={shipping_address} shipping_phone={shipping_phone} authInfo={authInfo} total={total} order_list={order_list} note={order_comments} /> }
                             { payment_method === "local" && <div className="my-4">
@@ -445,6 +530,7 @@ const mapStateToProps = (state) =>{
     listCity: state.address.city,
     listDistrict: state.address.district,
     listWard: state.address.ward,
+    ship: state.address.ship,
   }
 }
 
@@ -458,6 +544,9 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onGetListDistrict: (cityID) => {
       dispatch(AddressActions.onGetDistrict(cityID))
+    },
+    onCalculateShipping: (payload) => {
+      dispatch(AddressActions.onCalculateShipping(payload))
     },
     onGetListWard: (cityID, districtID) => {
       dispatch(AddressActions.onGetWard(cityID, districtID))

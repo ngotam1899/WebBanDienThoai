@@ -18,7 +18,8 @@ const ProductSchema = new Schema(
 			type: Number
 		},
 		active: {
-			type: Boolean
+			type: Boolean,
+			default: false
 		},
 		discount: {
 			type: Number
