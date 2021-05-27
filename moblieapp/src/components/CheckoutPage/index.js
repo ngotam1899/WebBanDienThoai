@@ -131,7 +131,6 @@ class CheckoutPage extends Component {
       }
     }
     onCreateAnOrder(data);
-    onClearCart();
   }
 
   findLastCity() {

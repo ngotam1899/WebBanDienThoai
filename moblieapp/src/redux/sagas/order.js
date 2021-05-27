@@ -12,6 +12,7 @@ function* handleGetList({payload}) {
     const data = get(result, "data")
     if (data.code !== 200) throw data;
     yield put(OrdersActions.onGetListSuccess(data.orders));
+    
   } catch (error) {
     yield put(OrdersActions.onGetListError(error));
   }

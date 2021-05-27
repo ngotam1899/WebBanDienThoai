@@ -11,7 +11,8 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 import SignUpPage from './src/components/SignUpPage';
 import SignInPage from './src/components/SignInPage';
-import UserDetailPage from './src/components/UserDetailPage'
+import UserDetailPage from './src/components/UserDetailPage';
+import CheckoutPage from './src/components/CheckoutPage'
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -48,6 +49,7 @@ function HomeStackScreen() {
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
       <HomeStack.Screen name="SignUp" component={SignUpPage} />
       <HomeStack.Screen name="SignIn" component={SignInPage} />
+      <HomeStack.Screen name="Checkout" component={CheckoutPage} />
       <HomeStack.Screen name="UserDetail" component={UserDetailPage} 
       options={{
         headerShown: true, 
