@@ -10,9 +10,10 @@ const routerReview = require('./routes/review');
 const routerProduct = require('./routes/product');
 const routerOrder = require('./routes/order');
 const routerImage = require('./routes/image');
+const routerPaypal = require('./routes/paypal');
 
 const mongoose = require('mongoose');
-
+const engines = require("consolidate");
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const http = require('http')
@@ -28,6 +29,10 @@ const io = socketIO(server,{
 		credentials: true
 	}
 })
+
+app.engine("ejs", engines.ejs);
+app.set("views", "./views");
+app.set("view engine", "ejs");
 
 app.use(
 	fileUpload({
@@ -78,7 +83,7 @@ app.use(function(req, res, next) {
 	next();
 });
 app.use(bodyParser.json());
-
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Routes
 app.use('/users', routerUser);
@@ -86,6 +91,7 @@ app.use('/reviews', routerReview);
 app.use('/products', routerProduct);
 app.use('/orders', routerOrder);
 app.use('/image', routerImage);
+app.use('/paypal', routerPaypal)
 
 //SocketIO Realtime
 io.on('connection', (socket) => {

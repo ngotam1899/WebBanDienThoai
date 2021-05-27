@@ -67,11 +67,11 @@ class CheckoutPage extends Component {
   componentWillReceiveProps(props){
     const{service_type_id, totalHeight, totalLength, totalWeight, totalWidth} = this.state;
     const {authInfo, onGetListDistrict, listCity, listDistrict, onGetListCity} = this.props;
-    if(authInfo !== props.authInfo){
+    if(authInfo !== props.authInfo && authInfo===null){
       onGetListCity();
     }
     if(authInfo && authInfo.address){
-      if(listCity !== props.listCity){
+      if(listCity !== props.listCity && props.listCity){
         onGetListDistrict({province_id:props.listCity.find(obj => obj.ProvinceName === authInfo.address.split(', ')[3]).ProvinceID})
       }
       if(listDistrict !== props.listDistrict && listDistrict===null){
@@ -86,6 +86,7 @@ class CheckoutPage extends Component {
 
   componentDidMount() {
     document.title = "[TellMe] Trang bán hàng"
+    const {onGetListCity} = this.props;
     var total = 0;
     var totalPrice = 0;
     var totalWeight = 0;
@@ -109,7 +110,7 @@ class CheckoutPage extends Component {
       totalWidth,
       totalLength
     })
-    
+    onGetListCity()
   }
   
   calculateShipping (service_type_id, to, height, length, weight, width){
