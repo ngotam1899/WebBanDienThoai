@@ -27,6 +27,7 @@ import {compose} from 'redux';
 import {AsyncStorage} from 'react-native';
 
 const {width} = Dimensions.get('window');
+
 class UserDetailPage extends Component {
   constructor(props) {
     super(props);
@@ -254,7 +255,7 @@ class UserDetailPage extends Component {
   changePassword() {
     const {oldPassword, newPassword, confirmPassword} = this.state;
     const {onChangePassword, t, userInfo} = this.props;
-    console.log('aa: ', userInfo);
+ 
     if (newPassword === confirmPassword && newPassword !== null) {
       if (userInfo.password) {
         onChangePassword({

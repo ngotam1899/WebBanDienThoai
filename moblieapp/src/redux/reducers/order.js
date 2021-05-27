@@ -1,6 +1,6 @@
-import { get, omit, cloneDeep } from "lodash";
 import { OrdersActionsTypes } from "../actions/order";
 import { toastError, toastSuccess } from '../../utils/toastHelper';
+import {ToastAndroid} from 'react-native';
 
 const init = {
   loading: true,
@@ -10,11 +10,16 @@ const init = {
 
 
 export default function(state = init, action) {
+  console.log('action: ',action)
   switch (action.type) {
     case OrdersActionsTypes.CREATE:
       return {...state};
     case OrdersActionsTypes.CREATE_SUCCESS:
-      toastSuccess("Tạo đơn hàng thành công")
+      ToastAndroid.showWithGravity(
+        "Tạo đơn hàng thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case OrdersActionsTypes.CREATE_ERROR:
       var { message } = action.payload;
@@ -23,19 +28,33 @@ export default function(state = init, action) {
     case OrdersActionsTypes.SEND_CONFIRM_EMAIL:
       return {...state};
     case OrdersActionsTypes.SEND_CONFIRM_EMAIL_SUCCESS:
-      toastSuccess("Đã gửi mã xác nhận đến mail của bạn")
+      ToastAndroid.showWithGravity(
+        "Đã gửi mail xác nhận đến mail của bạn",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case OrdersActionsTypes.SEND_CONFIRM_EMAIL_ERROR:
-      toastError("Không có dữ liệu mail")
+      ToastAndroid.showWithGravity(
+        "Không có dữ liệu mail",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case OrdersActionsTypes.CONFIRM_ORDER:
       return {...state};
     case OrdersActionsTypes.CONFIRM_ORDER_SUCCESS:
-      toastSuccess("Xác nhận đơn hàng thành công")
+      ToastAndroid.showWithGravity(
+        "Xác nhận đơn hàng thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case OrdersActionsTypes.CONFIRM_ORDER_ERROR:
+      /* eslint-disable */
       var { message } = action.payload;
       toastError(message)
+      /* eslint-disable */
       return {...state};
     case OrdersActionsTypes.GET_LIST:
       return {...state};
@@ -59,13 +78,19 @@ export default function(state = init, action) {
         ...state,
       };
     case OrdersActionsTypes.UPDATE_SUCCESS:
-      toastSuccess("Hủy đơn hàng thành công")
+      ToastAndroid.showWithGravity(
+        "Hủy đơn hàng thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
       };
     case OrdersActionsTypes.UPDATE_ERROR:
+      /* eslint-disable */
       var { message } = action.payload;
       toastError(message)
+      /* eslint-disable */
       return {
         ...state,
       };

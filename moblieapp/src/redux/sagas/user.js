@@ -12,7 +12,6 @@ import { updateUserInfo, getUser, changePassword } from "../apis/user";
 function* handleUpdate( {payload} ) {
   const {firstname, lastname, phonenumber, address, email} = payload.params;
   var result, detailResult = null;
-  console.log("image: ",payload.params.image)
   try {
     if(payload.params.image){
       var image = yield call(addImage, payload.params.image);
@@ -37,7 +36,6 @@ function* handleUpdate( {payload} ) {
 
 function* handleChangePassword( {payload} ) {
   try {
-    console.log('data: ',payload)
     const result = yield call(changePassword, payload);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;

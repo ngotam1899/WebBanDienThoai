@@ -6,11 +6,13 @@ import {
   StatusBar,
   TouchableOpacity,
   Image,
+  Dimensions,
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LinearGradient from 'react-native-linear-gradient';
 
 import Header from '../components/HeaderComponent';
 import AuthorizationActions from '../redux/actions/auth';
@@ -18,6 +20,8 @@ import {AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {Component} from 'react';
+
+const {width} = Dimensions.get('window');
 
 const ProfileItem = ({icon, name}) => (
   <View style={styles.itemContainer}>
@@ -32,6 +36,13 @@ class ProfileScreen extends Component {
     const token = await AsyncStorage.getItem('AUTH_USER').then(data => {});
     const {onGetProfile} = this.props;
     onGetProfile(null, token);
+  };
+
+  setLogout = () => {
+    const {onLogout, navigation} = this.props;
+    localStorage.removeItem('AUTH_USER');
+    onLogout();
+    navigation.navigate('Home');
   };
 
   render() {
@@ -98,6 +109,27 @@ class ProfileScreen extends Component {
           <View style={styles.divider} />
           <ProfileItem icon="headphones" name="Hỗ trợ" />
         </View>
+            {userInfo ?         <View style={{alignItems: 'center'}}>
+          <View style={styles.button}>
+            <TouchableOpacity
+              style={styles.signOut}
+              onPress={() => this.setLogout()}>
+              <LinearGradient
+                colors={['#fa1111', '#c22f2f']}
+                style={styles.signOut}>
+                <Text
+                  style={[
+                    styles.textSignOut,
+                    {
+                      color: '#fff',
+                    },
+                  ]}>
+                  ĐĂNG XUẤT
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View> : <></>}
       </View>
     );
   }
@@ -185,5 +217,22 @@ const styles = StyleSheet.create({
   //
   divider: {
     height: 10,
+  },
+  button: {
+    alignItems: 'center',
+    marginTop: 0,
+    width: width - 40,
+    marginBottom: 20
+  },
+  signOut: {
+    width: '100%',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  textSignOut: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

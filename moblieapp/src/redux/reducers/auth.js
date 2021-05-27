@@ -1,4 +1,5 @@
 import { AuthorizationActionTypes } from "../actions/auth";
+import {ToastAndroid} from 'react-native';
 
 const INITIAL_STATE = {
   loading: true,
@@ -10,36 +11,95 @@ export default function(state = INITIAL_STATE, action) {
     case AuthorizationActionTypes.REGISTER:
       return {...state};
     case AuthorizationActionTypes.REGISTER_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Đăng ký tài khoản thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case AuthorizationActionTypes.REGISTER_ERROR:
+      var { message } = action.payload;
+      ToastAndroid.showWithGravity(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case AuthorizationActionTypes.FORGOT_PASSWORD_ERROR:
+      var { message } = action.payload;
+      ToastAndroid.showWithGravity(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
+      return {...state};
+    case AuthorizationActionTypes.FORGOT_PASSWORD:
+      return {...state};
     case AuthorizationActionTypes.FORGOT_PASSWORD_SUCCESS:
-    case AuthorizationActionTypes.FORGOT_PASSWORD_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Đã gửi mail lấy lại mật khẩu",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state}
     case AuthorizationActionTypes.ACTIVATE_PASSWORD:
+      return {...state};
     case AuthorizationActionTypes.ACTIVATE_PASSWORD_ERROR:
+      var { message } = action.payload;
+      ToastAndroid.showWithGravity(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
+      return {...state};
     case AuthorizationActionTypes.ACTIVATE_PASSWORD_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Thay đổi mật khẩu thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT:
+      return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Kích hoạt tài khoản thành công!",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
+      return {...state};
     case AuthorizationActionTypes.ACTIVATE_ACCOUNT_ERROR:
+      var { message } = action.payload;
+      ToastAndroid.showWithGravity(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case AuthorizationActionTypes.LOGIN:
-      console.log('1')
       return {
         ...state,
         loggedIn: false,
         detail: null
       };
     case AuthorizationActionTypes.LOGIN_SUCCESS:
-      console.log('2')
+      ToastAndroid.showWithGravity(
+        "Đăng nhập thành công!",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {  
         ...state,
         loggedIn: true,
         detail: action.payload,
       };
     case AuthorizationActionTypes.LOGIN_ERROR:
+      var { message } = action.payload;
+      ToastAndroid.showWithGravity(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
         loggedIn: false,
@@ -50,6 +110,11 @@ export default function(state = INITIAL_STATE, action) {
         loggedIn: false,
       };
     case AuthorizationActionTypes.LOGIN_FACEBOOK_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Đăng nhập thành công!",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {  
         ...state,
         loggedIn: true,
@@ -60,14 +125,17 @@ export default function(state = INITIAL_STATE, action) {
         loggedIn: false,
       };
     case AuthorizationActionTypes.LOGIN_GOOGLE:
-      console.log('on success');
       return {
         ...state,
         loggedIn: false,
         data: null
       };
     case AuthorizationActionTypes.LOGIN_GOOGLE_SUCCESS:
-      console.log('login success');
+      ToastAndroid.showWithGravity(
+        "Đăng nhập thành công!",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {  
         ...state,
         loggedIn: true,

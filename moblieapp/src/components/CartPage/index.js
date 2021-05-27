@@ -67,13 +67,13 @@ class Cart extends Component {
         AsyncStorage.setItem('cart', JSON.stringify(data));
         this.props.onDeleteProductToCart();
       } else if (type == false && cantd == 1) {
-        if(data.length === 1){
+        if (data.length === 1) {
           data.splice(i, 1);
           this.setState({dataCart: data});
           this.setTotalPrice(data);
           AsyncStorage.removeItem('cart');
           this.props.onDeleteProductToCart();
-        }else{
+        } else {
           data.splice(i, 1);
           this.setState({dataCart: data});
           this.setTotalPrice(data);
@@ -81,11 +81,17 @@ class Cart extends Component {
           this.props.onDeleteProductToCart();
         }
       }
-
     });
   }
 
+  checkOut = () => {
+    const {navigation, onCheckout} = this.props;
+    onCheckout();
+    navigation.navigate('SignIn');
+  }
+
   render() {
+    const {navigation, isLogin} = this.props;
     return (
       <ScrollView>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -179,31 +185,56 @@ class Cart extends Component {
           })}
 
           <View style={{height: 20}} />
-          <View style={{width:width , marginLeft:20}}>
+          <View style={{width: width, marginLeft: 20}}>
             <Text style={{fontWeight: 'bold'}}>
               Tạm tính: {this.state.totalPrice}
             </Text>
             <Text style={{fontWeight: 'bold'}}>Phí ship: Free</Text>
-            <Text style={{fontWeight: 'bold'}}>Thành tiền: {this.state.totalPrice}</Text>
+            <Text style={{fontWeight: 'bold'}}>
+              Thành tiền: {this.state.totalPrice}
+            </Text>
           </View>
           <View style={{height: 20}} />
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#1e88e5',
-              width: width - 40,
-              alignItems: 'center',
-              padding: 10,
-              borderRadius: 5,
-            }}>
-            <Text
+
+          {isLogin ? (
+            <TouchableOpacity
               style={{
-                fontSize: 24,
-                fontWeight: 'bold',
-                color: 'white',
-              }}>
-              CHECKOUT
-            </Text>
-          </TouchableOpacity>
+                backgroundColor: '#1e88e5',
+                width: width - 40,
+                alignItems: 'center',
+                padding: 10,
+                borderRadius: 5,
+              }}
+              onPress={() => navigation.navigate('Checkout')}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  color: 'white',
+                }}>
+                CHECKOUT
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#1e88e5',
+                width: width - 40,
+                alignItems: 'center',
+                padding: 10,
+                borderRadius: 5,
+              }}
+              onPress={() => this.checkOut()}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  color: 'white',
+                }}>
+                CHECKOUT
+              </Text>
+            </TouchableOpacity>
+          )}
 
           <View style={{height: 20}} />
         </View>
@@ -211,10 +242,12 @@ class Cart extends Component {
     );
   }
 }
+
 const mapStateToProps = state => {
   return {
     product: state.products.detail,
     group: state.group.detail,
+    isLogin: state.auth.loggedIn,
   };
 };
 
@@ -226,6 +259,9 @@ const mapDispatchToProps = dispatch => {
     onAddProductToCart: () => {
       dispatch(ProductsActions.onAddProductToCart());
     },
+    onCheckout: () => {
+      dispatch(ProductsActions.onCheckout());
+    }
   };
 };
 

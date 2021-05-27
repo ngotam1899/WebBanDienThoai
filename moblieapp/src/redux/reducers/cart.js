@@ -1,48 +1,62 @@
 import {AsyncStorage} from 'react-native';
-import { ProductsActionTypes } from "../actions/products";
+import {ProductsActionTypes} from '../actions/products';
 
 const init = {
-  quantity: 0
-}
+  quantity: 0,
+  isCheckout: false,
+};
 
-export function sumQuantity(datacart){
+export function sumQuantity(datacart) {
   let sum = 0;
 
   for (var i = 0; i < Object.keys(datacart).length; i++) {
     sum += datacart[i].quantity;
   }
   return sum;
-};
-
-
-export default function(state = init, action) {
-  AsyncStorage.getItem('cart')
-      .then(dataCart => {
-        if (dataCart !== null) {
-          // We have data!!
-          value = sumQuantity(JSON.parse(dataCart));
-          state.quantity = value;
-        }
-      })
-      .catch(err => {
-        alert("error: ",err);
-      });
-  switch (action.type) {
-    case "PRODUCTS_ADD_PRODUCT_TO_CART":
-      return{
-        ...state,
-        quantity: state.quantity + 1
-      }
-    case "PRODUCTS_DELETE_PRODUCT_CART":
-      return{
-        ...state,
-        quantity: state.quantity - 1
-      }
-    default:
-      return state;
-    }
 }
 
+export default function (state = init, action) {
+  AsyncStorage.getItem('cart')
+    .then(dataCart => {
+      if (dataCart !== null) {
+        // We have data!!
+        value = sumQuantity(JSON.parse(dataCart));
+        state.quantity = value;
+      }
+    })
+    .catch(err => {
+      alert('error: ', err);
+    });
+  switch (action.type) {
+    case 'PRODUCTS_ADD_PRODUCT_TO_CART':
+      return {
+        ...state,
+        quantity: state.quantity + 1,
+      };
+    case 'PRODUCTS_DELETE_PRODUCT_CART':
+      return {
+        ...state,
+        quantity: state.quantity - 1,
+      };
+    case 'PRODUCTS_ON_CHECKOUT':
+      return {
+        ...state,
+        isCheckout: true,
+      };
+    case 'PRODUCTS_END_CHECKOUT':
+      return {
+        ...state,
+        isCheckout: false,
+      };
+    case 'PRODUCTS_ON_CLEAR_CART':
+      return {
+        ...state,
+        quantity: 0,
+      };
+    default:
+      return state;
+  }
+}
 
 const findProductInCart = (cart, productColor) => {
   //Trường hợp không tìm thấy

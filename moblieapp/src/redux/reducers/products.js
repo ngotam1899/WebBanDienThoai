@@ -1,11 +1,11 @@
-import { get } from "lodash";
-import { ProductsActionTypes } from "../actions/products";
+import {get} from 'lodash';
+import {ProductsActionTypes} from '../actions/products';
 
 const init = {
   detail: null,
 };
 
-export default function(state = init, action) {
+export default function (state = init, action) {
   switch (action.type) {
     case ProductsActionTypes.CLEAR_DETAIL:
       return {
@@ -30,23 +30,23 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_BEST_SELLER_SUCCESS:
       return {
         ...state,
-        best: get(action, "payload"), 
+        best: get(action, 'payload'),
       };
     case ProductsActionTypes.GET_FAVORITE_SUCCESS:
       return {
         ...state,
-        favorite: get(action, "payload"),
+        favorite: get(action, 'payload'),
       };
     case ProductsActionTypes.GET_NEWEST_SUCCESS:
       return {
         ...state,
-        new: get(action, "payload"),
+        new: get(action, 'payload'),
       };
     case ProductsActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        total: get(action, "payload.total"),
-        list: get(action, "payload.list", []), //list : action.payload.list
+        total: get(action, 'payload.total'),
+        list: get(action, 'payload.list', []), //list : action.payload.list
       };
     case ProductsActionTypes.GET_DETAIL:
       return {

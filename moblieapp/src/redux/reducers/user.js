@@ -1,6 +1,6 @@
 import { get, cloneDeep } from "lodash";
 import { UsersActionTypes } from "../actions/user";
-import { toastError, toastSuccess } from '../../utils/toastHelper';
+import {ToastAndroid} from 'react-native';
 
 const init = {
   loading: true,
@@ -34,11 +34,22 @@ export default function(state = init, action) {
         processing: true,
       };
     case UsersActionTypes.UPDATE_ERROR:
+      var { message } = action.payload;
+      ToastAndroid.showWithGravity(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
         processing: false,
       };
     case UsersActionTypes.UPDATE_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Cập nhật thông tin thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
         processing: false,
@@ -51,13 +62,21 @@ export default function(state = init, action) {
       };
     case UsersActionTypes.CHANGE_PASSWORD_ERROR:
       var { message } = action.payload;
-      console.log('err')
+      ToastAndroid.showWithGravity(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
         processing: false,
       };
     case UsersActionTypes.CHANGE_PASSWORD_SUCCESS:
-      console.log('success')
+      ToastAndroid.showWithGravity(
+        "Đổi mật khẩu thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
         processing: false,

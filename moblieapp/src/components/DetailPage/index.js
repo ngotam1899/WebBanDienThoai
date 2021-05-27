@@ -12,6 +12,7 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
+  ToastAndroid
 } from 'react-native';
 
 const {width} = Dimensions.get('window');
@@ -117,7 +118,11 @@ class ProductDetail extends Component {
             AsyncStorage.setItem('cart', JSON.stringify(cart));
             this.props.onAddProductToCart();
           }
-          alert('Add Cart');
+          ToastAndroid.showWithGravity(
+            "Thêm vào giỏ hàng thành công",
+            ToastAndroid.SHORT,
+            ToastAndroid.TOP
+          );
         })
         .catch(err => {
           alert(err);
@@ -129,7 +134,6 @@ class ProductDetail extends Component {
   render() {
     const {product, group, navigation, route} = this.props;
     const {color} = this.state;
-    console.log('product: ',product)
     return (
       <>
         {product && (

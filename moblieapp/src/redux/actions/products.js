@@ -1,121 +1,118 @@
 export const ProductsActionTypes = {
-  FILTER: "FILTER",
-  FILTER_SUCCESS: "FILTER_SUCCESS",
+  FILTER: 'FILTER',
+  FILTER_SUCCESS: 'FILTER_SUCCESS',
 
-  GET_LIST: "GET_LIST",
-  GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
-  GET_LIST_ERROR: "GET_LIST_ERROR",
+  GET_LIST: 'GET_LIST',
+  GET_LIST_SUCCESS: 'GET_LIST_SUCCESS',
+  GET_LIST_ERROR: 'GET_LIST_ERROR',
 
-  GET_DETAIL: "GET_DETAIL",
-  GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
-  GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
+  GET_DETAIL: 'GET_DETAIL',
+  GET_DETAIL_SUCCESS: 'GET_DETAIL_SUCCESS',
+  GET_DETAIL_ERROR: 'GET_DETAIL_ERROR',
 
-  GET_BEST_SELLER: "GET_BEST_SELLER",
-  GET_BEST_SELLER_SUCCESS: "GET_BEST_SELLER_SUCCESS",
-  GET_BEST_SELLER_ERROR: "GET_BEST_SELLER_ERROR",
+  GET_BEST_SELLER: 'GET_BEST_SELLER',
+  GET_BEST_SELLER_SUCCESS: 'GET_BEST_SELLER_SUCCESS',
+  GET_BEST_SELLER_ERROR: 'GET_BEST_SELLER_ERROR',
 
-  GET_FAVORITE: "GET_FAVORITE",
-  GET_FAVORITE_SUCCESS: "GET_FAVORITE_SUCCESS",
-  GET_FAVORITE_ERROR: "GET_FAVORITE_ERROR",
+  GET_FAVORITE: 'GET_FAVORITE',
+  GET_FAVORITE_SUCCESS: 'GET_FAVORITE_SUCCESS',
+  GET_FAVORITE_ERROR: 'GET_FAVORITE_ERROR',
 
-  GET_NEWEST: "GET_NEWEST",
-  GET_NEWEST_SUCCESS: "GET_NEWEST_SUCCESS",
-  GET_NEWEST_ERROR: "GET_NEWEST_ERROR",
+  GET_NEWEST: 'GET_NEWEST',
+  GET_NEWEST_SUCCESS: 'GET_NEWEST_SUCCESS',
+  GET_NEWEST_ERROR: 'GET_NEWEST_ERROR',
 
-  CREATE: "CREATE",
-  CREATE_SUCCESS: "CREATE_SUCCESS",
-  CREATE_ERROR: "CREATE_ERROR",
+  CREATE: 'CREATE',
+  CREATE_SUCCESS: 'CREATE_SUCCESS',
+  CREATE_ERROR: 'CREATE_ERROR',
 
-  UPDATE: "UPDATE",
-  UPDATE_SUCCESS: "UPDATE_SUCCESS",
-  UPDATE_ERROR: "UPDATE_ERROR",
+  UPDATE: 'UPDATE',
+  UPDATE_SUCCESS: 'UPDATE_SUCCESS',
+  UPDATE_ERROR: 'UPDATE_ERROR',
 
-  CLEAR_DETAIL: "CLEAR_DETAIL",
-  CLEAR_STATE: "CLEAR_STATE",
+  CLEAR_DETAIL: 'CLEAR_DETAIL',
+  CLEAR_STATE: 'CLEAR_STATE',
 
-  ADD_PRODUCT_TO_CART: "ADD_PRODUCT_TO_CART",
-  UPDATE_PRODUCT_CART: "UPDATE_PRODUCT_CART",
-  DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
+  ADD_PRODUCT_TO_CART: 'ADD_PRODUCT_TO_CART',
+  UPDATE_PRODUCT_CART: 'UPDATE_PRODUCT_CART',
+  DELETE_PRODUCT_CART: 'DELETE_PRODUCT_CART',
+  ON_CLEAR_CART: 'ON_CLEAR_CART',
 
-  
+  ON_CHECKOUT: 'ON_CHECKOUT',
+  END_CHECKOUT: 'END_CHECKOUT',
 
-  CLEAR_CART: "CLEAR_CART",
-  CHANGE_CURRENCY: "CHANGE_CURRENCY",
+  CLEAR_CART: 'CLEAR_CART',
+  CHANGE_CURRENCY: 'CHANGE_CURRENCY',
 };
 
-Object.keys(ProductsActionTypes).forEach((key) => {
-  ProductsActionTypes[
-    key
-  ] = `PRODUCTS_${ProductsActionTypes[key]}`;
+Object.keys(ProductsActionTypes).forEach(key => {
+  ProductsActionTypes[key] = `PRODUCTS_${ProductsActionTypes[key]}`;
 });
 
 const onClearDetail = () => ({
   type: ProductsActionTypes.CLEAR_DETAIL,
 });
-const onClearCart = () => ({
-  type: ProductsActionTypes.CLEAR_CART,
-});
+
 const onClearState = () => ({
   type: ProductsActionTypes.CLEAR_STATE,
 });
 
-const onGetList = (payload) => ({
+const onGetList = payload => ({
   type: ProductsActionTypes.GET_LIST,
   payload,
 });
 
 const onGetListSuccess = (list, total) => ({
   type: ProductsActionTypes.GET_LIST_SUCCESS,
-  payload: {list, total}
+  payload: {list, total},
 });
 
-const onGetListError = (error) => ({
+const onGetListError = error => ({
   type: ProductsActionTypes.GET_LIST_ERROR,
   payload: error,
 });
 
-
-const onGetBestSeller = (payload) => ({
+const onGetBestSeller = payload => ({
   type: ProductsActionTypes.GET_BEST_SELLER,
   payload,
 });
 
-const onGetBestSellerSuccess = (payload) => ({
+const onGetBestSellerSuccess = payload => ({
   type: ProductsActionTypes.GET_BEST_SELLER_SUCCESS,
-  payload
+  payload,
 });
 
-const onGetBestSellerError = (error) => ({
+const onGetBestSellerError = error => ({
   type: ProductsActionTypes.GET_BEST_SELLER_ERROR,
   payload: error,
 });
 
-const onGetFavorite = (payload) => ({
+const onGetFavorite = payload => ({
   type: ProductsActionTypes.GET_FAVORITE,
   payload,
 });
 
-const onGetFavoriteSuccess = (payload) => ({
+const onGetFavoriteSuccess = payload => ({
   type: ProductsActionTypes.GET_FAVORITE_SUCCESS,
-  payload
+  payload,
 });
 
-const onGetFavoriteError = (error) => ({
+const onGetFavoriteError = error => ({
   type: ProductsActionTypes.GET_FAVORITE_ERROR,
   payload: error,
 });
 
-const onGetNewest = (payload) => ({
+const onGetNewest = payload => ({
   type: ProductsActionTypes.GET_NEWEST,
   payload,
 });
 
-const onGetNewestSuccess = (payload) => ({
+const onGetNewestSuccess = payload => ({
   type: ProductsActionTypes.GET_NEWEST_SUCCESS,
-  payload
+  payload,
 });
 
-const onGetNewestError = (error) => ({
+const onGetNewestError = error => ({
   type: ProductsActionTypes.GET_NEWEST_ERROR,
   payload: error,
 });
@@ -123,17 +120,17 @@ const onGetNewestError = (error) => ({
  *
  * @param String id
  */
-const onGetDetail = (id) => ({
+const onGetDetail = id => ({
   type: ProductsActionTypes.GET_DETAIL,
   id,
 });
 
-const onGetDetailSuccess = (detail) => ({
+const onGetDetailSuccess = detail => ({
   type: ProductsActionTypes.GET_DETAIL_SUCCESS,
   payload: detail,
 });
 
-const onGetDetailError = (error) => ({
+const onGetDetailError = error => ({
   type: ProductsActionTypes.GET_DETAIL_ERROR,
   payload: error,
 });
@@ -142,19 +139,19 @@ const onGetDetailError = (error) => ({
  *
  * create
  */
-const onCreate = ({ params, filters, callback }) => ({
+const onCreate = ({params, filters, callback}) => ({
   type: ProductsActionTypes.CREATE,
-  payload: { params },
+  payload: {params},
   filters,
   callback,
 });
 
-const onCreateSuccess = (detail) => ({
+const onCreateSuccess = detail => ({
   type: ProductsActionTypes.CREATE_SUCCESS,
   payload: detail,
 });
 
-const onCreateError = (error) => ({
+const onCreateError = error => ({
   type: ProductsActionTypes.CREATE_ERROR,
   payload: error,
 });
@@ -163,19 +160,19 @@ const onCreateError = (error) => ({
  *
  * update
  */
-const onUpdate = ({ id, params, filters, callback }) => ({
+const onUpdate = ({id, params, filters, callback}) => ({
   type: ProductsActionTypes.UPDATE,
-  payload: { id, params },
+  payload: {id, params},
   filters,
   callback,
 });
 
-const onUpdateSuccess = (detail) => ({
+const onUpdateSuccess = detail => ({
   type: ProductsActionTypes.UPDATE_SUCCESS,
   payload: detail,
 });
 
-const onUpdateError = (error) => ({
+const onUpdateError = error => ({
   type: ProductsActionTypes.UPDATE_ERROR,
   payload: error,
 });
@@ -185,27 +182,44 @@ const onUpdateError = (error) => ({
  * cart _ products
  */
 
-const onAddProductToCart = () =>({
+const onAddProductToCart = () => ({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
-})
-const onDeleteProductToCart = (color) =>{
+});
+
+const onClearCart = () => ({
+  type: ProductsActionTypes.ON_CLEAR_CART,
+});
+
+const onDeleteProductToCart = color => {
   return {
     type: ProductsActionTypes.DELETE_PRODUCT_CART,
-    color
-  }
-}
-const onUpdateProductInCart = (product,color, quantity) =>{
+    color,
+  };
+};
+
+const onCheckout = () => (
+  {
+  type: ProductsActionTypes.ON_CHECKOUT,
+});
+
+const endCheckout = () => ({
+  type: ProductsActionTypes.END_CHECKOUT,
+});
+
+const onUpdateProductInCart = (product, color, quantity) => {
   return {
     type: ProductsActionTypes.UPDATE_PRODUCT_CART,
-    product, color, quantity
-  }
-}
-const onChangeCurrency = (unit) =>{
+    product,
+    color,
+    quantity,
+  };
+};
+const onChangeCurrency = unit => {
   return {
     type: ProductsActionTypes.CHANGE_CURRENCY,
-    payload: unit
-  }
-}
+    payload: unit,
+  };
+};
 
 const onFilter = keyword => ({
   type: ProductsActionTypes.FILTER,
@@ -227,8 +241,7 @@ const ProductsActions = {
 
   onClearDetail,
   onClearState,
-  onClearCart,
-  
+
   onGetList,
   onGetListSuccess,
   onGetListError,
@@ -259,9 +272,12 @@ const ProductsActions = {
 
   onAddProductToCart,
   onDeleteProductToCart,
+  onClearCart,
   onUpdateProductInCart,
   onChangeCurrency,
-  
+
+  onCheckout,
+  endCheckout,
 };
 
 export default ProductsActions;

@@ -19,6 +19,7 @@ import {
 import {connect} from 'react-redux';
 
 import * as Animatable from 'react-native-animatable';
+import ProductsActions from '../../redux/actions/products';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -39,7 +40,6 @@ GoogleSignin.configure({
     '66829264659-07n3208p778ai83rldvls9niq8vhahi0.apps.googleusercontent.com',
   offlineAccess: true,
 });
-
 
 const {width} = Dimensions.get('window');
 class SignInPage extends Component {
@@ -166,9 +166,13 @@ class SignInPage extends Component {
   };
 
   UNSAFE_componentWillReceiveProps(props) {
-    const {loggedIn, navigation} = props;
-    if (loggedIn && loggedIn === true) {
+    const {loggedIn, navigation, isCheckout} = props;
+    console.log('is checkout: ', isCheckout)
+    if (loggedIn && loggedIn === true && isCheckout === false) {
       navigation.navigate('Home');
+    }
+    else if (loggedIn && loggedIn === true && isCheckout === true) {
+      navigation.navigate('Checkout');
     }
   }
   componentDidMount() {}
@@ -182,7 +186,6 @@ class SignInPage extends Component {
 
   sendEmail() {
     const {email, isModalVisible} = this.state;
-    console.log('email: ', email);
     const {onForgotPassword} = this.props;
     if (email) {
       onForgotPassword({email});
@@ -195,7 +198,7 @@ class SignInPage extends Component {
   }
 
   render() {
-    const {navigation} = this.props;
+    const {navigation, isCheckout} = this.props;
     const {data, isModalVisible} = this.state;
     return (
       <ScrollView style={{backgroundColor: '#fff'}}>
@@ -290,7 +293,13 @@ class SignInPage extends Component {
                   justifyContent: 'center',
                 }}>
                 <View
-                  style={{height: 220, width:width - 40,borderRadius: 10, backgroundColor: '#fff', padding: 50}}>
+                  style={{
+                    height: 220,
+                    width: width - 40,
+                    borderRadius: 10,
+                    backgroundColor: '#fff',
+                    padding: 50,
+                  }}>
                   <Text style={[styles.text_footer]}>
                     Nhập email để xác thực
                   </Text>
@@ -313,7 +322,6 @@ class SignInPage extends Component {
                       flexDirection: 'row',
                       justifyContent: 'center',
                     }}>
-
                     <View style={styles.button}>
                       <TouchableOpacity
                         style={styles.btnExit}
@@ -404,23 +412,43 @@ class SignInPage extends Component {
               />
             </View>
             <View style={styles.button}>
-              <TouchableOpacity
-                style={styles.signIn}
-                onPress={this.onClickLogin}>
-                <LinearGradient
-                  colors={['#1F7cdb', '#1e88e5']}
-                  style={styles.signIn}>
-                  <Text
-                    style={[
-                      styles.textSign,
-                      {
-                        color: '#fff',
-                      },
-                    ]}>
-                    Sign In
-                  </Text>
-                </LinearGradient>
-              </TouchableOpacity>
+              {isCheckout ? (
+                <TouchableOpacity
+                  style={styles.signIn}
+                  onPress={this.onClickLogin}>
+                  <LinearGradient
+                    colors={['#1F7cdb', '#1e88e5']}
+                    style={styles.signIn}>
+                    <Text
+                      style={[
+                        styles.textSign,
+                        {
+                          color: '#fff',
+                        },
+                      ]}>
+                      Sign In
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.signIn}
+                  onPress={this.onClickLogin}>
+                  <LinearGradient
+                    colors={['#1F7cdb', '#1e88e5']}
+                    style={styles.signIn}>
+                    <Text
+                      style={[
+                        styles.textSign,
+                        {
+                          color: '#fff',
+                        },
+                      ]}>
+                      Sign In
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 onPress={() => navigation.navigate('SignUp')}
                 style={[
@@ -452,6 +480,7 @@ class SignInPage extends Component {
 const mapStateToProps = state => {
   return {
     loggedIn: state.auth.loggedIn,
+    isCheckout: state.cart.isCheckout,
   };
 };
 
@@ -471,6 +500,9 @@ const mapDispatchToProps = dispatch => {
     },
     onGetProfile: (data, headers) => {
       dispatch(AuthorizationActions.onGetProfile(data, headers));
+    },
+    endCheckout: () => {
+      dispatch(ProductsActions.endCheckout());
     },
   };
 };
