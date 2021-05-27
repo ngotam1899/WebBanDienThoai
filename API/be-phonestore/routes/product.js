@@ -38,17 +38,6 @@ router
 	.delete(specificationController.deleteSpecification)
 	.get(specificationController.getDetailSpecification);
 
-//Region Display
-/* router.route('/displays').get(displayController.getAllDisplay).post(displayController.addDisplay);
-router.route('/displays/:IDDisplay').put(displayController.updateDisplay).delete(displayController.deleteDisplay); */
-
-//Region Revolution
-/* router.route('/revolutions').get(revolutionController.getAllRevolution).post(revolutionController.addRevolution);
-router
-	.route('/revolutions/:IDRevolution')
-	.put(revolutionController.updateRevolution)
-	.delete(revolutionController.deleteRevolution); */
-
 //Region Color
 router.route('/colors').get(colorController.getAllColor).post(colorController.addColor);
 router
@@ -68,24 +57,6 @@ router
 	.delete(groupController.deleteGroup)
 	.get(groupController.getDetailGroup);
 
-//Region CPU
-/* router.route('/cpus').get(cpuController.getAllCPU).post(cpuController.addCPU);
-router.route('/cpus/:IDCPU').put(cpuController.updateCPU).delete(cpuController.deleteCPU); */
-
-//Region Widescreen
-/* router.route('/widescreens').get(widescreenController.getAllWideScreen).post(widescreenController.addWideScreen);
-router
-	.route('/widescreens/:IDWideScreen')
-	.put(widescreenController.updateWideScreen)
-	.delete(widescreenController.deleteWidecreen); */
-
-//Region Operation
-/* router.route('/operations').get(operationController.getAllOperation).post(operationController.addOperation);
-router
-	.route('/operations/:IDOperation')
-	.get(operationController.getDetailOperation)
-	.put(operationController.updateOperation)
-	.delete(operationController.deleteOperation); */
 router.route('/best-seller').get(productController.bestSellerProduct)
 router.route('/favorite').get(productController.favoriteProduct)
 router.route('/newest').get(productController.newestProduct)

@@ -42,7 +42,7 @@ class ForgotPassword extends Component {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Quên mật khẩu</h5>
-              <button type="button" className="close" data-dismiss="modal">&times;</button>
+              <button type="button" className="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div className="modal-body">
               <div className="form-group">
@@ -51,7 +51,7 @@ class ForgotPassword extends Component {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.sendEmail()}>Send email</button>
+              <button type="button" className="btn btn-success" data-bs-dismiss="modal" onClick={() => this.sendEmail()}>Send email</button>
             </div>
           </div> 
         </div>

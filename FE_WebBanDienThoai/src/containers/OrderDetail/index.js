@@ -52,12 +52,12 @@ class OrderDetail extends Component {
     const {orderItem, t, review} = this.props;
     const {modal, product} = this.state;
     return (
-      <div show="true" className="modal fade" id="myModal" role="dialog" data-keyboard="false" data-backdrop="static">
+      <div show="true" className="modal fade" id="myModal" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div className="modal-dialog modal-lg">
           {orderItem && <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">{t('user.info-bill.card')} {orderItem._id}</h5>
-              <button type="button" className="close" data-dismiss="modal">&times;</button>
+              <button type="button" className="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div className="modal-body">
             <div className="form-group">
@@ -143,7 +143,7 @@ class OrderDetail extends Component {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-dismiss="modal">{t('user.close.button')}</button>
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }
         </div>

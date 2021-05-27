@@ -194,7 +194,7 @@ class UserDetail extends Component {
           </select>
         </div>
         </div>
-        <button type="button" className="btn btn-success" data-dismiss="modal" onClick={() => this.updateProfile()}>{t('user.save-change.button')}</button>
+        <button type="button" className="btn btn-success" data-bs-dismiss="modal" onClick={() => this.updateProfile()}>{t('user.save-change.button')}</button>
       </div>
     );
   }

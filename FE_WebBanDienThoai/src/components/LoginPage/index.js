@@ -120,7 +120,7 @@ class LoginPage extends Component {
 									<input type="password" className="input" name="password" value={password} onChange={this.onChange}/>
 								</div>
 							</div>
-							<div onClick={()=> this.onForgotPass} className="text-right" data-toggle="modal" data-target="#forgotPassword">Forgot Password?</div>
+							<div onClick={()=> this.onForgotPass} className="text-right" data-bs-toggle="modal" data-bs-target="#forgotPassword">Forgot Password?</div>
 							<div className="row">
 								<div className="col-12">
 									<button type="button" className="btn" onClick={()=> this.onLogin()}>Login</button>

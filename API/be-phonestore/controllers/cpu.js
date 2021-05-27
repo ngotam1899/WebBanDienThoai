@@ -1,4 +1,4 @@
-const CPU = require('../models/CPU')
+/* const CPU = require('../models/CPU')
 const Validator = require('../validators/validator')
 
 const createError = require('http-errors')
@@ -45,4 +45,4 @@ module.exports = {
     addCPU,
     updateCPU,
     deleteCPU
-}
+} */

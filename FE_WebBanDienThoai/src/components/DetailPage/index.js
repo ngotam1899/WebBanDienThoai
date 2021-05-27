@@ -172,10 +172,12 @@ class DetailPage extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="product-content-right">
-                <div className="product-breadcroumb">
-                  <a href="/#/">{t('header.home.menu')}</a>
-                  <a href={`/#/products/${product.category.pathseo}/${product.category._id}`}>{product.category.name}</a>
-                  <a href={`/#/product/${product.pathseo}/${product._id}`}>{product.name}</a>
+                <div className="">
+                  <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
+                  <i className="fa fa-chevron-right px-2"></i>
+                  <a className="text-decoration-none" href={`/#/products/${product.category.pathseo}/${product.category._id}`}>{product.category.name}</a>
+                  <i className="fa fa-chevron-right px-2"></i>
+                  <a className="text-decoration-none" href={`/#/product/${product.pathseo}/${product._id}`}>{product.name}</a>
                 </div>
                 <div className="row">
                   <div className="col-sm-5">
@@ -200,12 +202,12 @@ class DetailPage extends Component {
                         </div>
                       
                       </div>
-                      <div className="row">
+                      <div className="row row-cols-lg-auto g-3">
                         {group && group.products.map((item, index)=>{
                           return(
-                            <div key={index}>
+                            <div key={index} >
                               <button type="button" key={item._id} 
-                                className="card text-dark py-2 px-3 m-2"
+                                className="card text-dark py-2 px-3 my-2"
                                 onClick={()=> this.onReload(`/product/${item.product.pathseo}/${item.product._id}`)}>
                                 <p className="mb-0 h6">{item.name} <span className="fa fa-check" style={{"display": _check===item.product._id ? "inline-block" : "none"}}></span></p>
                                 <p className="mb-0 h7">{item.product.price_min ? this.setPrice(currency, item.product.price_min, item.product.price_min) : 'NaN'} {currency}</p>
@@ -215,12 +217,12 @@ class DetailPage extends Component {
                         })}
                       </div>
                       <p className="mb-0 font-weight-bold">Vui lòng chọn màu</p>
-                      <div className="row">
+                      <div className="row row-cols-lg-auto g-3">
                         {product.colors.map((item, index)=>{
                           return(
                             <div className="" key={index}>
                               <button type="button" key={item._id} 
-                                className={item.amount===0 ? "card text-dark py-2 px-3 m-2 bg-active" :"card text-dark py-2 px-3 m-2"} 
+                                className={item.amount===0 ? "card text-dark py-2 px-3 my-2 bg-active" :"card text-dark py-2 px-3 my-2"} 
                                 onClick={() => this.setColor(item)} 
                                 disabled={item.amount===0 ? true : false}>
                                 <p className="mb-0 h6">{item.name_vn} <span className="fa fa-check" style={{"display": check===item._id ? "inline-block" : "none"}}></span></p>
@@ -243,14 +245,14 @@ class DetailPage extends Component {
                 <div className="container">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
-                      <a className="nav-link" id="recent-tab" data-toggle="tab" href="#recent" role="tab" aria-controls="recent">Recent viewed</a>
+                      <a className="nav-link" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent">Recent viewed</a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" id="like-tab" data-toggle="tab" href="#like" role="tab" aria-controls="like"
+                      <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
                       aria-selected="false">You may also like</a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link active" id="relate-tab" data-toggle="tab" href="#relate" role="tab" aria-controls="relate"
+                      <a className="nav-link active" id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
                       aria-selected="false">Related products</a>
                     </li>
                   </ul>
@@ -283,18 +285,18 @@ class DetailPage extends Component {
                 <div className="container">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
-                      <a className="nav-link" id="home-tab" data-toggle="tab" href="#description" role="tab" aria-controls="home" aria-selected="true">Description</a>
+                      <a className="nav-link" id="home-tab" data-bs-toggle="tab" href="#description" role="tab" aria-controls="home" aria-selected="true">Description</a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" id="profile-tab" data-toggle="tab" href="#specification" role="tab" aria-controls="profile"
+                      <a className="nav-link" id="profile-tab" data-bs-toggle="tab" href="#specification" role="tab" aria-controls="profile"
                       aria-selected="false">Specification</a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" id="contact-tab" data-toggle="tab" href="#comment" role="tab" aria-controls="contact"
+                      <a className="nav-link" id="contact-tab" data-bs-toggle="tab" href="#comment" role="tab" aria-controls="contact"
                       aria-selected="false">Comments</a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
+                      <a className="nav-link active" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review"
                       aria-selected="false">Reviews</a>
                     </li>
                   </ul>
@@ -386,7 +388,7 @@ class DetailPage extends Component {
                               return (
                                 <div className="row" key={index}>
                                   <div className="col-12">
-                                  <div className="float-left mr-3">
+                                  <div className="float-start mr-3">
                                     <img className="rounded-circle square-60" src={item.user && item.user.image ? item.user.image.public_url : INITIAL_IMAGE} alt=""/>
                                   </div>
                                   <div className="">
@@ -407,7 +409,7 @@ class DetailPage extends Component {
                             })}
                           </div>
                           {review && review.length>3 && <div className="product-pagination text-center">
-                            <nav className="float-right">
+                            <nav className="float-end">
                               <Pagination
                                 activePage={filter.page ? parseInt(filter.page)+1 : 1}
                                 itemsCountPerPage={3}

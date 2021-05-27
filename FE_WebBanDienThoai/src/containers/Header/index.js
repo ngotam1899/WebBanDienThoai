@@ -102,6 +102,15 @@ class Header extends Component {
     history.push(`https://localhost:5000/#/products/dien-thoai/?${qs.stringify(queryParams)}`);
   };
 
+  pressSearch = (event) => {
+    const {keyword} = this.state;
+    const {history} = this.props;
+    if(event.key === 'Enter'){
+      history.push(`/#/search?keyword=${keyword}`)
+      window.location.reload()
+    }
+  }
+
   // Button search
   searchKeyWorld = () => {
     const {keyword} = this.state;
@@ -135,13 +144,34 @@ class Header extends Component {
                 <div className="user-menu">
                   <ul>
                     {userInfo && <>
-                      <li><a href="/#/account/detail"><FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}</a></li>
-                      <li><a href="/#/carts"><i className="fa fa-luggage-cart"></i> {t('header.mycart.button')}</a></li>
-                      <li><a href="/#/carts/checkout"><i className="fa fa-credit-card"></i> {t('header.checkout.button')}</a></li></>}
+                      <li>
+                        <a href="/#/account/detail" className="text-decoration-none">
+                          <FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/#/carts" className="text-decoration-none">
+                            <i className="fa fa-luggage-cart"></i> {t('header.mycart.button')}
+                          </a>
+                        </li>
+                      <li>
+                        <a href="/#/carts/checkout" className="text-decoration-none">
+                          <i className="fa fa-credit-card"></i> {t('header.checkout.button')}
+                        </a>
+                      </li>
+                    </>}
                     {isLogin===false
                     ? <>
-                        <li><a href="/user/dang-nhap"><i className="fa fa-sign-in-alt"></i> {t('header.login.button')}</a></li>
-                        <li><a href="/user/dang-ky"><i className="fa fa-user-plus"></i> {t('header.signup.button')}</a></li>
+                        <li>
+                          <a href="/user/dang-nhap" className="text-decoration-none">
+                            <i className="fa fa-sign-in-alt"></i> {t('header.login.button')}
+                            </a>
+                          </li>
+                        <li>
+                          <a href="/user/dang-ky"  className="text-decoration-none">
+                            <i className="fa fa-user-plus"></i> {t('header.signup.button')}
+                          </a>
+                        </li>
                       </>
                     : <li><button type="button" className="btn-logout" style={{'outline': 'none'}} onClick={() => this.setLogout()}><i className="fa fa-sign-out-alt"></i> {t('header.logout.button')}</button></li>}
                   </ul>
@@ -185,13 +215,13 @@ class Header extends Component {
               </div>
               <div className="col-md-6 col-9 align-self-center">
                 <div className="input-group shadow">
-                  <input type="text" className="form-control" value={keyword} name="keyword" onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
+                  <input type="text" className="form-control" value={keyword} name="keyword" onKeyPress={this.pressSearch} onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
                   <div className="input-group-append">
                     <button className="btn btn-danger h-100" onClick={() => this.searchKeyWorld()}><i className="fa fa-search"></i></button>
                   </div>
                 </div>
                 <div style={{ position: "absolute", width: "95%" }}>
-                  <div className="card">
+                  <div className="card" style={{ zIndex: 1}}>
                   {listProducts && keyword && listProducts.map((product, index) =>{
                     return (
                       <Link to={`/product/${product.pathseo}/${product._id}`}>
@@ -213,7 +243,7 @@ class Header extends Component {
               </div>
               <div className="col-3 align-self-center">
                 <div className="shopping-item rounded shadow">
-                  <Link to="/carts">{t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> <i className="fa fa-shopping-cart"></i><span className="product-count">{total}</span></Link>
+                  <Link to="/carts" className="text-decoration-none">{t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> <i className="fa fa-shopping-cart"></i><span className="product-count">{total}</span></Link>
                 </div>
               </div>
             </div>
@@ -224,7 +254,7 @@ class Header extends Component {
           <div className="container">
             <div className="row">
               <nav className="navbar navbar-expand-sm navbar-light bg-light">
-                <button className="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+                <button className="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId"
                   aria-expanded="false" aria-label="Toggle navigation">
                   <span className="navbar-toggler-icon"></span>
                 </button>

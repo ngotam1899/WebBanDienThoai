@@ -29,7 +29,6 @@ table.shop_table td.product-remove a {
   table.shop_table {
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
-    margin-bottom: 50px;
     width: 100%;
 }
 table.shop_table th, table.shop_table td {

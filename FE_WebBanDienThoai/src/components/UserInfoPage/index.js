@@ -94,7 +94,7 @@ class UserInfoPage extends Component {
                 <UserDetail userInfo={authInfo} listCity={listCity} selectedFile={selectedFile}/>
               </div>
               <div className="col-md-2">
-                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#passwdModal">{t('user.change-password.button')}</button>
+                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#passwdModal">{t('user.change-password.button')}</button>
               </div>
             </div>
             <ChangePassword userInfo={authInfo}/>

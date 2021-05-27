@@ -172,8 +172,8 @@ class PurchasePage extends Component {
                 <div className="col-12 my-1" key={index}>
                   <div className="card">
                     <div className="card-header bg-primary text-white">
-                      <p className="float-left mb-0">Mã đơn hàng {order._id}</p>
-                      <p className="float-right mb-0">| {this.setStatus(order.confirmed, order.status, order.active)}</p>
+                      <p className="float-start mb-0">Mã đơn hàng {order._id}</p>
+                      <p className="float-end mb-0">| {this.setStatus(order.confirmed, order.status, order.active)}</p>
                     </div>
                     <div className="card-body">
                       {order.order_list.map((product, _index)=>{
@@ -195,13 +195,13 @@ class PurchasePage extends Component {
                       })}
                     </div>
                     <div className="card-footer">
-                      <div className="float-left">
-                        <button type="button" className="btn btn-success mr-2" data-toggle="modal" data-target="#myModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
+                      <div className="float-start">
+                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#myModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
                         {this.setStatus(order.confirmed, order.status, order.active)==="Chờ xác nhận" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(order._id)}>Hủy đơn hàng</button>}
                         {(this.setStatus(order.confirmed, order.status, order.active)==="Đã hủy" || this.setStatus(order.confirmed, order.status, order.active)==="Đã giao") && 
                         <button type="button" className="btn btn-warning" onClick={()=>this.onBuyAgain(order.order_list)}>Mua lần nữa</button>}
                       </div>
-                      <div className="float-right font-weight-bold">
+                      <div className="float-end font-weight-bold">
                         {numberWithCommas(order.total_price)} VND
                       </div>
                     </div>

@@ -19,11 +19,20 @@
     margin-bottom: 10px;
     width: 100%;
 }
-#customer_details h3 {
-    color: #5a88ca;
+h3 {
+    color: #000;
+    font-family: inherit;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
     font-size: 20px;
 }
-.woocommerce-billing-fields label, .woocommerce-shipping-fields div.shipping_address label, p#order_comments_field label {font-weight:700}
+.express{
+    width: 50px;
+}
+.smaller{
+    font-size: smaller;
+}
 .create-account {
     background: none repeat scroll 0 0 #f4f4f4;
     margin-bottom: 50px;
@@ -46,13 +55,6 @@ a.about_paypal {
     margin-left: 15px;
 }
 
-
-#customer_details select, .shipping_calculator select {
-  border: 1px solid #ddd;
-  margin-bottom: 15px;
-  padding: 5px 10px;
-  width: 100%;
-}
 .payment_method_paypal label {
     display: inline-block;
     max-width: 100%;

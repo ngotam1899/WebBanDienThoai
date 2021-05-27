@@ -116,7 +116,7 @@ class SearchPage extends Component {
             <div className="row">
               <div className="col-md-12">
                 <div className="product-pagination text-center">
-                <nav className="float-right">
+                <nav className="float-end">
                 <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
                   itemsCountPerPage={4}

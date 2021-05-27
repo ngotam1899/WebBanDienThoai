@@ -7,7 +7,8 @@ const SpecificationSchema = new Schema({
 		unique: true
 	},
 	selections: [{
-		type: String
+		type: Schema.Types.ObjectId,
+		ref: 'Selector'
 	}]
 });
 
