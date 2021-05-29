@@ -30,6 +30,11 @@ class DetailPage extends Component {
       quantity: 1,
       imageColor: "",
       check: 0,
+      queryParams: {
+        limit: 3,
+        product: match.params.productID,
+        page: 0,
+      },
       _check: match.params.productID,
       filter: {
         limit: 3,
@@ -41,7 +46,9 @@ class DetailPage extends Component {
   componentDidUpdate(prevProps) {
     try{
       /*global FB*/
-      FB.XFBML.parse();
+      if (FB) {
+        FB.XFBML.parse();
+      }
       if (prevProps.location.search !== this.props.location.search) {
         const filters = getFilterParams(this.props.location.search);
         const { filter } = this.state;
@@ -49,10 +56,8 @@ class DetailPage extends Component {
           ...filter,
           ...filters
         };
+        this.setState({queryParams: params})
         this.props.onGetReviews(params);
-      }
-      if (prevProps.match !== this.props.match) {
-        this.onReload(`/product/a/${this.props.match.params.productID}`)
       }
     }
     catch(err){
@@ -60,6 +65,26 @@ class DetailPage extends Component {
   }
 
   componentDidMount(){
+    /* FB comment plugin */
+    window.fbAsyncInit = () => {
+      /* eslint-disable */
+      window.FB.init({
+        appId: '308035613517523',
+        xfbml: true,
+        version: 'v2.6'
+      });
+      FB.XFBML.parse();
+      /* eslint-disable */
+    };
+
+    (function(d, s, id){
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = '//connect.facebook.net/en_US/sdk.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    /* FB comment plugin */
     const { match, onGetDetailProduct, onGetReviews, onGetLike, onGetRelate } = this.props;
     onGetDetailProduct(match.params.productID);
     onGetLike(match.params.productID);
@@ -113,6 +138,7 @@ class DetailPage extends Component {
       ...queryParams,
       ...data,
     };
+    this.setState({queryParams})
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
@@ -138,6 +164,7 @@ class DetailPage extends Component {
 
   onLiked = (id, like) => {
     const {onUpdateReview, authInfo} = this.props;
+    const {queryParams} = this.state;
     if(authInfo){
       if(like.indexOf(authInfo._id) === -1){
         like.push(authInfo._id)
@@ -145,7 +172,7 @@ class DetailPage extends Component {
       else{
         like.splice(like.indexOf(authInfo._id), 1);
       }
-      onUpdateReview(id, {like})
+      onUpdateReview(id, {like}, queryParams)
     }
     else{
       toastError("Bạn chưa đăng nhập")
@@ -202,8 +229,8 @@ class DetailPage extends Component {
                         </div>
                       
                       </div>
-                      <div className="row row-cols-lg-auto g-3">
-                        {group && group.products.map((item, index)=>{
+                      {group && <div className="row row-cols-lg-auto g-3">
+                        {group.products.map((item, index)=>{
                           return(
                             <div key={index} >
                               <button type="button" key={item._id} 
@@ -215,7 +242,7 @@ class DetailPage extends Component {
                             </div>
                           )
                         })}
-                      </div>
+                      </div>}
                       <p className="mb-0 font-weight-bold">Vui lòng chọn màu</p>
                       <div className="row row-cols-lg-auto g-3">
                         {product.colors.map((item, index)=>{
@@ -273,7 +300,7 @@ class DetailPage extends Component {
                       <div className="row">
                         {relate && relate.map((product, index) => {
                           return (
-                              <ProductItem product={product} key={index} />
+                              <ProductItem product={product} key={index}/>
                             )
                         })}
                       </div>
@@ -408,7 +435,7 @@ class DetailPage extends Component {
                               )
                             })}
                           </div>
-                          {review && review.length>3 && <div className="product-pagination text-center">
+                          {review && <div className="product-pagination text-center">
                             <nav className="float-end">
                               <Pagination
                                 activePage={filter.page ? parseInt(filter.page)+1 : 1}
@@ -473,8 +500,8 @@ const mapDispatchToProps = (dispatch, props) => {
     onClearStateReview: () => {
       dispatch(ReviewActions.onClearState());
     },
-    onUpdateReview: (id, params) => {
-      dispatch(ReviewActions.onUpdate(id, params));
+    onUpdateReview: (id, data, params) => {
+      dispatch(ReviewActions.onUpdate(id, data, params));
     },
   }
 }

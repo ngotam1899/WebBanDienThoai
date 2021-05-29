@@ -16,10 +16,14 @@ function* handleGetList({ payload }) {
 
 
 function* handleFilter({ payload }) {
-  yield delay(2000);
+  yield delay(500);
   const { keyword } = payload;
   try {
-    const result = yield call(getAllGroups, {keyword});
+    const result = yield call(getAllGroups, {
+      keyword,
+      limit: 5,
+      page:0
+    });
     const data = get(result, "data");
     yield put(GroupActions.onFilterSuccess(data.groups));
   } catch (error) {

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { compose } from "redux";
+import { withRouter } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 // @Components
 import Rating from 'react-rating'
@@ -10,11 +11,17 @@ import tryConvert from "../../utils/changeMoney";
 import numberWithCommas from "../../utils/formatPrice";
 
 class ProductItem extends Component {
+  onReload = (path) => {
+    const {history} = this.props
+    history.push(path);
+    window.location.reload();
+  }
+
   render() {
     const { product, currency } = this.props;
     return (
       <div className="col-md-3 col-6 my-2">
-        {product && <Link to={`/product/${product.pathseo}/${product._id}`} style={{textDecoration: 'none'}}>
+        {product && <Link to={`/product/${product.pathseo}/${product._id}`} onClick={()=> this.onReload(`/product/${product.pathseo}/${product._id}`)} style={{textDecoration: 'none'}}>
         <div className="single-shop-product">
           <div className="product-upper text-center">
               <img
@@ -79,4 +86,8 @@ const mapDispatchToProps = (dispatch, props) => {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withConnect, withTranslation())(ProductItem);
+export default compose(
+  withConnect, 
+  withTranslation(),
+  withRouter
+)(ProductItem);

@@ -224,7 +224,7 @@ class Header extends Component {
                   <div className="card" style={{ zIndex: 1}}>
                   {listProducts && keyword && listProducts.map((product, index) =>{
                     return (
-                      <Link to={`/product/${product.pathseo}/${product._id}`}>
+                      <Link to={`/product/${product.pathseo}/${product._id}`} >
                       <div className="row text-dark text-decoration-none " style={{height: "80px"}} key={index}>
                         <div className="col-3 my-auto">
                           <><img style={{height: "80px"}} src={product.bigimage.public_url} alt={product.name}></img></>
@@ -260,7 +260,7 @@ class Header extends Component {
                 </button>
                 <div className="collapse navbar-collapse" id="collapsibleNavId">
                   <ul className="navbar-nav mr-auto mt-lg-0">
-                    <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true}  onClick={this.refreshPage} />
+                    <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true} /*  onClick={this.refreshPage} */ />
                     {location.hash.indexOf("account") === -1 && listCategories && listCategories.map((category, index)=>{
                       return (
                         <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
@@ -277,6 +277,7 @@ class Header extends Component {
           <MessengerCustomerChat
             pageId="104334418256109"
             appId="804609327113718"
+            htmlRef="https://localhost:5000"
           />
         </div>
       </>

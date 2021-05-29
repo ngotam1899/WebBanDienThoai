@@ -40,7 +40,7 @@ export default function(state = init, action) {
         ...state,
       };
     case ReviewActionTypes.UPDATE_SUCCESS:
-      toastSuccess("Cập nhật review thành công")
+      //toastSuccess("Cập nhật review thành công")
       return {
         ...state,
       };

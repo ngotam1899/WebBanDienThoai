@@ -88,8 +88,9 @@ class ProductDetail extends Component {
       if (product.specifications.length !== 0) {
         categoryDetail.specifications.map((item) => {
           specifications.push({
-            _id: item,
+            _id: item._id,
             value: "",
+            selections: item.selections
           });
           product.specifications.map((i) => {
             specifications.map((obj) =>
@@ -101,8 +102,9 @@ class ProductDetail extends Component {
         //mảng specification=[]
         categoryDetail.specifications.map((item) => {
           specifications.push({
-            _id: item,
+            _id: item._id,
             value: "",
+            selections: item.selections
           });
         });
       }
@@ -110,8 +112,9 @@ class ProductDetail extends Component {
       //Trường hợp thêm
       categoryDetail.specifications.map((item) => {
         specifications.push({
-          _id: item,
+          _id: item._id,
           value: "",
+          selections: item.selections
         });
       });
     }
@@ -130,6 +133,16 @@ class ProductDetail extends Component {
     this.setState({
       [name]: value,
     });
+  };
+  onChangeSelect = (event) => {
+    var target = event.target;
+    var name = target.name;
+    var value = target.value;
+    console.log(value)
+    console.log(name)
+/*     this.setState({
+      [name]: value,
+    }); */
   };
 
   deletePhoto = (id) => {
@@ -406,7 +419,6 @@ class ProductDetail extends Component {
 
   onCallback = (id, formData) => {
     const { onCreate, onUpdateImage, queryParams } = this.props;
-    console.log(queryParams)
     const {
       name,
       price,
@@ -919,13 +931,14 @@ class ProductDetail extends Component {
                 <div className="float-right">
                   <button type="button" className="btn btn-primary" onClick={()=> this.onCloseModal("_modal", true)}>Thêm nhóm</button>
                 </div>
-                <input className="form-control" name="keyword" value={keyword} onChange={this.handleFilter} placeholder="Tìm nhóm có sẵn"></input>
-                  <div className="card mb-0">
+                <div style={{position: "relative"}}>
+                  <input className="form-control" name="keyword" value={keyword} onChange={this.handleFilter} placeholder="Tìm nhóm có sẵn"></input>
+                  <div className="card mb-0 w-100" style={{ position: "absolute", zIndex: 1}}>
                     {listSearch && keyword && listSearch.map((group, index) =>{
                       return (
                         <div key={index}>
                           <div className="row">
-                            <div className="col-12" onClick={()=>this.setState({group})}>
+                            <div className="col-12" onClick={()=>this.setState({group, keyword: ""})}>
                               <p className="my-1 mx-2">{group.name}</p>
                             </div>
                           </div>
@@ -934,6 +947,8 @@ class ProductDetail extends Component {
                       )
                     })}
                   </div>
+                </div>
+
                 {group && <div className="input-group">
                   <input
                     disabled
@@ -943,7 +958,7 @@ class ProductDetail extends Component {
                     value={group.name}
                     onChange={this.onChange}
                   />
-                  <div className="input-group-append">
+                  <div className="input-group-append" style={{zIndex:0}}>
                     <button className="btn btn-warning" type="button" onClick={this.onEditGroup}>Sửa</button>
                   </div>
                 </div>}
@@ -1019,14 +1034,25 @@ class ProductDetail extends Component {
                         <label key={index + 1} className="my-0">
                           {this.setSpecification(item._id)}
                         </label>
-                        <input
+                        {item.selections.length > 0 ?
+                        <select className="form-control" name={item._id} value={item.value} onChange={this.onChangeDetail}>
+                          <option value="">Chọn {this.setSpecification(item._id)}</option>
+                          {item.selections.map((selector, index) =>{
+                            return(
+                              <option key={index} value={selector._id}>
+                                {selector.name}
+                              </option>
+                            )
+                          })}
+                        </select>
+                        : <input
                           key={item._id}
                           type="text"
                           className="form-control"
                           name={item._id}
                           defaultValue={item.value}
                           onChange={this.onChangeDetail}
-                        />
+                        />}
                       </div>
                     );
                   })}

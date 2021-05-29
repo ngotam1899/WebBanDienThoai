@@ -71,7 +71,6 @@ export default function (state = init, action) {
         ...state,
         processing: true,
       };
-
     case SpecificationActionTypes.CREATE_ERROR:
     case SpecificationActionTypes.UPDATE_ERROR:
     case SpecificationActionTypes.DELETE_ERROR:

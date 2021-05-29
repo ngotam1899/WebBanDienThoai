@@ -62,6 +62,10 @@ const ProductSchema = new Schema(
 				},
 				value: {
 					type: String
+				},
+				selection: {
+					type: Schema.Types.ObjectId,
+					ref: 'Selector'
 				}
 			}
 		],

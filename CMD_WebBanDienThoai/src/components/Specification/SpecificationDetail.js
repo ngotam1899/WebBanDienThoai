@@ -29,12 +29,11 @@ class SpecificationDetail extends Component {
   onSubmit = () =>{
     const {id, name, selections} = this.state;
     const {onUpdate, onCreate} = this.props;
-    var data = {name, selections}
     if (id) {
-      onUpdate(id, data);
+      onUpdate(id, {name, selections});
     }
     else {
-      onCreate(data);
+      onCreate(name, selections);
     }
   }
 
@@ -48,7 +47,7 @@ class SpecificationDetail extends Component {
 
   onAddSelection = () =>{
     const {selections, selection} = this.state;
-    selections.push(selection);
+    selections.push({ name : selection });
     this.setState({
       selections,
       selection: ""
@@ -88,16 +87,19 @@ class SpecificationDetail extends Component {
                     pagination
                     scopedSlots = {{
                       'name': (item) => (
-                        <td>{item}</td>
+                        <td>{item.name}</td>
                       ),
                       'actions': (item) => (
-                        <CButton
-                          onClick={() => this.onDeleteSelection(item)}
-                          className="mr-1 mb-1 mb-xl-0"
-                          color="danger"
-                        >
-                          Xoá
-                        </CButton>
+                        <td>
+                          <CButton
+                            onClick={() => this.onDeleteSelection(item._id)}
+                            className="mr-1 mb-1 mb-xl-0"
+                            color="danger"
+                          >
+                            Xoá
+                          </CButton>
+                        </td>
+
                       )
                     }}
                   />}

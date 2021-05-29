@@ -1,4 +1,5 @@
 const Specification = require('../models/specification')
+const Selector = require('../models/selector')
 const Validator = require('../validators/validator')
 
 const getAllSpecification = async(req, res, next) => {
@@ -28,7 +29,7 @@ const getAllSpecification = async(req, res, next) => {
             page = number_page;
         }
     }
-    const specifications = await Specification.find(condition)
+    const specifications = await Specification.find(condition, {__v : 0})
     .limit(limit)
     .skip(limit * page);
     let count = await Specification.countDocuments(condition);
@@ -38,18 +39,49 @@ const getAllSpecification = async(req, res, next) => {
   }
 }
 const addSpecification = async(req, res, next) => {
-  const newSpecification = new Specification(req.body)
+  const { name, selections } = req.body;
+  if(selections.length > 0){
+    var selectArray=[];
+    for (let item of selections){
+      const select = new Selector({name : item.name});
+      await select.save();
+      selectArray.push(select._id)
+    }
+  }
+  const newSpecification = new Specification({
+    name,
+    selections: selectArray
+  })
   await newSpecification.save()
   return res.status(200).json({ success: true, code: 201, message: '', specification: newSpecification })
 }
 const updateSpecification = async(req, res, next) => {
   const { IDSpecification } = req.params
-  const specification = req.body
-  const result = await Specification.findByIdAndUpdate(IDSpecification, specification)
-  if (!result) {
-      return res.status(200).json({ success: false, code: 400, message: 'id Specification is not correctly' })
+  const { name, selections } = req.body
+  const specFound = await Specification.findById(IDSpecification)
+  if (!specFound) {
+    return res.status(200).json({ success: false, code: 400, message: 'id Specification is not correctly' })
   }
-  return res.status(200).json({ success: true, code: 200, message: '' })
+  if (name) specFound.name = name;
+  if (selections) {
+    var selectArray=[];
+    for (let item of selections) {
+      if(item._id){
+        let selectFound = await Selector.findById(item._id);
+        if (selectFound) {
+          selectArray.push(item)
+        }
+      }
+      else{
+        const select = new Selector({name : item.name});
+        await select.save();
+        selectArray.push(select._id)
+      }
+    }
+    specFound.selections = selectArray;
+  }
+  await specFound.save();
+  return res.status(200).json({ success: true, code: 200, message: '', specification: specFound })
 }
 const deleteSpecification = async(req, res, next) => {
   const { IDSpecification } = req.params
@@ -64,8 +96,9 @@ const getDetailSpecification = async(req, res, next) => {
   const { IDSpecification } = req.params;
   const isValid = await Validator.isValidObjId(IDSpecification);
   if (!isValid) { return res.status(200).json({ success: false, code: 400, message: 'id category is not correctly' }) } else {
-      const result = await Specification.findById(IDSpecification);
-      return res.status(200).json({ success: true, code: 200, message: '', specification: result })
+    const result = await Specification.findById(IDSpecification)
+    .populate({path: 'selections', select: 'name'});
+    return res.status(200).json({ success: true, code: 200, message: '', specification: result })
   }
 }
 

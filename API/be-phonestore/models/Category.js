@@ -18,6 +18,16 @@ const CategorySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Specification"
     }],
+    filter: [{
+        _id: {
+            type: Schema.Types.ObjectId,
+            ref: "Specification"
+        },
+        query: {
+            type: String, 
+        },
+        
+    }]
 })
 
 CategorySchema.pre('findOneAndDelete', function(next) {

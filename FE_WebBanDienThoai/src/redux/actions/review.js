@@ -76,9 +76,9 @@ const onCreateError = (error) => ({
   payload: error
 });
 
-const onUpdate = (id, params) => ({
+const onUpdate = (id, data, params) => ({
   type: ReviewActionTypes.UPDATE,
-  payload: { id, params },
+  payload: { id, data, params },
 });
 
 const onUpdateSuccess = (detail) => ({

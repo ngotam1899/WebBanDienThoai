@@ -4,14 +4,15 @@ const brandController = require('../controllers/brand');
 const categoryController = require('../controllers/category');
 const commentController = require('../controllers/comment');
 const colorController = require('../controllers/color');
+const groupController = require('../controllers/group')
 const productController = require('../controllers/product');
-const groupController = require('../controllers/group');
+const selectorController = require('../controllers/selector')
 const specificationController = require('../controllers/specification');
 
 const passport = require('passport');
 require('../middlewares/passport');
 
-//Region Brand
+// Region Brand
 router.route('/brands').get(brandController.getAllBrand).post(brandController.addBrand);
 router
 	.route('/brands/:IDBrand')
@@ -19,7 +20,7 @@ router
 	.put(brandController.updateBrand)
 	.delete(brandController.deleteBrand);
 
-//Region CateGory
+// Region CateGory
 router.route('/categorys').get(categoryController.getAllCategory).post(categoryController.addCategory);
 router
 	.route('/categorys/:IDCategory')
@@ -38,7 +39,7 @@ router
 	.delete(specificationController.deleteSpecification)
 	.get(specificationController.getDetailSpecification);
 
-//Region Color
+// Region Color
 router.route('/colors').get(colorController.getAllColor).post(colorController.addColor);
 router
 	.route('/colors/:IDColor')
@@ -46,6 +47,12 @@ router
 	.delete(colorController.deleteColor)
 	.get(colorController.getDetailColor);
 
+	// Region Selector
+router.route('/selectors').post(selectorController.addSelector);
+router.route('/selectors/:IDSelector').delete(colorController.deleteColor)
+/* 	.get(colorController.getDetailColor);
+.put(colorController.updateColor)
+ */
 // Region Group
 router
 	.route('/groups')

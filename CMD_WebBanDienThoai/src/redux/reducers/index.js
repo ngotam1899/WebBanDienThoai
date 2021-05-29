@@ -9,9 +9,10 @@ import color from "./color";
 import user from "./user";
 import order from "./order";
 import specification from "./specification";
-import ui from "./ui";
 import state from "./state";
+import ui from "./ui";
+
 
 export default combineReducers({
-  products, cloudinary, brands, categories, group, operations, color, user, order, specification, ui, state
+  products, cloudinary, brands, categories, group, operations, color, user, order, specification, state, ui
 });

@@ -9,6 +9,7 @@ import SpecificationActions from "../../redux/actions/specification";
 import { toastError } from "../../utils/toastHelper";
 
 const fields = ['name' ,{ key: 'actions', _style: { width: '10%'} }]
+const _fields = ['name' , 'query',{ key: 'actions', _style: { width: '10%'} }]
 
 class CategoryDetail extends Component {
   constructor(props){
@@ -20,6 +21,7 @@ class CategoryDetail extends Component {
       name_en: category ? category.name_en : '',
       pathseo: category ? category.pathseo :'',
       specifications: category ? category.specifications : [],
+      filter: category ? category.filter : [],
       keyword: ""
     }
   }
@@ -69,25 +71,29 @@ class CategoryDetail extends Component {
     return get(specificationName, "name");
   }
 
-  onAddSpecification = (_id) =>{
+  onAddSpecification = (specification) =>{
     const {specifications} = this.state;
-    if(specifications.indexOf(_id)!== -1){
+    console.log(specifications)
+    if(specifications.findIndex(i => i.name === specification.name)!== -1){
       toastError("Thuộc tính này đã tồn tại trong danh sách")
     }
     else{
-      specifications.push(_id)
+      specifications.push(specification)
     }
     this.setState({specifications})
   }
 
-  onDeleteSpecification = (_id) =>{
+  onDeleteSpecification = (item) =>{
     const {specifications} = this.state;
-    specifications.splice(specifications.indexOf(_id), 1);
+    specifications.splice(specifications.indexOf(item), 1);
     this.setState({specifications})
+  }
+  onDeleteFilter = (item) => {
+
   }
 
 	render() {
-    const {name, pathseo, name_en, specifications, keyword} = this.state;
+    const {name, pathseo, name_en, specifications, filter, keyword} = this.state;
     const { large, onClose, category, listSpecification, listSearch} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -111,26 +117,28 @@ class CategoryDetail extends Component {
                   <input type="text" className="form-control" name="name_en" value={name_en} onChange={this.onChange}/>
 								</div>
               </form>
-            </div>
-            <div className="col-12 col-lg-6">
-              <input className="form-control" name="keyword" value={keyword} onChange={this.handleFilter}></input>
-              <div className="card">
-                {listSearch && keyword && listSearch.map((specification, index) =>{
-                  return (
-                    <>
-                    <div className="row" key={index}>
-                      <div className="col-9">
-                        <p className="mb-0">{specification.name}</p>
+              <label>Danh mục thuộc tính:</label>
+              <div style={{position: "relative"}}>
+                <input className="form-control" name="keyword" value={keyword} onChange={this.handleFilter}></input>
+                <div className="card mb-0 w-100" style={{ position: "absolute", zIndex: 1}}>
+                  {listSearch && keyword && listSearch.map((specification, index) =>{
+                    return (
+                      <div key={index}>
+                      <div className="row p-2" >
+                        <div className="col-9 align-self-center">
+                          <p className="mb-0">{specification.name}</p>
+                        </div>
+                        <div className="col-3 text-right my-auto">
+                          <button className="btn btn-success" onClick ={ () => this.onAddSpecification(specification)}><i className="fa fa-plus-circle"></i></button>
+                        </div>
                       </div>
-                      <div className="col-3 my-auto">
-                        <button className="btn btn-success" onClick ={ () => this.onAddSpecification(specification._id)}><i className="fa fa-plus-circle"></i></button>
+                      <div className="border-bottom"></div>
                       </div>
-                    </div>
-                    <div class="border-bottom"></div>
-                    </>
-                  )
-                })}
+                    )
+                  })}
+                </div>
               </div>
+
               {listSpecification && <CDataTable
                 items={specifications}
                 fields={fields}
@@ -139,21 +147,72 @@ class CategoryDetail extends Component {
                 pagination
                 scopedSlots = {{
                   'name': (item) => (
-                    <td>{this.setSpecification(item)}</td>
+                    <td>{this.setSpecification(item._id)}</td>
                   ),
                   'actions': (item) => (
-                    <CButton
+                    <td>
+                      <CButton
                       onClick={() => this.onDeleteSpecification(item)}
                       className="mr-1 mb-1 mb-xl-0"
                       color="danger"
-                    >
-                      Xoá
-                    </CButton>
+                      >
+                        Xoá
+                      </CButton>
+                    </td>
+
                   )
                 }}
               />}
 
             </div>
+            <div className="col-12 col-lg-6">
+              <label className="float-left">Danh mục bộ lọc:</label>
+              <div className="float-right">
+                {/* <button
+                  className="btn btn-success mr-2"
+                  style={{ display: colorEditing }}
+                  onClick={() => this.onSaveColor()}
+                  type="button"
+                >
+                  Lưu
+                </button> */}
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  //onClick={() => this.onAddColor(colorEditing)}
+                >
+                  Thêm bộ lọc
+                </button>
+              </div>
+              {filter.length > 0 && <CDataTable
+                items={filter}
+                fields={_fields}
+                striped
+                itemsPerPage={5}
+                pagination
+                scopedSlots = {{
+                  'name': (item) => (
+                    <td>{this.setSpecification(item._id._id)}</td>
+                  ),
+                  'os': (item) => {
+
+                  },
+                  'actions': (item) => (
+                    <td>
+                      <CButton
+                      onClick={() => this.onDeleteFilter(item)}
+                      className="mr-1 mb-1 mb-xl-0"
+                      color="danger"
+                      >
+                        Xoá
+                      </CButton>
+                    </td>
+
+                  )
+                }}
+              />}
+            </div>
+
 					</div>
 				</CModalBody>
 				<CModalFooter>
