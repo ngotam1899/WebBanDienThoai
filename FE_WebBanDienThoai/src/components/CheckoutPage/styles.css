@@ -1,10 +1,5 @@
 .form-row { margin-right: 0; margin-left:0 }
 
-.single-product-area .zigzag-bottom {background-color: #f4f4f4}
-
-.single-product-area {
-  padding: 80px 0 130px;
-}
 .woocommerce-info {
     background: none repeat scroll 0 0 #f4f4f4;
     font-size: 18px;

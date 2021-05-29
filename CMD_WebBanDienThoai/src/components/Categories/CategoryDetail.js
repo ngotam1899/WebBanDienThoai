@@ -9,7 +9,7 @@ import SpecificationActions from "../../redux/actions/specification";
 import { toastError } from "../../utils/toastHelper";
 
 const fields = ['name' ,{ key: 'actions', _style: { width: '10%'} }]
-const _fields = ['name' , 'query',{ key: 'actions', _style: { width: '10%'} }]
+const _fields = ['name' , 'query',{ key: 'actions', _style: { width: '35%'}}]
 
 class CategoryDetail extends Component {
   constructor(props){
@@ -22,7 +22,14 @@ class CategoryDetail extends Component {
       pathseo: category ? category.pathseo :'',
       specifications: category ? category.specifications : [],
       filter: category ? category.filter : [],
-      keyword: ""
+      keyword: "",
+      //Filter - bộ lọc
+      filterEditing: "none",
+      btnStatus: "Thêm bộ lọc",
+      onEditing: false,
+      indexFilter: -1,
+      idFilter: "",
+      query: ""
     }
   }
 
@@ -53,9 +60,14 @@ class CategoryDetail extends Component {
   }
 
   onSubmit = () =>{
-    const {id, name, pathseo, name_en, specifications} = this.state;
+    const {id, name, pathseo, name_en, specifications, filter} = this.state;
     const {onUpdate, onCreate} = this.props;
-    var data = {name, pathseo, name_en, specifications}
+    /* eslint-disable */
+    filter.map(item =>{
+      item._id = item._id._id
+    })
+    /* eslint-disable */
+    var data = {name, pathseo, name_en, specifications, filter}
     if (id) {
       onUpdate(id, data);
     }
@@ -73,7 +85,6 @@ class CategoryDetail extends Component {
 
   onAddSpecification = (specification) =>{
     const {specifications} = this.state;
-    console.log(specifications)
     if(specifications.findIndex(i => i.name === specification.name)!== -1){
       toastError("Thuộc tính này đã tồn tại trong danh sách")
     }
@@ -92,8 +103,94 @@ class CategoryDetail extends Component {
 
   }
 
+  onAddFilter = (value) => {
+    if (value === "none") {
+      this.setState({
+        filterEditing: "inline-flex",
+        btnStatus: "Hủy",
+        onEditing: false,
+      });
+    } else {  //Click button Hủy
+      this.setState({
+        // Gán giá trị button
+        filterEditing: "none",
+        btnStatus: "Thêm bộ lọc",
+        onEditing: false,
+        // Gán giá trị fields
+        idFilter: "",
+        query: ""
+      });
+    }
+  };
+
+  onSaveFilter() {
+    const {
+      idFilter,
+      query,
+      onEditing,
+      indexFilter,
+      filter,
+    } = this.state;
+    if(!idFilter){
+      toastError("Chọn thuộc tính trước khi lưu");
+    }
+    else{
+      if (onEditing === false) {
+        // TH thêm màu
+        if (filter.find((obj) => obj._id._id === idFilter)) {
+          toastError("Thuộc tính này đã tồn tại");
+        } else {
+          filter.push({
+            _id: {_id: idFilter},
+            query
+          });
+        }
+      } else {
+        // TH sửa màu
+        for (let i = 0; i < filter.length; i++) {
+          filter[indexFilter] = {
+            _id: {_id: idFilter},
+            query
+          };
+        }
+      }
+    }
+    this.setState({
+      filter,
+      // Gán giá trị button
+      filterEditing: "none",
+      btnStatus: "Thêm bộ lọc",
+      // Gán giá trị fields
+      idFilter: "",
+      query: "",
+      onEditing: false,
+    });
+  }
+
+  onEditFilter = (item) => {
+    const { filter } = this.state;
+    this.setState({
+      // Gán giá trị button
+      filterEditing: "inline-flex",
+      btnStatus: "Hủy",
+      // Gán giá trị fields
+      idFilter: item._id._id,
+      query: item.query,
+      onEditing: true,
+      indexFilter: filter.indexOf(item),
+    });
+  };
+
+  onDeleteFilter = (item) => {
+    const { filter } = this.state;
+    filter.splice(filter.indexOf(item), 1);
+    this.setState({
+      filter,
+    });
+  };
+
 	render() {
-    const {name, pathseo, name_en, specifications, filter, keyword} = this.state;
+    const {name, pathseo, name_en, specifications, filter, keyword, filterEditing, btnStatus, idFilter, query} = this.state;
     const { large, onClose, category, listSpecification, listSearch} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -168,23 +265,50 @@ class CategoryDetail extends Component {
             <div className="col-12 col-lg-6">
               <label className="float-left">Danh mục bộ lọc:</label>
               <div className="float-right">
-                {/* <button
+                <button
                   className="btn btn-success mr-2"
-                  style={{ display: colorEditing }}
-                  onClick={() => this.onSaveColor()}
+                  style={{ display: filterEditing }}
+                  onClick={() => this.onSaveFilter()}
                   type="button"
                 >
                   Lưu
-                </button> */}
+                </button>
                 <button
                   className="btn btn-primary"
                   type="button"
-                  //onClick={() => this.onAddColor(colorEditing)}
+                  onClick={() => this.onAddFilter(filterEditing)}
                 >
-                  Thêm bộ lọc
+                  {btnStatus}
                 </button>
               </div>
-              {filter.length > 0 && <CDataTable
+              <div className="row w-100 rounded border my-2" style={{ display: filterEditing }}>
+                <div className="col-12">
+                  <div className="form-group">
+                    <label>Tên thuộc tính:</label>
+                    <select
+                    className="form-control my-1"
+                    required="required"
+                    name="idFilter"
+                    value={idFilter}
+                    onChange={this.onChange}
+                  >
+                    <option value={-1}>Chọn thuộc tính</option>
+                    {specifications && specifications.map((item, index) => {
+                      return (
+                        <option key={index} value={item._id}>
+                          {item.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Query string:</label>
+                    <input type="text" className="form-control" name="query" value={query} onChange={this.onChange}/>
+                  </div>
+                </div>
+              </div>
+              {listSpecification && filter.length > 0 && <CDataTable
                 items={filter}
                 fields={_fields}
                 striped
@@ -200,11 +324,18 @@ class CategoryDetail extends Component {
                   'actions': (item) => (
                     <td>
                       <CButton
+                      onClick={() => this.onEditFilter(item)}
+                      className="mr-1 mb-1 mb-xl-0"
+                      color="warning"
+                      >
+                        <i className="fa fa-highlighter"></i>
+                      </CButton>
+                      <CButton
                       onClick={() => this.onDeleteFilter(item)}
                       className="mr-1 mb-1 mb-xl-0"
                       color="danger"
                       >
-                        Xoá
+                        <i className="fa fa-trash-alt"></i>
                       </CButton>
                     </td>
 

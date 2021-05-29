@@ -210,7 +210,7 @@ class Header extends Component {
             <div className="row">
               <div className="col-sm-6 col-md-5 col-lg-4 col-xl-3">
                 <div className="logo">
-                  <Link to="/"  onClick={this.refreshPage}><img src={assets("brand.png")} alt="" className="w-100" /></Link>
+                  <Link to="/" /*  onClick={this.refreshPage} */><img src={assets("brand.png")} alt="" className="w-100" /></Link>
                 </div>
               </div>
               <div className="col-md-6 col-9 align-self-center">

@@ -66,7 +66,8 @@ const getDetailCategory = async(req, res, next) => {
     })
     .populate({ 
       path: 'filter', select: '_id',
-      populate : {path : '_id', select: "name"},
+      populate : {path : '_id', select: ["name", "selections"], 
+      populate : {path : 'selections', select: "name"}},
     });
     return res.status(200).json({ success: true, code: 200, message: '', category: result })
   }

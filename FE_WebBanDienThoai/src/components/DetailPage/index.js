@@ -194,12 +194,11 @@ class DetailPage extends Component {
       </div>
       
       <div className="">
-        <div className="zigzag-bottom"></div>
         {product && <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <div className="product-content-right">
-                <div className="">
+              <div className="">
+                <div className="my-2">
                   <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
                   <i className="fa fa-chevron-right px-2"></i>
                   <a className="text-decoration-none" href={`/#/products/${product.category.pathseo}/${product.category._id}`}>{product.category.name}</a>

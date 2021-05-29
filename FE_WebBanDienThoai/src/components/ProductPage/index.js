@@ -81,11 +81,13 @@ class ProductPage extends Component {
   onSetBrand = (value) => {
     this.handleUpdateFilter({ brand: value, page: 0 });
   }
-/*   // Button search
-  searchKeyWorld = (e) => {
-    const {keyword} = this.state;
-    this.handleUpdateFilter({ keyword, page : 0});
-  } */
+
+  onSetFilter = (event) => {
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.handleUpdateFilter({ [name]: value });
+  }
 
   // Change distance price
   distancePrice = (e) => {
@@ -117,141 +119,116 @@ class ProductPage extends Component {
 
   render() {
     const {min_p, max_p} = this.state;
-    const { listProducts, totalBrand, t, location, total } = this.props;
+    const { listProducts, totalBrand, t, location, total, category } = this.props;
     const filter = getFilterParams(location.search);
     return (
-      <>
-        <div className="single-product-area">
-          <div className="zigzag-bottom"></div>
-          <div className="container">
-            <div className="row">
-              <div className="col-12 col-md-3">
-                <div className="row">
-                  <div className="col-6 col-md-12 ">
-                    <div className="card bg-light mb-3">
-                      <div className="card-header bg-info text-white"><h5 className="m-0">{t('shop.brand.card')}</h5></div>
-                      <div className="card-body">
-                        <form>
-                          <div className="radio">
-                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(null)} 
-                            checked={(filter.brand === null || filter.brand === undefined) && "checked"}/>{t('shop.all.radio-button')}</label>
-                          </div>
-                          {totalBrand && 
-                          totalBrand.map((brand, index) =>{
-                          return(
-                          <div className="radio" key={index}>
-                            <label className="m-0"><input className="mr-2" type="radio" name="brand" onChange={()=>this.onSetBrand(brand._id._id)} 
-                            checked={filter.brand === brand._id._id && "checked"}/>{brand._id.name} ({brand.count})</label>
-                          </div>
-                          )})}
-                        </form>
-                      </div>
+    <div className="container">
+      <div className="row">
+        {category && <div className="my-2">
+          <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
+          <i className="fa fa-chevron-right px-2"></i>
+          <a className="text-decoration-none" href={`/#/products/${category.pathseo}/${category._id}`}>{category.name}</a>
+        </div>}
+        <div className="col-12 col-md-3">
+          <div className="row">
+            <div className="col-6 col-md-12 mb-4">
+              <div className="shadow-sm rounded">
+                <div className="px-3 py-2">
+                  <h3 className="mb-1">{t('shop.distance.label')}</h3>
+                  <div className="mb-2 border-bottom"></div>
+                  <div className="row input-group mx-auto">
+                    <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder={t('shop.distance.from')} className="form-control w-40"></input>
+                    <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} className="form-control w-40"></input>
+                    <div className="input-group-append">
+                      <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
                     </div>
                   </div>
-                  <div className="col-6 col-md-12 ">
-                    <div className="card bg-light mb-3">
-                      <div className="card-header bg-info text-white"><h5 className="m-0">{t('shop.color.card')}</h5></div>
-                      <div className="card-body">
-                        {/* <form>
-                          <div className="radio">
-                            <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(null)}
-                            checked={(filter.color === null || filter.brand === undefined) && "checked"}/>{t('shop.all.radio-button')}</label>
-                          </div>
-                          {listColor && listColor.map((color, index) =>{
-                            return (
-                            <div className="radio" key={index}>
-                              <label className="m-0"><input className="mr-2" type="radio" name="color" onChange={()=>this.onSetColor(color._id)}
-                              checked={filter.color === color._id && "checked"}/>{color.color}</label>
-                            </div>
-                            )
-                          })}
-                        </form> */}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-9 col-12">
-                <div className="row">
-                  <div className="col-6 col-md-5">
-                    <div className="card border-info mb-3 w-100">
-                      <div className="row no-gutters">
-                        <div className="col-sm-5">
-                          <div className="card-header h-100 text-info mb-0"><h5 className="card-title mb-0">{t('shop.sort.label')}</h5></div>
-                        </div>
-                        <div className="col-sm-5">
-                          <div className="card-body py-md-3 py-2 px-3 px-md-2">
-                            <select value={filter.sort_p} className="" onChange={this.handleChangeSortPrice}>
-                              <option key={-1} value="0">{t('shop.sort.price')}</option>
-                              <option value="1">{t('shop.sort.inc')}</option>
-                              <option value="-1">{t('shop.sort.des')}</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-7 col-6">
-                    <div className="card border-info mb-3 w-100">
-                      <div className="row no-gutters">
-                        <div className="col-sm-4">
-                          <div className="card-header h-100 text-info mb-0"><h5 className="card-title mb-0">{t('shop.distance.label')}</h5></div>
-                        </div>
-                        <div className="col-sm-8 d-md-block d-none">
-                          <div className="card-body py-md-2 py-0">
-                            <div className="row input-group mx-auto">
-                              <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder={t('shop.distance.from')} className="form-control w-40"></input>
-                              <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} className="form-control w-40"></input>
-                              <div className="input-group-append">
-                                <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-8 d-md-none d-block">
-                          <div className="card-body py-1">
-                              <input type="number" value={min_p} name="min_p" step={100000} min={0}  onChange={this.onChange} placeholder={t('shop.distance.from')} style={{borderBottomLeftRadius: "unset", borderBottomRightRadius: "unset"}} className="form-control"></input>
-                              <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} style={{borderRadius: "unset"}} className="form-control"></input>
-                            <button onClick={() => this.distancePrice()} className="btn btn-primary w-100" style={{borderTopLeftRadius: "unset", borderTopRightRadius: "unset"}}><i className="fa fa-search-dollar"></i> {t('shop.distance.button')}</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <p style={{fontStyle: 'italic'}}>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
-                <div className="row">
-                  {listProducts.map((product, index) => {
-                    return (
-                        <ProductItem product={product} key={index} />
-                      )
-                  })}
                 </div>
               </div>
             </div>
-
-            <div className="row">
-              <div className="col-md-12">
-                <div className="product-pagination text-center">
-                <nav className="float-end">
-                <Pagination
-                  activePage={filter.page ? parseInt(filter.page)+1 : 1}
-                  itemsCountPerPage={4}
-                  totalItemsCount={total ? total : 10}
-                  pageRangeDisplayed={3}
-                  linkClass="page-link"
-                  itemClass="page-item"
-                  prevPageText={t('shop.pagination.prev')}
-                  nextPageText={t('shop.pagination.next')}
-                  hideFirstLastPages={true}
-                  onChange={this.handlePageChange.bind(this)}
-                />
-                </nav>
-                </div>
-              </div>
+            {category && category.filter.map(item=>{
+              return (
+                <div className="col-6 col-md-12" key={item._id._id}>
+                  <div className="shadow-sm rounded">
+                    <div className="px-3 py-2">
+                      <h3 className="mb-1">{item._id.name}</h3>
+                      <div className="mb-2 border-bottom"></div>
+                      <ul className="pl-0">
+                        <li className="form-check">
+                          <input type="radio" className="form-check-input" value={null} id="all" name={item.query} onChange={this.onSetFilter} defaultChecked/>
+                          <label htmlFor="all" className="form-check-label">{t('shop.all.radio-button')}</label>
+                        </li>
+                        {item._id.selections.map(selector =>{
+                          return (
+                          <li className="form-check" key={selector._id}>
+                            <input type="radio" value={selector._id} id={selector._id} name={item.query} className="form-check-input" onChange={this.onSetFilter} />
+                            <label htmlFor={selector._id} className="form-check-label">{selector.name}</label>
+                          </li>
+                          )
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                </div> 
+              )
+            })}
+          </div>
+        </div>
+        <div className="col-md-9 col-12">
+          <div className="row">
+            <div className="col-6 col-md-12 ">
+            {totalBrand && 
+            totalBrand.map((brand, index) =>{
+            return(
+              <button type="button" className="rounded-pill shadow-sm bg-active text-dark mr-2" key={index} onClick={()=>this.onSetBrand(brand._id._id)}>{brand._id.name} ({brand.count})</button>
+            )})}
+            </div>
+            
+            
+          </div>
+          <div className="row">
+            <div className="col-6">
+            <p>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
+            </div>
+            <div className="col-6">
+            <select value={filter.sort_p} className="form-select float-end" style={{width: "fit-content"}} onChange={this.handleChangeSortPrice}>
+              <option key={-1} value="0">{t('shop.sort.price')}</option>
+              <option value="1">{t('shop.sort.inc')}</option>
+              <option value="-1">{t('shop.sort.des')}</option>
+            </select>
             </div>
           </div>
-        </div></>
+          
+          <div className="row">
+            {listProducts.map((product, index) => {
+              return (
+                  <ProductItem product={product} key={index} />
+                )
+            })}
+          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-12">
+          <div className="product-pagination text-center">
+          <nav className="float-end">
+          <Pagination
+            activePage={filter.page ? parseInt(filter.page)+1 : 1}
+            itemsCountPerPage={4}
+            totalItemsCount={total ? total : 10}
+            pageRangeDisplayed={3}
+            linkClass="page-link"
+            itemClass="page-item"
+            prevPageText={t('shop.pagination.prev')}
+            nextPageText={t('shop.pagination.next')}
+            hideFirstLastPages={true}
+            onChange={this.handlePageChange.bind(this)}
+          />
+          </nav>
+          </div>
+        </div>
+      </div>
+    </div>
     );
   }
 }

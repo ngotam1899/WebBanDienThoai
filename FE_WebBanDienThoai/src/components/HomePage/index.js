@@ -18,7 +18,6 @@ class HomePage extends Component {
     onGetNewest();
   }
 
-
   render() {
     const { t, bestSeller, newest, favorite } = this.props;
     return (<>
