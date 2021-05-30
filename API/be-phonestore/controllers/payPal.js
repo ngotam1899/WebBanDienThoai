@@ -16,14 +16,14 @@ const getPayPal = async(req, res, next) => {
       payment_method: "paypal"
     },
     redirect_urls: {
-      return_url: "http://localhost:3000/paypal/success",
-      cancel_url: "http://localhost:3000/paypal/cancel"
+      return_url: `${process.env.URL}/paypal/success`,
+      cancel_url: `${process.env.URL}/paypal/cancel`
     },
     transactions: [
       {
         amount: {
           currency: "USD",
-          total: 1
+          total
         },
         description: "This is the payment description."
       }

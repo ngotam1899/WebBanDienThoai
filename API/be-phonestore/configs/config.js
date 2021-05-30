@@ -9,5 +9,6 @@ module.exports = {
     GoogleID: process.env.GoogleID,
     GoogleSecret: process.env.GoogleSecret,
     FacebookID: process.env.FacebookID,
-    FacebookSecret: process.env.FacebookSecret
+    FacebookSecret: process.env.FacebookSecret,
+    URL: process.env.URL
 }

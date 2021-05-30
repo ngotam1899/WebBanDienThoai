@@ -59,11 +59,16 @@ const getAllProduct = async (req, res, next) => {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
 		}
 		/* Filter area */
-		if (req.query.os != undefined && req.query.os != '') {
-			if (Validator.isValidObjId(req.query.os)) {
-				condition.specifications = { $elemMatch : { value : req.query.os}};
+		const filter_query = ["os", "price", "brand"]
+		filter_query.map(item => {
+			if (req.query[`${item}`] != undefined && req.query[`${item}`] != '') {
+				if (Validator.isValidObjId(req.query[`${item}`])) {
+					var value = req.query[`${item}`]
+					condition.specifications = { $elemMatch : { value }};
+				}
 			}
-		}
+		})
+		
 		/* Filter area */
 		let products;
 		products = await Product.find(condition, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
