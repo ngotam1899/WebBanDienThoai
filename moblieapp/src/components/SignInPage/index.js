@@ -99,8 +99,6 @@ class SignInPage extends Component {
           const {onLoginFacebook, navigation} = this.props;
           this.setState({userFacebookInfo: result});
           onLoginFacebook(token);
-          console.log('result:', result);
-          console.log('Token: ', token);
           navigation.navigate('Home');
         }
       },
@@ -167,7 +165,6 @@ class SignInPage extends Component {
 
   UNSAFE_componentWillReceiveProps(props) {
     const {loggedIn, navigation, isCheckout} = props;
-    console.log('is checkout: ', isCheckout)
     if (loggedIn && loggedIn === true && isCheckout === false) {
       navigation.navigate('Home');
     }

@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
+  Image,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -13,45 +14,33 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Picker} from '@react-native-community/picker';
 import CheckBox from '@react-native-community/checkbox';
 import {Table, Row, Rows} from 'react-native-table-component';
+import {WebView} from 'react-native-webview';
 
 import UsersActions from '../../redux/actions/user';
 import AddressActions from '../../redux/actions/address';
 import AuthorizationActions from '../../redux/actions/auth';
 import ProductsActions from '../../redux/actions/products';
 import OrdersActions from '../../redux/actions/order';
-
+import numberWithCommas from '../../utils/formatPrice';
+import {
+  SHIPPING_EXPRESS,
+  SHIPPING_STANDARD,
+  API_ENDPOINT_AUTH,
+} from '../../constants';
+import tryConvert from '../../utils/changeMoney';
 
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {AsyncStorage} from 'react-native';
+import Modal from 'react-native-modal';
 
 class CheckoutPage extends Component {
   constructor(props) {
     super(props);
     const {authInfo} = props;
-    AsyncStorage.getItem('cart')
-      .then(cart => {
-        if (cart !== null) {
-          // We have data!!
-          const cartData = JSON.parse(cart);
-          var items = cartData.map(item => {
-            var dataItem = {
-              product: item.product._id,
-              quantity: item.quantity,
-              color: item.color,
-            };
-            return dataItem;
-          });
-          this.setState({order_list: items});
-          this.setTotalPrice(cartData);
-        }
-      })
-      .catch(err => {
-        alert(err);
-      });
-
     this.state = {
       order_list: [],
+      order_info: [],
       shipToDifferentAddress: false,
       firstname: authInfo ? authInfo.firstname : '',
       lastname: authInfo ? authInfo.lastname : '',
@@ -71,16 +60,35 @@ class CheckoutPage extends Component {
       isModalVisible: false,
       total: 0,
       totalPrice: 0,
+      totalWeight: 0,
+      totalHeight: 0,
+      totalWidth: 0,
+      totalLength: 0,
       payment_method: 'local',
       order_comments: '',
       noteOrder: '',
-      shipping_type: 1,
+      service_type_id: '1',
+      showModal: false,
+      status: 'Pending',
     };
   }
+  handleResponse = data => {
+    if (data.title === 'success') {
+      this.setState({showModal: false, status: 'Complete'});
+    } else if (data.title === 'cancel') {
+      this.setState({showModal: false, status: 'Cancelled'});
+    } else {
+      return;
+    }
+  };
   // Hàm tính tổng số lượng và tổng tiền
   setTotalPrice(dataCart) {
     var total = 0;
     var totalPrice = 0;
+    var totalWeight = 0;
+    var totalHeight = 0;
+    var totalWidth = 0;
+    var totalLength = 0;
     for (var i = 0; i < dataCart.length; i++) {
       total = total + dataCart[i].quantity;
       totalPrice =
@@ -89,23 +97,97 @@ class CheckoutPage extends Component {
           dataCart[i].product.colors.find(
             item => item._id === dataCart[i].color,
           ).price;
+      totalWeight =
+        totalWeight + dataCart[i].quantity * dataCart[i].product.weight;
+      totalHeight =
+        totalHeight + dataCart[i].quantity * dataCart[i].product.height;
+      totalWidth =
+        totalWidth < dataCart[i].product.width
+          ? dataCart[i].product.width
+          : totalWidth;
+      totalLength =
+        totalLength < dataCart[i].product.width
+          ? dataCart[i].product.width
+          : totalLength;
     }
+
     this.setState({
       total,
       totalPrice,
+      totalWeight,
+      totalHeight,
+      totalWidth,
+      totalLength,
     });
   }
-  placeOrder(){
-    const {onCreateAnOrder, authInfo, onClearCart} = this.props;
-    const {shipToDifferentAddress, order_comments, total, totalPrice, phonenumber, 
-      address, city, district, ward, payment_method, order_list} = this.state;
+
+  componentWillReceiveProps(props) {
+    const {
+      service_type_id,
+      totalHeight,
+      totalLength,
+      totalWeight,
+      totalWidth,
+    } = this.state;
+    const {
+      authInfo,
+      onGetListDistrict,
+      listCity,
+      listDistrict,
+      onGetListCity,
+    } = this.props;
+    if (authInfo !== props.authInfo && authInfo === null) {
+      onGetListCity();
+    }
+    if (authInfo && authInfo.address) {
+      if (listCity !== props.listCity && props.listCity) {
+        onGetListDistrict({
+          province_id: props.listCity.find(
+            obj => obj.ProvinceName === authInfo.address.split(', ')[3],
+          ).ProvinceID,
+        });
+      }
+      if (listDistrict !== props.listDistrict && listDistrict === null) {
+        var districtID = props.listDistrict.find(
+          obj => obj.DistrictName === authInfo.address.split(', ')[2],
+        ).DistrictID;
+        this.setState({
+          districtID,
+        });
+        console.log('WillRec: ', service_type_id);
+        this.calculateShipping(
+          service_type_id,
+          districtID,
+          totalHeight,
+          totalLength,
+          totalWeight,
+          totalWidth,
+        );
+      }
+    }
+  }
+  placeOrder() {
+    const {onCreateAnOrder, authInfo, ship} = this.props;
+    const {
+      shipToDifferentAddress,
+      order_comments,
+      total,
+      totalPrice,
+      phonenumber,
+      address,
+      city,
+      district,
+      ward,
+      payment_method,
+      order_list,
+    } = this.state;
     var data = {};
+
     //3. Truyền thông tin order vào body req
-    
-    if(shipToDifferentAddress === true){
+    if (shipToDifferentAddress === true) {
       data = {
         order_list,
-        total_price: totalPrice,
+        total_price: totalPrice + ship.total,
         total_quantity: total,
         shipping_phonenumber: phonenumber,
         email: authInfo.email,
@@ -113,13 +195,12 @@ class CheckoutPage extends Component {
         note: order_comments,
         status: -1,
         payment_method,
-        is_paid: false
-      }
-    }
-    else {
+        is_paid: false,
+      };
+    } else {
       data = {
         order_list,
-        total_price: totalPrice,
+        total_price: totalPrice + ship.total,
         total_quantity: total,
         shipping_phonenumber: authInfo.phonenumber,
         email: authInfo.email,
@@ -127,10 +208,98 @@ class CheckoutPage extends Component {
         payment_method,
         note: order_comments,
         status: -1,
-        is_paid: false
-      }
+        is_paid: false,
+      };
     }
     onCreateAnOrder(data);
+  }
+
+  shipDifferentAddress = shipToDifferentAddress => {
+    this.setState({shipToDifferentAddress});
+    const {
+      service_type_id,
+      districtID,
+      totalHeight,
+      totalLength,
+      totalWeight,
+      totalWidth,
+    } = this.state;
+    this.setState({
+      shipToDifferentAddress,
+    });
+    if (shipToDifferentAddress === false) {
+      this.calculateShipping(
+        service_type_id,
+        districtID,
+        totalHeight,
+        totalLength,
+        totalWeight,
+        totalWidth,
+      );
+    }
+  };
+
+  componentDidMount = async () => {
+    const {onGetListCity, onGetProfile} = this.props;
+    AsyncStorage.getItem('cart')
+      .then(cart => {
+        if (cart !== null) {
+          // We have data!!
+          const cartData = JSON.parse(cart);
+          var items = cartData.map(item => {
+            var dataItem = {
+              product: item.product._id,
+              quantity: item.quantity,
+              color: item.color,
+            };
+            return dataItem;
+          });
+          this.setState({order_list: items});
+          var items2 = cartData.map(item => {
+            var dataItem2 = {
+              name: item.product.name,
+              quantity: item.quantity,
+              color: item.product.colors.find(i => i._id === item.color)
+                .name_vn,
+              price: item.product.colors.find(i => i._id === item.color).price,
+            };
+            return dataItem2;
+          });
+          this.setState({order_info: items2});
+          this.setTotalPrice(cartData);
+        }
+      })
+      .catch(err => {
+        alert(err);
+      });
+    const token = await AsyncStorage.getItem('AUTH_USER');
+
+    //Get profile
+    await onGetProfile(null, token);
+
+    //get list city
+    await onGetListCity();
+
+    const {cityID} = this.state;
+    if (cityID) {
+      await onGetListDistrict({province_id: cityID});
+    }
+  };
+
+  calculateShipping(service_type_id, to, height, length, weight, width) {
+    const {onCalculateShipping} = this.props;
+    var data = {
+      service_type_id: parseInt(service_type_id),
+      insurance_value: 0,
+      coupon: null,
+      from_district_id: 1450,
+      to_district_id: Math.round(to),
+      height: Math.round(height),
+      length: Math.round(length),
+      weight: Math.round(weight),
+      width: Math.round(width),
+    };
+    onCalculateShipping(data);
   }
 
   findLastCity() {
@@ -148,22 +317,6 @@ class CheckoutPage extends Component {
     });
   }
 
-  componentWillMount = async () => {
-    const token = await AsyncStorage.getItem('AUTH_USER');
-    const {onGetProfile, onGetListCity} = this.props;
-    //Get profile
-    await onGetProfile(null, token);
-
-    //get list city
-    await onGetListCity();
-
-    const {onGetListDistrict} = this.props;
-    const {cityID} = this.state;
-    if (cityID) {
-      await onGetListDistrict({province_id: cityID});
-    }
-  };
-
   setDistrict = (value, index) => {
     const {onGetListDistrict} = this.props;
     this.setState({
@@ -177,12 +330,27 @@ class CheckoutPage extends Component {
   setWard = (value, index) => {
     const {onGetListWard} = this.props;
     const {cityID} = this.state.cityID;
+    const {
+      service_type_id,
+      totalHeight,
+      totalLength,
+      totalWeight,
+      totalWidth,
+    } = this.state;
     this.setState({
       districtInfo: value,
       district: value.DistrictName,
       districtID: value.DistrictID,
     });
     onGetListWard(cityID, value.DistrictID);
+    this.calculateShipping(
+      service_type_id,
+      value.DistrictID,
+      totalHeight,
+      totalLength,
+      totalWeight,
+      totalWidth,
+    );
   };
 
   setAddress = (value, index) => {
@@ -190,16 +358,33 @@ class CheckoutPage extends Component {
       ward: value,
     });
   };
+
   changePaymentMethod = value => {
     this.setState({
       payment_method: value,
     });
   };
 
-  changeShipping = value => {
+  changeShipping = service_type_id => {
     this.setState({
-      shipping_type: value,
+      service_type_id,
     });
+    const {
+      totalHeight,
+      districtID,
+      totalLength,
+      totalWeight,
+      totalWidth,
+      d,
+    } = this.state;
+    this.calculateShipping(
+      service_type_id,
+      districtID,
+      totalHeight,
+      totalLength,
+      totalWeight,
+      totalWidth,
+    );
   };
   render() {
     const {
@@ -213,20 +398,36 @@ class CheckoutPage extends Component {
       ward,
       order_comments,
       shipToDifferentAddress,
-      shipping_type,
+      service_type_id,
       total,
       totalPrice,
-      payment_method
+      payment_method,
+      order_info,
     } = this.state;
-    const {listCity, listDistrict, listWard} = this.props;
+    console.log('this.state: ', this.state);
+    console.log('render');
+    const {listCity, listDistrict, listWard, ship} = this.props;
     const tableHead = ['Product', 'Total'];
-
     const tableData = [
-      ['Total of product x ' + total, totalPrice + ' VND'],
-      ['Shipping and handling', 'Free shipping'],
-      ['Order total', totalPrice + ' VND'],
+      ['Total of product x ' + total, numberWithCommas(totalPrice) + ' VND'],
+      [
+        'Shipping and handling',
+        ship ? numberWithCommas(ship.total) + ' VNĐ' : '',
+      ],
+      [
+        'Order total',
+        ship ? numberWithCommas(totalPrice + ship.total) + ' VND' : '',
+      ],
     ];
-
+    const tableInfoHead = ['Tên sản phẩm', 'Giá bán', 'Số lượng', 'Tổng giá'];
+    const tableInfoData = order_info.map((item, index) => {
+      return [
+        item.name,
+        numberWithCommas(item.price) + ' VNĐ',
+        'x' + item.quantity,
+        numberWithCommas(item.quantity * item.price) + ' VNĐ',
+      ];
+    });
     return (
       <View style={styles.container}>
         <Text style={styles.textTitle}>Checkout Page</Text>
@@ -234,7 +435,7 @@ class CheckoutPage extends Component {
           <Text style={styles.nameTitle}>Customer Info</Text>
           {shipToDifferentAddress ? (
             <View>
-            {/* ---------------------- Ship custom address --------------------- */}
+              {/* ---------------------- Ship custom address --------------------- */}
               <Text
                 style={[
                   styles.text_footer,
@@ -390,7 +591,7 @@ class CheckoutPage extends Component {
             </View>
           ) : (
             <View>
-            {/* ------------------------ Ship default address ---------------------- */}
+              {/* ------------------------ Ship default address ---------------------- */}
               <Text
                 style={[
                   styles.text_footer,
@@ -490,11 +691,7 @@ class CheckoutPage extends Component {
             <Text style={styles.label}>Ship to a different address: </Text>
             <CheckBox
               value={shipToDifferentAddress}
-              onValueChange={() => {
-                this.setState({
-                  shipToDifferentAddress: !shipToDifferentAddress,
-                });
-              }}
+              onValueChange={val => this.shipDifferentAddress(val)}
               style={styles.checkbox}
             />
           </View>
@@ -534,24 +731,49 @@ class CheckoutPage extends Component {
                 marginTop: 20,
               },
             ]}>
-            Shipping types:
+            Đơn vị vận chuyển:
           </Text>
+          <View style={{flexDirection: 'row'}}>
+            <Image
+              style={{borderWidth: 1, borderRadius: 10, width: 140, height: 70}}
+              source={{
+                uri: 'https://static.ybox.vn/2020/6/1/1592759417126-ghn.png',
+              }}></Image>
+            <Text
+              style={{
+                textAlign: 'center',
+                textAlignVertical: 'center',
+                marginLeft: 40,
+                fontSize: 16,
+                fontWeight: 'bold',
+              }}>
+              : Giao Hàng Nhanh
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={{fontSize: 16, fontStyle: 'italic', width: 180}}>
+              {service_type_id === '2' ? SHIPPING_EXPRESS : SHIPPING_STANDARD}
+            </Text>
+            <Text style={{fontSize: 16}}>
+              {ship ? ': ' + numberWithCommas(ship.total) + ' VNĐ' : ''}
+            </Text>
+          </View>
           <View style={styles.shippingContainer}>
             <Text style={styles.labelShipping}>Express</Text>
             <CheckBox
               value={shipToDifferentAddress}
-              onValueChange={() => this.changeShipping(1)}
+              onValueChange={() => this.changeShipping('2')}
               style={styles.checkbox}
-              value={shipping_type === 1 ? true : false}
+              value={service_type_id === '2' ? true : false}
             />
             <Text style={[styles.labelShipping, {marginLeft: 10}]}>
               Standard
             </Text>
             <CheckBox
               value={shipToDifferentAddress}
-              onValueChange={() => this.changeShipping(2)}
+              onValueChange={() => this.changeShipping('1')}
               style={styles.checkbox}
-              value={shipping_type === 2 ? true : false}
+              value={service_type_id === '1' ? true : false}
             />
           </View>
           {/* ----------------------------------------------------- */}
@@ -562,7 +784,7 @@ class CheckoutPage extends Component {
               styles.text_footer,
               {
                 marginTop: 20,
-                marginBottom: 10
+                marginBottom: 10,
               },
             ]}>
             Your Order:
@@ -570,13 +792,21 @@ class CheckoutPage extends Component {
 
           <Table borderStyle={{borderWidth: 2, borderColor: '#1e88e5'}}>
             <Row
+              data={tableInfoHead}
+              style={{height: 60, backgroundColor: '#f1f8ff'}}
+              textStyle={{margin: 6, fontWeight: 'bold', fontSize: 16}}
+            />
+            <Rows data={tableInfoData} textStyle={{margin: 6}} />
+          </Table>
+          <View style={{height: 20}}></View>
+          <Table borderStyle={{borderWidth: 2, borderColor: '#1e88e5'}}>
+            <Row
               data={tableHead}
               style={{height: 40, backgroundColor: '#f1f8ff'}}
-              textStyle={{margin: 6, fontWeight: 'bold', fontSize:16}}
+              textStyle={{margin: 6, fontWeight: 'bold', fontSize: 16}}
             />
             <Rows data={tableData} textStyle={{margin: 6}} />
           </Table>
-
           {/* ---------------------------------------------------- */}
 
           {/* ------------------- Shipping method ---------------- */}
@@ -585,10 +815,10 @@ class CheckoutPage extends Component {
               styles.text_footer,
               {
                 marginTop: 20,
-                marginBottom: 10
+                marginBottom: 10,
               },
             ]}>
-            Shipping Methods:
+            Payment Methods:
           </Text>
 
           <View style={styles.shippingContainer}>
@@ -599,9 +829,7 @@ class CheckoutPage extends Component {
               style={styles.checkbox}
               value={payment_method === 'local' ? true : false}
             />
-            <Text style={[styles.labelShipping, {marginLeft: 20}]}>
-              PayPal
-            </Text>
+            <Text style={[styles.labelShipping, {marginLeft: 20}]}>PayPal</Text>
             <CheckBox
               value={shipToDifferentAddress}
               onValueChange={() => this.changePaymentMethod('paypal')}
@@ -609,6 +837,46 @@ class CheckoutPage extends Component {
               value={payment_method === 'paypal' ? true : false}
             />
           </View>
+
+          <Modal
+            visible={this.state.showModal}
+            onRequestClose={() => this.setState({showModal: false})}>
+            <WebView
+              source={{uri: `${API_ENDPOINT_AUTH}/paypal?total=${2}`}}
+              onNavigationStateChange={data => this.handleResponse(data)}
+              injectedJavaScript={`document.f1.submit()`}
+            />
+          </Modal>
+          {payment_method === 'paypal' ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 10,
+              }}>
+              <TouchableOpacity
+                style={{
+                  width: 300,
+                  height: 50,
+                  backgroundColor: '#ffc439',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 10,
+                }}
+                onPress={() => this.setState({showModal: true})}>
+                <Image
+                  style={{width: 100, height: 40}}
+                  source={{
+                    uri:
+                      'https://lh3.googleusercontent.com/proxy/_Kv4UvVVjBMbWm4dUNu0rJlw8kQSM6TzrPp6iQdawytOLR_G1mriHqo7EAclgfHIn5qSAEco9HG0WO1sr7m50Od3ll9aHwRBBbNvNx4jLLgh2-vdE8cpm1LiPF4',
+                  }}></Image>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <></>
+          )}
+
           {/* ---------------------------------------------------- */}
           <View style={styles.textPrivate}>
             <Text style={styles.color_textPrivate}>
@@ -654,6 +922,7 @@ const mapStateToProps = state => {
     listDistrict: state.address.district,
     listWard: state.address.ward,
     authInfo: state.auth.detail,
+    ship: state.address.ship,
   };
 };
 
@@ -682,7 +951,10 @@ const mapDispatchToProps = dispatch => {
     },
     onClearCart: () => {
       dispatch(ProductsActions.onClearCart());
-    }
+    },
+    onCalculateShipping: payload => {
+      dispatch(AddressActions.onCalculateShipping(payload));
+    },
   };
 };
 
@@ -809,9 +1081,9 @@ const styles = StyleSheet.create({
     marginBottom: -5,
   },
   label: {
-    margin: 0,
     fontSize: 18,
-    fontWeight: 'bold',
+    color: '#05375a',
+    fontStyle: 'italic',
   },
   //Modal change password
   button: {

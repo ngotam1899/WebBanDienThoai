@@ -27,6 +27,7 @@ function* handleGetListDistrict({payload}) {
 
 function* handleGetListWard({payload}) {
   try {
+    console.log("get ==== ",payload)
     const result = yield call(getWardByCityAndDistrict,payload.cityID,payload.districtID );
     const data = get(result, "data");
     if (data.code !== 200) throw data;

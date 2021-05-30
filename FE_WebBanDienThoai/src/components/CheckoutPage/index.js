@@ -141,7 +141,6 @@ class CheckoutPage extends Component {
       cityID: value,
       shipping_city: options[selectedIndex].text,
       shipping_district: "",
-
     })
     onGetListDistrict({province_id: event.target.value });
   }

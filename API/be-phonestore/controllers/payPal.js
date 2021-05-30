@@ -9,21 +9,20 @@ paypal.configure({
 });
 
 const getPayPal = async(req, res, next) => {
-  const {total} = req.body;
   var create_payment_json = {
     intent: "sale",
     payer: {
       payment_method: "paypal"
     },
     redirect_urls: {
-      return_url: `${process.env.URL}/paypal/success`,
-      cancel_url: `${process.env.URL}/paypal/cancel`
+      return_url: `http://192.168.1.13:3000/paypal/success`,
+      cancel_url: `http://192.168.1.13:3000/paypal/cancel`
     },
     transactions: [
       {
         amount: {
           currency: "USD",
-          total
+          total: req.query.total
         },
         description: "This is the payment description."
       }

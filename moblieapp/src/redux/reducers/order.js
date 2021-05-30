@@ -10,7 +10,6 @@ const init = {
 
 
 export default function(state = init, action) {
-  console.log('action: ',action)
   switch (action.type) {
     case OrdersActionsTypes.CREATE:
       return {...state};

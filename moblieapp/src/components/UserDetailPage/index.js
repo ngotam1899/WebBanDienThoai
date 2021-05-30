@@ -179,7 +179,6 @@ class UserDetailPage extends Component {
       image,
     } = this.state;
     /* Xử lý ảnh */
-    console.log('data: ', image);
     var data = {
       firstname,
       lastname,

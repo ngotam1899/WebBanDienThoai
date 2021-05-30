@@ -5,6 +5,7 @@ const init = {
   city: null,
   district: null,
   ward: null,
+  ship: null
 };
 
 export default function(state = init, action) {
