@@ -41,17 +41,17 @@ app.use(
 );
 
 // @For tester
-mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
+/* mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
 	useCreateIndex: true,
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false
 })
 .then(() => console.log('Connected to MongoDB!'))
-.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`)) 
+.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`)) */ 
 
 //@For dev
-/* mongoose
+mongoose
 .connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
  		useCreateIndex: true,
  		useNewUrlParser: true,
@@ -59,7 +59,7 @@ mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongo
  		useFindAndModify: false
  	})
  	.then(() => console.log('Connected to MongoDB!'))
- 	.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`)); */
+ 	.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`));
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_NAME,

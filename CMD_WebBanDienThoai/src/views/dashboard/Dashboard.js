@@ -29,7 +29,7 @@ class Dashboard extends Component {
     const thisMonth = today.getMonth()+1 < 10 ? `0${today.getMonth() + 1}` : today.getMonth() + 1;
     this.state = {
       browse_from: `${today.getFullYear()}-01-01` ,
-      browse_to: `${today.getFullYear()}-${thisMonth}-${today.getDate()+1}`,
+      browse_to: `${today.getFullYear()}-${thisMonth}-${today.getDate()}`,
       year: today.getFullYear()
     }
   }

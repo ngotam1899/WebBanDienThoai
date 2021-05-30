@@ -252,7 +252,7 @@ export default [
   {
     _tag: 'CSidebarNavTitle',
     _children: ['Extras'],
-  },
+  },/*
   {
     _tag: 'CSidebarNavDropdown',
     name: 'Pages',

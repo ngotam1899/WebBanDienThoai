@@ -10,7 +10,6 @@ const MainChartExample = (attributes) => {
   var data1=[];
   const today = new Date();
   var months = today.getMonth();
-
   if(attributes.year===today.getFullYear()){
     months = today.getMonth()
   }

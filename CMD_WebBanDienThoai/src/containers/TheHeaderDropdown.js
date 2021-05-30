@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 /* eslint-disable */
 import {
   CBadge,
@@ -9,9 +9,31 @@ import {
   CImg
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import {connect} from 'react-redux';
+import { compose } from "redux";
+import { withRouter } from 'react-router-dom'
 /* eslint-disable */
-const TheHeaderDropdown = () => {
-  return (
+
+// @Actions
+import AuthorizationActions from '../redux/actions/auth'
+
+class TheHeaderDropdown extends Component {
+  componentDidMount(){
+    const {onGetProfile} = this.props;
+    const token = localStorage.getItem('AUTH_USER')
+    onGetProfile(null,token);
+  }
+
+  onLogout = () =>{
+    const {onLogout, history} = this.props;
+    localStorage.removeItem('AUTH_USER')
+    onLogout()
+    history.push('/login');
+  }
+
+  render(){
+    const { userInfo, isLogin } = this.props;
+    return (
     <CDropdown
       inNav
       className="c-header-nav-items mx-2"
@@ -26,8 +48,8 @@ const TheHeaderDropdown = () => {
           />
         </div>
       </CDropdownToggle>
-      {/* <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownItem
+      <CDropdownMenu className="pt-0" placement="bottom-end">
+        {/* <CDropdownItem
           header
           tag="div"
           color="light"
@@ -80,14 +102,36 @@ const TheHeaderDropdown = () => {
           Projects
           <CBadge color="primary" className="mfs-auto">42</CBadge>
         </CDropdownItem>
-        <CDropdownItem divider />
-        <CDropdownItem>
-          <CIcon name="cil-lock-locked" className="mfe-2" />
+        <CDropdownItem divider />*/}
+        <CDropdownItem onClick={()=> this.onLogout()}>
+          <CIcon name="cil-lock-locked" className="mfe-2"/>
           Lock Account
         </CDropdownItem>
-      </CDropdownMenu> */}
+      </CDropdownMenu>
     </CDropdown>
-  )
+    )
+  }
+}
+const mapStateToProps = (state) =>{
+  return {
+    userInfo: state.auth.detail,
+    isLogin: state.auth.loggedIn,
+  }
 }
 
-export default TheHeaderDropdown
+const mapDispatchToProps =(dispatch)=> {
+	return {
+		onGetProfile : (data, headers) =>{
+			dispatch(AuthorizationActions.onGetProfile(data, headers))
+    },
+    onLogout : ()=>{
+      dispatch(AuthorizationActions.onLogout())
+    },
+	}
+};
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+export default compose(
+  withConnect,
+  withRouter
+)(TheHeaderDropdown)

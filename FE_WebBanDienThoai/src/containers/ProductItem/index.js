@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { compose } from "redux";
-import { withRouter } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 // @Components
 import Rating from 'react-rating'
