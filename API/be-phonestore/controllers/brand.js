@@ -1,5 +1,6 @@
 const Brand = require('../models/Brand');
 const Product = require('../models/Product');
+const Category = require('../models/Category');
 const Image = require('../models/Image');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -19,6 +20,22 @@ const getAllBrand = async (req, res, next) => {
 		if (req.query.category != undefined && req.query.category != '') {
 			if (Validator.isValidObjId(req.query.category)) {
 				condition['category'] = ObjectId(req.query.category);
+				/* Filter area */
+				const categoryFound = await Category.findById(req.query.category);
+				var filter = categoryFound.filter;
+				if(filter.length > 0){
+					var specCondition = []
+					filter.map(item => {
+						if (req.query[`${item.query}`] != undefined && req.query[`${item.query}`] != '') {
+							if (Validator.isValidObjId(req.query[`${item.query}`])) {
+								var value = req.query[`${item.query}`]
+								specCondition.push({specifications: { $elemMatch: { value }}})
+								condition['$and']= specCondition;
+							}
+						}
+					})
+				}
+				/* Filter area */
 			}
 		}
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
@@ -34,9 +51,12 @@ const getAllBrand = async (req, res, next) => {
 					'count': { '$sum': 1 }
 				}
 			},
+			{
+				'$sort': { 'count': -1, '_id': -1 }
+			}
 		];
 		const count = await Product.aggregate(pipeline);
-		await Brand.populate(count, {path: "_id", select: ['name']});
+		await Brand.populate(count, {path: "_id", select: ['name', 'image'], populate: {path: 'image', select: 'public_url'}});
 		const brands = await Brand.find().populate({path: 'image', select: 'public_url'});
 		return res.status(200).json({ success: true, code: 200, message: '', count, brands });
 	} catch (error) {

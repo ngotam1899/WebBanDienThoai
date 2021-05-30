@@ -9,60 +9,75 @@ paypal.configure({
 });
 
 const getPayPal = async(req, res, next) => {
-  var create_payment_json = {
-    intent: "sale",
-    payer: {
-      payment_method: "paypal"
-    },
-    redirect_urls: {
-      return_url: `http://192.168.1.13:3000/paypal/success`,
-      cancel_url: `http://192.168.1.13:3000/paypal/cancel`
-    },
-    transactions: [
-      {
-        amount: {
-          currency: "USD",
-          total: req.query.total
-        },
-        description: "This is the payment description."
-      }
-    ]
-  };
+  try {
+    var create_payment_json = {
+      intent: "sale",
+      payer: {
+        payment_method: "paypal"
+      },
+      redirect_urls: {
+        return_url: `http://192.168.1.13:3000/paypal/success`,
+        cancel_url: `http://192.168.1.13:3000/paypal/cancel`
+      },
+      transactions: [
+        {
+          amount: {
+            currency: "USD",
+            total: req.query.total
+          },
+          description: "This is the payment description."
+        }
+      ]
+    };
 
-  paypal.payment.create(create_payment_json, function(error, payment) {
-    if (error) {
-      throw error;
-    } else {
-      console.log("Create Payment Response");
-      console.log(payment);
-      res.redirect(payment.links[1].href);
-    }
-  });
+    paypal.payment.create(create_payment_json, function(error, payment) {
+      if (error) {
+        throw error;
+      } else {
+        console.log("Create Payment Response");
+        console.log(payment);
+        res.redirect(payment.links[1].href);
+      }
+    });
+  }
+  catch(error){
+    next(error)
+  }
 }
 
 const successPayPal = async(req, res, next) => {
-  var PayerID = req.query.PayerID;
-  var paymentId = req.query.paymentId;
-  var execute_payment_json = {
-    payer_id: PayerID
-  };
-  paypal.payment.execute(paymentId, execute_payment_json, function(
-    error,
-    payment
-  ) {
-    if (error) {
-      console.log(error.response);
-      throw error;
-    } else {
-      console.log("Get Payment Response");
-      console.log(JSON.stringify(payment));
-      res.render("success");
-    }
-  });
+  try {
+    var PayerID = req.query.PayerID;
+    var paymentId = req.query.paymentId;
+    var execute_payment_json = {
+      payer_id: PayerID
+    };
+    paypal.payment.execute(paymentId, execute_payment_json, function(
+      error,
+      payment
+    ) {
+      if (error) {
+        console.log(error.response);
+        throw error;
+      } else {
+        console.log("Get Payment Response");
+        console.log(JSON.stringify(payment));
+        res.render("success");
+      }
+    });
+  }
+  catch(error){
+    next(error)
+  }
 }
 
 const cancelPayPal = async(req, res, next) => {
-  res.render("cancel");
+  try {
+    res.render("cancel");
+  }
+  catch {
+    next(error)
+  }
 }
 
 module.exports = {

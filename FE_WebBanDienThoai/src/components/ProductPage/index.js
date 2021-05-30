@@ -62,7 +62,7 @@ class ProductPage extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {location, category} = this.props
+    const {location, category, onGetList, onGetListBrand} = this.props
     if (prevProps.location.search !== location.search) {
       const filters = getFilterParams(location.search);
       const { filter } = this.state;
@@ -70,7 +70,8 @@ class ProductPage extends Component {
         ...filter,
         ...filters
       };
-      this.props.onGetList(params);
+      onGetList(params);
+      onGetListBrand(params);
     }
     if(prevProps.category !== category && category){
       document.title = `${category.name} | ${category.name_en}`
@@ -131,7 +132,7 @@ class ProductPage extends Component {
         </div>}
         <div className="col-12 col-md-3">
           <div className="row">
-            <div className="col-6 col-md-12 mb-4">
+            <div className="col-6 col-md-12 mb-3">
               <div className="shadow-sm rounded">
                 <div className="px-3 py-2">
                   <h3 className="mb-1">{t('shop.distance.label')}</h3>
@@ -148,20 +149,20 @@ class ProductPage extends Component {
             </div>
             {category && category.filter.map(item=>{
               return (
-                <div className="col-6 col-md-12" key={item._id._id}>
+                <div className="col-6 col-md-12 mb-3" key={item._id._id}>
                   <div className="shadow-sm rounded">
                     <div className="px-3 py-2">
                       <h3 className="mb-1">{item._id.name}</h3>
                       <div className="mb-2 border-bottom"></div>
                       <ul className="pl-0">
                         <li className="form-check">
-                          <input type="radio" className="form-check-input" value={null} id="all" name={item.query} onChange={this.onSetFilter} defaultChecked/>
-                          <label htmlFor="all" className="form-check-label">{t('shop.all.radio-button')}</label>
+                          <input type="radio" checked={(filter[`${item.query}`] === "" || filter[`${item.query}`] === undefined) && "checked"} className="form-check-input" value="" id={item.query} name={item.query} onChange={this.onSetFilter}/>
+                          <label htmlFor={item.query} className="form-check-label">{t('shop.all.radio-button')}</label>
                         </li>
                         {item._id.selections.map(selector =>{
                           return (
                           <li className="form-check" key={selector._id}>
-                            <input type="radio" value={selector._id} id={selector._id} name={item.query} className="form-check-input" onChange={this.onSetFilter} />
+                            <input type="radio" checked={filter[`${item.query}`] === selector._id && "checked"} value={selector._id} id={selector._id} name={item.query} className="form-check-input" onChange={this.onSetFilter} />
                             <label htmlFor={selector._id} className="form-check-label">{selector.name}</label>
                           </li>
                           )
@@ -176,15 +177,21 @@ class ProductPage extends Component {
         </div>
         <div className="col-md-9 col-12">
           <div className="row">
-            <div className="col-6 col-md-12 ">
+            <div className="col-12">
+            <button type="button" 
+            className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-info text-dark my-2 mr-2 position-relative" : "rounded-pill shadow-sm bg-active text-dark my-2 mr-2 position-relative"} 
+            onClick={()=>this.onSetBrand(null)}>Độc quyền</button>
             {totalBrand && 
             totalBrand.map((brand, index) =>{
             return(
-              <button type="button" className="rounded-pill shadow-sm bg-active text-dark mr-2" key={index} onClick={()=>this.onSetBrand(brand._id._id)}>{brand._id.name} ({brand.count})</button>
+              <button type="button" 
+              className={filter.brand === brand._id._id ? "rounded-pill shadow-sm bg-info text-dark mr-2 my-2 position-relative" : "rounded-pill shadow-sm bg-active text-dark mr-2 my-2 position-relative"} 
+              key={index} onClick={()=>this.onSetBrand(brand._id._id)}>
+                <img style={{height: "20px"}} src={brand._id.image.public_url}/>
+                <span className="product-count">{brand.count}</span>
+              </button>
             )})}
             </div>
-            
-            
           </div>
           <div className="row">
             <div className="col-6">

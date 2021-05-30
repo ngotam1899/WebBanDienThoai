@@ -40,8 +40,8 @@ const getAllSpecification = async(req, res, next) => {
 }
 const addSpecification = async(req, res, next) => {
   const { name, selections } = req.body;
+  var selectArray=[];
   if(selections.length > 0){
-    var selectArray=[];
     for (let item of selections){
       const select = new Selector({name : item.name});
       await select.save();

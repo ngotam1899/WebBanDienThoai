@@ -33,7 +33,7 @@ class SpecificationDetail extends Component {
       onUpdate(id, {name, selections});
     }
     else {
-      onCreate(name, selections);
+      onCreate({name, selections});
     }
   }
 

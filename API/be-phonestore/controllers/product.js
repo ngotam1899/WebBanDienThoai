@@ -28,6 +28,22 @@ const getAllProduct = async (req, res, next) => {
 		if (req.query.category != undefined && req.query.category != '') {
 			if (Validator.isValidObjId(req.query.category)) {
 				condition.category = req.query.category;
+				/* Filter area */
+				const categoryFound = await Category.findById(req.query.category);
+				var filter = categoryFound.filter;
+				if(filter.length > 0){
+					var specCondition = []
+					filter.map(item => {
+						if (req.query[`${item.query}`] != undefined && req.query[`${item.query}`] != '') {
+							if (Validator.isValidObjId(req.query[`${item.query}`])) {
+								var value = req.query[`${item.query}`]
+								specCondition.push({specifications: { $elemMatch: { value }}})
+								condition.$and= specCondition;
+							}
+						}
+					})
+				}
+				/* Filter area */
 			}
 		}
 		let limit = 5;
@@ -58,18 +74,6 @@ const getAllProduct = async (req, res, next) => {
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
 			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
 		}
-		/* Filter area */
-		const filter_query = ["os", "price", "brand"]
-		filter_query.map(item => {
-			if (req.query[`${item}`] != undefined && req.query[`${item}`] != '') {
-				if (Validator.isValidObjId(req.query[`${item}`])) {
-					var value = req.query[`${item}`]
-					condition.specifications = { $elemMatch : { value }};
-				}
-			}
-		})
-		
-		/* Filter area */
 		let products;
 		products = await Product.find(condition, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
 			.populate({ path: 'bigimage', select: 'public_url' })

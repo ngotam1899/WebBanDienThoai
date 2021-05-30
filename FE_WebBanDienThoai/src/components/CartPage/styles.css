@@ -126,8 +126,6 @@ div.cart-collaterals ul.products li.product .price ins {
 }
 
 input[type="button"], button {
-    background: none repeat scroll 0 0 #5a88ca;
-    border: medium none;
-    color: #fff;
+    border: none;
     padding: 11px 20px;
 }
