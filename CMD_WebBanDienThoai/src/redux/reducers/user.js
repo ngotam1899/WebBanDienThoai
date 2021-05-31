@@ -74,7 +74,7 @@ export default function(state = init, action) {
       };
 
     case UsersActionTypes.CREATE:
-    case UsersActionTypes.UPDATE_IMAGE:
+    case UsersActionTypes.UPDATE:
     case UsersActionTypes.DELETE:
       return {
         ...state,
@@ -82,13 +82,13 @@ export default function(state = init, action) {
       };
 
     case UsersActionTypes.CREATE_ERROR:
-    case UsersActionTypes.UPDATE_IMAGE_ERROR:
+    case UsersActionTypes.UPDATE_ERROR:
     case UsersActionTypes.DELETE_ERROR:
       return {
         ...state,
         processing: false,
       };
-    case UsersActionTypes.UPDATE_IMAGE_SUCCESS:
+    case UsersActionTypes.UPDATE_SUCCESS:
       return {
         ...state,
         processing: true,

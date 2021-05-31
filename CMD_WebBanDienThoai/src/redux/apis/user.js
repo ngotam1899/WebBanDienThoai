@@ -20,6 +20,11 @@ export const getDetailUser  = (userId) =>{
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/${userId}`);
 }
 
+// http://localhost:3000/users/:id  METHOD = PUT
+export const updateUser  = (data, userId) =>{
+  return axiosService.put(`${API_ENDPOINT_AUTH}${url}/${userId}`, data);
+}
+
 // http://localhost:3000/users/:id  METHOD = DELETE
 export const deleteUser  = (userId) =>{
     return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${userId}`);

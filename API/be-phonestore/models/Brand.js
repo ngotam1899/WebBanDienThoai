@@ -13,7 +13,7 @@ const BrandSchema = new Schema({
 })
 
 BrandSchema.pre('findOneAndDelete', function(next) {
-	mongoose.model('Product').remove({ brand: this._conditions._id }, next);
+	mongoose.model('Product').deleteOne({ brand: this._conditions._id }, next);
 });
 
 const Brand = mongoose.model('Brand', BrandSchema)

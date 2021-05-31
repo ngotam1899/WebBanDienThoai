@@ -11,8 +11,9 @@ import {
 } from '@coreui/react'
 import UserDetail from './UserDetail'
 import UsersActions from "../../redux/actions/user";
-
-const fields = ['first name', 'last name','phone','address','email',{ key: 'actions', _style: { width: '15%'} }]
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+const fields = ['first name', 'last name','phone','email', 'role',{ key: 'actions', _style: { width: '20%'} }]
 
 class UserList extends Component {
   constructor(props) {
@@ -31,6 +32,32 @@ class UserList extends Component {
     this.setState({
       large
     })
+  }
+
+  onSubmit = (id, role) => {
+    confirmAlert({
+      title: 'Thông báo',
+      message: `Bạn có thực sự muốn thay đổi vai trò người dùng này?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.onChangeRole(id, role)
+        },
+        {
+          label: 'No'
+        }
+      ]
+    });
+  };
+
+  onChangeRole = (id, role)=>{
+    const {onUpdate} = this.props;
+    if(role === "1"){
+      onUpdate(id, { role : 0 });
+    }
+    else{
+      onUpdate(id, { role : 1 });
+    }
   }
 
   handleListOrder = (id) =>{
@@ -86,11 +113,11 @@ class UserList extends Component {
                     'phone': (item) => (
                       <td>{item.phonenumber}</td>
                     ),
-                    'address': (item) => (
-                      <td>{item.address}</td>
-                    ),
                     'email': (item) => (
                       <td>{item.email}</td>
+                    ),
+                    'role': (item) => (
+                      <td>{item.role ==="0" ? "User, Admin" : "User"}</td>
                     ),
                     'actions':
                     (item)=>(
@@ -100,16 +127,19 @@ class UserList extends Component {
                           className="mr-1 mb-1 mb-xl-0"
                           color="success"
                         >
-                          Danh sách
+                          Đơn mua
+                        </CButton>
+                        <CButton
+                          onClick={() => this.onSubmit(item._id, item.role)}
+                          className={item.role === "1" ? "mr-1 mb-1 mb-xl-0 bg-orange" : "mr-1 mb-1 mb-xl-0 bg-purple"}
+                        >
+                          {item.role === "1" ? "Nâng cấp" : "Hạ cấp"}
                         </CButton>
                       </td>)
                   }}
                 />
-                {(userDetail && large) && <UserDetail large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
-
-                {(!userDetail && large) && <UserDetail large={large} onClose={this.onClose} onClearDetail={onClearDetail}
-                onSubmit={this.onSubmit}/>}
+                {(userDetail && large) && <UserDetail large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}/>}
+                {(!userDetail && large) && <UserDetail large={large} onClose={this.onClose} onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -130,6 +160,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onGetList: () => {
       dispatch(UsersActions.onGetList())
+    },
+    onUpdate: (id, params) => {
+      dispatch(UsersActions.onUpdate(id, params))
     },
     onClearState: () =>{
       dispatch(UsersActions.onClearState())

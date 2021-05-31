@@ -52,50 +52,6 @@ const upload = async (file, Schema) => {
 	} catch (error) {}
 };
 
-/* const uploadImageUser = async (req, res, next) => {
-	try {
-		if (!req.files || Object.keys(req.files).length === 0)
-			return res.status(200).json({ success: false, code: 400, message: 'No file were uploaded' });
-		const fileimage = req.files.image;
-		if (fileimage.length > 0) {
-			fileimage.forEach((element) => {
-				removeTmp(element);
-			});
-			return res.status(200).json({ success: false, code: 400, message: 'Can not upload multiple file' });
-		}
-		if (Validator.isValidFile(fileimage) == false) {
-			await removeTmp(fileimage);
-			return res.status(200).json({ success: false, code: 400, message: 'The format file is incorrect!' });
-		}
-		const image = await upload(fileimage, Image);
-		return res.status(200).json({ success: true, code: 200, message: '', image: image });
-	} catch (error) {
-		next(error);
-	}
-};
-
-const uploadImageBrand = async (req, res, next) => {
-	try {
-		if (!req.files || Object.keys(req.files).length === 0)
-			return res.status(200).json({ success: false, code: 400, message: 'No file were uploaded' });
-		const fileimage = req.files.image;
-		if (fileimage.length > 0) {
-			fileimage.forEach((element) => {
-				removeTmp(element);
-			});
-			return res.status(200).json({ success: false, code: 400, message: 'Can not upload multiple file' });
-		}
-		if (Validator.isValidFile(fileimage) == false) {
-			await removeTmp(fileimage);
-			return res.status(200).json({ success: false, code: 400, message: 'The format file is incorrect!' });
-		}
-		const image = await upload(fileimage, Image);
-		return res.status(200).json({ success: true, code: 200, message: '', image: image });
-	} catch (error) {
-		next(error);
-	}
-}; */
-
 const removeTmp = async (path) => {
 	try {
 		fs.unlink(path, (err) => {

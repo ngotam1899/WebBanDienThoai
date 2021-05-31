@@ -142,14 +142,14 @@ class ProductList extends Component {
     })
     onClearDetail();
   }
-  submit = (id) => {
+  onSubmit = (id, request, active) => {
     confirmAlert({
       title: 'Thông báo',
-      message: 'Bạn có thực sự muốn xóa product này?',
+      message: `Bạn có thực sự muốn ${request} product này?`,
       buttons: [
         {
           label: 'Yes',
-          onClick: () => this.onDelete(id)
+          onClick: () => {request === "xóa" ? this.onDelete(id) : this.onActivate(id, active)}
         },
         {
           label: 'No'
@@ -281,7 +281,7 @@ class ProductList extends Component {
                     (item)=>(
                       <td>
                         <CButton
-                          onClick={() => this.onActivate(item._id, item.active)}
+                          onClick={() => this.onSubmit(item._id, "đổi trạng thái", item.active)}
                           className={item.active ? "mr-1 mb-1 mb-xl-0 bg-primary text-white" : "mr-1 mb-1 mb-xl-0 bg-success text-white"}
                         >
                           {item.active ? "Deactivate" : "Activate"}
@@ -294,7 +294,7 @@ class ProductList extends Component {
                           Sửa
                         </CButton>
                         <CButton
-                          onClick={() => this.submit(item._id)}
+                          onClick={() => this.onSubmit(item._id, "xóa", null)}
                           className="mr-1"
                           color="danger"
                         >

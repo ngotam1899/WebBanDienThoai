@@ -31,7 +31,7 @@ const CategorySchema = new Schema({
 })
 
 CategorySchema.pre('findOneAndDelete', function(next) {
-	mongoose.model('Product').remove({ category: this._conditions._id }, next);
+	mongoose.model('Product').deleteOne({ category: this._conditions._id }, next);
 });
 
 const Category = mongoose.model('Category', CategorySchema)
