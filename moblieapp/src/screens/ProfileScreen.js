@@ -95,7 +95,7 @@ class ProfileScreen extends Component {
           )}
           {/*  */}
           <View style={styles.divider} />
-          <ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" />
+          <TouchableOpacity onPress={() => navigation.navigate('Orders')}><ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" /></TouchableOpacity>
           <ProfileItem icon="cart-outline" name="Sản phẩm đã mua" />
           <ProfileItem icon="eye-outline" name="Sản phẩm đã xem" />
           <ProfileItem icon="heart-outline" name="Sản phẩm yêu thích" />

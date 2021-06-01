@@ -1,5 +1,4 @@
 import { OrdersActionsTypes } from "../actions/order";
-import { toastError, toastSuccess } from '../../utils/toastHelper';
 import {ToastAndroid} from 'react-native';
 
 const init = {
@@ -21,8 +20,11 @@ export default function(state = init, action) {
       );
       return {...state};
     case OrdersActionsTypes.CREATE_ERROR:
-      var { message } = action.payload;
-      toastError(message)
+      ToastAndroid.showWithGravity(
+        "Tạo đơn hàng thất bại",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case OrdersActionsTypes.SEND_CONFIRM_EMAIL:
       return {...state};
@@ -52,7 +54,11 @@ export default function(state = init, action) {
     case OrdersActionsTypes.CONFIRM_ORDER_ERROR:
       /* eslint-disable */
       var { message } = action.payload;
-      toastError(message)
+      ToastAndroid.showWithGravity(
+        "Xác nhận đơn hàng thất bại",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       /* eslint-disable */
       return {...state};
     case OrdersActionsTypes.GET_LIST:
@@ -88,7 +94,11 @@ export default function(state = init, action) {
     case OrdersActionsTypes.UPDATE_ERROR:
       /* eslint-disable */
       var { message } = action.payload;
-      toastError(message)
+      ToastAndroid.showWithGravity(
+        "Cập nhật thất bại",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       /* eslint-disable */
       return {
         ...state,

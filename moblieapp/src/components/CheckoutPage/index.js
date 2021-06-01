@@ -70,6 +70,7 @@ class CheckoutPage extends Component {
       service_type_id: '1',
       showModal: false,
       status: 'Pending',
+      shipPrice: 0,
     };
   }
   handleResponse = data => {
@@ -154,7 +155,6 @@ class CheckoutPage extends Component {
         this.setState({
           districtID,
         });
-        console.log('WillRec: ', service_type_id);
         this.calculateShipping(
           service_type_id,
           districtID,
@@ -187,7 +187,7 @@ class CheckoutPage extends Component {
     if (shipToDifferentAddress === true) {
       data = {
         order_list,
-        total_price: totalPrice + ship.total,
+        total_price: ship ? totalPrice + ship.total : totalPrice,
         total_quantity: total,
         shipping_phonenumber: phonenumber,
         email: authInfo.email,
@@ -200,7 +200,7 @@ class CheckoutPage extends Component {
     } else {
       data = {
         order_list,
-        total_price: totalPrice + ship.total,
+        total_price: ship ? totalPrice + ship.total : totalPrice,
         total_quantity: total,
         shipping_phonenumber: authInfo.phonenumber,
         email: authInfo.email,
@@ -211,6 +211,7 @@ class CheckoutPage extends Component {
         is_paid: false,
       };
     }
+    console.log('checkout: ',data)
     onCreateAnOrder(data);
   }
 
@@ -404,8 +405,6 @@ class CheckoutPage extends Component {
       payment_method,
       order_info,
     } = this.state;
-    console.log('this.state: ', this.state);
-    console.log('render');
     const {listCity, listDistrict, listWard, ship} = this.props;
     const tableHead = ['Product', 'Total'];
     const tableData = [

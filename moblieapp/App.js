@@ -12,7 +12,8 @@ import NotificationScreen from './src/screens/NotificationScreen';
 import SignUpPage from './src/components/SignUpPage';
 import SignInPage from './src/components/SignInPage';
 import UserDetailPage from './src/components/UserDetailPage';
-import CheckoutPage from './src/components/CheckoutPage'
+import CheckoutPage from './src/components/CheckoutPage';
+import OrdersPage from './src/components/OrdersPage';
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -24,17 +25,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 const HomeStack = createStackNavigator();
 import {CartProvider} from './src/context/Cart';
 
-
-getTabBarVisibility = route => {
-  const routeName = route.state
-    ? route.state.routes[route.state.index].name
-    : '';
-
-  if (routeName === 'SignIn' || routeName === 'SignUp') {
-    return false;
-  }
-  return true;
-};
 
 function HomeStackScreen() {
   return (
@@ -50,24 +40,51 @@ function HomeStackScreen() {
       <HomeStack.Screen name="SignUp" component={SignUpPage} />
       <HomeStack.Screen name="SignIn" component={SignInPage} />
       <HomeStack.Screen name="Checkout" component={CheckoutPage} />
-      <HomeStack.Screen name="UserDetail" component={UserDetailPage} 
-      options={{
-        headerShown: true, 
-        title: 'TRANG CÁ NHÂN',
-        headerStyle: {
+      <HomeStack.Screen
+        name="Orders"
+        component={OrdersPage}
+        options={{
+          headerShown: true,
+          title: 'TRANG ĐƠN HÀNG',
+          headerStyle: {
             backgroundColor: '#1e88e5',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
-            fontSize: 20
+            fontSize: 16,
           },
-      }} />
+        }}
+      />
+      <HomeStack.Screen
+        name="UserDetail"
+        component={UserDetailPage}
+        options={{
+          headerShown: true,
+          title: 'TRANG CÁ NHÂN',
+          headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        }}
+      />
     </HomeStack.Navigator>
   );
 }
 
 const App = () => {
-
+  getTabBarVisibility = route => {
+    const routeName = route.state
+      ? route.state.routes[route.state.index].name
+      : '';
+  
+    if (routeName === 'SignIn' || routeName === 'SignUp') {
+      return false;
+    }
+    return true;
+  };
   return (
     <Provider store={store}>
       <CartProvider>
@@ -92,7 +109,7 @@ const App = () => {
               name="Notification"
               component={NotificationScreen}
               options={{
-                tabBarLabel: 'Thông báo',
+                title: 'Thông báo',
                 tabBarIcon: ({color}) => (
                   <MaterialIcons name="notifications" size={26} color={color} />
                 ),

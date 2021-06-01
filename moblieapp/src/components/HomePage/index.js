@@ -10,20 +10,24 @@ import Header from '../HeaderComponent';
 import ProductsSelectors from '../../redux/selectors/products';
 import ProductsActions from '../../redux/actions/products';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AuthorizationActions from '../../redux/actions/auth';
+import {AsyncStorage} from 'react-native';
+
 const section_banner = require('../../assets/section_banner.png');
-
-
 
 class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {movieName: '', releaseYear: ''};
   }
-  componentDidMount() {
+  componentDidMount = async () => {
     this.props.onGetList();
     this.props.onGetBestSeller();
     this.props.onGetFavorite();
     this.props.onGetNewest();
+    const token = await AsyncStorage.getItem('AUTH_USER').then(data => {});
+    const {onGetProfile} = this.props;
+    onGetProfile(null, token);
   }
   render() {
     const {listProducts, bestSeller, newest, favorite, navigation} = this.props;
@@ -192,6 +196,9 @@ const mapDispatchToProps = dispatch => {
     },
     onGetNewest: () => {
       dispatch(ProductsActions.onGetNewest());
+    },
+    onGetProfile: (data, headers) => {
+      dispatch(AuthorizationActions.onGetProfile(data, headers));
     },
   };
 };

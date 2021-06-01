@@ -287,7 +287,7 @@ class UserDetailPage extends Component {
       isSecureTextEntryNew,
       isSecureTextEntryConfirm,
     } = this.state;
-    const {listCity, listDistrict, listWard, userInfo} = this.props;
+    const {listCity, listDistrict, listWard} = this.props;
     return (
       <View style={styles.container}>
         <ScrollView>
