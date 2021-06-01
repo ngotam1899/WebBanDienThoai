@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {Component} from 'react'
 import {
   CBadge,
   CDropdown,
@@ -6,48 +6,103 @@ import {
   CDropdownMenu,
   CDropdownToggle
 } from '@coreui/react'
+import { connect } from 'react-redux';
+import { compose } from "redux";
 import CIcon from '@coreui/icons-react'
 import io from 'socket.io-client';
+import { toastInfo } from '../utils/toastHelper';
+// @Actions
+import NotificationActions from '../redux/actions/notification'
 
+const ENDPOINT = 'http://localhost:3000';
+let socket = io(ENDPOINT);
 
+class TheHeaderDropdownNotif extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      itemsCount : 0,
+      email: ""
+    }
+  }
 
-const TheHeaderDropdownNotif = () => {
-  const [itemsCount, setItemsCount] = useState(5);
-  const ENDPOINT = 'http://localhost:3000';
-  let socket = io(ENDPOINT);
-/* eslint-disable */
-  useEffect(() => {
+  componentDidUpdate(prevProps, prevState){
+    const {itemsCount, email} = this.state;
+    const {onGetAllNotifications, totalNotification, userInfo} = this.props
+    if (userInfo !== prevProps.userInfo && userInfo) {
+      var admin = userInfo._id;
+      onGetAllNotifications({admin, limit: 5, page: 0})
+    }
+    if (totalNotification !== prevProps.totalNotification && totalNotification) {
+      this.setState({itemsCount: totalNotification})
+    }
     socket.on('newOrder', res => {
-      setItemsCount(itemsCount+res.newOrders);
+      this.setState({itemsCount: itemsCount + res.newOrders, email: res.email});
     });
-  }, [itemsCount]);
-/* eslint-disable */
-  return (
-    <CDropdown
-      inNav
-      className="c-header-nav-item mx-2"
-    >
-      <CDropdownToggle className="c-header-nav-link" caret={false}>
-        <CIcon name="cil-bell"/>
-        <CBadge shape="pill" color="danger">{itemsCount}</CBadge>
-      </CDropdownToggle>
-      <CDropdownMenu  placement="bottom-end" className="pt-0">
-        <CDropdownItem
-          header
-          tag="div"
-          className="text-center"
-          color="light"
-        >
-          <strong>You have {itemsCount} notifications</strong>
-        </CDropdownItem>
-        <CDropdownItem><CIcon name="cil-user-follow" className="mr-2 text-success" /> New user registered</CDropdownItem>
-        <CDropdownItem><CIcon name="cil-user-unfollow" className="mr-2 text-danger" /> User deleted</CDropdownItem>
-        <CDropdownItem><CIcon name="cil-chart-pie" className="mr-2 text-info" /> Sales report is ready</CDropdownItem>
-        <CDropdownItem><CIcon name="cil-basket" className="mr-2 text-primary" /> New client</CDropdownItem>
-        <CDropdownItem><CIcon name="cil-speedometer" className="mr-2 text-warning" /> Server overloaded</CDropdownItem>
-      </CDropdownMenu>
-    </CDropdown>
-  )
+    if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
+      toastInfo(`${email} vừa xác thực đơn hàng`)
+      var admin = userInfo._id;
+      onGetAllNotifications({admin, limit: 5, page: 0})
+    }
+  }
+
+  onReadAllNotification = () =>{
+    const {onUpdateAllNotifications} = this.props;
+    onUpdateAllNotifications({user: null})
+    this.setState({itemsCount : 0})
+  }
+
+  render(){
+    const {itemsCount} = this.state;
+    const {listNotification} = this.props;
+    return (
+      <CDropdown
+        inNav
+        className="c-header-nav-item mx-2"
+      >
+        <CDropdownToggle className="c-header-nav-link" caret={false} onClick={()=>this.onReadAllNotification()}>
+          <CIcon name="cil-bell"/>
+          {itemsCount > 0 && <CBadge shape="pill" color="danger">{itemsCount}</CBadge>}
+        </CDropdownToggle>
+        <CDropdownMenu  placement="bottom-end" className="pt-0">
+          {listNotification
+          && listNotification.map((notification, index)=>{
+            return(
+            <CDropdownItem key={index} className="d-block">
+              <CIcon name="cil-basket" className="mr-2 text-success" />
+              <span className="font-weight-bold mb-0">{notification.name}</span>
+              <p className="mb-0">{notification.content}</p>
+              <p className="mb-0 text-secondary">{new Date(notification.createdAt).toLocaleDateString("vi-VN")}</p>
+            </CDropdownItem>
+            )
+          })}
+        </CDropdownMenu>
+      </CDropdown>
+    )
+  }
 }
 
-export default TheHeaderDropdownNotif
+const mapStateToProps = (state) =>{
+  return {
+    listNotification: state.notification.list,
+    totalNotification: state.notification.total,
+    userInfo: state.auth.detail,
+    isLogin: state.auth.loggedIn,
+  }
+}
+
+const mapDispatchToProps =(dispatch)=> {
+	return {
+		onGetAllNotifications : (data) =>{
+			dispatch(NotificationActions.onGetList(data))
+    },
+    onUpdateAllNotifications : (data) =>{
+			dispatch(NotificationActions.onUpdateAll(data))
+    },
+	}
+};
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+export default compose(
+  withConnect
+)(TheHeaderDropdownNotif)

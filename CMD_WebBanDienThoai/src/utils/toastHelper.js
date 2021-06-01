@@ -6,6 +6,12 @@ export const toastError = message => {
   }
 };
 
+export const toastInfo = message => {
+  if (message !== null && typeof message !== 'undefined' && message !== '') {
+    toast.info(message);
+  }
+};
+
 export const toastSuccess = message => {
   if (message !== null && typeof message !== 'undefined' && message !== '') {
     toast.success(message);

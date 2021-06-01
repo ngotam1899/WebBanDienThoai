@@ -1,15 +1,6 @@
 const Selector = require('../models/selector')
 const Validator = require('../validators/validator')
 
-/* const getAllColor = async(req, res, next) => {
-  try {
-    const colors = await Color.find()
-
-    return res.status(200).json({ success: true, code: 200, message: '', colors: colors })
-  } catch (error) {
-    return next(error)
-  }
-} */
 const addSelector = async(req, res, next) => {
   const selector = new Selector(req.body)
   await selector.save()
@@ -26,7 +17,6 @@ const deleteSelector = async(req, res, next) => {
 }
 
 module.exports = {
-    //getAllColor,
-    addSelector,
-    deleteSelector
+  addSelector,
+  deleteSelector
 }

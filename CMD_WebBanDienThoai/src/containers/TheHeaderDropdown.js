@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 /* eslint-disable */
 import {
-  CBadge,
   CDropdown,
   CDropdownItem,
   CDropdownMenu,
@@ -11,7 +10,7 @@ import {
   CImg
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { compose } from "redux";
 import { withRouter } from 'react-router-dom'
 /* eslint-disable */
@@ -35,7 +34,7 @@ class TheHeaderDropdown extends Component {
   }
 
   render(){
-    const { userInfo, isLogin } = this.props;
+    const { userInfo } = this.props;
     return (<>
     {userInfo ? <CDropdown
       inNav

@@ -5,15 +5,17 @@ const NotificationSchema = new Schema({
 	name: {
 		type: String,
 	},
-	user: {
+	user: {							// notification cho mỗi user
 		type: Schema.Types.ObjectId,
-		ref: 'User'
+		ref: 'User',
+		default: null
 	},
 	content: {
 		type: String,
 	},
-	isAdmin: {
+	active: {
 		type: Boolean,
+		default: true
 	}
 },{
 	timestamps: true // createAt, updateAt

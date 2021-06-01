@@ -338,7 +338,7 @@ const updateUser = async (req, res, next) => {
 		}
 		newUser.email = user.email;
 		newUser.password = user.password;
-		await user.update(newUser);
+		await user.updateMany(newUser);
 		return res.status(200).json({ success: true, code: 200, message: '' });
 	} catch (error) {}
 };

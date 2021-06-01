@@ -8,9 +8,9 @@ import queryString from 'query-string';
 const url = '/products/brands';
 //cho params 1 default value là object
 export const getAllBrands = (params = {}) =>{
-    let queryParams = '';
-    if(Object.keys(params).length>0){
-      queryParams = `?${queryString.stringify(params)}`;
-    }
-    return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
+  let queryParams = '';
+  if(Object.keys(params).length>0){
+    queryParams = `?${queryString.stringify(params)}`;
+  }
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
 };

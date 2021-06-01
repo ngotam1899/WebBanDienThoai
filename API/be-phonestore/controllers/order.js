@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Image = require('../models/Image');
+const JWTS = require('../models/jwt');
 const Validator = require('../validators/validator');
 const nodemailer = require('nodemailer');
 const service = require('../services/service');
@@ -268,6 +269,8 @@ const confirmOrder = async (req, res, next) => {
 	try {
 		const { tokenOrder } = req.params;
 		if (tokenOrder) {
+			var JWT_destroyed = await JWTS.findOne({token: tokenOrder})
+			if(JWT_destroyed) return res.status(200).json({ success: false, code: 400, message: 'Incorect or Expired link' });
 			JWT.verify(tokenOrder, JWT_SECRET, async (err, decodeToken) => {
 				if (err) {
 					return res.status(200).json({ success: false, code: 400, message: 'Incorect or Expired link' });
@@ -280,8 +283,10 @@ const confirmOrder = async (req, res, next) => {
 				}
 				order.confirmed = true;
 				order.status = -1;
+				var JWT_blacklist = new JWTS({token : tokenOrder})
+				await JWT_blacklist.save();
 				await order.save();
-				return res.status(200).json({ message: true, code: 200, message: 'Confirm Successfull' });
+				return res.status(200).json({ message: true, code: 200, message: 'Confirm Successfull' , order});
 			});
 		}
 	} catch (error) {

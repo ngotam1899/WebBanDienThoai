@@ -16,12 +16,6 @@ const getAllGroup = async(req, res, next) => {
           limit = number_limit;
       }
     }
-    if (req.query.limit != undefined && req.query.limit != "") {
-      const number_limit = parseInt(req.query.limit);
-      if (number_limit && number_limit > 0) {
-          limit = number_limit;
-      }
-    }
     if (req.query.page != undefined && req.query.page != "") {
       const number_page = parseInt(req.query.page);
       if (number_page && number_page > 0) {
