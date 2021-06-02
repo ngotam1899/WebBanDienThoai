@@ -35,7 +35,8 @@ export default function(state = init, action) {
     case NotificationActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        list: action.payload,
+        list: action.payload.list,
+        total: action.payload.total
       };
     case NotificationActionTypes.UPDATE_SUCCESS:
     case NotificationActionTypes.UPDATE_ALL_SUCCESS:

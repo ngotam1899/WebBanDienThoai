@@ -72,10 +72,6 @@ function* handleGetProfile() {
     const result = yield call(getProfile, null);
     const data = get(result, "data.user", {}); 
     yield put(AuthorizationActions.onGetProfileSuccess(data));
-    //2. Get user info details
-    //3. Get order history
-/*     const orderData = yield call(orderHistory, data._id); 
-    yield put(OrdersActions.onGetHistoryOrderSuccess(orderData.data.orders));*/
   } catch (error) {
     yield put(AuthorizationActions.onGetProfileError(error));
   }

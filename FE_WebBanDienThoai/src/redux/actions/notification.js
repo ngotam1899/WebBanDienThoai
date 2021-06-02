@@ -49,9 +49,9 @@ const onGetList = (payload) => ({
   payload,
 });
 
-const onGetListSuccess = (payload) => ({
+const onGetListSuccess = (list, total) => ({
   type: NotificationActionTypes.GET_LIST_SUCCESS,
-  payload,
+  payload: {list, total},
 });
 
 const onGetListError = (error) => ({

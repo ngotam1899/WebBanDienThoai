@@ -2,6 +2,11 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import OrderActions, { OrderActionTypes } from "../actions/order";
 import { getAllOrders, getDetailOrder, updateOrder, deleteOrder, findOrders, getRevenue, getRevenueList, getSessionOrder } from "../apis/order";
+/* Notification */
+import io from 'socket.io-client';
+import NotificationActions from "../actions/notification";
+const socket = io('http://localhost:3000');
+/* Notification */
 
 function* handleGetList({ payload }) {
   try {
@@ -38,9 +43,28 @@ function* handleUpdate({ payload }) {
     const result = yield call(updateOrder, payload.params, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    const detailResult = yield call(getDetailOrder, payload.id);
-    yield put(OrderActions.onUpdateSuccess(get(detailResult, "data")));
+    yield put(OrderActions.onUpdateSuccess(data.order));
     yield put(OrderActions.onGetList());
+    /* Notification */
+    if(data.order.status === 0){
+      socket.emit(data.order.user, { status: data.order.status, user: data.order.user.toString(), order: data.order._id });
+      yield put(NotificationActions.onCreate({
+        user: data.order.user,
+        name : `Đơn hàng ${data.order._id} đang trong quá trình vận chuyển`,
+        image : data.order.order_list[0].product.bigimage,
+        content :  `${data.order._id} vừa nhập kho vận chuyển`
+      }))
+    }
+    else if(data.order.status === 1){
+      socket.emit('orderChangeStatus', { status: data.order.status, user: data.order.user.toString(), order: data.order._id });
+      yield put(NotificationActions.onCreate({
+        user: data.order.user,
+        name : `Đơn hàng ${data.order._id} đã vận chuyển thành công`,
+        image : data.order.order_list[0].product.bigimage,
+        content : 'Chúng tôi vừa ghi nhận đơn hàng của bạn vừa vận chuyển thành công. Vui lòng kiểm tra đơn hàng và bổ dung đánh giá'
+      }))
+    }
+  /* Notification */
   } catch (error) {
     yield put(OrderActions.onUpdateError(error));
   }

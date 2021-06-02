@@ -101,16 +101,14 @@ app.use('/paypal', routerPaypal)
 
 // 7. SocketIO Realtime
 io.on('connection', (socket) => {
-	var admin;
-	socket.on("login", ()=>{
-		console.log('test', socket.id)
-		admin = socket.id;
-		//Lấy giá trị order mới nhất từ database
-  })
+	socket.on('orderChangeStatus', ({ status, user, order }) => {
+		io.sockets.emit(`${user}`, {
+			status, order
+		});
+	})
   socket.on('order', ({ email, order }) => {
 		// Nếu bắt đc trạng thái join
     // Thêm order vào danh sách order mới
-		socket.join(order);
 		// Trả về toàn bộ order cho admin
 		var orders = [];
     orders.push(order);
@@ -118,16 +116,8 @@ io.on('connection', (socket) => {
 			newOrders: orders.length,
 			email
 		})
-		console.log(orders)
-    // "Chào mừng user vào phòng"
-    //socket.emit('message', { user: 'admin', text: `${user.name}, welcome to room ${user.room}.`});
-    // Cho mọi người trong phòng cùng biết, ko cho mình
-    //socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
-
-    //io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
-
-    //callback(); // lặp lại mỗi lần bắt đc sự kiện join
-  });
+	});
+	
 });
 
 // 8. Child process python machine learning

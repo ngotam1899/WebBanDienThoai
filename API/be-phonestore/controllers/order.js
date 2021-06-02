@@ -1,5 +1,6 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
+const User = require('../models/User');
 const Image = require('../models/Image');
 const JWTS = require('../models/jwt');
 const Validator = require('../validators/validator');
@@ -214,10 +215,8 @@ const updateOrder = async (req, res, next) => {
 					}
 					result = await Order.findByIdAndUpdate(IDOrder, orderUpdate);
 				}
-				if (!result) {
-					return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
-				}
-				return res.status(200).json({ success: true, code: 200, message: '' });
+				await Product.populate(result, {path: "order_list.product", select: 'bigimage'})
+				return res.status(200).json({ success: true, code: 200, message: '', order: result });
 			}
 		} else {
 			return res.status(200).json({ success: false, code: 400, message: 'id không chính xác' });
@@ -286,6 +285,7 @@ const confirmOrder = async (req, res, next) => {
 				var JWT_blacklist = new JWTS({token : tokenOrder})
 				await JWT_blacklist.save();
 				await order.save();
+				await User.populate(order, {path: "user", select: 'image'})
 				return res.status(200).json({ message: true, code: 200, message: 'Confirm Successfull' , order});
 			});
 		}

@@ -10,14 +10,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
 import tryConvert from '../../utils/changeMoney'
 import { withTranslation } from 'react-i18next'
-
+import ReactTooltip from 'react-tooltip';
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth'
 import CategoryActions from "../../redux/actions/categories";
 import ProductsActions from '../../redux/actions/products'
+import NotificationActions from '../../redux/actions/notification'
+import io from 'socket.io-client';
+import { toastInfo } from '../../utils/toastHelper';
 // @Functions
 import numberWithCommas from '../../utils/formatPrice'
 import getFilterParams from "../../utils/getFilterParams";
+import {INITIAL_IMAGE} from '../../constants';
+const ENDPOINT = 'http://localhost:3000';
+let socket = io(ENDPOINT);
 
 class Header extends Component {
   constructor(props) {
@@ -27,7 +33,10 @@ class Header extends Component {
       totalPrice: 0,
       currencyCode: "VND",
       language: "en",
-      keyword: ""
+      keyword: "",
+      itemsCount: 0,
+      status: "",
+      order: ""
     }
     this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
@@ -52,10 +61,11 @@ class Header extends Component {
     this.props.i18n.changeLanguage(event.target.value)
   }
   
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     var total = 0;
     var totalPrice = 0;
-    var { cart } = this.props;
+    const { cart, onGetAllNotifications, totalNotification, userInfo } = this.props;
+    const { itemsCount, order, status } = this.state;
     if (cart !== prevProps.cart) {
       for (let i = 0; i < cart.length; i++) {
         total = total + cart[i].quantity
@@ -65,6 +75,29 @@ class Header extends Component {
         total,
         totalPrice
       })
+    }
+    if (userInfo !== prevProps.userInfo && userInfo) {
+      var user = userInfo._id;
+      onGetAllNotifications({user, limit: 5, page: 0})
+    }
+    if (totalNotification !== prevProps.totalNotification && totalNotification) {
+      this.setState({itemsCount: totalNotification})
+    }
+    if(userInfo){
+      socket.on(`${userInfo._id}`, res => {
+        this.setState({itemsCount: itemsCount + 1, status: res.status, order: res.order});
+      });
+    }
+    
+    if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
+      if(status===1){
+        toastInfo(`Đơn hàng ${order} đã vận chuyển thành công`)
+      }
+      else{
+        toastInfo(`Đơn hàng ${order} đã xuất kho vận chuyển`)
+      }
+      var user = userInfo._id;
+      onGetAllNotifications({user, limit: 5, page: 0})
     }
   }
 
@@ -132,8 +165,8 @@ class Header extends Component {
         }} />
       )
     }
-    const {total, totalPrice, currencyCode, language, keyword}=this.state;
-    const {userInfo, isLogin, listCategories, t, listProducts, currency, location} = this.props;
+    const {total, totalPrice, currencyCode, language, keyword, itemsCount}=this.state;
+    const {userInfo, isLogin, listCategories, t, listProducts, currency, location, listNotification} = this.props;
     const notVND = currencyCode==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2));
     return (
       <>
@@ -150,14 +183,33 @@ class Header extends Component {
                         </a>
                       </li>
                       <li>
-                        <a href="/#/carts" className="text-decoration-none">
-                            <i className="fa fa-luggage-cart"></i> {t('header.mycart.button')}
-                          </a>
-                        </li>
-                      <li>
                         <a href="/#/carts/checkout" className="text-decoration-none">
                           <i className="fa fa-credit-card"></i> {t('header.checkout.button')}
                         </a>
+                      </li>
+                      <li>
+                        <button type="button" className="btn-notification" style={{'outline': 'none'}} data-tip data-for='notification'>
+                          <i className="fa fa-bell"></i> Thông báo
+                          <span className="notification-count ml-1">{itemsCount}</span>
+                        </button>
+                        <ReactTooltip id='notification' place="bottom" type="light" class="shadow-sm bg-white" effect="solid" getContent={(dataTip) => 
+                          <div>
+                            <h3 className="mb-1">Thông báo</h3>
+                            <div className="mb-2 border-bottom"></div>
+                            {listNotification && listNotification.map((notification, index)=>{
+                              return(
+                              <div className="row" key={index}>
+                                <div className="col-3">
+                                <img className="w-100 rounded" src={notification.image ? notification.image.public_url : INITIAL_IMAGE} alt={index}></img>
+                                </div>
+                                <div className="col-9">
+                            <p className="mb-0">{notification.name}</p>
+                                </div>
+                              </div>
+                              )
+                            })}
+                          </div> 
+                        }/>
                       </li>
                     </>}
                     {isLogin===false
@@ -292,7 +344,9 @@ const mapStateToProps = (state) =>{
     currency: state.currency,
     userInfo: state.auth.detail,
     isLogin: state.auth.loggedIn,
-    listCategories: state.categories.list
+    listCategories: state.categories.list,
+    listNotification: state.notification.list,
+    totalNotification: state.notification.total,
   }
 }
 
@@ -312,6 +366,12 @@ const mapDispatchToProps =(dispatch)=> {
     },
     onChangeCurrency: (unit) => {
       dispatch(ProductsActions.onChangeCurrency(unit));
+    },
+    onGetAllNotifications : (data) =>{
+			dispatch(NotificationActions.onGetList(data))
+    },
+    onUpdateAllNotifications : (data) =>{
+			dispatch(NotificationActions.onUpdateAll(data))
     },
 	}
 };

@@ -10,6 +10,10 @@ const NotificationSchema = new Schema({
 		ref: 'User',
 		default: null
 	},
+	image: {
+		type: Schema.Types.ObjectId,
+		ref: 'Image',
+	},
 	content: {
 		type: String,
 	},

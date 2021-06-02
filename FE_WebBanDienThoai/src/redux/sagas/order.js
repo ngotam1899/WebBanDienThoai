@@ -3,8 +3,11 @@ import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
 import ProductsActions from "../actions/products";
 import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, updateOrder, getAllOrder } from "../apis/order";
+/* Notification */
 import io from 'socket.io-client';
 import NotificationActions from "../actions/notification";
+const socket = io('http://localhost:3000');
+/* Notification */
 
 function* handleGetList({payload}) {
   try {
@@ -53,6 +56,16 @@ function* handleCreate({ payload }) {
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
     localStorage.removeItem("CART");
+    /* Notification */
+    if(payload.payment_method ==="paypal"){
+      socket.emit('order', { email: data.order.email, order: data.order._id });
+      yield put(NotificationActions.onCreate({
+        name : "Đơn hàng mới được xác nhận",
+        image : data.order.order_list[0].image,
+        content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
+      }))
+    }
+    /* Notification */
     yield put(ProductsActions.onClearCart())
   } catch (error) {
     yield put(OrdersActions.onCreateError(error));
@@ -65,15 +78,14 @@ function* handleConfirmOrder({ payload}) {
     const data = get(result, "data", {});  
     if (data.code !== 200) throw data;
     yield put(OrdersActions.onConfirmOrderSuccess(data));
-    /*  */
-    const socket = io('http://localhost:3000');
+    /* Notification */
     socket.emit('order', { email: data.order.email, order: data.order._id });
-    yield put(NotificationActions.onCreate())
-    /*  */
     yield put(NotificationActions.onCreate({
       name : "Đơn hàng mới được xác nhận",
+      image : data.order.user.image,
       content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
     }))
+    /* Notification */
   } catch (error) {
     yield put(OrdersActions.onConfirmOrderError(error));
   }

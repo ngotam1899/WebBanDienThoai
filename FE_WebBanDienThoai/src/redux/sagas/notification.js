@@ -8,7 +8,7 @@ function* handleGetList({ payload }) {
     const result = yield call(getAllNotifications, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(NotificationActions.onGetListSuccess(data.notifications));
+    yield put(NotificationActions.onGetListSuccess(data.notifications, data.total));
   } catch (error) {
     yield put(NotificationActions.onGetListError(error));
   }

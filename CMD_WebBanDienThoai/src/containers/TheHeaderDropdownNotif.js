@@ -13,6 +13,8 @@ import io from 'socket.io-client';
 import { toastInfo } from '../utils/toastHelper';
 // @Actions
 import NotificationActions from '../redux/actions/notification'
+// @Functions
+import {INITIAL_IMAGE} from '../constants';
 
 const ENDPOINT = 'http://localhost:3000';
 let socket = io(ENDPOINT);
@@ -48,8 +50,11 @@ class TheHeaderDropdownNotif extends Component {
 
   onReadAllNotification = () =>{
     const {onUpdateAllNotifications} = this.props;
-    onUpdateAllNotifications({user: null})
-    this.setState({itemsCount : 0})
+    const {itemsCount} = this.state;
+    if(itemsCount > 0){
+      onUpdateAllNotifications({user: null})
+      this.setState({itemsCount : 0})
+    }
   }
 
   render(){
@@ -66,16 +71,31 @@ class TheHeaderDropdownNotif extends Component {
         </CDropdownToggle>
         <CDropdownMenu  placement="bottom-end" className="pt-0">
           {listNotification
-          && listNotification.map((notification, index)=>{
+          ? listNotification.map((notification, index)=>{
             return(
-            <CDropdownItem key={index} className="d-block">
-              <CIcon name="cil-basket" className="mr-2 text-success" />
-              <span className="font-weight-bold mb-0">{notification.name}</span>
-              <p className="mb-0">{notification.content}</p>
-              <p className="mb-0 text-secondary">{new Date(notification.createdAt).toLocaleDateString("vi-VN")}</p>
+            <CDropdownItem key={index} className="d-block dropdown-normal">
+              <div className="row">
+                <div className="col-3">
+                  <img className="w-100 rounded-circle" src={notification.image ? notification.image.public_url : INITIAL_IMAGE} alt={index}></img>
+                </div>
+                <div className="col-9">
+                  <CIcon name="cil-basket" className="mr-2 text-success" />
+                  <span className="font-weight-bold mb-0">{notification.name}</span>
+                  <p className="mb-0">{notification.content}</p>
+                  <p className="mb-0 text-secondary">{new Date(notification.createdAt).toLocaleDateString("vi-VN")}</p>
+                </div>
+              </div>
+
             </CDropdownItem>
             )
-          })}
+          })
+          : <CDropdownItem className="d-block dropdown-normal">
+          <div className="row">
+            <div className="col-12 text-center">
+              <p>Chưa có thông báo nào</p>
+            </div>
+          </div>
+        </CDropdownItem>}
         </CDropdownMenu>
       </CDropdown>
     )

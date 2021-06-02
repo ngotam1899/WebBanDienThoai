@@ -20,7 +20,7 @@ function* handleGetList({ payload }) {
  */
 function* handleCreate({ payload }) {
   try {
-    const result = yield call(addNotification, payload.data);
+    const result = yield call(addNotification, payload);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(NotificationActions.onCreateSuccess(data.notification));
