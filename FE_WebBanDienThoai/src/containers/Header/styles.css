@@ -114,7 +114,7 @@ z-index: 999;}
     width: 20px;
     padding-top: 2px;
 }
-#notification{
+#notification, #cart{
     width: 300px;
 }
 

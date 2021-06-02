@@ -166,7 +166,7 @@ class Header extends Component {
       )
     }
     const {total, totalPrice, currencyCode, language, keyword, itemsCount}=this.state;
-    const {userInfo, isLogin, listCategories, t, listProducts, currency, location, listNotification} = this.props;
+    const {userInfo, isLogin, listCategories, t, listProducts, currency, location, listNotification, cart} = this.props;
     const notVND = currencyCode==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2));
     return (
       <>
@@ -295,7 +295,30 @@ class Header extends Component {
               </div>
               <div className="col-3 align-self-center">
                 <div className="shopping-item rounded shadow">
-                  <Link to="/carts" className="text-decoration-none">{t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> <i className="fa fa-shopping-cart"></i><span className="product-count">{total}</span></Link>
+                  <Link to="/carts" className="text-decoration-none" data-tip data-for='cart'>
+                    {t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> 
+                    <i className="fa fa-shopping-cart"></i>
+                    <span className="product-count">{total}</span>
+                  </Link>
+                  <ReactTooltip id='cart' place="bottom" type="light" class="shadow-sm bg-white" effect="solid" getContent={(dataTip) => 
+                    <div>
+                      <h3 className="mb-1">Giỏ hàng</h3>
+                      <div className="mb-2 border-bottom"></div>
+                      {cart && cart.map((item, index)=>{
+                        return(
+                        <div className="row" key={index}>
+                          <div className="col-3">
+                          <img className="w-100 rounded" src={item.product.bigimage ? item.product.bigimage.public_url : INITIAL_IMAGE} alt={index}></img>
+                          </div>
+                          <div className="col-9">
+                      <p className="font-weight-bold mb-0">{item.product.name}</p>
+                      <p className="mb-0">Màu {item.product.colors.find(i => i._id === item.color).name_en}</p>
+                          </div>
+                        </div>
+                        )
+                      })}
+                    </div> 
+                  }/>
                 </div>
               </div>
             </div>

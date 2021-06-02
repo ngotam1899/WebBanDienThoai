@@ -120,68 +120,87 @@ class UserDetail extends Component {
 
     return (  
       <div>
-        <div className="row">
+        <div className="row py-2">
           <div className="col-6">
-            <div className="form-group">
-              <label>{t('checkout.firstname.input')}:</label>
-              <input type="text" className="form-control" name="firstname" value={firstname} onChange={this.onChange}/>
+            <div className="form-floating">
+              <input type="text" className="form-control" id="firstname" name="firstname" value={firstname} onChange={this.onChange}/>
+              <label for="firstname">{t('checkout.firstname.input')}</label>
             </div>
           </div>
           <div className="col-6">
-            <div className="form-group">
-              <label>{t('checkout.lastname.input')}: </label>
-              <input type="text" className="form-control" name="lastname" value={lastname} onChange={this.onChange}/>
+            <div className="form-floating">
+              <input type="text" className="form-control" id="lastname" name="lastname" value={lastname} onChange={this.onChange}/>
+              <label for="lastname">{t('checkout.lastname.input')}</label>
             </div>
           </div>
         </div>
-        <div className="row">
+        <div className="row py-2">
           <div className="col-6">
-            <div className="form-group">
-              <label>{t('checkout.phone.input')}: </label>
-              <input type="number" className="form-control" name="phonenumber" value={phonenumber} onChange={this.onChange}/>
+            <div className="form-floating">
+              <input type="tel" className="form-control" id="phonenumber" name="phonenumber" value={phonenumber} onChange={this.onChange}/>
+              <label for="phonenumber">{t('checkout.phone.input')}</label>
             </div>
           </div>
           <div className="col-6">
-          <div className="form-group">
-            <label>Email: </label>
-            <input type="email" className="form-control" name="email" value={email} onChange={this.onChange}/>
-          </div>
+            <div className="form-floating">
+              <input type="email" className="form-control" id="email" name="email" value={email} onChange={this.onChange}/>
+              <label for="email">Email</label>
+            </div>
           </div>
         </div>
-        <div className="form-group">
-          <label>{t('checkout.address.input')}: </label>
-          <input type="text" className="form-control" name="address" value={address} onChange={this.onChange}/>
-          <div className="form-inline form-group">
-          <select  className="form-control" type="text" placeholder="Chọn tỉnh/ thành" value={cityID}
-          onChange={this.setDistrict} required>
-            {listCity && listCity.map((item, index)=>{
-                return(
-                  <option key={index} value={item.ProvinceID} name="city">{item.ProvinceName}</option>
-                )
-              })
-            }
-          </select>
-          <select  className="form-control" type="text" placeholder="Chọn quận/ huyện" 
-          value={districtID ? districtID : null}
-          onChange={this.setWard} required>
-            {listDistrict && listDistrict.map((item, index)=>{
-                  return(
-                    <option key={index} value={item.DistrictID} name="district">{item.DistrictName}</option>
-                  )
-                })
-              }
-          </select>
-          <select  className="form-control" type="text" placeholder="Chọn phường xã" 
-          value={wardID ? wardID : null}
-          onChange={this.setAddress} required>
-            {listWard && listWard.map((item, index)=>{
-                  return(
-                    <option key={index} value={item.WardCode} name="ward">{item.WardName}</option>
-                  )
-                })
-              }
-          </select>
+        <div className="row py-2">
+          <div className="col-12">
+            <div className="form-floating">
+              <input type="text" className="form-control" id="address" name="address" value={address} onChange={this.onChange}/>
+              <label for="address">{t('checkout.address.input')}</label>
+            </div>
+          </div>
         </div>
+        <div className="row py-2">
+          <div className="col-4">
+            <div className="form-floating">
+              <select className="form-select" type="text" id="city" value={cityID}
+              onChange={this.setDistrict} required>
+                {listCity && listCity.map((item, index)=>{
+                    return(
+                      <option key={index} value={item.ProvinceID} name="city">{item.ProvinceName}</option>
+                    )
+                  })
+                }
+              </select>
+              <label htmlFor="city">Tỉnh thành</label>
+            </div>
+          </div>
+          <div className="col-4">
+            <div className="form-floating">
+              <select  className="form-select" type="text" id="district"
+              value={districtID ? districtID : null}
+              onChange={this.setWard} required>
+                {listDistrict && listDistrict.map((item, index)=>{
+                      return(
+                        <option key={index} value={item.DistrictID} name="district">{item.DistrictName}</option>
+                      )
+                    })
+                  }
+              </select>
+              <label htmlFor="district">Quận huyện</label>
+            </div>
+          </div>
+          <div className="col-4">
+            <div className="form-floating">
+              <select  className="form-select" type="text" id="ward"
+              value={wardID ? wardID : null}
+              onChange={this.setAddress} required>
+                {listWard && listWard.map((item, index)=>{
+                      return(
+                        <option key={index} value={item.WardCode} name="ward">{item.WardName}</option>
+                      )
+                    })
+                  }
+              </select>
+              <label htmlFor="ward">Phường xã</label>
+            </div>
+          </div>
         </div>
         <button type="button" className="btn btn-success" data-bs-dismiss="modal" onClick={() => this.updateProfile()}>{t('user.save-change.button')}</button>
       </div>

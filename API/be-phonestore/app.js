@@ -107,9 +107,6 @@ io.on('connection', (socket) => {
 		});
 	})
   socket.on('order', ({ email, order }) => {
-		// Nếu bắt đc trạng thái join
-    // Thêm order vào danh sách order mới
-		// Trả về toàn bộ order cho admin
 		var orders = [];
     orders.push(order);
 		io.sockets.emit("newOrder", {

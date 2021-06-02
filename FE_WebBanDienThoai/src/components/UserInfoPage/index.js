@@ -56,7 +56,7 @@ class UserInfoPage extends Component {
         <div className="container emp-profile">
           {authInfo && listCity && <>
             <div className="row">
-              <div className="col-md-3">
+              <div className="col-md-4 text-center">
                 <form onSubmit={this.handleSubmitFile} className="form">
                   {authInfo.image ? <div className="profile-img">
                     {
@@ -86,15 +86,23 @@ class UserInfoPage extends Component {
                   <div className="row justify-content-center">
                   </div>
                 </form>
+                <button type="button" className="btn mx-5" style={{width: "-webkit-fill-available", backgroundColor: "#E9F3FF"}} data-bs-toggle="modal" data-bs-target="#passwdModal">
+                  <div className="row">
+                    <div className="col-3">
+                      <i className="fa fa-unlock-alt rounded-circle bg-primary p-2 text-white"></i>
+                    </div>
+                    <div className="col-9 py-1 text-left">
+                      {t('user.change-password.button')}
+                    </div>
+                  </div>
+                </button>
+             
               </div>
-              <div className="col-md-7">
+              <div className="col-md-8">
                 <div className="profile-head">
-                  <h5>Hồ sơ của tôi</h5>
+                  <h2>Hồ sơ của tôi</h2>
                 </div>
                 <UserDetail userInfo={authInfo} listCity={listCity} selectedFile={selectedFile}/>
-              </div>
-              <div className="col-md-2">
-                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#passwdModal">{t('user.change-password.button')}</button>
               </div>
             </div>
             <ChangePassword userInfo={authInfo}/>
