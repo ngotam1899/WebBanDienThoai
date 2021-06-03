@@ -331,21 +331,27 @@ const newUser = async (req, res) => {
 const updateUser = async (req, res, next) => {
 	try {
 		const { userID } = req.params;
-		const newUser = req.body;
-		const user = await User.findById(userID);
-		if (!user) {
+		const user = req.body;
+		const userFound = await User.findById(userID);
+		if (!userFound) {
 			return res.status(200).json({ success: false, code: 404, message: 'Can not found user need to update' });
 		}
-		newUser.email = user.email;
-		newUser.password = user.password;
-		await user.updateMany(newUser);
+		/* Không cho phép đổi thông tin quan trọng */
+		user.email = userFound.email;
+		user.password = userFound.password;
+		await userFound.updateOne(user);
 		return res.status(200).json({ success: true, code: 200, message: '' });
-	} catch (error) {}
+	} catch (error) {
+		next(error)
+	}
 };
 
 const returnUserByToken = async (req, res, next) => {
 	try {
-		return res.status(200).json({ success: true, code: 200, message: 'success', user: req.user });
+		const user = req.user;
+		await Product.populate(user, {path: "history", select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active'],
+		populate : {path : 'bigimage', select: "public_url"}})
+		return res.status(200).json({ success: true, code: 200, message: 'success', user });
 	} catch (error) {}
 };
 

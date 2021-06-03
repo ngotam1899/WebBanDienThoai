@@ -61,7 +61,7 @@ router.route('/groups')
 router.route('/groups/:IDGroup')
 	.put(passport.authenticate('jwt', { session: false }), groupController.updateGroup)
 	.delete(passport.authenticate('jwt', { session: false }), groupController.deleteGroup)
-	.get(passport.authenticate('jwt', { session: false }), groupController.getDetailGroup);
+	.get(groupController.getDetailGroup);
 
 router.route('/best-seller')
 	.get(productController.bestSellerProduct)

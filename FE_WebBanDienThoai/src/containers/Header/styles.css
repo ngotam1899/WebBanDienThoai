@@ -149,7 +149,10 @@ z-index: 999;}
     border: none;
     cursor: pointer;
 }
-
+.bill-icon {
+    width: 36px;
+    text-align: center;
+}
 .dropdown-small select {
     background-color: transparent;
     border: none;

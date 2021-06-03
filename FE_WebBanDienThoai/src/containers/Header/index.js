@@ -96,8 +96,7 @@ class Header extends Component {
       else{
         toastInfo(`Đơn hàng ${order} đã xuất kho vận chuyển`)
       }
-      var user = userInfo._id;
-      onGetAllNotifications({user, limit: 5, page: 0})
+      onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
     }
   }
 
@@ -343,7 +342,8 @@ class Header extends Component {
                     })}
                     {location.hash.indexOf("account") !== -1 &&<>
                     <MenuLink label="Tài khoản của tôi" to={"/account/detail"} activeOnlyWhenExact={true} />
-                    <MenuLink label="Đơn mua" to={"/account/purchase"} onClick={this.refreshPage} activeOnlyWhenExact={true} /></>}
+                    <MenuLink label="Đơn mua" to={"/account/purchase"} onClick={this.refreshPage} activeOnlyWhenExact={true} />
+                    <MenuLink label="Thông báo" to={"/account/notification"} activeOnlyWhenExact={true} /></>}
                   </ul>
                 </div>
               </nav>

@@ -10,7 +10,7 @@ import { updateUserInfo, getUser, changePassword } from "../apis/user";
  * update
  */
 function* handleUpdate( {payload} ) {
-  const {firstname, lastname, phonenumber, address, email} = payload.params;
+  const {firstname, lastname, phonenumber, address, email, history} = payload.params;
   var result, detailResult = null;
   try {
     if(payload.params.image){
@@ -22,7 +22,7 @@ function* handleUpdate( {payload} ) {
       if (result.data.code !== 200) throw result.data;
     }
     else{
-      result = yield call(updateUserInfo, {firstname, lastname, phonenumber, address, email}, payload.id);
+      result = yield call(updateUserInfo, {firstname, lastname, phonenumber, address, email, history}, payload.id);
       const data = get(result, "data", {});
       if (data.code !== 200) throw data;
     }

@@ -60,52 +60,65 @@ class OrderDetail extends Component {
               <button type="button" className="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div className="modal-body">
-            <div className="form-group">
-                <label>{t('user.date.input')}:</label>
-                <input type="text" className="form-control" name="createdAt" value={Date(orderItem.createdAt)} disabled/>
-              </div>
-              <div className="form-group">
-                <label>{t('user.total.input')}: (VND)</label>
-                <input type="number" className="form-control" name="total_price" value={numberWithCommas(orderItem.total_price)} disabled/>
-              </div>
-              <div className="form-group">
-                <label>{t('user.status.label')}:</label>
-                <input type="text" className="form-control" name="status" value={orderItem.status===true ? `${t('user.status.true')}` : `${t('user.status.false')}`} disabled/>
-              </div>
-              <div className="form-group">
-                <label>{t('user.payment.way')}:</label>
-                <div className="row">
-                  <div className="col-12">
-                    <input type="text" className="form-control" name="payment_method" value={ orderItem.payment_method === "local" ? `${t('checkout.cod.button')}` : 'Paypal'} disabled/>
+              <div className="row">
+                <div className="col-6 form-inline">
+                  <i className="fa fa-calendar-day text-xl bill-icon"></i>
+                  <div className="form-floating">
+                    <input type="text" className="form-control border-0" id="createdAt" name="createdAt" value={Date(orderItem.createdAt)}/>
+                    <label for="createdAt">{t('user.date.input')}</label>
                   </div>
                 </div>
-              </div>
-              {orderItem.payment_method==="local" 
-              ? <>
-              <div className="form-group">
-                <label>{t('user.confirm.label')}:</label>
-                <div className="row">
-                  <div className={orderItem.confirmed===true ? "col-12": "col-9"}>
-                    <input type="text" className="form-control" name="confirmed" value={ orderItem.confirmed===true ? `${t('user.confirm.true')}` : `${t('user.confirm.false')}`} disabled/>
-                  </div>
-                  <div className={orderItem.confirmed===true ? "d-none" : "col-3"}>
-                    <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>{t('user.confirm.button')}</button>
+                <div className="col-6 form-inline">
+                  <i className="fa fa-money-bill-wave text-xl bill-icon"></i>
+                  <div className="form-floating">
+                    <input type="number" className="form-control border-0" id="total_price" name="total_price" value={orderItem.total_price}/>
+                    <label for="total_price">{t('user.total.input')} (VND)</label>
                   </div>
                 </div>
-              </div>
-              </>
-              : <>
-              <div className="form-group">
-                <label>{t('user.payment.label')}:</label>
-                <div className="row">
-                  <div className="col-12">
-                    <input type="text" className="form-control" name="paid" value={ orderItem.paid===true ? `${t('user.payment.true')}` : `${t('user.payment.false')}`} disabled/>
+                <div className="col-6 form-inline">
+                  <i className="fa fa-gifts text-xl bill-icon"></i>
+                  <div className="form-floating">
+                    <input type="text" className="form-control border-0 " id="status" name="status" 
+                    value={orderItem.status===true ? `${t('user.status.true')}` : `${t('user.status.false')}`}/>
+                    <label for="status">{t('user.status.label')}</label>
                   </div>
                 </div>
+                <div className="col-6 form-inline">
+                  <i className="fa fa-money-check-alt text-xl bill-icon"></i>
+                  <div className="form-floating">
+                    <input type="text" className="form-control border-0" id="payment_method" name="payment_method" 
+                    value={orderItem.payment_method === "local" ? `${t('checkout.cod.button')}` : 'Paypal'}/>
+                    <label for="payment_method">{t('user.payment.way')}</label>
+                  </div>
+                </div>
+                <div className="col-6 form-inline">
+                  <i className="fa fa-shopping-basket text-xl bill-icon"></i>
+                  <div className="form-floating">
+                    <input type="number" className="form-control border-0" id="total_price" name="total_price" value={orderItem.total_price}/>
+                    <label for="total_price">{t('user.total.input')} (VND)</label>
+                  </div>
+                </div>
+                <div className="col-6 form-inline">
+                  <i className="fa fa-file-invoice-dollar text-xl bill-icon"></i>
+                  {orderItem.payment_method==="local" 
+                  ? <>
+                  <div className="form-floating">
+                    <input type="text" className="form-control border-0" name="confirmed" id="confirmed" value={ orderItem.confirmed===true ? `${t('user.confirm.true')}` : `${t('user.confirm.false')}`}/>
+                    <label for="confirmed">{t('user.confirm.label')}</label>
+                    <span className={orderItem.confirmed===true && "d-none"}>
+                      <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>{t('user.confirm.button')}</button>
+                    </span>
+                  </div>
+                  </>
+                  : <>
+                  <div className="form-floating">
+                    <input type="text" className="form-control border-0" id="paid" name="paid" value={ orderItem.paid===true ? `${t('user.payment.true')}` : `${t('user.payment.false')}`}/>
+                    <label for="paid">{t('user.payment.label')}</label>  
+                  </div>
+                  </>}
+                </div>
               </div>
-              </>}
-              <div className="form-group">
-                <label>{t('user.item.list')}:</label>
+              <div className="rounded shadow-sm">
                 {orderItem.order_list.map((item, index) =>{
                   return (
                   <div className="card my-1" key={index}>
@@ -129,17 +142,28 @@ class OrderDetail extends Component {
                 })
                 }
               </div>
-              <div className="form-group">
-                <label>{t('user.phone.order')}:</label>
-                <input type="number" className="form-control" name="shipping_phonenumber" value={orderItem.shipping_phonenumber} disabled/>
-              </div>
-              <div className="form-group">
-                <label>{t('user.address.order')}:</label>
-                <input type="text" className="form-control" name="shipping_address" value={orderItem.shipping_address} disabled/>
-              </div>
-              <div className="form-group">
-                <label>{t('user.email.order')}:</label>
-                <input type="email" className="form-control" name="email" value={orderItem.email} disabled/>
+              <div className="row">
+                <div className="col-6 form-inline">
+                  <i className="fa fa-mobile-alt text-xl bill-icon"></i>
+                  <div className="form-floating" style={{width: "90%"}}>
+                    <input type="number" className="form-control border-0" id="shipping_phonenumber" name="shipping_phonenumber" value={orderItem.shipping_phonenumber}/>
+                    <label for="shipping_phonenumber">{t('user.phone.order')}</label>
+                  </div>
+                </div>
+                <div className="col-6 form-inline">
+                  <i className="fa fa-envelope text-xl bill-icon"></i>
+                  <div className="form-floating">
+                    <input type="email" className="form-control border-0" name="email" id="email" value={orderItem.email}/>
+                    <label for="email">{t('user.email.order')}:</label>
+                  </div>
+                </div>
+                <div className="col-12 form-inline">
+                  <i className="fa fa-home text-xl bill-icon"></i>
+                  <div className="form-floating" style={{width: "90%"}}>
+                    <input type="text" className="form-control border-0 w-100" name="shipping_address" id="shipping_address" value={orderItem.shipping_address}/>
+                    <label for="shipping_address">{t('user.address.order')}:</label>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="modal-footer">

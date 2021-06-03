@@ -9,6 +9,7 @@ import qs from "query-string";
 // @Actions
 import ProductsActions from '../../redux/actions/products'
 import ReviewActions from '../../redux/actions/review'
+import UsersActions from '../../redux/actions/user';
 // @Components
 import Rating from 'react-rating'
 import ImageGalleries from './ImageGalleries';
@@ -43,6 +44,23 @@ class DetailPage extends Component {
       }
     }
   }
+  componentWillReceiveProps(nextProps){
+    const {authInfo, onHistoryProduct} = this.props;
+    if (nextProps.authInfo !== authInfo && nextProps.authInfo) {
+      var history = [];
+      nextProps.authInfo.history.map(item => history.push(item._id));
+      const index = history.findIndex(product => product === nextProps.match.params.productID)
+      if(index === -1){
+        history.push(nextProps.match.params.productID)
+        if(history.length > 4){
+          history.shift();
+        }
+        console.log(history)
+        onHistoryProduct(nextProps.authInfo._id, {history})
+      }
+    }
+  }
+
   componentDidUpdate(prevProps) {
     try{
       /*global FB*/
@@ -59,6 +77,7 @@ class DetailPage extends Component {
         this.setState({queryParams: params})
         this.props.onGetReviews(params);
       }
+      
     }
     catch(err){
     }
@@ -180,7 +199,7 @@ class DetailPage extends Component {
   }
 
   render() {
-    const {product, currency, t, review, group, total, count, location, relate, like } = this.props;
+    const {product, currency, t, review, group, total, count, location, relate, like, authInfo } = this.props;
     const {quantity, imageColor, check, _check } = this.state;
     const filter = getFilterParams(location.search);
     
@@ -271,20 +290,26 @@ class DetailPage extends Component {
                 <div className="container">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
-                      <a className="nav-link" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent">Recent viewed</a>
+                      <a className="nav-link active" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent">Recent viewed</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
                       aria-selected="false">You may also like</a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link active" id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
+                      <a className="nav-link " id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
                       aria-selected="false">Related products</a>
                     </li>
                   </ul>
                   <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane fade" id="recent" role="tab" aria-labelledby="recent-tab">
-                      a
+                    <div className="tab-pane fade show active" id="recent" role="tab" aria-labelledby="recent-tab">
+                      <div className="row">
+                        {authInfo && authInfo.history.map((product, index) => {
+                          return (
+                              <ProductItem product={product} key={index} />
+                            )
+                        })}
+                      </div>
                     </div>
                     <div className="tab-pane fade" id="like" role="tab" aria-labelledby="like-tab">
                       <div className="row">
@@ -295,7 +320,7 @@ class DetailPage extends Component {
                         })}
                       </div>
                     </div>
-                    <div className="tab-pane fade show active" id="relate" role="tab" aria-labelledby="relate-tab">
+                    <div className="tab-pane fade" id="relate" role="tab" aria-labelledby="relate-tab">
                       <div className="row">
                         {relate && relate.map((product, index) => {
                           return (
@@ -434,7 +459,7 @@ class DetailPage extends Component {
                               )
                             })}
                           </div>
-                          {review && <div className="product-pagination text-center">
+                          {review && review.length > 0 && <div className="product-pagination text-center">
                             <nav className="float-end">
                               <Pagination
                                 activePage={filter.page ? parseInt(filter.page)+1 : 1}
@@ -501,6 +526,9 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onUpdateReview: (id, data, params) => {
       dispatch(ReviewActions.onUpdate(id, data, params));
+    },
+    onHistoryProduct : (id, params) =>{
+			dispatch(UsersActions.onUpdate({id, params}))
     },
   }
 }

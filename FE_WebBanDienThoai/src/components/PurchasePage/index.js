@@ -141,12 +141,14 @@ class PurchasePage extends Component {
       <div className="bg-user-info py-4">
         <div className="container emp-profile p-0 mt-5 mb-2">
           <div className="row mx-3">
-            <div className={filter.type===0 || filter.type===undefined ? "col-2 text-center py-3 bg-selected" : "col-2 text-center py-3"} onClick={() => this.onList(0, null)}>
+            <div className={filter.type==="0" || filter.type===undefined ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
+            onClick={() => this.onList(0, null)}>
               Tất cả
             </div>
             {statusList.map((status, index)=>{
               return (
-                <div key={index} className={filter.type===index+1 ? "col-2 text-center py-3 bg-selected" : "col-2 text-center py-3"} onClick={() => this.onList(index+1, status.state)}>
+                <div key={index} className={filter.type===(index+1).toString() ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
+                onClick={() => this.onList(index+1, status.state)}>
                   {status.name}
                 </div>
               )
@@ -170,7 +172,7 @@ class PurchasePage extends Component {
             {orderList && orderList.length > 0 ? orderList.map((order, index) =>{
               return (
                 <div className="col-12 my-1" key={index}>
-                  <div className="card">
+                  <div className="card shadow-sm">
                     <div className="card-header bg-primary text-white">
                       <p className="float-start mb-0">Mã đơn hàng {order._id}</p>
                       <p className="float-end mb-0">| {this.setStatus(order.confirmed, order.status, order.active)}</p>
@@ -198,8 +200,6 @@ class PurchasePage extends Component {
                       <div className="float-start">
                         <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#myModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
                         {this.setStatus(order.confirmed, order.status, order.active)==="Chờ xác nhận" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(order._id)}>Hủy đơn hàng</button>}
-                        {(this.setStatus(order.confirmed, order.status, order.active)==="Đã hủy" || this.setStatus(order.confirmed, order.status, order.active)==="Đã giao") && 
-                        <button type="button" className="btn btn-warning" onClick={()=>this.onBuyAgain(order.order_list)}>Mua lần nữa</button>}
                       </div>
                       <div className="float-end font-weight-bold">
                         {numberWithCommas(order.total_price)} VND

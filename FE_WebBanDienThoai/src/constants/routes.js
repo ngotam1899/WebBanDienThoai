@@ -13,6 +13,7 @@ import UserInfoPage from '../components/UserInfoPage';
 import PurchasePage from '../components/PurchasePage';
 import ActivePassword from '../containers/ActivePassword';
 import SearchPage from '../components/SearchPage';
+import NotificationPage from '../components/NotificationPage';
 
 const routes = [
 	{
@@ -68,6 +69,12 @@ const routes = [
 		exact: true,
 		name: "Purchase",
 		main: ({history, location}) => <PurchasePage history={history} location={location}/>
+	},
+	{
+		path: '/account/notification',
+		exact: true,
+		name: "Notification",
+		main: ({history, location}) => <NotificationPage history={history} location={location}/>
 	},
 	{
 		path: '/order/active/:token',

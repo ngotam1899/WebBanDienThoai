@@ -143,7 +143,7 @@ class UserDetail extends Component {
           </div>
           <div className="col-6">
             <div className="form-floating">
-              <input type="email" className="form-control" id="email" name="email" value={email} onChange={this.onChange}/>
+              <input type="email" className="form-control" id="email" name="email" value={email} onChange={this.onChange} disabled/>
               <label for="email">Email</label>
             </div>
           </div>

@@ -19,7 +19,6 @@ export default function(state = init, action) {
         processing: false,
       };
     case UsersActionTypes.UPDATE_SUCCESS:
-      toastSuccess('Cập nhật thông tin thành công');
       return {
         ...state,
         processing: false,
