@@ -187,10 +187,10 @@ class Header extends Component {
                         </a>
                       </li>
                       <li>
-                        <button type="button" className="btn-notification" style={{'outline': 'none'}} data-tip data-for='notification'>
+                        <a href="/#/account/notification" className="text-decoration-none" data-tip data-for='notification'>
                           <i className="fa fa-bell"></i> Thông báo
-                          <span className="notification-count ml-1">{itemsCount}</span>
-                        </button>
+                          <span className="notification-count ml-1 pl-1">{itemsCount}</span>
+                        </a>
                         <ReactTooltip id='notification' place="bottom" type="light" class="shadow-sm bg-white" effect="solid" getContent={(dataTip) => 
                           <div>
                             <h3 className="mb-1">Thông báo</h3>
@@ -265,17 +265,17 @@ class Header extends Component {
                 </div>
               </div>
               <div className="col-md-6 col-9 align-self-center">
-                <div className="input-group shadow">
-                  <input type="text" className="form-control" value={keyword} name="keyword" onKeyPress={this.pressSearch} onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
-                  <div className="input-group-append">
-                    <button className="btn btn-danger h-100" onClick={() => this.searchKeyWorld()}><i className="fa fa-search"></i></button>
+                <div className="input-group shadow rounded-pill position-relative">
+                  <input type="text" className="form-control rounded-pill" value={keyword} name="keyword" onKeyPress={this.pressSearch} onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
+                  <div className="input-group-append position-absolute btn-circle" style={{right: '5px', top: '5px'}}>
+                    <button className="btn btn-danger h-100 rounded-circle p-revert" onClick={() => this.searchKeyWorld()}><i className="fa fa-search"></i></button>
                   </div>
                 </div>
                 <div style={{ position: "absolute", width: "95%" }}>
                   <div className="card" style={{ zIndex: 1}}>
                   {listProducts && keyword && listProducts.map((product, index) =>{
                     return (
-                      <Link to={`/product/${product.pathseo}/${product._id}`} >
+                      <Link to={`/product/${product.pathseo}/${product._id}`} className="text-decoration-none">
                       <div className="row text-dark text-decoration-none " style={{height: "80px"}} key={index}>
                         <div className="col-3 my-auto">
                           <><img style={{height: "80px"}} src={product.bigimage.public_url} alt={product.name}></img></>
@@ -293,7 +293,7 @@ class Header extends Component {
                 </div>
               </div>
               <div className="col-3 align-self-center">
-                <div className="shopping-item rounded shadow">
+                <div className="shopping-item rounded-pill shadow">
                   <Link to="/carts" className="text-decoration-none" data-tip data-for='cart'>
                     {t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> 
                     <i className="fa fa-shopping-cart"></i>

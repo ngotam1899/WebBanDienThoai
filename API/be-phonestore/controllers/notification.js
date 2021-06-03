@@ -10,6 +10,9 @@ const getAllNotification = async(req, res, next) => {
     if (req.query.admin != undefined && req.query.admin != "") {
 			condition.user = null;
     }
+    if (req.query.type != undefined && req.query.type != "") {
+			condition.type = parseInt(req.query.type);
+    }
     let limit = 5;
     let page = 0;
     if (req.query.limit != undefined && req.query.limit != "") {

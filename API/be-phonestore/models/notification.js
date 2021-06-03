@@ -20,6 +20,9 @@ const NotificationSchema = new Schema({
 	active: {
 		type: Boolean,
 		default: true
+	},
+	type: {						// 0: đơn hàng, 1: event
+		type: Number
 	}
 },{
 	timestamps: true // createAt, updateAt

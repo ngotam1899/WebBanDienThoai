@@ -59,7 +59,6 @@ class PurchasePage extends Component {
       };
       if(props.authInfo)onGetList(params);
     }
-    
   }
 
   setStatus = (confirmed, status, active) => {

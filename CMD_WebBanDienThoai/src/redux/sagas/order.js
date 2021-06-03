@@ -50,6 +50,7 @@ function* handleUpdate({ payload }) {
       socket.emit(data.order.user, { status: data.order.status, user: data.order.user.toString(), order: data.order._id });
       yield put(NotificationActions.onCreate({
         user: data.order.user,
+        type: 0,
         name : `Đơn hàng ${data.order._id} đang trong quá trình vận chuyển`,
         image : data.order.order_list[0].product.bigimage,
         content :  `${data.order._id} vừa nhập kho vận chuyển`
@@ -59,6 +60,7 @@ function* handleUpdate({ payload }) {
       socket.emit('orderChangeStatus', { status: data.order.status, user: data.order.user.toString(), order: data.order._id });
       yield put(NotificationActions.onCreate({
         user: data.order.user,
+        type: 0,
         name : `Đơn hàng ${data.order._id} đã vận chuyển thành công`,
         image : data.order.order_list[0].product.bigimage,
         content : 'Chúng tôi vừa ghi nhận đơn hàng của bạn vừa vận chuyển thành công. Vui lòng kiểm tra đơn hàng và bổ dung đánh giá'

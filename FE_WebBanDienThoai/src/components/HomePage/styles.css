@@ -252,13 +252,7 @@
     top: 3px;
 }
 .wid-view-more:hover {color: #fff;background-color: #222;text-decoration: none}
-.single-product-widget {
-    position: relative;
-}
-.product-widget-area {
-  padding-bottom: 30px;
-  padding-top: 30px;
-}
+
 .product-widget-area .zigzag-bottom{background: #f4f4f4;}
 .caption-group h2{
   font-size: 2vw

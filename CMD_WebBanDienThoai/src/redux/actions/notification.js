@@ -3,6 +3,10 @@ export const NotificationActionTypes = {
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
 
+  GET_NEWEST: "GET_NEWEST",
+  GET_NEWEST_SUCCESS: "GET_NEWEST_SUCCESS",
+  GET_NEWEST_ERROR: "GET_NEWEST_ERROR",
+
   CREATE: "CREATE",
   CREATE_SUCCESS: "CREATE_SUCCESS",
   CREATE_ERROR: "CREATE_ERROR",
@@ -56,6 +60,21 @@ const onGetListSuccess = (list, total) => ({
 
 const onGetListError = (error) => ({
   type: NotificationActionTypes.GET_LIST_ERROR,
+  payload: error,
+});
+
+const onGetNewest = (payload) => ({
+  type: NotificationActionTypes.GET_NEWEST,
+  payload,
+});
+
+const onGetNewestSuccess = (detail, total) => ({
+  type: NotificationActionTypes.GET_NEWEST_SUCCESS,
+  payload: {detail, total},
+});
+
+const onGetNewestError = (error) => ({
+  type: NotificationActionTypes.GET_NEWEST_ERROR,
   payload: error,
 });
 
@@ -149,6 +168,10 @@ const onDeleteAllError = (error) => ({
 });
 
 const NotificationActions = {
+  onGetNewest,
+  onGetNewestSuccess,
+  onGetNewestError,
+
   onGetList,
   onGetListSuccess,
   onGetListError,

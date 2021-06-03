@@ -62,6 +62,7 @@ function* handleCreate({ payload }) {
       yield put(NotificationActions.onCreate({
         name : "Đơn hàng mới được xác nhận",
         image : data.order.order_list[0].image,
+        type: 0,
         content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
       }))
     }
@@ -83,6 +84,7 @@ function* handleConfirmOrder({ payload}) {
     yield put(NotificationActions.onCreate({
       name : "Đơn hàng mới được xác nhận",
       image : data.order.user.image,
+      type: 0,
       content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
     }))
     /* Notification */
