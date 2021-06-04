@@ -80,7 +80,7 @@ class Header extends Component {
       var user = userInfo._id;
       onGetAllNotifications({user, limit: 5, page: 0})
     }
-    if (totalNotification !== prevProps.totalNotification && totalNotification) {
+    if (totalNotification !== prevProps.totalNotification) {
       this.setState({itemsCount: totalNotification})
     }
     if(userInfo){
@@ -189,13 +189,13 @@ class Header extends Component {
                       <li>
                         <a href="/#/account/notification" className="text-decoration-none" data-tip data-for='notification'>
                           <i className="fa fa-bell"></i> Thông báo
-                          <span className="notification-count ml-1 pl-1">{itemsCount}</span>
+                          {itemsCount > 0 && <span className="notification-count ml-1 pl-1">{itemsCount}</span>}
                         </a>
                         <ReactTooltip id='notification' place="bottom" type="light" class="shadow-sm bg-white" effect="solid" getContent={(dataTip) => 
                           <div>
                             <h3 className="mb-1">Thông báo</h3>
                             <div className="mb-2 border-bottom"></div>
-                            {listNotification && listNotification.map((notification, index)=>{
+                            {listNotification && listNotification.length > 0 ? listNotification.map((notification, index)=>{
                               return(
                               <div className="row" key={index}>
                                 <div className="col-3">
@@ -206,7 +206,15 @@ class Header extends Component {
                                 </div>
                               </div>
                               )
-                            })}
+                            })
+                            : <div className="row">
+                              <div className="col-12 text-center">
+                                <div className="h-120">
+                                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/d3eb7b91baeb280516583f958b10f601.png" alt="404 not found"></img>
+                                </div>
+                                <p className="my-3">Chưa có thông báo mới</p>
+                              </div>  
+                            </div>}
                           </div> 
                         }/>
                       </li>
@@ -303,7 +311,7 @@ class Header extends Component {
                     <div>
                       <h3 className="mb-1">Giỏ hàng</h3>
                       <div className="mb-2 border-bottom"></div>
-                      {cart && cart.map((item, index)=>{
+                      {cart && cart.length > 0 ? cart.map((item, index)=>{
                         return(
                         <div className="row" key={index}>
                           <div className="col-3">
@@ -315,7 +323,15 @@ class Header extends Component {
                           </div>
                         </div>
                         )
-                      })}
+                      })
+                    : <div className="row">
+                      <div className="col-12 text-center">
+                        <div className="h-120">
+                          <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/cart/9bdd8040b334d31946f49e36beaf32db.png" alt="404 not found"></img>
+                        </div>
+                        <p className="my-3">Giỏ hàng trống</p>
+                      </div>  
+                    </div>}
                     </div> 
                   }/>
                 </div>
@@ -343,7 +359,7 @@ class Header extends Component {
                     {location.hash.indexOf("account") !== -1 &&<>
                     <MenuLink label="Tài khoản của tôi" to={"/account/detail"} activeOnlyWhenExact={true} />
                     <MenuLink label="Đơn mua" to={"/account/purchase"} onClick={this.refreshPage} activeOnlyWhenExact={true} />
-                    <MenuLink label="Thông báo" to={"/account/notification"} activeOnlyWhenExact={true} /></>}
+                    <MenuLink label="Thông báo" to={"/account/notification"} onClick={this.refreshPage} activeOnlyWhenExact={true} /></>}
                   </ul>
                 </div>
               </nav>
@@ -368,8 +384,8 @@ const mapStateToProps = (state) =>{
     userInfo: state.auth.detail,
     isLogin: state.auth.loggedIn,
     listCategories: state.categories.list,
-    listNotification: state.notification.list,
-    totalNotification: state.notification.total,
+    listNotification: state.notification.detail,
+    totalNotification: state.notification._total,
   }
 }
 
@@ -391,7 +407,7 @@ const mapDispatchToProps =(dispatch)=> {
       dispatch(ProductsActions.onChangeCurrency(unit));
     },
     onGetAllNotifications : (data) =>{
-			dispatch(NotificationActions.onGetList(data))
+			dispatch(NotificationActions.onGetNewest(data))
     },
     onUpdateAllNotifications : (data) =>{
 			dispatch(NotificationActions.onUpdateAll(data))

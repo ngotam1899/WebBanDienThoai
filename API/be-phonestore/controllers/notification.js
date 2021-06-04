@@ -71,7 +71,7 @@ const deleteNotification = async (req, res, next) => {
 	if (!isValid) {
 		return res.status(200).json({ success: false, code: 400, message: 'id notification is not correctly' });
 	} else {
-		const result = await Color.findByIdAndDelete(IDColor);
+		const result = await Notification.findByIdAndDelete(IDNotification);
 		if (result) return res.status(200).json({ success: true, code: 200, message: '' });
 	}
 };

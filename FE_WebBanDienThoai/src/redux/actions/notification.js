@@ -3,6 +3,10 @@ export const NotificationActionTypes = {
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
 
+  GET_NEWEST: "GET_NEWEST",
+  GET_NEWEST_SUCCESS: "GET_NEWEST_SUCCESS",
+  GET_NEWEST_ERROR: "GET_NEWEST_ERROR",
+
   CREATE: "CREATE",
   CREATE_SUCCESS: "CREATE_SUCCESS",
   CREATE_ERROR: "CREATE_ERROR",
@@ -44,6 +48,21 @@ const onClearState = () => ({
  * get list
  */
 
+const onGetNewest = (payload) => ({
+  type: NotificationActionTypes.GET_NEWEST,
+  payload,
+});
+
+const onGetNewestSuccess = (detail, total) => ({
+  type: NotificationActionTypes.GET_NEWEST_SUCCESS,
+  payload: {detail, total},
+});
+
+const onGetNewestError = (error) => ({
+  type: NotificationActionTypes.GET_NEWEST_ERROR,
+  payload: error,
+});
+
 const onGetList = (payload) => ({
   type: NotificationActionTypes.GET_LIST,
   payload,
@@ -83,9 +102,9 @@ const onCreateError = (error) => ({
  *
  * update
  */
-const onUpdate = (id, data) => ({
+const onUpdate = (id, data, params) => ({
   type: NotificationActionTypes.UPDATE,
-  payload: { id, data },
+  payload: { id, data, params },
 });
 
 const onUpdateSuccess = (detail) => ({
@@ -98,9 +117,9 @@ const onUpdateError = (error) => ({
   payload: error,
 });
 
-const onUpdateAll = (data) => ({
+const onUpdateAll = (data, params) => ({
   type: NotificationActionTypes.UPDATE_ALL,
-  payload: data,
+  payload: { data, params },
 });
 
 const onUpdateAllSuccess = (payload) => ({
@@ -118,9 +137,9 @@ const onUpdateAllError = (error) => ({
  *
  * delete
  */
-const onDelete = (id) => ({
+const onDelete = (id, params) => ({
   type: NotificationActionTypes.DELETE,
-  payload : id,
+  payload : { id, params },
 });
 
 const onDeleteSuccess = (detail) => ({
@@ -133,9 +152,9 @@ const onDeleteError = (error) => ({
   payload: error,
 });
 
-const onDeleteAll = (id) => ({
+const onDeleteAll = (id, params) => ({
   type: NotificationActionTypes.DELETE_ALL,
-  payload: id,
+  payload: { id, params },
 });
 
 const onDeleteAllSuccess = (detail) => ({
@@ -149,6 +168,10 @@ const onDeleteAllError = (error) => ({
 });
 
 const NotificationActions = {
+  onGetNewest,
+  onGetNewestSuccess,
+  onGetNewestError,
+
   onGetList,
   onGetListSuccess,
   onGetListError,

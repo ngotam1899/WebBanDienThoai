@@ -55,7 +55,6 @@ class DetailPage extends Component {
         if(history.length > 4){
           history.shift();
         }
-        console.log(history)
         onHistoryProduct(nextProps.authInfo._id, {history})
       }
     }

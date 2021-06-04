@@ -48,21 +48,6 @@ const onClearState = () => ({
  * get list
  */
 
-const onGetList = (payload) => ({
-  type: NotificationActionTypes.GET_LIST,
-  payload,
-});
-
-const onGetListSuccess = (list, total) => ({
-  type: NotificationActionTypes.GET_LIST_SUCCESS,
-  payload: {list, total},
-});
-
-const onGetListError = (error) => ({
-  type: NotificationActionTypes.GET_LIST_ERROR,
-  payload: error,
-});
-
 const onGetNewest = (payload) => ({
   type: NotificationActionTypes.GET_NEWEST,
   payload,
@@ -75,6 +60,21 @@ const onGetNewestSuccess = (detail, total) => ({
 
 const onGetNewestError = (error) => ({
   type: NotificationActionTypes.GET_NEWEST_ERROR,
+  payload: error,
+});
+
+const onGetList = (payload) => ({
+  type: NotificationActionTypes.GET_LIST,
+  payload,
+});
+
+const onGetListSuccess = (list, total) => ({
+  type: NotificationActionTypes.GET_LIST_SUCCESS,
+  payload: {list, total},
+});
+
+const onGetListError = (error) => ({
+  type: NotificationActionTypes.GET_LIST_ERROR,
   payload: error,
 });
 
@@ -102,9 +102,9 @@ const onCreateError = (error) => ({
  *
  * update
  */
-const onUpdate = (id, data) => ({
+const onUpdate = (id, data, params) => ({
   type: NotificationActionTypes.UPDATE,
-  payload: { id, data },
+  payload: { id, data, params },
 });
 
 const onUpdateSuccess = (detail) => ({
@@ -117,9 +117,9 @@ const onUpdateError = (error) => ({
   payload: error,
 });
 
-const onUpdateAll = (data) => ({
+const onUpdateAll = (data, params) => ({
   type: NotificationActionTypes.UPDATE_ALL,
-  payload: data,
+  payload: { data, params },
 });
 
 const onUpdateAllSuccess = (payload) => ({
@@ -137,9 +137,9 @@ const onUpdateAllError = (error) => ({
  *
  * delete
  */
-const onDelete = (id) => ({
+const onDelete = (id, params) => ({
   type: NotificationActionTypes.DELETE,
-  payload : id,
+  payload : { id, params },
 });
 
 const onDeleteSuccess = (detail) => ({
@@ -152,9 +152,9 @@ const onDeleteError = (error) => ({
   payload: error,
 });
 
-const onDeleteAll = (id) => ({
+const onDeleteAll = (id, params) => ({
   type: NotificationActionTypes.DELETE_ALL,
-  payload: id,
+  payload: { id, params },
 });
 
 const onDeleteAllSuccess = (detail) => ({

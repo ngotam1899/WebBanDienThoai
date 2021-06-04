@@ -104,8 +104,8 @@ class TheHeaderDropdownNotif extends Component {
 
 const mapStateToProps = (state) =>{
   return {
-    listNotification: state.notification.list,
-    totalNotification: state.notification.total,
+    listNotification: state.notification.detail,
+    totalNotification: state.notification._total,
     userInfo: state.auth.detail,
     isLogin: state.auth.loggedIn,
   }
@@ -114,7 +114,7 @@ const mapStateToProps = (state) =>{
 const mapDispatchToProps =(dispatch)=> {
 	return {
 		onGetAllNotifications : (data) =>{
-			dispatch(NotificationActions.onGetList(data))
+			dispatch(NotificationActions.onGetNewest(data))
     },
     onUpdateAllNotifications : (data) =>{
 			dispatch(NotificationActions.onUpdateAll(data))

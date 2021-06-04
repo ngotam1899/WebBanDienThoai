@@ -19,6 +19,8 @@ export default function(state = init, action) {
       return {
         ...init,
       };
+    case NotificationActionTypes.GET_NEWEST:
+    case NotificationActionTypes.GET_LIST:
     case NotificationActionTypes.CREATE:
     case NotificationActionTypes.UPDATE:
     case NotificationActionTypes.UPDATE_ALL:
@@ -28,10 +30,11 @@ export default function(state = init, action) {
         ...state,
         loading: true,
       };
-    case NotificationActionTypes.GET_LIST:
+    case NotificationActionTypes.GET_NEWEST_SUCCESS:
       return {
         ...state,
-        loading: true,
+        detail: action.payload.detail,
+        _total: action.payload.total
       };
     case NotificationActionTypes.GET_LIST_SUCCESS:
       return {
@@ -48,8 +51,9 @@ export default function(state = init, action) {
         ...state,
         processing: true,
       };
-    case NotificationActionTypes.GET_LIST_ERROR:
+    case NotificationActionTypes.GET_NEWEST_ERROR:
     case NotificationActionTypes.CREATE_ERROR:
+    case NotificationActionTypes.GET_LIST_ERROR:
     case NotificationActionTypes.UPDATE_ERROR:
     case NotificationActionTypes.UPDATE_ALL_ERROR:
     case NotificationActionTypes.DELETE_ERROR:

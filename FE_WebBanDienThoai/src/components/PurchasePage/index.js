@@ -39,7 +39,7 @@ class PurchasePage extends Component {
     this.state = {
       keyword: "",
       filter: {
-        limit: 12,
+        limit: 8,
         page: 0,
       },
     }
@@ -57,6 +57,7 @@ class PurchasePage extends Component {
         ...filters,
         user: props.authInfo && props.authInfo._id
       };
+
       if(props.authInfo)onGetList(params);
     }
   }
@@ -81,6 +82,7 @@ class PurchasePage extends Component {
     const {onUpdate} = this.props;
     onUpdate(id, params);
   }
+
   onDeactivate = (id) => {
     const {t} = this.props;
     confirmAlert({
@@ -213,7 +215,6 @@ class PurchasePage extends Component {
                 <div className="h-120">
                   <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/5fafbb923393b712b96488590b8f781f.png" alt="404 not found"></img>
                 </div>
-                
                 <p>Chưa có đơn hàng</p>
               </div>
             </div>}

@@ -9,7 +9,6 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import UserDetail from './UserDetail'
 import UsersActions from "../../redux/actions/user";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
@@ -84,7 +83,7 @@ class UserList extends Component {
 
   render () {
     const {large} = this.state;
-    const {listUser, userDetail, onClearDetail} = this.props;
+    const {listUser, onClearDetail} = this.props;
     return (
       <>
         <CRow>
@@ -138,8 +137,6 @@ class UserList extends Component {
                       </td>)
                   }}
                 />
-                {(userDetail && large) && <UserDetail large={large} user={userDetail} onClose={this.onClose} onClearDetail={onClearDetail}/>}
-                {(!userDetail && large) && <UserDetail large={large} onClose={this.onClose} onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>
           </CCol>
@@ -152,7 +149,6 @@ class UserList extends Component {
 const mapStateToProps = (state) => {
   return {
     listUser: state.user.list,
-    userDetail: state.user.detail,
   }
 }
 

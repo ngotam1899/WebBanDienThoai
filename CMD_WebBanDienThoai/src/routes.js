@@ -5,6 +5,7 @@ const BrandList = React.lazy(() => import('./components/Brands/BrandList'));
 const ColorList = React.lazy(() => import('./components/Colors/ColorList'));
 const GroupList = React.lazy(() => import('./components/Group/GroupList'));
 const SpecificationList = React.lazy(() => import('./components/Specification/SpecificationList'));
+const NotificationList = React.lazy(() => import('./components/Notifications/NotificationList'));
 
 const UserList = React.lazy(() => import('./components/Users/UserList'));
 const OrderList = React.lazy(() => import('./components/Orders/OrderList'));
@@ -60,6 +61,7 @@ const routes = [
   { path: '/users/order-manage', name: 'Order List', component: OrderList },
 
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+  { path: '/notification', name: 'Notification List', component: NotificationList },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },

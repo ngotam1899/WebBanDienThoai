@@ -3,6 +3,17 @@ import { get } from "lodash";
 import NotificationActions, { NotificationActionTypes } from "../actions/notification";
 import { getAllNotifications, addNotification, updateNotification, deleteNotification, updateAllNotifications, deleteAllNotifications } from "../apis/notification";
 
+function* handleGetNewest({ payload }) {
+  try {
+    const result = yield call(getAllNotifications, payload);
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(NotificationActions.onGetNewestSuccess(data.notifications, data.total));
+  } catch (error) {
+    yield put(NotificationActions.onGetNewestError(error));
+  }
+}
+
 function* handleGetList({ payload }) {
   try {
     const result = yield call(getAllNotifications, payload);
@@ -37,11 +48,12 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateNotification, payload.data, payload.id);
+    const result = yield call(updateNotification, payload.id, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onUpdateSuccess(data));
-    yield put(NotificationActions.onGetList());
+    yield put(NotificationActions.onGetList(payload.params));
+    yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {
     yield put(NotificationActions.onUpdateError(error));
   }
@@ -53,7 +65,8 @@ function* handleUpdateAll({ payload }) {
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onUpdateAllSuccess(data));
-    yield put(NotificationActions.onGetList());
+    yield put(NotificationActions.onGetList(payload.params));
+    yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {
     yield put(NotificationActions.onUpdateAllError(error));
   }
@@ -69,7 +82,8 @@ function* handleDelete({ payload }) {
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onDeleteSuccess(data));
-    yield put(NotificationActions.onGetList());
+    yield put(NotificationActions.onGetList(payload.params));
+    yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {
     yield put(NotificationActions.onDeleteError(error));
   }
@@ -81,12 +95,16 @@ function* handleDeleteAll({ payload }) {
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onDeleteAllSuccess(data));
-    yield put(NotificationActions.onGetList());
+    yield put(NotificationActions.onGetList(payload.params));
+    yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {
     yield put(NotificationActions.onDeleteAllError(error));
   }
 }
 
+export function* watchGetNewest() {
+  yield takeEvery(NotificationActionTypes.GET_NEWEST, handleGetNewest);
+}
 export function* watchGetList() {
   yield takeEvery(NotificationActionTypes.GET_LIST, handleGetList);
 }
@@ -108,6 +126,7 @@ export function* watchDeleteAll() {
 
 export default function* rootSaga() {
   yield all([
+    fork(watchGetNewest),
     fork(watchGetList),
     fork(watchCreate),
     fork(watchUpdate),
