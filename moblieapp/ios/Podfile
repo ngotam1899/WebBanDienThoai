@@ -12,6 +12,8 @@ target 'moblieapp' do
     :hermes_enabled => false
   )
 
+  pod 'RNSearchBar', :path => '../node_modules/react-native-search-bar'
+
   target 'moblieappTests' do
     inherit! :complete
     # Pods for testing

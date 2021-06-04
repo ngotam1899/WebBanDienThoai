@@ -8,7 +8,7 @@ function* handleGetList({payload}) {
     const result = yield call(getAllProductReview, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(ReviewActions.onGetListSuccess(data.reviews, data.total));
+    yield put(ReviewActions.onGetListSuccess(data.reviews, data.total, data.count));
   } catch (error) {
     yield put(ReviewActions.onGetListError(error));
   }
@@ -38,11 +38,11 @@ function* handleCreate({ payload }) {
 
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateReview, payload.id, payload.params);
+    const result = yield call(updateReview, payload.id, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(ReviewActions.onUpdateSuccess(data.review));
-    yield put(ReviewActions.onGetList({product: data.review.product}))
+    yield put(ReviewActions.onGetList(payload.params))
   } catch (error) {
     yield put(ReviewActions.onUpdateError(error));
   }

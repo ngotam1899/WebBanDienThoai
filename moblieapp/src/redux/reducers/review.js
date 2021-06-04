@@ -1,7 +1,6 @@
-import { get } from "lodash";
 import { ReviewActionTypes } from "../actions/review";
-import { toastError, toastSuccess } from '../../utils/toastHelper';
-
+import {ToastAndroid} from 'react-native';
+import { get } from "lodash";
 const init = {
 };
 
@@ -24,12 +23,23 @@ export default function(state = init, action) {
         ...state,
       };
     case ReviewActionTypes.GET_LIST_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Gọi danh sách review thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
         list: get(action, "payload.list", []),
         total: get(action, "payload.total"),
+        count: action.payload.count
       };
     case ReviewActionTypes.GET_DETAIL_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Gọi review thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
         detail: get(action, "payload", {}),
@@ -39,24 +49,33 @@ export default function(state = init, action) {
         ...state,
       };
     case ReviewActionTypes.UPDATE_SUCCESS:
-      toastSuccess("Cập nhật review thành công")
+      ToastAndroid.showWithGravity(
+        "Cập nhật review thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
       };
     case ReviewActionTypes.UPDATE_ERROR:
       var { message } = action.payload;
-      toastError(message)
       return {
         ...state,
       };
     case ReviewActionTypes.CREATE:
       return {...state};
     case ReviewActionTypes.CREATE_SUCCESS:
-      toastSuccess("Tạo đánh giá thành công")
+      ToastAndroid.showWithGravity(
+        "Tạo review thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {...state};
     case ReviewActionTypes.CREATE_ERROR:
+      /* eslint-disable */
       var { message } = action.payload;
       toastError(message)
+      /* eslint-disable */
       return {...state};
     default:
       return state;

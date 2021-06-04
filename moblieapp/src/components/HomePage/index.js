@@ -12,6 +12,7 @@ import ProductsActions from '../../redux/actions/products';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AuthorizationActions from '../../redux/actions/auth';
 import {AsyncStorage} from 'react-native';
+import numberWithCommas from '../../utils/formatPrice';
 
 const section_banner = require('../../assets/section_banner.png');
 
@@ -91,7 +92,7 @@ class HomePage extends Component {
                             ? product.bigimage.public_url
                             : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
                         }
-                        price={product.price_min}
+                        price={numberWithCommas(product.price_min)}
                         navigation={navigation}
                         id={product._id}
                       />
@@ -116,7 +117,7 @@ class HomePage extends Component {
                             ? product.bigimage.public_url
                             : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
                         }
-                        price={product.price_min}
+                        price={numberWithCommas(product.price_min)}
                         navigation={navigation}
                         id={product._id}
                       />
@@ -137,7 +138,7 @@ class HomePage extends Component {
                             ? product.bigimage.public_url
                             : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
                         }
-                        price={product.price_min}
+                        price={numberWithCommas(product.price_min)}
                         navigation={navigation}
                         id={product._id}
                       />

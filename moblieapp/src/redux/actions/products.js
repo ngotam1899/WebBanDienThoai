@@ -37,6 +37,7 @@ export const ProductsActionTypes = {
   UPDATE_PRODUCT_CART: 'UPDATE_PRODUCT_CART',
   DELETE_PRODUCT_CART: 'DELETE_PRODUCT_CART',
   ON_CLEAR_CART: 'ON_CLEAR_CART',
+  PURCHASE_AGAIN: "PURCHASE_AGAIN",
 
   ON_CHECKOUT: 'ON_CHECKOUT',
   END_CHECKOUT: 'END_CHECKOUT',
@@ -197,6 +198,12 @@ const onDeleteProductToCart = color => {
   };
 };
 
+const onPurchaseAgain = (order_list) =>{
+  return {
+    type: ProductsActionTypes.PURCHASE_AGAIN,
+    order_list
+  }
+}
 const onCheckout = () => (
   {
   type: ProductsActionTypes.ON_CHECKOUT,
@@ -273,6 +280,7 @@ const ProductsActions = {
   onAddProductToCart,
   onDeleteProductToCart,
   onClearCart,
+  onPurchaseAgain,
   onUpdateProductInCart,
   onChangeCurrency,
 

@@ -211,7 +211,6 @@ class CheckoutPage extends Component {
         is_paid: false,
       };
     }
-    console.log('checkout: ',data)
     onCreateAnOrder(data);
   }
 

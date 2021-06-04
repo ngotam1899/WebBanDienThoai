@@ -44,7 +44,7 @@ class ProfileScreen extends Component {
     onLogout();
     navigation.navigate('Home');
   };
-
+  
   render() {
     const {navigation, userInfo} = this.props;
     return (
@@ -95,7 +95,16 @@ class ProfileScreen extends Component {
           )}
           {/*  */}
           <View style={styles.divider} />
-          <TouchableOpacity onPress={() => navigation.navigate('Orders')}><ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" /></TouchableOpacity>
+          {userInfo ? (
+            <TouchableOpacity onPress={() => navigation.navigate('Orders')}>
+              <ProfileItem
+                icon="format-list-bulleted"
+                name="Quản lý đơn hàng"
+              />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
           <ProfileItem icon="cart-outline" name="Sản phẩm đã mua" />
           <ProfileItem icon="eye-outline" name="Sản phẩm đã xem" />
           <ProfileItem icon="heart-outline" name="Sản phẩm yêu thích" />
@@ -109,27 +118,31 @@ class ProfileScreen extends Component {
           <View style={styles.divider} />
           <ProfileItem icon="headphones" name="Hỗ trợ" />
         </View>
-            {userInfo ?         <View style={{alignItems: 'center'}}>
-          <View style={styles.button}>
-            <TouchableOpacity
-              style={styles.signOut}
-              onPress={() => this.setLogout()}>
-              <LinearGradient
-                colors={['#fa1111', '#c22f2f']}
-                style={styles.signOut}>
-                <Text
-                  style={[
-                    styles.textSignOut,
-                    {
-                      color: '#fff',
-                    },
-                  ]}>
-                  ĐĂNG XUẤT
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
+        {userInfo ? (
+          <View style={{alignItems: 'center'}}>
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.signOut}
+                onPress={() => this.setLogout()}>
+                <LinearGradient
+                  colors={['#fa1111', '#c22f2f']}
+                  style={styles.signOut}>
+                  <Text
+                    style={[
+                      styles.textSignOut,
+                      {
+                        color: '#fff',
+                      },
+                    ]}>
+                    ĐĂNG XUẤT
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View> : <></>}
+        ) : (
+          <></>
+        )}
       </View>
     );
   }
@@ -222,7 +235,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 0,
     width: width - 40,
-    marginBottom: 20
+    marginBottom: 20,
   },
   signOut: {
     width: '100%',

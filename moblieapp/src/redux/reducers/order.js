@@ -73,11 +73,23 @@ export default function(state = init, action) {
     case OrdersActionsTypes.GET_DETAIL:
       return {...state};
     case OrdersActionsTypes.GET_DETAIL_SUCCESS:
+      ToastAndroid.showWithGravity(
+        "Gọi chi tiết đơn hàng thành công",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
       return {
         ...state,
         loadingDetail: false,
         detail: action.payload,
       };
+    case OrdersActionsTypes.GET_DETAIL_ERROR:
+        ToastAndroid.showWithGravity(
+          "Gọi đơn hàng thất bại",
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP
+        );
+        return {...state};
     case OrdersActionsTypes.UPDATE:
       return {
         ...state,
@@ -103,8 +115,6 @@ export default function(state = init, action) {
       return {
         ...state,
       };
-    case OrdersActionsTypes.GET_DETAIL_ERROR:
-      return {...state};
     default:
       return state;
   }

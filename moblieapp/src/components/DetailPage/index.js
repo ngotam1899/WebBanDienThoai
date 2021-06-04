@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import styles from './style';
 import {AsyncStorage} from 'react-native';
 import {Rating} from 'react-native-ratings';
+import numberWithCommas from '../../utils/formatPrice';
 import {
   Text,
   View,
@@ -98,6 +99,7 @@ class ProductDetail extends Component {
       quantity: quantity,
       color: color,
     };
+    console.log('Detail: ',itemCart)
     if (color !== '') {
       AsyncStorage.getItem('cart')
         .then(datacart => {
@@ -164,7 +166,7 @@ class ProductDetail extends Component {
               <Text style={styles.price}>
                 {product.price_min === product.price_max
                   ? product.price_min
-                  : `${product.price_min}-${product.price_max}`}{' '}
+                  : `${numberWithCommas(product.price_min)}-${numberWithCommas(product.price_max)}`}{' '}
                 VND
               </Text>
             </View>
@@ -205,7 +207,7 @@ class ProductDetail extends Component {
                     }
                     onPress={() => this.setColor(item)}>
                     <Text style={styles.textColor}>{item.name_vn}</Text>
-                    <Text style={styles.textColor}>{item.price}</Text>
+                    <Text style={styles.textColor}>{numberWithCommas(item.price)}</Text>
                   </TouchableOpacity>
                 ))}
             </View>

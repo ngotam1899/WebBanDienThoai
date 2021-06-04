@@ -4,6 +4,7 @@ import ProductsActions from '../../redux/actions/products';
 import {connect} from 'react-redux';
 import {Text, View, Image, TouchableOpacity, Dimensions} from 'react-native';
 var {width} = Dimensions.get('window');
+
 // import icons
 import Icon from 'react-native-vector-icons/Ionicons';
 
