@@ -5,6 +5,8 @@ import styles from './style';
 import {AsyncStorage} from 'react-native';
 import {Rating} from 'react-native-ratings';
 import numberWithCommas from '../../utils/formatPrice';
+import getRNDraftJSBlocks from 'react-native-draftjs-render';
+
 import {
   Text,
   View,
@@ -13,7 +15,7 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
-  ToastAndroid
+  ToastAndroid,
 } from 'react-native';
 
 const {width} = Dimensions.get('window');
@@ -99,7 +101,6 @@ class ProductDetail extends Component {
       quantity: quantity,
       color: color,
     };
-    console.log('Detail: ',itemCart)
     if (color !== '') {
       AsyncStorage.getItem('cart')
         .then(datacart => {
@@ -121,9 +122,9 @@ class ProductDetail extends Component {
             this.props.onAddProductToCart();
           }
           ToastAndroid.showWithGravity(
-            "Thêm vào giỏ hàng thành công",
+            'Thêm vào giỏ hàng thành công',
             ToastAndroid.SHORT,
-            ToastAndroid.TOP
+            ToastAndroid.TOP,
           );
         })
         .catch(err => {
@@ -133,9 +134,35 @@ class ProductDetail extends Component {
       alert('Vui lòng chọn màu bạn muốn mua');
     }
   };
+
   render() {
     const {product, group, navigation, route} = this.props;
     const {color} = this.state;
+
+    const atomicHandler = (
+      item: Object,
+      entityMap: Object,
+    ): ?React$Element<*> => {
+      switch (item.data.type) {
+        case 'image':
+          return (
+            <View key={item.key} style={{flex: 1}}>
+              <Image
+                style={{
+                  width: 240,
+                  height: 300,
+                  borderColor: '#ccc',
+                  borderWidth: 1,
+                }}
+                source={{uri: item.data.url}}
+              />
+            </View>
+          );
+        default:
+          return null;
+      }
+    };
+
     return (
       <>
         {product && (
@@ -155,18 +182,20 @@ class ProductDetail extends Component {
             <View style={{marginHorizontal: 20, marginTop: 10}}>
               <Text style={styles.name}>{product.name}</Text>
               <Rating
-              type = "star"
+                type="star"
                 ratingCount={5}
-                readonly= {true}
-                startingValue = {product.stars}
-                style = {{alignItems:'flex-start'}}
-                size = {15}
-                imageSize ={18}
+                readonly={true}
+                startingValue={product.stars}
+                style={{alignItems: 'flex-start'}}
+                size={15}
+                imageSize={18}
               />
               <Text style={styles.price}>
                 {product.price_min === product.price_max
                   ? product.price_min
-                  : `${numberWithCommas(product.price_min)}-${numberWithCommas(product.price_max)}`}{' '}
+                  : `${numberWithCommas(product.price_min)}-${numberWithCommas(
+                      product.price_max,
+                    )}`}{' '}
                 VND
               </Text>
             </View>
@@ -193,7 +222,6 @@ class ProductDetail extends Component {
             ) : (
               <></>
             )}
-
             <Text style={styles.titleName}>Chọn màu sản phẩm</Text>
             <View style={styles.contentColors}>
               {product.colors &&
@@ -207,7 +235,9 @@ class ProductDetail extends Component {
                     }
                     onPress={() => this.setColor(item)}>
                     <Text style={styles.textColor}>{item.name_vn}</Text>
-                    <Text style={styles.textColor}>{numberWithCommas(item.price)}</Text>
+                    <Text style={styles.textColor}>
+                      {numberWithCommas(item.price)}
+                    </Text>
                   </TouchableOpacity>
                 ))}
             </View>
@@ -219,7 +249,7 @@ class ProductDetail extends Component {
               </TouchableOpacity>
             </View>
             <Text style={styles.titleName}>Mô tả sản phẩm</Text>
-            <Text style={styles.textDescription}>{product.description}</Text>
+            <ScrollView style={{flex: 1, padding: 20}}>{getRNDraftJSBlocks({contentState:JSON.parse(product.description), atomicHandler})}</ScrollView>
             <Text style={styles.titleName}>Thông số kỹ thuật</Text>
             <FlatList
               data={product.specifications}
@@ -242,7 +272,7 @@ const mapStateToProps = state => {
     currency: state.currency,
     review: state.review.list,
     total: state.review.total,
-    authInfo: state.auth.detail
+    authInfo: state.auth.detail,
   };
 };
 
@@ -254,7 +284,7 @@ const mapDispatchToProps = dispatch => {
     onAddProductToCart: () => {
       dispatch(ProductsActions.onAddProductToCart());
     },
-    onGetReviews: (params) => {
+    onGetReviews: params => {
       dispatch(ReviewActions.onGetList(params));
     },
     onClearStateReview: () => {

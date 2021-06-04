@@ -1,0 +1,372 @@
+{
+  "blocks": [
+    {
+      "key": "1kjrr",
+      "text": "Điện thoại iPhone 12 Pro Max: Nâng tầm đẳng cấp sử dụng",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 55, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 55, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 55, "style": "fontsize-12"},
+        {"offset": 0, "length": 55, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 55, "style": "color-rgb(10,38,60)"},
+        {"offset": 0, "length": 55, "style": "fontsize-21"},
+        {"offset": 0, "length": 55, "style": "fontfamily-inherit"},
+        {"offset": 0, "length": 55, "style": "BOLD"}
+      ],
+      "entityRanges": [],
+      "data": {"text-align": "start"}
+    },
+    {
+      "key": "c022t",
+      "text": "Cứ mỗi năm, đến dạo cuối tháng 8 và gần đầu tháng 9 thì mọi thông tin sôi sục mới về chiếc iPhone mới lại xuất hiện. Apple năm nay lại ra thêm một chiếc iPhone mới với tên gọi mới là iPhone 12 Pro Max, đây là một dòng điện thoại mới và mạnh mẽ nhất của nhà Apple năm nay. Mời bạn tham khảo thêm một số mô tả sản phẩm bên dưới để bạn có thể ra quyết định mua sắm.",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 182, "style": "color-rgb(68,68,68)"},
+        {"offset": 183, "length": 179, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 182, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 183, "length": 179, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 182, "style": "fontsize-12"},
+        {"offset": 183, "length": 179, "style": "fontsize-12"},
+        {"offset": 0, "length": 182, "style": "fontfamily-sans-serif"},
+        {"offset": 183, "length": 179, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 182, "style": "fontsize-15"},
+        {"offset": 183, "length": 179, "style": "fontsize-15"},
+        {"offset": 183, "length": 17, "style": "BOLD"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "5e2qd",
+      "text": "Màn hình 6.7 inches Super Retina XDR",
+      "type": "header-three",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 36, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 36, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 36, "style": "fontsize-12"},
+        {"offset": 0, "length": 36, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 36, "style": "color-rgb(10,38,60)"},
+        {"offset": 0, "length": 36, "style": "fontsize-1.75rem"},
+        {"offset": 0, "length": 36, "style": "fontfamily-inherit"},
+        {"offset": 0, "length": 36, "style": "BOLD"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "2tr3",
+      "text": "Năm nay, công nghệ màn hình trên 12 Pro Max cũng được đổi mới và trang bị tốt hơn cùng kích thước lên đến 6.7 inch, lớn hơn so với điện thoại iPhone 12. Với công nghệ màn hình OLED cho khả năng hiển thị hình ảnh lên đến 2778 x 1284 pixels. Bên cạnh đó, màn hình này còn cho độ sáng tối đa cao nhất lên đến 800 nits, luôn đảm bảo cho bạn một độ sáng cao và dễ nhìn nhất ngoài nắng.",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 130, "style": "color-rgb(68,68,68)"},
+        {"offset": 131, "length": 249, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 130, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 131, "length": 249, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 130, "style": "fontsize-12"},
+        {"offset": 131, "length": 249, "style": "fontsize-12"},
+        {"offset": 0, "length": 130, "style": "fontfamily-sans-serif"},
+        {"offset": 131, "length": 249, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 130, "style": "fontsize-15"},
+        {"offset": 131, "length": 249, "style": "fontsize-15"},
+        {"offset": 131, "length": 20, "style": "color-rgb(215,0,24)"},
+        {"offset": 131, "length": 20, "style": "bgcolor-transparent"}
+      ],
+      "entityRanges": [{"offset": 131, "length": 20, "key": 0}],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "74rls",
+      "text": "",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "9rrmd",
+      "text": " ",
+      "type": "atomic",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [{"offset": 0, "length": 1, "key": 1}],
+      "data": {}
+    },
+    {
+      "key": "5pqsh",
+      "text": "Một điểm đổi mới nữa trên màn hình của chiếc điện thoại Apple iPhone 12 năm nay là việc chúng được thiết kế với khung viền vuông vức, viền thép không gỉ mang đến vẻ đẹp sang trọng cho điện thoại. Máy cũng được trang bị nhiều phiên bản màu sắc đặc biệt cho người dùng lựa chọn.",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 276, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 276, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 276, "style": "fontsize-12"},
+        {"offset": 0, "length": 276, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 276, "style": "fontsize-15"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "q03p",
+      "text": "RAM 6GB đa nhiệm thoải mái, bộ nhớ trong dung lượng lớn",
+      "type": "header-three",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 55, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 55, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 55, "style": "fontsize-12"},
+        {"offset": 0, "length": 55, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 55, "style": "color-rgb(10,38,60)"},
+        {"offset": 0, "length": 55, "style": "fontsize-1.75rem"},
+        {"offset": 0, "length": 55, "style": "fontfamily-inherit"},
+        {"offset": 0, "length": 55, "style": "BOLD"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "956sv",
+      "text": "Về trang bị phần cứng bên trong thì iPhone 12 Pro Max có một thanh RAM lên đến 6GB. Điều này cho thấy rằng Apple ngày đang lắng nghe người dùng nhiều hơn khi trang bị một dung lượng RAM lớn hơn để việc đa nhiệm ngày càng được cải thiện hơn. Việc thanh ram lớn giúp cho bạn trải nghiệm các tựa game và đa nhiệm mượt mà hơn.",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 322, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 322, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 322, "style": "fontsize-12"},
+        {"offset": 0, "length": 322, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 322, "style": "fontsize-15"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "76edt",
+      "text": "",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "eqgaa",
+      "text": " ",
+      "type": "atomic",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [{"offset": 0, "length": 1, "key": 2}],
+      "data": {}
+    },
+    {
+      "key": "fuihc",
+      "text": "Năm nay, 12 Pro Max cũng sẽ có ba phiên bản bộ nhớ trong khác nhau, với bộ nhớ trong nhỏ nhất bắt đầu từ 128GB, 256GB và cao nhất sẽ là 512GB. Một chiếc điện thoại mà có một bộ nhớ trong lớn ngang ngửa một chiếc laptop là điều mà Apple muốn mang lại cho người dùng để có thể san sẻ bớt bộ nhớ cho các thiết bị khác.",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 315, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 315, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 315, "style": "fontsize-12"},
+        {"offset": 0, "length": 315, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 315, "style": "fontsize-15"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "52d8u",
+      "text": "Con chip Apple A14 SoC 5nm, RAM 6GB mạnh mẽ",
+      "type": "header-three",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 43, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 43, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 43, "style": "fontsize-12"},
+        {"offset": 0, "length": 43, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 43, "style": "color-rgb(10,38,60)"},
+        {"offset": 0, "length": 43, "style": "fontsize-1.75rem"},
+        {"offset": 0, "length": 43, "style": "fontfamily-inherit"},
+        {"offset": 0, "length": 43, "style": "BOLD"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "bo11o",
+      "text": "iPhone 12 Pro Max không những chỉ có các cải tiến trên, mà chúng còn có một thứ cải tiến được coi là nguồn lõi và là trái tim để vận hành chiếc điện thoại siêu phẩm 2020, đó là con chip Apple A14 SoC 5nm. Trang bị này giúp cho điện thoại có một sức mạnh đáng gờm hơn các đối thủ hơn về hiệu năng, hiệu suất sử dụng pin.",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 319, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 319, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 319, "style": "fontsize-12"},
+        {"offset": 0, "length": 319, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 319, "style": "fontsize-15"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "dfk9u",
+      "text": "",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "1a844",
+      "text": " ",
+      "type": "atomic",
+      "depth": 0,
+      "inlineStyleRanges": [],
+      "entityRanges": [{"offset": 0, "length": 1, "key": 3}],
+      "data": {}
+    },
+    {
+      "key": "4v37f",
+      "text": "Máy cũng được trang bị chuẩn kết nối wifi và mạng di động giúp cho bạn có thể cải thiện hiệu suất sử dụng mạng và chúng còn giúp các đường truyền tín hiệu luôn được đảm bảo không rớt kết nối và tăng chất lượng hiển thị hình ảnh trên mạng.",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 238, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 238, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 238, "style": "fontsize-12"},
+        {"offset": 0, "length": 238, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 238, "style": "fontsize-15"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "6s95g",
+      "text": "Cụm 3 camera sau với độ phân giải 12MP  ",
+      "type": "header-three",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 40, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 40, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 40, "style": "fontsize-12"},
+        {"offset": 0, "length": 40, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 40, "style": "color-rgb(10,38,60)"},
+        {"offset": 0, "length": 40, "style": "fontsize-1.75rem"},
+        {"offset": 0, "length": 40, "style": "fontfamily-inherit"},
+        {"offset": 0, "length": 40, "style": "BOLD"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    },
+    {
+      "key": "f2g2i",
+      "text": "Có thể nói camera cũng là một bước tiến mới trên iPhone 12 Pro Max khi chúng có một bộ 3 camera với chung một độ phân giải là 12MP. Tuy nhiên chúng có khẩu độ lớn và mật độ điểm ảnh trên một panel cũng lớn hơn, do đó chúng cho hình ảnh chi tiết hơn, bắt sáng tốt hơn. Ngoài ra, kết hợp chống rung quang học OIS thì máy còn có thể quay phim 4K tốt. ",
+      "type": "unstyled",
+      "depth": 0,
+      "inlineStyleRanges": [
+        {"offset": 0, "length": 48, "style": "color-rgb(68,68,68)"},
+        {"offset": 49, "length": 17, "style": "color-rgb(68,68,68)"},
+        {"offset": 67, "length": 280, "style": "color-rgb(68,68,68)"},
+        {"offset": 0, "length": 48, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 49, "length": 17, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 67, "length": 280, "style": "bgcolor-rgb(255,255,255)"},
+        {"offset": 0, "length": 48, "style": "fontsize-12"},
+        {"offset": 49, "length": 17, "style": "fontsize-12"},
+        {"offset": 67, "length": 280, "style": "fontsize-12"},
+        {"offset": 0, "length": 48, "style": "fontfamily-sans-serif"},
+        {"offset": 49, "length": 17, "style": "fontfamily-sans-serif"},
+        {"offset": 67, "length": 280, "style": "fontfamily-sans-serif"},
+        {"offset": 0, "length": 48, "style": "fontsize-15"},
+        {"offset": 49, "length": 17, "style": "fontsize-15"},
+        {"offset": 67, "length": 280, "style": "fontsize-15"},
+        {"offset": 49, "length": 17, "style": "BOLD"}
+      ],
+      "entityRanges": [],
+      "data": {"margin-left": "0px"}
+    }
+  ],
+  "entityMap": {
+    "0": {
+      "type": "LINK",
+      "mutability": "MUTABLE",
+      "data": {
+        "url": "https://cellphones.com.vn/iphone-12.html",
+        "title": "điện thoại iPhone 12",
+        "targetOption": "",
+        "_map": {
+          "type": "LINK",
+          "mutability": "MUTABLE",
+          "data": {
+            "url": "https://cellphones.com.vn/iphone-12.html",
+            "title": "điện thoại iPhone 12",
+            "targetOption": ""
+          }
+        }
+      }
+    },
+    "1": {
+      "type": "IMAGE",
+      "mutability": "MUTABLE",
+      "data": {
+        "src": "https://cdn.cellphones.com.vn/media/wysiwyg/mobile/apple/iphone-12-pro-max-1.jpg",
+        "alt": "Màn hình 6.7 inches Super Retina XDR",
+        "height": "",
+        "width": "",
+        "_map": {
+          "type": "IMAGE",
+          "mutability": "MUTABLE",
+          "data": {
+            "src": "https://cdn.cellphones.com.vn/media/wysiwyg/mobile/apple/iphone-12-pro-max-1.jpg",
+            "alt": "Màn hình 6.7 inches Super Retina XDR",
+            "height": "",
+            "width": ""
+          }
+        }
+      }
+    },
+    "2": {
+      "type": "IMAGE",
+      "mutability": "MUTABLE",
+      "data": {
+        "src": "https://cdn.cellphones.com.vn/media/wysiwyg/mobile/apple/iphone-12-pro-max-2.jpg",
+        "alt": "RAM 6GB đa nhiệm thoải mái, bộ nhớ trong dung lượng lớn",
+        "height": "",
+        "width": "",
+        "_map": {
+          "type": "IMAGE",
+          "mutability": "MUTABLE",
+          "data": {
+            "src": "https://cdn.cellphones.com.vn/media/wysiwyg/mobile/apple/iphone-12-pro-max-2.jpg",
+            "alt": "RAM 6GB đa nhiệm thoải mái, bộ nhớ trong dung lượng lớn",
+            "height": "",
+            "width": ""
+          }
+        }
+      }
+    },
+    "3": {
+      "type": "IMAGE",
+      "mutability": "MUTABLE",
+      "data": {
+        "src": "https://cdn.cellphones.com.vn/media/wysiwyg/mobile/apple/iphone-12-pro-max-1_1.jpg",
+        "alt": "Con chip Apple A14 SoC 5nm cùng khả năng kết nối 5G hiện đại",
+        "height": "",
+        "width": "",
+        "_map": {
+          "type": "IMAGE",
+          "mutability": "MUTABLE",
+          "data": {
+            "src": "https://cdn.cellphones.com.vn/media/wysiwyg/mobile/apple/iphone-12-pro-max-1_1.jpg",
+            "alt": "Con chip Apple A14 SoC 5nm cùng khả năng kết nối 5G hiện đại",
+            "height": "",
+            "width": ""
+          }
+        }
+      }
+    }
+  }
+}
