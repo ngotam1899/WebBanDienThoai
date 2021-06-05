@@ -3,6 +3,10 @@ export const CategoryActionTypes = {
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
 
+  GET_LIST_KEYWORD: "GET_LIST_KEYWORD",
+  GET_LIST_KEYWORD_SUCCESS: "GET_LIST_KEYWORD_SUCCESS",
+  GET_LIST_KEYWORD_ERROR: "GET_LIST_KEYWORD_ERROR",
+
   GET_DETAIL: "GET_DETAIL",
   GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
   GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
@@ -33,6 +37,22 @@ const onGetListError = (error) => ({
   payload: error,
 });
 
+const onGetListKeyword = (payload) => ({
+  type: CategoryActionTypes.GET_LIST_KEYWORD,
+  payload,
+});
+
+const onGetListKeywordSuccess = (payload) => ({
+  type: CategoryActionTypes.GET_LIST_KEYWORD_SUCCESS,
+  payload,
+});
+
+const onGetListKeywordError = (error) => ({
+  type: CategoryActionTypes.GET_LIST_KEYWORD_ERROR,
+  payload: error,
+});
+
+
 /**
  *
  * @param String id
@@ -56,6 +76,10 @@ const CategoryActions = {
   onGetList,
   onGetListSuccess,
   onGetListError,
+
+  onGetListKeyword,
+  onGetListKeywordSuccess,
+  onGetListKeywordError,
 
   onGetDetail,
   onGetDetailSuccess,

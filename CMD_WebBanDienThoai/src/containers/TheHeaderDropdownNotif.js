@@ -33,7 +33,7 @@ class TheHeaderDropdownNotif extends Component {
     const {onGetAllNotifications, totalNotification, userInfo} = this.props
     if (userInfo !== prevProps.userInfo && userInfo) {
       var admin = userInfo._id;
-      onGetAllNotifications({admin, limit: 5, page: 0})
+      onGetAllNotifications({admin, limit: 5, page: 0, active: 1})
     }
     if (totalNotification !== prevProps.totalNotification && totalNotification) {
       this.setState({itemsCount: totalNotification})
@@ -44,7 +44,7 @@ class TheHeaderDropdownNotif extends Component {
     if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
       toastInfo(`${email} vừa xác thực đơn hàng`)
       var admin = userInfo._id;
-      onGetAllNotifications({admin, limit: 5, page: 0})
+      onGetAllNotifications({admin, limit: 5, page: 0, active: 1})
     }
   }
 

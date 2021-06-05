@@ -60,8 +60,6 @@ const successPayPal = async(req, res, next) => {
         console.log(error.response);
         throw error;
       } else {
-        console.log("Get Payment Response");
-        console.log(JSON.stringify(payment));
         res.render("success");
       }
     });

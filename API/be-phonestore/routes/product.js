@@ -22,10 +22,12 @@ router.route('/brands/:IDBrand')
 	.delete(passport.authenticate('jwt', { session: false }), brandController.deleteBrand);
 
 // Region CateGory
-router.route('/categorys')
+router.route('/categories-search')
+	.get(categoryController.getAllCategorySortByKeyword)
+router.route('/categories')
 	.get(categoryController.getAllCategory)
 	.post(passport.authenticate('jwt', { session: false }), categoryController.addCategory);
-router.route('/categorys/:IDCategory')
+router.route('/categories/:IDCategory')
 	.put(passport.authenticate('jwt', { session: false }), categoryController.updateCategory)
 	.delete(passport.authenticate('jwt', { session: false }), categoryController.deleteCategory)
 	.get(categoryController.getDetailCategory);

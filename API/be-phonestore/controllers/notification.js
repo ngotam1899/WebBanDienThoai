@@ -4,6 +4,7 @@ const Validator = require('../validators/validator')
 const getAllNotification = async(req, res, next) => {
   try {
     let condition = {}
+    let conditions = {}
     if (req.query.user != undefined && req.query.user != "") {
 			condition.user = req.query.user;
     }
@@ -13,6 +14,9 @@ const getAllNotification = async(req, res, next) => {
     if (req.query.type != undefined && req.query.type != "") {
 			condition.type = parseInt(req.query.type);
     }
+    if (req.query.active != undefined && req.query.active != "") {
+			conditions.active = req.query.active=='1' ? true : false;
+		}
     let limit = 5;
     let page = 0;
     if (req.query.limit != undefined && req.query.limit != "") {
@@ -32,7 +36,7 @@ const getAllNotification = async(req, res, next) => {
     .sort({ createAt: 1 })
     .limit(limit)
     .skip(limit * page)
-    let total = await Notification.countDocuments({...condition, active : true});
+    let total = await Notification.countDocuments(condition, conditions);
     return res.status(200).json({ success: true, code: 200, message: '', total, notifications })
   } catch (error) {
     return next(error)

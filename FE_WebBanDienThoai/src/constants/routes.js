@@ -26,7 +26,7 @@ const routes = [
 		path: '/search',
 		exact: true,
 		name: "Search",
-		main: ({match, location}) => <SearchPage match={match} location={location}/>
+		main: ({match, location, history}) => <SearchPage match={match} location={location} history={history}/>
 	},
 	{
 		path: '/products/:pathseo/:categoryID',

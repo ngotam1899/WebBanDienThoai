@@ -10,6 +10,8 @@ const init = {
 export default function(state = init, action) {
   switch (action.type) {
     case CategoryActionTypes.GET_LIST:
+    case CategoryActionTypes.GET_LIST_KEYWORD:
+    case CategoryActionTypes.GET_DETAIL:
       return {
         ...state,
         loading: true,
@@ -18,6 +20,13 @@ export default function(state = init, action) {
       return {
         ...state,
          loading: false,
+         list: null
+      };
+    case CategoryActionTypes.GET_LIST_KEYWORD_ERROR:
+      return {
+        ...state,
+          loading: false,
+          search: null
       };
     case CategoryActionTypes.GET_LIST_SUCCESS:
       return {
@@ -25,7 +34,6 @@ export default function(state = init, action) {
         loading: false,
         list: get(action, "payload", []), // list: action.payload
       };
-    case CategoryActionTypes.GET_DETAIL:
     case CategoryActionTypes.GET_DETAIL_ERROR:
       return {
         ...state,
@@ -37,6 +45,12 @@ export default function(state = init, action) {
         ...state,
         loadingDetail: false,
         detail: action.payload,
+      };
+    case CategoryActionTypes.GET_LIST_KEYWORD_SUCCESS:
+      return {
+        ...state,
+          loading: false,
+          search: action.payload
       };
     default:
       return state;

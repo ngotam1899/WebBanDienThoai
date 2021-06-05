@@ -1,14 +1,47 @@
 const Category = require('../models/Category')
+const Product = require('../models/Product');
 const Specification = require('../models/specification')
 const Validator = require('../validators/validator')
 
-const createError = require('http-errors')
+const getAllCategorySortByKeyword = async(req, res, next) => {
+  try {
+    var condition = {
+			'active': true
+		}
+		if (req.query.keyword != undefined && req.query.keyword != '') {
+			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+			condition = {$or:[
+				{name:{$regex: '.*' + keyword.trim() + '.*', $options: 'i'}},
+				{desc_text:{$regex: '.*' + keyword.trim() + '.*', $options: 'i'}}
+			]};
+		}
+		const pipeline = [
+			{
+				'$match': condition
+			},
+			{	'$group': 	
+				{
+					'_id': '$category',
+					'count': { '$sum': 1 }
+				}
+			},
+			{
+				'$sort': { 'count': -1, '_id': -1 }
+			}
+    ];
+    const categories = await Product.aggregate(pipeline);
+    await Category.populate(categories, {path: "_id", select: 'name'})
+    return res.status(200).json({ success: true, code: 200, message: '', categories})
+  } catch (error) {
+    return next(error)
+  }
+}
 
 const getAllCategory = async(req, res, next) => {
   try {
     const categorys = await Category.find()
     .populate({ path: 'specifications', select: ['selections', 'name'], populate : {path : 'selections', select: "name"}  })
-    return res.status(200).json({ success: true, code: 200, message: '', categorys: categorys })
+    return res.status(200).json({ success: true, code: 200, message: '', categorys})
   } catch (error) {
     return next(error)
   }
@@ -74,9 +107,10 @@ const getDetailCategory = async(req, res, next) => {
 }
 
 module.exports = {
-    getAllCategory,
-    addCategory,
-    updateCategory,
-    deleteCategory,
-    getDetailCategory
+  getAllCategorySortByKeyword,
+  getAllCategory,
+  addCategory,
+  updateCategory,
+  deleteCategory,
+  getDetailCategory
 }

@@ -376,7 +376,7 @@ const bestSellerProduct = async (req, res, next) => {
 		{
 			'$sort': { 'count': -1 }
 		}, {
-			'$limit': 3
+			'$limit': 4
 		},
 	];
 	const order = await Order.aggregate(pipeline);
@@ -388,7 +388,7 @@ const bestSellerProduct = async (req, res, next) => {
 const newestProduct = async (req, res, next) => {
 	let products = await Product.find({active: true}, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
 		.populate({ path: 'bigimage', select: 'public_url' })
-		.limit(3)
+		.limit(4)
 		.sort({'createdAt' : -1})
 	return res.status(200).json({ success: true, code: 200, products });
 }
@@ -398,7 +398,7 @@ const favoriteProduct = async (req, res, next) => {
 		{
 			'$sort': { 'stars': -1 }
 		}, {
-			'$limit': 3
+			'$limit': 4
 		},
 		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_min': 1, 'pathseo': 1, 'active' : 1 } }
 	];

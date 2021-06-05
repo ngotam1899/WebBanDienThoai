@@ -78,7 +78,7 @@ class Header extends Component {
     }
     if (userInfo !== prevProps.userInfo && userInfo) {
       var user = userInfo._id;
-      onGetAllNotifications({user, limit: 5, page: 0})
+      onGetAllNotifications({user, limit: 5, page: 0, active: 1})
     }
     if (totalNotification !== prevProps.totalNotification) {
       this.setState({itemsCount: totalNotification})
