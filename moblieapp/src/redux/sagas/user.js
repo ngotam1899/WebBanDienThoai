@@ -1,7 +1,7 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import UsersActions, { UsersActionTypes } from "../actions/user";
-import AuthorizationActions, { AuthorizationActionTypes } from "../actions/auth";
+import AuthorizationActions from "../actions/auth";
 import { addImage } from "../apis/cloudinary";
 import { updateUserInfo, getUser, changePassword } from "../apis/user";
 
@@ -10,7 +10,7 @@ import { updateUserInfo, getUser, changePassword } from "../apis/user";
  * update
  */
 function* handleUpdate( {payload} ) {
-  const {firstname, lastname, phonenumber, address, email} = payload.params;
+  const {firstname, lastname, phonenumber, address, email, history} = payload.params;
   var result, detailResult = null;
   try {
     if(payload.params.image){
@@ -22,7 +22,7 @@ function* handleUpdate( {payload} ) {
       if (result.data.code !== 200) throw result.data;
     }
     else{
-      result = yield call(updateUserInfo, {firstname, lastname, phonenumber, address, email, image}, payload.id);
+      result = yield call(updateUserInfo, {firstname, lastname, phonenumber, address, email, history}, payload.id);
       const data = get(result, "data", {});
       if (data.code !== 200) throw data;
     }

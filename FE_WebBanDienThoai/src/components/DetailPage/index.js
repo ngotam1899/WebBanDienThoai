@@ -104,6 +104,7 @@ class DetailPage extends Component {
     }(document, 'script', 'facebook-jssdk'));
     /* FB comment plugin */
     const { match, onGetDetailProduct, onGetReviews, onGetLike, onGetRelate } = this.props;
+    console.log('id: ',match.params.productID)
     onGetDetailProduct(match.params.productID);
     onGetLike(match.params.productID);
     onGetRelate(match.params.productID);
@@ -201,7 +202,7 @@ class DetailPage extends Component {
     const {product, currency, t, review, group, total, count, location, relate, like, authInfo } = this.props;
     const {quantity, imageColor, check, _check } = this.state;
     const filter = getFilterParams(location.search);
-    
+     console.log('review: ',review)
     return (<>
       <div className="application">
         <Helmet>

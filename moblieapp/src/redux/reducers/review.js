@@ -16,6 +16,9 @@ export default function(state = init, action) {
         ...init,
       };
     case ReviewActionTypes.GET_LIST:
+      return {
+        ...state,
+      };
     case ReviewActionTypes.GET_LIST_ERROR:
     case ReviewActionTypes.GET_DETAIL:
     case ReviewActionTypes.GET_DETAIL_ERROR:
@@ -23,11 +26,6 @@ export default function(state = init, action) {
         ...state,
       };
     case ReviewActionTypes.GET_LIST_SUCCESS:
-      ToastAndroid.showWithGravity(
-        "Gọi danh sách review thành công",
-        ToastAndroid.SHORT,
-        ToastAndroid.TOP
-      );
       return {
         ...state,
         list: get(action, "payload.list", []),

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  ToastAndroid
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -22,12 +23,14 @@ import AuthorizationActions from '../../redux/actions/auth';
 import ProductsActions from '../../redux/actions/products';
 import OrdersActions from '../../redux/actions/order';
 import numberWithCommas from '../../utils/formatPrice';
+import tryConvert from '../../utils/changeMoney';
+
 import {
   SHIPPING_EXPRESS,
   SHIPPING_STANDARD,
   API_ENDPOINT_AUTH,
 } from '../../constants';
-import tryConvert from '../../utils/changeMoney';
+
 
 import {connect} from 'react-redux';
 import {compose} from 'redux';
@@ -386,6 +389,17 @@ class CheckoutPage extends Component {
       totalWidth,
     );
   };
+  onMessage(e) {
+    let data = e.nativeEvent.data;
+    setShowGateway(false);
+    console.log(data);
+    let payment = JSON.parse(data);
+    if (payment.status === 'COMPLETED') {
+      alert('PAYMENT MADE SUCCESSFULLY!');
+    } else {
+      alert('PAYMENT FAILED. PLEASE TRY AGAIN.');
+    }
+  }
   render() {
     const {
       firstname,
@@ -426,6 +440,7 @@ class CheckoutPage extends Component {
         numberWithCommas(item.quantity * item.price) + ' VNĐ',
       ];
     });
+
     return (
       <View style={styles.container}>
         <Text style={styles.textTitle}>Checkout Page</Text>
@@ -840,8 +855,9 @@ class CheckoutPage extends Component {
             visible={this.state.showModal}
             onRequestClose={() => this.setState({showModal: false})}>
             <WebView
-              source={{uri: `${API_ENDPOINT_AUTH}/paypal?total=${2}`}}
+              source={{uri: `${API_ENDPOINT_AUTH}/paypal?total=${parseFloat(tryConvert(ship ? totalPrice + ship.total : 0, "USD", false)).toFixed(2)}`}}
               onNavigationStateChange={data => this.handleResponse(data)}
+              onMessage={onMessage}
               injectedJavaScript={`document.f1.submit()`}
             />
           </Modal>

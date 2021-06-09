@@ -12,7 +12,7 @@ const getAllProductReView = async(req, res, next) => {
     if (req.query.user != undefined) {
 			condition.user = req.query.user;
     }
-    let limit = 3;
+    let limit = 10;
 		let page = 0;
 		if (req.query.limit != undefined && req.query.limit != '') {
 			const number_limit = parseInt(req.query.limit);

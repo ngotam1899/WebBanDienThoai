@@ -1,4 +1,3 @@
-import { get, cloneDeep } from "lodash";
 import { UsersActionTypes } from "../actions/user";
 import {ToastAndroid} from 'react-native';
 
@@ -7,25 +6,6 @@ const init = {
   detail: null,
   processing: false,
 };
-
-function handleUpdate({state, action}) {
-  const list = cloneDeep(state.list);
-  const detailData = get(action, "payload.data");
-  const index = list.findIndex(i => i.id === detailData.id);
-  if (index !== -1) {
-    list[index] = {...list[index], ...detailData};
-  }
-  return {
-    ...state,
-    processing: false,
-    list,
-    detail: {
-      ...state.detail,
-      data: { ...state.detail.data, ...detailData },
-    },
-  };
-}
-
 export default function(state = init, action) {
   switch (action.type) {
     case UsersActionTypes.UPDATE:
@@ -67,6 +47,7 @@ export default function(state = init, action) {
         ToastAndroid.SHORT,
         ToastAndroid.TOP
       );
+      var { message } = action.payload;
       return {
         ...state,
         processing: false,

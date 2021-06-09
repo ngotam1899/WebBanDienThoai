@@ -3,8 +3,9 @@ import {StyleSheet, Dimensions} from 'react-native'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
+    paddingTop: 20,
     backgroundColor: '#fff',
+    paddingHorizontal: 20,
   },
   productImg: {
     width: 200,
@@ -14,7 +15,6 @@ const styles = StyleSheet.create({
     color: 'black',
     padding: 5,
     fontSize: 13,
-    marginLeft: 20,
   },
   flatListItemValue: {
     color: 'black',
@@ -30,14 +30,19 @@ const styles = StyleSheet.create({
     marginBottom: 3
   },
   titleName: {
-    marginLeft: 20,
-    marginBottom: 5,
+    marginBottom: 10,
     marginTop: 5,
     fontSize: 16,
     fontWeight: 'bold',
   },
+  titleDescription:{
+    marginBottom: 10,
+    marginTop: 20,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
   textDescription: {
-    marginLeft: 20,
     marginBottom: 10,
   },
   price: {
@@ -57,13 +62,13 @@ const styles = StyleSheet.create({
   },
   contentColors: {
     justifyContent: 'flex-start',
-    marginHorizontal: 20,
+    marginHorizontal: 0,
     flexDirection: 'row',
     marginBottom: 5,
   },
   btnColor: {
     height: 50,
-    width: 80,
+    width: 100,
     borderRadius: 10,
     borderColor: '#778899',
     borderWidth: 2,
@@ -81,11 +86,11 @@ const styles = StyleSheet.create({
   },
   contentGroup: {
     justifyContent: 'flex-start',
-    marginHorizontal: 20,
+    marginHorizontal: 0,
     flexDirection: 'row',
   },
   btnGroup: {
-    height: 30,
+    height: 36,
     width: 100,
     borderRadius: 10,
     borderColor: '#778899',
@@ -130,7 +135,169 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   addToCarContainer: {
-    marginHorizontal: 30,
+    marginHorizontal: 0,
+    marginVertical: 5
   },
+  viewMore:{
+    height: 130,
+    flex: 1,
+  },
+  lessMore:{
+    flex: 1
+  },
+  btnViewMore:{
+    marginTop: 20,
+    marginBottom: 40,
+    justifyContent:'center',
+     alignItems:'center'
+  },
+  btnViewMoreReview:{
+    marginTop: 0,
+    marginBottom: 15,
+    justifyContent:'center',
+     alignItems:'center'
+  },
+  backgroundOpacity:{
+    height: 40,
+    paddingVertical:10,
+  },
+  textViewMore:{
+    fontSize: 15,
+    fontWeight: 'bold'
+  },
+  containerReviews: {
+    marginVertical:10
+  },
+  containerOverallReview: {
+    flexDirection:'row',
+    alignItems: 'center',
+    justifyContent:'center',
+  },
+  overallReview: {
+    flex: 4,
+    backgroundColor:'#f1f6f7',
+    paddingHorizontal: 30,
+    paddingVertical:30
+  },
+  baseOnReview: {
+    flex: 6,
+    paddingLeft: 20
+  },
+  titleOverall:{
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  textOverall:{
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  numberOverall: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginVertical: 5
+  },
+  lineBaseReview: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2
+  },
+  titleBaseOn: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5
+  }, 
+  containerDetailReview:{
+    marginVertical: 20,
+    height: 290
+  },
+  containerDetailReviewMore:{
+    marginVertical: 20,
+  },
+  containerBoxReview:{
+    marginBottom: 20
+  },
+  containerItemReview:{
+    flexDirection: 'row',
+  },
+  boxImage:{
+    flex: 3
+  },
+  boxContentReview:{
+    flex: 7,
+    padding: 5
+  },
+  imgUser:{
+    flex:1,
+    borderRadius: 50,
+    margin: 5
+  },
+  nameUser:{
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom:5
+  },
+  colorReview:{
+    fontStyle:'italic',
+    marginBottom:5
+  },
+  contentReview:{
+    fontSize: 18,
+  },
+  likeBox:{
+    flexDirection: 'row', 
+    alignItems:'center',
+    marginLeft: 5,
+    marginTop:5
+  },
+  likeItem:{
+    marginLeft: 10,
+    fontSize: 16
+  },
+  itemContainer: {
+    width: 100,
+    marginRight: 12,
+    marginTop: 10,
+  },
+  itemImage: {
+    width: 100,
+    height: 120,
+  },
+  itemName: {
+    fontSize: 14,
+    color: '#484848',
+    marginVertical: 4,
+  },
+  itemPrice: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#2a2a2a',
+  },
+  containerGroupNameButton:{
+    flexDirection:'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#f1f6f7',
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    marginVertical: 10
+  },
+  groupButton:{
+    paddingHorizontal:15,
+    paddingVertical:8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
+  },
+  groupButtonActive:{
+    backgroundColor: '#9DDCF1',
+  },
+  textGroupButton: {
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold'
+  }
 });
 export default styles;

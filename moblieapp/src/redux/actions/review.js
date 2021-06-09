@@ -38,9 +38,9 @@ const onGetList = (params) => ({
   payload: params,
 });
 
-const onGetListSuccess = (list, total) => ({
+const onGetListSuccess = (list, total, count) => ({
   type: ReviewActionTypes.GET_LIST_SUCCESS,
-  payload: {list, total}
+  payload: {list, total, count}
 });
 
 const onGetListError = (error) => ({

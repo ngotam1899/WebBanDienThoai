@@ -1,11 +1,20 @@
 import React, {Component} from 'react';
-import ProductsActions from '../../redux/actions/products';
-import {connect} from 'react-redux';
-import styles from './style';
+import getRNDraftJSBlocks from 'react-native-draftjs-render';
 import {AsyncStorage} from 'react-native';
 import {Rating} from 'react-native-ratings';
+import {connect} from 'react-redux';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+import ProductsActions from '../../redux/actions/products';
+import AuthorizationActions from '../../redux/actions/auth';
+import ReviewActions from '../../redux/actions/review';
+import UsersActions from '../../redux/actions/user';
+
+import styles from './style';
+
+import {INITIAL_IMAGE} from '../../constants';
 import numberWithCommas from '../../utils/formatPrice';
-import getRNDraftJSBlocks from 'react-native-draftjs-render';
+import tryConvert from '../../utils/changeMoney';
 
 import {
   Text,
@@ -60,19 +69,148 @@ class FlatListImage extends Component {
     );
   }
 }
+
+class ListReview extends Component {
+  render() {
+    const {item} = this.props;
+    return (
+      <View style={styles.containerBoxReview}>
+        <View style={styles.containerItemReview}>
+          <View style={styles.boxImage}>
+            <Image
+              style={styles.imgUser}
+              source={{
+                uri:
+                  item.user && item.user.image
+                    ? item.user.image.public_url
+                    : INITIAL_IMAGE,
+              }}></Image>
+          </View>
+          <View style={styles.boxContentReview}>
+            <Text style={styles.nameUser}>
+              {item.user && item.user.firstname}{' '}
+              {item.user && item.user.lastname}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 4,
+              }}>
+              <Rating
+                type="star"
+                ratingCount={5}
+                readonly={true}
+                startingValue={item.rating}
+                style={{
+                  alignItems: 'flex-start',
+                  marginRight: 20,
+                }}
+                size={15}
+                imageSize={15}
+              />
+              <Text>| {item.createdAt}</Text>
+            </View>
+            <Text style={styles.colorReview}>
+              Màu sắc: {item.color.name_vn}
+            </Text>
+            <Text style={styles.contentReview}>{item.content}</Text>
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            this.onLiked(item._id, item.like);
+          }}
+          style={styles.likeBox}>
+          <FontAwesome name="thumbs-up" color="#6c757d" size={24} />
+          <Text style={styles.likeItem}>
+            {item.like.length > 0 ? item.like.length : 'Hữu ích?'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+class ProductItem extends Component {
+  render() {
+    const {product, navigation, id} = this.props;
+    return (
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => {
+          navigation.replace('Detail', {id: product._id});
+        }}>
+        <Image
+          source={{
+            uri:
+              product && product.bigimage ? product.bigimage.public_url : null,
+          }}
+          style={styles.itemImage}
+        />
+        <Text style={styles.itemName} numberOfLines={2}>
+          {product ? product.name.substring(0, 22) : ''}
+          {product && product.name.length > 22 ? '...' : ''}
+        </Text>
+        <Text style={styles.itemPrice}>
+          {product && product.price_min
+            ? numberWithCommas(product.price_min)
+            : null}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+}
+
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       color: '',
+      viewMore: true,
+      viewMoreReview: true,
+      quantity: 'page: 0',
+      recommend: -1,
     };
+    const token = AsyncStorage.getItem('AUTH_USER').then(data => {});
+    console.log('token: ', token);
+    this.props.onGetProfile(null, token);
   }
 
-  componentDidMount() {
-    const {route, onGetDetailProduct} = this.props;
+  componentDidMount = async () => {
+    const {
+      route,
+      onGetDetailProduct,
+      onGetReviews,
+      onGetRelate,
+      onGetLike,
+    } = this.props;
+    onGetReviews({product: route.params.id});
     onGetDetailProduct(route.params.id);
-  }
+    onGetLike(route.params.id);
+    onGetRelate(route.params.id);
+    AsyncStorage.getItem('AUTH_USER').then(data => {
+      this.props.onGetProfile(null, data);
+    });
+  };
 
+  componentWillReceiveProps(nextProps) {
+    const {authInfo, onHistoryProduct} = this.props;
+    if (nextProps.authInfo !== authInfo && nextProps.authInfo) {
+      var history = [];
+      nextProps.authInfo.history.map(item => history.push(item._id));
+      const index = history.findIndex(
+        product => product === nextProps.route.params.id,
+      );
+      if (index === -1) {
+        history.push(nextProps.route.params.id);
+        if (history.length > 4) {
+          history.shift();
+        }
+        console.log(history);
+        onHistoryProduct(nextProps.authInfo._id, {history});
+      }
+    }
+  }
   setColor = item => {
     this.setState({
       color: item._id,
@@ -134,11 +272,44 @@ class ProductDetail extends Component {
       alert('Vui lòng chọn màu bạn muốn mua');
     }
   };
-
+  onChangeViewMore = value => {
+    this.setState({
+      viewMore: !value,
+    });
+  };
+  onLiked = (id, like) => {
+    const {onUpdateReview, authInfo} = this.props;
+    const {queryParams} = this.state;
+    if (authInfo) {
+      if (like.indexOf(authInfo._id) === -1) {
+        like.push(authInfo._id);
+      } else {
+        like.splice(like.indexOf(authInfo._id), 1);
+      }
+      onUpdateReview(id, {like}, queryParams);
+    } else {
+      ToastAndroid.showWithGravity(
+        'Bạn chưa đăng nhập',
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+      );
+    }
+  };
   render() {
-    const {product, group, navigation, route} = this.props;
-    const {color} = this.state;
-
+    const {
+      product,
+      group,
+      navigation,
+      route,
+      review,
+      total,
+      count,
+      location,
+      relate,
+      like,
+      authInfo,
+    } = this.props;
+    const {color, viewMore, viewMoreReview, recommend} = this.state;
     const atomicHandler = (
       item: Object,
       entityMap: Object,
@@ -179,8 +350,9 @@ class ProductDetail extends Component {
                   <FlatListImage item={item} index={index}></FlatListImage>
                 );
               }}></FlatList>
-            <View style={{marginHorizontal: 20, marginTop: 10}}>
+            <View style={{marginTop: 10}}>
               <Text style={styles.name}>{product.name}</Text>
+              <View style={{flexDirection: 'row', marginVertical:3}}>
               <Rating
                 type="star"
                 ratingCount={5}
@@ -190,6 +362,9 @@ class ProductDetail extends Component {
                 size={15}
                 imageSize={18}
               />
+              <Text style={{fontSize: 16}}> | {total} đánh giá</Text>
+              </View>
+
               <Text style={styles.price}>
                 {product.price_min === product.price_max
                   ? product.price_min
@@ -248,16 +423,246 @@ class ProductDetail extends Component {
                 <Text style={styles.shareButtonText}>Chọn Mua</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.titleName}>Mô tả sản phẩm</Text>
-            <ScrollView style={{flex: 1, padding: 20}}>{getRNDraftJSBlocks({contentState:JSON.parse(product.description), atomicHandler})}</ScrollView>
+            <View style={styles.containerGroupNameButton}>
+              <TouchableOpacity style={recommend===-1?[styles.groupButton, styles.groupButtonActive]: styles.groupButton} onPress={()=>this.setState({recommend:-1})}>
+                <Text style={styles.textGroupButton}>SP đã xem</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={recommend=== 0?[styles.groupButton, styles.groupButtonActive]: styles.groupButton} onPress={()=>this.setState({recommend: 0})}>
+                <Text style={styles.textGroupButton}>Có thể bạn thích</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={recommend===1?[styles.groupButton, styles.groupButtonActive]: styles.groupButton} onPress={()=>this.setState({recommend:1})}>
+                <Text style={styles.textGroupButton}>SP tương tự</Text>
+              </TouchableOpacity>
+            </View>
+            {recommend === -1 && authInfo && authInfo.history ? (
+              <FlatList
+                data={authInfo.history}
+                pagingEnabled={true}
+                showsHorizontalScrollIndicator={true}
+                scrollEventThrottle={10}
+                keyExtractor={(item, index) => item._id}
+                horizontal={true}
+                renderItem={({item, index}) => {
+                  return (
+                    <ProductItem
+                      product={item}
+                      index={index}
+                      navigation={navigation}></ProductItem>
+                  );
+                }}></FlatList>
+            ) : (
+              <></>
+            )}
+            {recommend === 0 && like ? (
+              <FlatList
+                data={like}
+                pagingEnabled={true}
+                showsHorizontalScrollIndicator={true}
+                scrollEventThrottle={10}
+                keyExtractor={(item, index) => item._id}
+                horizontal={true}
+                renderItem={({item, index}) => {
+                  return (
+                    <ProductItem
+                      product={item}
+                      index={index}
+                      navigation={navigation}></ProductItem>
+                  );
+                }}></FlatList>
+            ) : (
+              <></>
+            )}
+            {recommend === 1 && relate ? (
+              <FlatList
+                data={relate}
+                pagingEnabled={true}
+                showsHorizontalScrollIndicator={true}
+                scrollEventThrottle={10}
+                keyExtractor={(product, index) => product._id}
+                horizontal={true}
+                renderItem={({item, index}) => {
+                  return (
+                    <ProductItem
+                      product={item}
+                      index={index}
+                      navigation={navigation}></ProductItem>
+                  );
+                }}></FlatList>
+            ) : (
+              <></>
+            )}
+
+            <Text style={styles.titleDescription}>MÔ TẢ VỀ SẢN PHẨM</Text>
+            <ScrollView
+              style={
+                viewMore && viewMore === true
+                  ? styles.viewMore
+                  : styles.lessMore
+              }>
+              {getRNDraftJSBlocks({
+                contentState: JSON.parse(product.description),
+                atomicHandler,
+              })}
+            </ScrollView>
+            <View>
+              <TouchableOpacity
+                style={styles.btnViewMore}
+                onPress={() =>
+                  this.setState({
+                    viewMore: !viewMore,
+                  })
+                }>
+                <Text style={styles.textViewMore}>
+                  {viewMore && viewMore === true ? 'View More' : 'Less More'}
+                </Text>
+              </TouchableOpacity>
+            </View>
             <Text style={styles.titleName}>Thông số kỹ thuật</Text>
+
             <FlatList
               data={product.specifications}
               keyExtractor={(item, index) => item._id}
+              style={{marginBottom: 40}}
               renderItem={({item, index}) => {
                 return <FlatListItem item={item} index={index}></FlatListItem>;
               }}></FlatList>
-
+            <View style={styles.containerReviews}>
+              <View style={styles.containerOverallReview}>
+                <View style={styles.overallReview}>
+                  <Text style={styles.titleOverall}>Overall</Text>
+                  <Text style={styles.numberOverall}>{product.stars}</Text>
+                  <Text style={styles.textOverall}>( {total} reviews)</Text>
+                </View>
+                <View style={styles.baseOnReview}>
+                  <Text style={styles.titleBaseOn}>
+                    Base on {total} Reviews
+                  </Text>
+                  <View style={styles.lineBaseReview}>
+                    <Text>5 Star </Text>
+                    <Rating
+                      type="star"
+                      ratingCount={5}
+                      readonly={true}
+                      startingValue={5}
+                      style={{alignItems: 'flex-start'}}
+                      size={15}
+                      imageSize={15}
+                    />
+                    <Text>
+                      {' '}
+                      {count && count.find(i => i._id === 5)
+                        ? count.find(i => i._id === 5).count
+                        : 0}
+                    </Text>
+                  </View>
+                  <View style={styles.lineBaseReview}>
+                    <Text>4 Star </Text>
+                    <Rating
+                      type="star"
+                      ratingCount={5}
+                      readonly={true}
+                      startingValue={4}
+                      style={{alignItems: 'flex-start'}}
+                      size={15}
+                      imageSize={15}
+                    />
+                    <Text>
+                      {' '}
+                      {count && count.find(i => i._id === 4)
+                        ? count.find(i => i._id === 4).count
+                        : 0}
+                    </Text>
+                  </View>
+                  <View style={styles.lineBaseReview}>
+                    <Text>3 Star </Text>
+                    <Rating
+                      type="star"
+                      ratingCount={5}
+                      readonly={true}
+                      startingValue={3}
+                      style={{alignItems: 'flex-start'}}
+                      size={15}
+                      imageSize={15}
+                    />
+                    <Text>
+                      {' '}
+                      {count && count.find(i => i._id === 3)
+                        ? count.find(i => i._id === 3).count
+                        : 0}
+                    </Text>
+                  </View>
+                  <View style={styles.lineBaseReview}>
+                    <Text>2 Star </Text>
+                    <Rating
+                      type="star"
+                      ratingCount={5}
+                      readonly={true}
+                      startingValue={2}
+                      style={{alignItems: 'flex-start'}}
+                      size={15}
+                      imageSize={15}
+                    />
+                    <Text>
+                      {' '}
+                      {count && count.find(i => i._id === 2)
+                        ? count.find(i => i._id === 2).count
+                        : 0}
+                    </Text>
+                  </View>
+                  <View style={styles.lineBaseReview}>
+                    <Text>1 Star </Text>
+                    <Rating
+                      type="star"
+                      ratingCount={5}
+                      readonly={true}
+                      startingValue={1}
+                      style={{alignItems: 'flex-start'}}
+                      size={15}
+                      imageSize={15}
+                    />
+                    <Text>
+                      {' '}
+                      {count && count.find(i => i._id === 1)
+                        ? count.find(i => i._id === 1).count
+                        : 0}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View
+                style={
+                  viewMoreReview && review && review.length >= 3
+                    ? styles.containerDetailReview
+                    : styles.containerDetailReviewMore
+                }>
+                <FlatList
+                  data={review}
+                  keyExtractor={(item, index) => item._id}
+                  style={{marginBottom: 0}}
+                  renderItem={({item, index}) => {
+                    return <ListReview item={item} index={index}></ListReview>;
+                  }}></FlatList>
+              </View>
+              {review && review.length >= 3 ? (
+                <View>
+                  <TouchableOpacity
+                    style={styles.btnViewMoreReview}
+                    onPress={() =>
+                      this.setState({
+                        viewMoreReview: !viewMoreReview,
+                      })
+                    }>
+                    <Text style={styles.textViewMore}>
+                      {viewMoreReview && viewMoreReview === true
+                        ? 'View More'
+                        : 'Less More'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <></>
+              )}
+            </View>
             <View style={styles.separator}></View>
           </ScrollView>
         )}
@@ -273,6 +678,9 @@ const mapStateToProps = state => {
     review: state.review.list,
     total: state.review.total,
     authInfo: state.auth.detail,
+    count: state.review.count,
+    like: state.products.like,
+    relate: state.products.relate,
   };
 };
 
@@ -284,6 +692,12 @@ const mapDispatchToProps = dispatch => {
     onAddProductToCart: () => {
       dispatch(ProductsActions.onAddProductToCart());
     },
+    onGetLike: payload => {
+      dispatch(ProductsActions.onGetLike(payload));
+    },
+    onGetRelate: payload => {
+      dispatch(ProductsActions.onGetRelate(payload));
+    },
     onGetReviews: params => {
       dispatch(ReviewActions.onGetList(params));
     },
@@ -292,6 +706,12 @@ const mapDispatchToProps = dispatch => {
     },
     onUpdateReview: (id, params) => {
       dispatch(ReviewActions.onUpdate(id, params));
+    },
+    onHistoryProduct: (id, params) => {
+      dispatch(UsersActions.onUpdate({id, params}));
+    },
+    onGetProfile: (data, headers) => {
+      dispatch(AuthorizationActions.onGetProfile(data, headers));
     },
   };
 };

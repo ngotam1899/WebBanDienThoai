@@ -66,6 +66,7 @@ class SignInPage extends Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo.idToken)
       onLoginGoogle(userInfo.idToken);
       this.setState({
         userGoogleInfo: userInfo,
