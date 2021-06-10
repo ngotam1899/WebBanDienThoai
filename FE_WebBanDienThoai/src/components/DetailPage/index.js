@@ -103,12 +103,12 @@ class DetailPage extends Component {
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
     /* FB comment plugin */
+    const {filter} = this.state;
     const { match, onGetDetailProduct, onGetReviews, onGetLike, onGetRelate } = this.props;
-    console.log('id: ',match.params.productID)
     onGetDetailProduct(match.params.productID);
     onGetLike(match.params.productID);
     onGetRelate(match.params.productID);
-    onGetReviews({product: match.params.productID})
+    onGetReviews(filter)
   }
 
   setColor = (item) =>{
@@ -202,7 +202,7 @@ class DetailPage extends Component {
     const {product, currency, t, review, group, total, count, location, relate, like, authInfo } = this.props;
     const {quantity, imageColor, check, _check } = this.state;
     const filter = getFilterParams(location.search);
-     console.log('review: ',review)
+    
     return (<>
       <div className="application">
         <Helmet>
@@ -364,7 +364,7 @@ class DetailPage extends Component {
                                 return (
                                 <tr key={index}>
                                   <td className="font-weight-bold" scope="row">{item.name}</td>
-                                  <td>{item.value}</td>
+                                  <td>{item.selection ? item.selection.name : item.value}</td>
                                 </tr>
                                 )
                               /* eslint-disable */

@@ -53,7 +53,7 @@ const addCategory = async(req, res, next) => {
 }
 const updateCategory = async(req, res, next) => {
   const { IDCategory } = req.params
-  const { name, specifications, filter } = req.body
+  const { name, specifications, filter, price } = req.body
   const category = await Category.findById(IDCategory);
   if(name) category.name = name;
   if(specifications){
@@ -75,7 +75,8 @@ const updateCategory = async(req, res, next) => {
       }
     }
     category.filter = filterArray 
-  } 
+  }
+  if(price) category.price = price;
   await category.save();
   return res.status(200).json({ success: true, code: 200, message: '' })
 }

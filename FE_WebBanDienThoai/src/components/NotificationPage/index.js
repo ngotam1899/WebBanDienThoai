@@ -5,6 +5,7 @@ import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 // @Functions
 import getFilterParams from "../../utils/getFilterParams";
+import {INITIAL_IMAGE} from '../../constants';
 // @Actions
 import NotificationActions from "../../redux/actions/notification";
 
@@ -121,7 +122,7 @@ class NotificationPage extends Component {
                   <p className="mb-0 text-secondary">{new Date(notification.createdAt).toLocaleDateString("vi-VN")}</p>
                 </div>
                 <div className="col-2 text-center h-100">
-                  <img className="h-100" src={notification.image.public_url} alt=""></img>
+                  <img className="h-100" src={notification.image ? notification.image.public_url : INITIAL_IMAGE} alt=""></img>
                 </div>
                 <div className="col-7 align-self-center">
             <p className="font-weight-bold">{notification.name}</p>

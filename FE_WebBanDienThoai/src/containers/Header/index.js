@@ -11,6 +11,7 @@ import { assets } from '../../constants/assetsImage';
 import tryConvert from '../../utils/changeMoney'
 import { withTranslation } from 'react-i18next'
 import ReactTooltip from 'react-tooltip';
+import Widget from 'rasa-webchat';
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth'
 import CategoryActions from "../../redux/actions/categories";
@@ -365,10 +366,16 @@ class Header extends Component {
               </nav>
             </div>
           </div>
-          <MessengerCustomerChat
+          {/* <MessengerCustomerChat
             pageId="104334418256109"
             appId="804609327113718"
             htmlRef="https://localhost:5000"
+          /> */}
+          <Widget
+            socketUrl={"http://localhost:5005"}
+            socketPath={"/socket.io/"}
+            customData={{"language": "en"}} // arbitrary custom data. Stay minimal as this will be added to the socket
+            title={"TellMe - Mobile Shopping Online"}
           />
         </div>
       </>

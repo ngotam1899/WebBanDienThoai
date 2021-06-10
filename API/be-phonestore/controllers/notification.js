@@ -36,7 +36,10 @@ const getAllNotification = async(req, res, next) => {
     .sort({ createAt: 1 })
     .limit(limit)
     .skip(limit * page)
-    let total = await Notification.countDocuments(condition, conditions);
+    let total = await Notification.countDocuments({
+      ...condition, 
+      ...conditions
+    });
     return res.status(200).json({ success: true, code: 200, message: '', total, notifications })
   } catch (error) {
     return next(error)

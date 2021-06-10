@@ -9,7 +9,8 @@ import SpecificationActions from "../../redux/actions/specification";
 import { toastError } from "../../utils/toastHelper";
 
 const fields = ['name' ,{ key: 'actions', _style: { width: '10%'} }]
-const _fields = ['name' , 'query',{ key: 'actions', _style: { width: '35%'}}]
+const filterField = ['name' , 'query',{ key: 'actions', _style: { width: '35%'}}]
+const priceField = ['name' , 'min', 'max', { key: 'actions', _style: { width: '35%'}}]
 
 class CategoryDetail extends Component {
   constructor(props){
@@ -22,14 +23,23 @@ class CategoryDetail extends Component {
       pathseo: category ? category.pathseo :'',
       specifications: category ? category.specifications : [],
       filter: category ? category.filter : [],
+      price: category ? category.price : [],
       keyword: "",
-      //Filter - bộ lọc
+      // Filter - bộ lọc
       filterEditing: "none",
       btnStatus: "Thêm bộ lọc",
       onEditing: false,
       indexFilter: -1,
       idFilter: "",
-      query: ""
+      query: "",
+      // Price - khoảng giá
+      priceEditing: "none",
+      _btnStatus: "Thêm khoảng giá",
+      _onEditing: false,
+      indexPrice: -1,
+      name_price: "",
+      min: "",
+      max: ""
     }
   }
 
@@ -60,14 +70,14 @@ class CategoryDetail extends Component {
   }
 
   onSubmit = () =>{
-    const {id, name, pathseo, name_en, specifications, filter} = this.state;
+    const {id, name, pathseo, name_en, specifications, filter, price} = this.state;
     const {onUpdate, onCreate} = this.props;
     /* eslint-disable */
     filter.map(item =>{
       item._id = item._id._id
     })
     /* eslint-disable */
-    var data = {name, pathseo, name_en, specifications, filter}
+    var data = {name, pathseo, name_en, specifications, filter, price}
     if (id) {
       onUpdate(id, data);
     }
@@ -99,27 +109,47 @@ class CategoryDetail extends Component {
     specifications.splice(specifications.indexOf(item), 1);
     this.setState({specifications})
   }
-  onDeleteFilter = (item) => {
 
-  }
-
-  onAddFilter = (value) => {
+  onAddFilter = (name, value) => {
     if (value === "none") {
       this.setState({
-        filterEditing: "inline-flex",
-        btnStatus: "Hủy",
-        onEditing: false,
-      });
+        [name]: "inline-flex"
+      })
+      if(name ==="filterEditing"){
+        this.setState({
+          btnStatus: "Hủy",
+          onEditing: false,
+        });
+      }
+      else {
+        this.setState({
+          _btnStatus: "Hủy",
+          _onEditing: false,
+        });
+      }
     } else {  //Click button Hủy
       this.setState({
         // Gán giá trị button
-        filterEditing: "none",
-        btnStatus: "Thêm bộ lọc",
-        onEditing: false,
-        // Gán giá trị fields
-        idFilter: "",
-        query: ""
-      });
+        [name]: "none"
+      })
+      if(name ==="filterEditing"){
+        this.setState({
+          btnStatus: "Thêm bộ lọc",
+          onEditing: false,
+          // Gán giá trị fields
+          idFilter: "",
+          query: ""
+        });
+      }
+      else{
+        this.setState({
+          _btnStatus: "Thêm khoảng giá",
+          _onEditing: false,
+          // Gán giá trị fields
+          min: "",
+          max: ""
+        });
+      }
     }
   };
 
@@ -167,30 +197,101 @@ class CategoryDetail extends Component {
     });
   }
 
-  onEditFilter = (item) => {
-    const { filter } = this.state;
+  onSavePrice = () =>{
+    const {
+      name_price,
+      min,
+      max,
+      _onEditing,
+      indexPrice,
+      price,
+    } = this.state;
+    if(!name_price){
+      toastError("Đặt tên khoảng giá khi lưu");
+    }
+    else{
+      if (_onEditing === false) {
+        price.push({
+          name: name_price,
+          min,
+          max
+        });
+      } else {
+        for (let i = 0; i < price.length; i++) {
+          price[indexPrice] = {
+            name: name_price,
+            min,
+            max
+          };
+        }
+      }
+    }
     this.setState({
+      price,
       // Gán giá trị button
-      filterEditing: "inline-flex",
-      btnStatus: "Hủy",
+      priceEditing: "none",
+      _btnStatus: "Thêm khoảng giá",
       // Gán giá trị fields
-      idFilter: item._id._id,
-      query: item.query,
-      onEditing: true,
-      indexFilter: filter.indexOf(item),
+      name_price: "",
+      min: "",
+      max: "",
+      _onEditing: false,
     });
+  }
+
+  onEditFilter = (name, item) => {
+    if(name==="filter"){
+      const { filter } = this.state;
+      this.setState({
+        // Gán giá trị button
+        filterEditing: "inline-flex",
+        btnStatus: "Hủy",
+        // Gán giá trị fields
+        idFilter: item._id._id,
+        query: item.query,
+        onEditing: true,
+        indexFilter: filter.indexOf(item),
+      });
+    }
+    else{
+      const { price } = this.state;
+      this.setState({
+        // Gán giá trị button
+        priceEditing: "inline-flex",
+        _btnStatus: "Hủy",
+        // Gán giá trị fields
+        name_price: item.name,
+        min: item.min,
+        max: item.max,
+        _onEditing: true,
+        indexPrice: price.indexOf(item),
+      });
+    }
   };
 
-  onDeleteFilter = (item) => {
-    const { filter } = this.state;
-    filter.splice(filter.indexOf(item), 1);
-    this.setState({
-      filter,
-    });
+  onDeleteFilter = (name, item) => {
+    if(name === "filter"){
+      const { filter } = this.state;
+      filter.splice(filter.indexOf(item), 1);
+      this.setState({
+        filter,
+      });
+    }
+    else{
+      const { price } = this.state;
+      price.splice(price.indexOf(item), 1);
+      this.setState({
+        price,
+      });
+    }
   };
 
 	render() {
-    const {name, pathseo, name_en, specifications, filter, keyword, filterEditing, btnStatus, idFilter, query} = this.state;
+    const {
+      name, pathseo, name_en, specifications, filter, keyword,
+      filterEditing, btnStatus, idFilter, query,
+      priceEditing, _btnStatus, name_price, min, max, price
+    } = this.state;
     const { large, onClose, category, listSpecification, listSearch} = this.props;
     return (
 			<CModal show={large} onClose={() => onClose(!large)} size="lg">
@@ -263,24 +364,29 @@ class CategoryDetail extends Component {
 
             </div>
             <div className="col-12 col-lg-6">
-              <label className="float-left">Danh mục bộ lọc:</label>
-              <div className="float-right">
-                <button
-                  className="btn btn-success mr-2"
-                  style={{ display: filterEditing }}
-                  onClick={() => this.onSaveFilter()}
-                  type="button"
-                >
-                  Lưu
-                </button>
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  onClick={() => this.onAddFilter(filterEditing)}
-                >
-                  {btnStatus}
-                </button>
+              <div className="row mb-2">
+                <div className="col-12">
+                  <label className="float-left">Danh mục bộ lọc:</label>
+                  <div className="float-right">
+                    <button
+                      className="btn btn-success mr-2"
+                      style={{ display: filterEditing }}
+                      onClick={() => this.onSaveFilter()}
+                      type="button"
+                    >
+                      Lưu
+                    </button>
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={() => this.onAddFilter("filterEditing", filterEditing)}
+                    >
+                      {btnStatus}
+                    </button>
+                  </div>
+                </div>
               </div>
+
               <div className="row w-100 rounded border my-2" style={{ display: filterEditing }}>
                 <div className="col-12">
                   <div className="form-group">
@@ -310,7 +416,7 @@ class CategoryDetail extends Component {
               </div>
               {listSpecification && filter.length > 0 && <CDataTable
                 items={filter}
-                fields={_fields}
+                fields={filterField}
                 striped
                 itemsPerPage={5}
                 pagination
@@ -318,20 +424,80 @@ class CategoryDetail extends Component {
                   'name': (item) => (
                     <td>{this.setSpecification(item._id._id)}</td>
                   ),
-                  'os': (item) => {
-
-                  },
                   'actions': (item) => (
                     <td>
                       <CButton
-                      onClick={() => this.onEditFilter(item)}
+                      onClick={() => this.onEditFilter("filter", item)}
                       className="mr-1 mb-1 mb-xl-0"
                       color="warning"
                       >
                         <i className="fa fa-highlighter"></i>
                       </CButton>
                       <CButton
-                      onClick={() => this.onDeleteFilter(item)}
+                      onClick={() => this.onDeleteFilter("filter", item)}
+                      className="mr-1 mb-1 mb-xl-0"
+                      color="danger"
+                      >
+                        <i className="fa fa-trash-alt"></i>
+                      </CButton>
+                    </td>
+
+                  )
+                }}
+              />}
+
+              <label className="float-left">Danh mục khoảng giá:</label>
+              <div className="float-right">
+                <button
+                  className="btn btn-success mr-2"
+                  style={{ display: priceEditing }}
+                  onClick={() => this.onSavePrice()}
+                  type="button"
+                >
+                  Lưu
+                </button>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => this.onAddFilter("priceEditing", priceEditing)}
+                >
+                  {_btnStatus}
+                </button>
+              </div>
+              <div className="row w-100 rounded border my-2" style={{ display: priceEditing }}>
+                <div className="col-12">
+                  <div className="form-group">
+                    <label>Tên khoảng giá:</label>
+                    <input type="text" className="form-control" name="name_price" value={name_price} onChange={this.onChange}/>
+                  </div>
+                  <div className="form-group">
+                    <label>Từ (min):</label>
+                    <input type="number" className="form-control" name="min" value={min} onChange={this.onChange}/>
+                  </div>
+                  <div className="form-group">
+                    <label>Đến (max):</label>
+                    <input type="number" className="form-control" name="max" value={max} onChange={this.onChange}/>
+                  </div>
+                </div>
+              </div>
+              {price.length > 0 && <CDataTable
+                items={price}
+                fields={priceField}
+                striped
+                itemsPerPage={5}
+                pagination
+                scopedSlots = {{
+                  'actions': (item) => (
+                    <td>
+                      <CButton
+                      onClick={() => this.onEditFilter("price", item)}
+                      className="mr-1 mb-1 mb-xl-0"
+                      color="warning"
+                      >
+                        <i className="fa fa-highlighter"></i>
+                      </CButton>
+                      <CButton
+                      onClick={() => this.onDeleteFilter("price", item)}
                       className="mr-1 mb-1 mb-xl-0"
                       color="danger"
                       >
@@ -343,7 +509,6 @@ class CategoryDetail extends Component {
                 }}
               />}
             </div>
-
 					</div>
 				</CModalBody>
 				<CModalFooter>

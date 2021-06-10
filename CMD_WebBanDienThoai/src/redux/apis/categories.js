@@ -5,7 +5,7 @@ import {API_ENDPOINT_AUTH} from '../../constants/index';
 import queryString from 'query-string';
 
 // http://localhost:3000/products/categorys  METHOD = GET
-const url = '/products/categorys';
+const url = '/products/categories';
 //cho params 1 default value là object
 export const getAllCategories = (params = {}) =>{
     let queryParams = '';

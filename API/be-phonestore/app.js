@@ -57,16 +57,16 @@ app.use(
 .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))  
 
 //@For dev
-// mongoose
-// .connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
-//  		useCreateIndex: true,
-//  		useNewUrlParser: true,
-//  		useUnifiedTopology: true,
-//  		useFindAndModify: false
-//  	})
-//  	.then(() => console.log('Connected to MongoDB!'))
-//  	.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`));
-
+/* mongoose
+.connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
+ 		useCreateIndex: true,
+  	useNewUrlParser: true,
+  	useUnifiedTopology: true,
+  	useFindAndModify: false
+})
+.then(() => console.log('Connected to MongoDB!'))
+.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`));
+ */
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,

@@ -22,6 +22,7 @@
     "lodash": "^4.17.20",
     "path": "^0.12.7",
     "query-string": "^6.13.6",
+    "rasa-webchat": "^1.0.1",
     "react": "^16.13.1",
     "react-confirm-alert": "^2.6.2",
     "react-dom": "^16.13.1",

@@ -27,6 +27,17 @@ const CategorySchema = new Schema({
             type: String, 
         },
         
+    }],
+    price: [{
+        name: {
+            type: String, 
+        },
+        min: {
+            type: Number, 
+        },
+        max: {
+            type: Number, 
+        }
     }]
 })
 

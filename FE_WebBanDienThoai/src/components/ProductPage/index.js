@@ -91,9 +91,16 @@ class ProductPage extends Component {
   }
 
   // Change distance price
-  distancePrice = (e) => {
+  distancePrice = (min, max, e) => {
+    console.log(min)
     const {min_p, max_p} = this.state;
-    this.handleUpdateFilter({ min_p, max_p, page: 0});
+    console.log(min_p)
+    if(min_p !== undefined && max_p !== undefined){
+      this.handleUpdateFilter({ min_p, max_p, page: 0});
+    }
+    else{
+      this.handleUpdateFilter({ min_p: min, max_p: max, page: 0});
+    }
   }
 
   // Sort price
@@ -137,13 +144,27 @@ class ProductPage extends Component {
                 <div className="px-3 py-2">
                   <h3 className="mb-1">{t('shop.distance.label')}</h3>
                   <div className="mb-2 border-bottom"></div>
-                  <div className="row input-group mx-auto">
+                  {category && <ul className="pl-0">
+                    {/* <li className="form-check">
+                      <input type="radio" className="form-check-input" value="" id={price._id} name="price"/>
+                      <label htmlFor={price._id} className="form-check-label">{t('shop.all.radio-button')}</label>
+                    </li> */}
+                    {category.price.map(price =>{
+                      return (
+                      <li className="form-check" key={price._id}>
+                        <input type="radio" id={price._id} name="price" className="form-check-input"  onChange={(e) => this.distancePrice(price.min, price.max, e)}/>
+                        <label htmlFor={price._id} className="form-check-label">{price.name}</label>
+                      </li>
+                      )
+                    })}
+                  </ul>}
+                  <div className="row input-group mx-auto mb-1">
                     <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder={t('shop.distance.from')} className="form-control w-40"></input>
                     <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} className="form-control w-40"></input>
-                    <div className="input-group-append">
-                      <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
-                    </div>
                   </div>
+                  <button className="btn btn-primary w-100" onClick={() => this.distancePrice()}>
+                  <i className="fa fa-search-dollar"></i> Áp dụng
+                  </button>
                 </div>
               </div>
             </div>

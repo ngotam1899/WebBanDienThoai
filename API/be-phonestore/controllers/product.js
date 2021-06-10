@@ -72,7 +72,15 @@ const getAllProduct = async (req, res, next) => {
 			condition.active = req.query.active=='1' ? true : false;
 		}
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
-			condition.price = { $lte: req.query.max_p || 10000000, $gte: req.query.min_p || 0 };
+			if(req.query.min_p == undefined){
+				condition.price_min = { $lte: req.query.max_p }
+			}
+			if(req.query.max_p == undefined){
+				condition.price_min = { $gte: req.query.min_p }
+			}
+			else{
+				condition.price_min = { $lte: req.query.max_p || 50000000, $gte: req.query.min_p || 0 };
+			}
 		}
 		let products;
 		products = await Product.find(condition, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
@@ -161,7 +169,13 @@ const updateProduct = async (req, res, next) => {
 					let _id = specificationFound._id;
 					let name = specificationFound.name;
 					let value = item.value;
-					specificationArray.push({ _id, name, value })
+					if (Validator.isValidObjId(value)) {
+						let selection = item.value;
+						specificationArray.push({ _id, name, value, selection })
+					}
+					else{
+						specificationArray.push({ _id, name, value })
+					}
 				}
 			}
 			product.specifications = specificationArray;
@@ -271,7 +285,13 @@ const addProduct = async(req, res, next) => {
 					let _id = specificationFound._id;
 					let name = specificationFound.name;
 					let value = item.value;
-					specificationArray.push({ _id, name, value })
+					if (Validator.isValidObjId(value)) {
+						let selection = item.value;
+						specificationArray.push({ _id, name, value, selection })
+					}
+					else{
+						specificationArray.push({ _id, name, value })
+					}
 				}
 			}
 			product.specifications = specificationArray;
@@ -327,7 +347,8 @@ const getProductDetail = async(req, res, next) => {
 			.populate({ path: 'brand', select: 'name' })
 			.populate({ path: 'group', select: 'name' })
 			.populate({ path: 'bigimage', select: 'public_url' })
-			.populate({ path: 'image', select: 'public_url' });
+			.populate({ path: 'image', select: 'public_url' })
+			.populate({ path: 'specifications', select: "selection", populate : {path : 'selection', select: "name"} });
 		return res.status(200).json({ success: true, code: 200, message: '', product })
 	} catch (error) {
 		return next(error)

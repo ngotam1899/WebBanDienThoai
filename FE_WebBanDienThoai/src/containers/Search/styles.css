@@ -56,3 +56,13 @@ input[type="submit"]:hover, button[type=submit]:hover {background-color: #222}
 .single-sidebar a {
     display: block;
 }
+
+.rw-title{
+    color: #fff;
+}
+.rw-open-launcher__container img{
+    width: auto;
+}
+.rw-conversation-container .rw-image-frame{
+    width: 50%;
+}
