@@ -244,280 +244,268 @@ class CheckoutPage extends Component {
       ship
     } = this.props;
     return (
-      <>
-        <div className="product-big-title-area">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="product-bit-title text-center">
-                  <h2>{t('checkout.page.title')}</h2>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="container mb-3">
+      <div className="row">
+        <div className="col-12 my-2">
+          <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
+          <i className="fa fa-chevron-right px-2"></i>
+          <a className="text-decoration-none" href="/#/carts/checkout">Checkout Page</a>
         </div>
-
-
-        <div className="my-5">
-          <div className="container">
+        <div className="col-12">
+          <form>
             <div className="row">
               <div className="col-12">
-                <form>
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="rounded shadow-sm my-2">
-                        <div className="px-3 py-2">
-                          <h3 className="mb-1">Sản phẩm</h3>
-                          <div className="mb-2 border-bottom"></div>
-                          {cart && cart.map((item, index) => {
-                            return (
-                              <div className="row" key={index}>
-                                <div className="col-6">
-                                  <div className="row">
-                                    <div className="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
-                                      <img className="float-start" alt={item.product.name} src={item.product.bigimage ? item.product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"}></img>
-                                    </div>
-                                    <div className="col-6 col-sm-8 col-md-9 col-lg-10 align-self-center">
-                                    <p className="font-weight-bold mb-0">{item.product.name}</p>
-                                    <p className="mb-0 text-secondary">Màu {item.product.colors.find(i => i._id === item.color).name_en}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-2 align-self-center text-center">
-                                {currency==="VND" 
-                                ? numberWithCommas(item.product.colors.find(i => i._id === item.color).price) 
-                                : numberWithCommas(parseFloat(tryConvert(item.product.colors.find(i => i._id === item.color).price, currency, false)).toFixed(2))} {currency}
-                                 </div>
-                                <div className="col-2 align-self-center text-center">x {item.quantity}</div>
-                                <div className="col-2 align-self-center text-right font-weight-bold">
-                                {currency==="VND" 
-                                ? numberWithCommas(item.quantity * item.product.colors.find(i => i._id === item.color).price) 
-                                : numberWithCommas(parseFloat(tryConvert(item.quantity * item.product.colors.find(i => i._id === item.color).price)).toFixed(2))} {currency}
-                                </div>
-                              </div>
-                            )
-                          })}
-                          <div className="my-2 border-bottom"></div>
-                          <div className="row mb-3">
-                            <div className="col-12 col-md-6">
-                              <div className="form-floating">
-                                <textarea type="text" className="form-control h-100" name="order_comments" value={order_comments} onChange={this.onChange}/>
-                                <label>{t('checkout.note.input')}</label>
-                              </div>
-                            </div>
-                            <div className="col-12 col-md-6">
-                              <h4>Đơn vị vận chuyển</h4>
-                              <div className="row">
-                                <div className="col-5">
-                                  <div className="express float-start">
-                                    <img className="w-100 rounded border py-2" src="https://static.ybox.vn/2020/6/1/1592759417126-ghn.png" alt=""></img>
-                                  </div>
-                                  <div className="float-start ml-2">
-                                    <p className="mb-0">Giao hàng nhanh</p>
-                                    <p className="mb-0 text-secondary smaller">{service_type_id === "2" ? SHIPPING_EXPRESS : SHIPPING_STANDARD}</p>
-                                  </div>
-                                </div>
-                                <div className="col-3 text-center">
-                                  <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#expressModal">Thay đổi</button>
-                                </div>
-                                {ship && <div className="col-4 text-right font-weight-bold">
-                                {currency==="VND" 
-                                ? numberWithCommas(ship.total) 
-                                : numberWithCommas(parseFloat(tryConvert(ship.total)).toFixed(2))} {currency}
-                                </div>}
-                              </div>
-                            </div>
-                            <ChangeExpress service_type_id={service_type_id} setService={this.setService}/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-12 col-lg-6">
-                      <div className="rounded shadow-sm mt-2 mb-3">
-                        <div className="px-3 py-2">
-                          <h3>{t('checkout.billing.label')}</h3>
-                          { authInfo && <>
+                <div className="rounded shadow-sm my-2">
+                  <div className="px-3 py-2">
+                    <h3 className="mb-1">Sản phẩm</h3>
+                    <div className="mb-2 border-bottom"></div>
+                    {cart && cart.map((item, index) => {
+                      return (
+                        <div className="row" key={index}>
+                          <div className="col-6">
                             <div className="row">
-                              <div className="col">
-                                <div className="form-floating validate-required mb-3">
-                                  <input type="text" className="form-control"  value={authInfo.firstname} readOnly disabled/>
-                                  <label >{t('checkout.firstname.input')}*</label>
-                                </div>
+                              <div className="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
+                                <img className="float-start" alt={item.product.name} src={item.product.bigimage ? item.product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"}></img>
                               </div>
-                              <div className="col">
-                                <div className="form-floating validate-required mb-3">
-                                  <input type="text" className="form-control"  value={authInfo.lastname} readOnly disabled/>
-                                  <label >{t('checkout.lastname.input')}*</label>
-                                </div>
+                              <div className="col-6 col-sm-8 col-md-9 col-lg-10 align-self-center">
+                              <p className="font-weight-bold mb-0">{item.product.name}</p>
+                              <p className="mb-0 text-secondary">Màu {item.product.colors.find(i => i._id === item.color).name_en}</p>
                               </div>
                             </div>
-                            <div className="form-floating mb-3 validate-required">
-                              <input type="text" className="form-control"  value={authInfo.address} readOnly disabled/>
-                              <label >{t('checkout.address.input')}*</label>
+                          </div>
+                          <div className="col-2 align-self-center text-center">
+                          {currency==="VND" 
+                          ? numberWithCommas(item.product.colors.find(i => i._id === item.color).price) 
+                          : numberWithCommas(parseFloat(tryConvert(item.product.colors.find(i => i._id === item.color).price, currency, false)).toFixed(2))} {currency}
                             </div>
-                            <div className="form-floating mb-3 validate-required">
-                              <input type="email" className="form-control"  value={authInfo.email} readOnly disabled/>
-                              <label >Email*</label>
-                            </div>
-                            <div className="form-floating mb-3 validate-required">
-                              <input type="text" className="form-control"  value={authInfo.phonenumber} readOnly disabled/>
-                              <label >{t('checkout.phone.input')}*</label>
-                            </div>
-                          </>}
-                        </div>
-                      </div>
-                      <div className="rounded shadow-sm my-2">
-                      <div className="px-3 py-2">
-                        <div className="form-inline">
-                          <h3 className="w-100">{t('checkout.shipping.label')}</h3>
-                          <div className="form-check form-switch float-end">
-                            <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" value={shipToDifferentAddress} onChange={()=>this.shipDifferentAddress(!shipToDifferentAddress)}></input>
+                          <div className="col-2 align-self-center text-center">x {item.quantity}</div>
+                          <div className="col-2 align-self-center text-right font-weight-bold">
+                          {currency==="VND" 
+                          ? numberWithCommas(item.quantity * item.product.colors.find(i => i._id === item.color).price) 
+                          : numberWithCommas(parseFloat(item.quantity * tryConvert(item.product.colors.find(i => i._id === item.color).price, currency, false)).toFixed(2))} {currency}
                           </div>
                         </div>
-                        {shipToDifferentAddress && <div className="" style={{ display: 'block' }}>
-                          <div className="row">
-                            <div className="col">
-                              <div className="form-floating mb-3">
-                                <input type="text" className="form-control"  name="shipping_first_name" placeholder="Nhập họ" value={shipping_first_name} onChange={this.onChange}/>
-                                <label >{t('checkout.firstname.input')}</label>
-                              </div>
-                            </div>
-                            <div className="col">
-                              <div className="form-floating mb-3">
-                                <input type="text" className="form-control"  name="shipping_last_name" placeholder="Nhập tên" value={shipping_last_name} onChange={this.onChange}/>
-                                <label >{t('checkout.lastname.input')}</label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-lg-12 col-md-6 col-12">
-                              <div className="form-floating mb-3">
-                              <input type="text" className="form-control"  name="shipping_address" placeholder="Nhập địa chỉ" value={shipping_address} onChange={this.onChange}/>
-                              <label >{t('checkout.address.input')}</label>
-                            </div>
-                            </div>
-                            <div className="col-lg-4 col-md-6 col-12">
-                              <div className="form-floating mb-3">
-                                <select className="form-select"  id="floatingSelect" onChange={this.setDistrict} required>
-                                  <option selected>Chọn tỉnh/ thành</option>
-                                  {listCity && listCity.map((item, index)=>{
-                                      return(
-                                        <option key={index} value={item.ProvinceID} name="shipping_city">{item.ProvinceName}</option>
-                                      )
-                                    })
-                                  }
-                                </select>
-                                <label htmlFor="floatingSelect">Tỉnh thành</label>
-                              </div>
-                            </div>
-                            <div className="col-lg-4 col-md-6 col-12">
-                              <div className="form-floating mb-3">
-                                <select className="form-select"  id="floatingSelect" onChange={this.setWard} required>
-                                  <option selected>Chọn quận huyện</option>
-                                  {listDistrict && listDistrict.map((item, index)=>{
-                                      return(
-                                        <option key={index} value={item.DistrictID} name="shipping_district">{item.DistrictName}</option>
-                                      )
-                                    })
-                                  }
-                                </select>
-                                <label htmlFor="floatingSelect">Quận huyện</label>
-                              </div>
-                            </div>
-                            <div className="col-lg-4 col-md-6 col-12">
-                              <div className="form-floating mb-3">
-                                <select className="form-select"  id="floatingSelect" onChange={this.setAddress} required>
-                                  <option selected>Chọn phường xã</option>
-                                  {listWard && listWard.map((item, index)=>{
-                                    return(
-                                      <option key={index} value={item.WardCode} name="shipping_ward">{item.WardName}</option>
-                                    )
-                                    })
-                                  }
-                                </select>
-                                <label htmlFor="floatingSelect">Phường xã</label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="form-floating mb-3">
-                            <input type="tel" className="form-control"  name="shipping_phone" placeholder="Nhập số điện thoại" value={shipping_phone} onChange={this.onChange}/>
-                            <label >{t('checkout.phone.input')}</label>
-                          </div>
-                        </div>}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-12 col-lg-6">
-                    {ship && <div className="rounded shadow-sm mt-2 mb-3">
-                      <div className="px-3 py-2">
-                        <h3>{t('checkout.order.title')}</h3>
-                        <div id="order_review" style={{ position: 'relative' }}>
-                          <table className="shop_table mb-2">
-                            <thead>
-                              <tr>
-                                <th className="product-name">{t('cart.product.table')}</th>
-                                <th className="product-total">{t('cart.total.table')}</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr className="cart_item">
-                                <td className="product-name">
-                                {t('checkout.total.label')} <strong className="product-quantity">× {total}</strong> </td>
-                                <td className="product-total">
-                                <span className="amount">{currency==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span> </td>
-                              </tr>
-                            </tbody>
-                            <tfoot>
-                              <tr className="shipping">
-                                <th>{t('cart.ship.table')}</th>
-                                <td>{currency==="VND" ? numberWithCommas(ship.total) : numberWithCommas(parseFloat(tryConvert(ship.total, currency, false)).toFixed(2))} {currency}</td>
-                              </tr>
-                              <tr className="order-total">
-                                <th>{t('cart.order-total.table')}</th>
-                                <td><strong><span className="amount">{currency==="VND" ? numberWithCommas(totalPrice + ship.total) : numberWithCommas(parseFloat(tryConvert(totalPrice + ship.total, currency, false)).toFixed(2))} {currency}</span></strong> </td>
-                              </tr>
-                            </tfoot>
-                          </table>
+                      )
+                    })}
+                    <div className="my-2 border-bottom"></div>
+                    <div className="row mb-3">
+                      <div className="col-12 col-md-6">
+                        <div className="form-floating">
+                          <textarea type="text" className="form-control h-100" name="order_comments" value={order_comments} onChange={this.onChange}/>
+                          <label>{t('checkout.note.input')}</label>
                         </div>
                       </div>
-                    </div>}
-                    <div className="rounded shadow-sm my-2">
-                      <div className="px-3 py-2">
-                      {authInfo && ship && (authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
-                        <h3>Shipping methods</h3>
+                      <div className="col-12 col-md-6">
+                        <h4>Đơn vị vận chuyển</h4>
                         <div className="row">
-                          <div className="col">
-                            <ul className="payment_methods methods">
-                              <li className="form-check">
-                                  <input type="radio" value="local" id="local" defaultChecked name="payment_method" className="form-check-input" onChange={this.onChange} />
-                                  <label htmlFor="local" className="form-check-label">{t('checkout.cod.button')}</label>
-                                </li>
-                              <li className="form-check">
-                                <input type="radio" value="paypal" id="paypal" name="payment_method" className="form-check-input" onChange={this.onChange}/>
-                                <label htmlFor="paypal" className="form-check-label"><img alt="" className="w-50 rounded border p-2" src="https://www.thoushallfind.com/design/public/Img/accepted-payment-methods.png"></img></label>
-                              </li>
-                            </ul>
+                          <div className="col-5">
+                            <div className="express float-start">
+                              <img className="w-100 rounded border py-2" src="https://static.ybox.vn/2020/6/1/1592759417126-ghn.png" alt=""></img>
+                            </div>
+                            <div className="float-start ml-2">
+                              <p className="mb-0">Giao hàng nhanh</p>
+                              <p className="mb-0 text-secondary smaller">{service_type_id === "2" ? SHIPPING_EXPRESS : SHIPPING_STANDARD}</p>
+                            </div>
                           </div>
-                          <div className="col align-self-end">
-                            { payment_method === "paypal" && <Paypal total_price={parseFloat(tryConvert(totalPrice + ship.total, "USD", false)).toFixed(2)} onCreateAnOrder={onCreateAnOrder} 
-                            shipToDifferentAddress={shipToDifferentAddress}
-                            shipping_address={shipping_address} shipping_phone={shipping_phone} authInfo={authInfo} total={total} order_list={order_list} note={order_comments} /> }
-                            { payment_method === "local" && <div className="my-4">
-                              <button type="button" className="btn btn-primary w-100" onClick={() => this.placeOrder()}>{t('checkout.order.button')}</button>
-                            </div>}
+                          <div className="col-3 text-center">
+                            <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#expressModal">Thay đổi</button>
                           </div>
+                          {ship && <div className="col-4 text-right font-weight-bold">
+                          {currency==="VND" 
+                          ? numberWithCommas(ship.total) 
+                          : numberWithCommas(parseFloat(tryConvert(ship.total, currency, false)).toFixed(2))} {currency}
+                          </div>}
                         </div>
-                      </div>}
-                    </div>
+                      </div>
+                      <ChangeExpress service_type_id={service_type_id} setService={this.setService}/>
                     </div>
                   </div>
                 </div>
-                </form>
+              </div>
+              <div className="col-12 col-lg-6">
+                <div className="rounded shadow-sm mt-2 mb-3">
+                  <div className="px-3 py-2">
+                    <h3>{t('checkout.billing.label')}</h3>
+                    { authInfo && <>
+                      <div className="row">
+                        <div className="col">
+                          <div className="form-floating validate-required mb-3">
+                            <input type="text" className="form-control"  value={authInfo.firstname} readOnly disabled/>
+                            <label >{t('checkout.firstname.input')}*</label>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="form-floating validate-required mb-3">
+                            <input type="text" className="form-control"  value={authInfo.lastname} readOnly disabled/>
+                            <label >{t('checkout.lastname.input')}*</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-floating mb-3 validate-required">
+                        <input type="text" className="form-control"  value={authInfo.address} readOnly disabled/>
+                        <label >{t('checkout.address.input')}*</label>
+                      </div>
+                      <div className="form-floating mb-3 validate-required">
+                        <input type="email" className="form-control"  value={authInfo.email} readOnly disabled/>
+                        <label >Email*</label>
+                      </div>
+                      <div className="form-floating mb-3 validate-required">
+                        <input type="text" className="form-control"  value={authInfo.phonenumber} readOnly disabled/>
+                        <label >{t('checkout.phone.input')}*</label>
+                      </div>
+                    </>}
+                  </div>
+                </div>
+                <div className="rounded shadow-sm my-2">
+                <div className="px-3 py-2">
+                  <div className="form-inline">
+                    <h3 className="w-100">{t('checkout.shipping.label')}</h3>
+                    <div className="form-check form-switch float-end">
+                      <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" value={shipToDifferentAddress} onChange={()=>this.shipDifferentAddress(!shipToDifferentAddress)}></input>
+                    </div>
+                  </div>
+                  {shipToDifferentAddress && <div className="" style={{ display: 'block' }}>
+                    <div className="row">
+                      <div className="col">
+                        <div className="form-floating mb-3">
+                          <input type="text" className="form-control"  name="shipping_first_name" placeholder="Nhập họ" value={shipping_first_name} onChange={this.onChange}/>
+                          <label >{t('checkout.firstname.input')}</label>
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="form-floating mb-3">
+                          <input type="text" className="form-control"  name="shipping_last_name" placeholder="Nhập tên" value={shipping_last_name} onChange={this.onChange}/>
+                          <label >{t('checkout.lastname.input')}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-lg-12 col-md-6 col-12">
+                        <div className="form-floating mb-3">
+                        <input type="text" className="form-control"  name="shipping_address" placeholder="Nhập địa chỉ" value={shipping_address} onChange={this.onChange}/>
+                        <label >{t('checkout.address.input')}</label>
+                      </div>
+                      </div>
+                      <div className="col-lg-4 col-md-6 col-12">
+                        <div className="form-floating mb-3">
+                          <select className="form-select"  id="floatingSelect" onChange={this.setDistrict} required>
+                            <option selected>Chọn tỉnh/ thành</option>
+                            {listCity && listCity.map((item, index)=>{
+                                return(
+                                  <option key={index} value={item.ProvinceID} name="shipping_city">{item.ProvinceName}</option>
+                                )
+                              })
+                            }
+                          </select>
+                          <label htmlFor="floatingSelect">Tỉnh thành</label>
+                        </div>
+                      </div>
+                      <div className="col-lg-4 col-md-6 col-12">
+                        <div className="form-floating mb-3">
+                          <select className="form-select"  id="floatingSelect" onChange={this.setWard} required>
+                            <option selected>Chọn quận huyện</option>
+                            {listDistrict && listDistrict.map((item, index)=>{
+                                return(
+                                  <option key={index} value={item.DistrictID} name="shipping_district">{item.DistrictName}</option>
+                                )
+                              })
+                            }
+                          </select>
+                          <label htmlFor="floatingSelect">Quận huyện</label>
+                        </div>
+                      </div>
+                      <div className="col-lg-4 col-md-6 col-12">
+                        <div className="form-floating mb-3">
+                          <select className="form-select"  id="floatingSelect" onChange={this.setAddress} required>
+                            <option selected>Chọn phường xã</option>
+                            {listWard && listWard.map((item, index)=>{
+                              return(
+                                <option key={index} value={item.WardCode} name="shipping_ward">{item.WardName}</option>
+                              )
+                              })
+                            }
+                          </select>
+                          <label htmlFor="floatingSelect">Phường xã</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="form-floating mb-3">
+                      <input type="tel" className="form-control"  name="shipping_phone" placeholder="Nhập số điện thoại" value={shipping_phone} onChange={this.onChange}/>
+                      <label >{t('checkout.phone.input')}</label>
+                    </div>
+                  </div>}
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-lg-6">
+              {ship && <div className="rounded shadow-sm mt-2 mb-3">
+                <div className="px-3 py-2">
+                  <h3>{t('checkout.order.title')}</h3>
+                  <div id="order_review" style={{ position: 'relative' }}>
+                    <table className="shop_table mb-2">
+                      <thead>
+                        <tr>
+                          <th className="product-name">{t('cart.product.table')}</th>
+                          <th className="product-total">{t('cart.total.table')}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="cart_item">
+                          <td className="product-name">
+                          {t('checkout.total.label')} <strong className="product-quantity">× {total}</strong> </td>
+                          <td className="product-total">
+                          <span className="amount">{currency==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}</span> </td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr className="shipping">
+                          <th>{t('cart.ship.table')}</th>
+                          <td>{currency==="VND" ? numberWithCommas(ship.total) : numberWithCommas(parseFloat(tryConvert(ship.total, currency, false)).toFixed(2))} {currency}</td>
+                        </tr>
+                        <tr className="order-total">
+                          <th>{t('cart.order-total.table')}</th>
+                          <td><strong><span className="amount">{currency==="VND" ? numberWithCommas(totalPrice + ship.total) : numberWithCommas(parseFloat(tryConvert(totalPrice + ship.total, currency, false)).toFixed(2))} {currency}</span></strong> </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>}
+              <div className="rounded shadow-sm my-2">
+                <div className="px-3 py-2">
+                {authInfo && ship && (authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
+                  <h3>Shipping methods</h3>
+                  <div className="row">
+                    <div className="col">
+                      <ul className="payment_methods methods">
+                        <li className="form-check">
+                            <input type="radio" value="local" id="local" defaultChecked name="payment_method" className="form-check-input" onChange={this.onChange} />
+                            <label htmlFor="local" className="form-check-label">{t('checkout.cod.button')}</label>
+                          </li>
+                        <li className="form-check">
+                          <input type="radio" value="paypal" id="paypal" name="payment_method" className="form-check-input" onChange={this.onChange}/>
+                          <label htmlFor="paypal" className="form-check-label"><img alt="" className="w-50 rounded border p-2" src="https://www.thoushallfind.com/design/public/Img/accepted-payment-methods.png"></img></label>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="col align-self-end">
+                      { payment_method === "paypal" && <Paypal total_price={parseFloat(tryConvert(totalPrice + ship.total, "USD", false)).toFixed(2)} onCreateAnOrder={onCreateAnOrder} 
+                      shipToDifferentAddress={shipToDifferentAddress}
+                      shipping_address={shipping_address} shipping_phone={shipping_phone} authInfo={authInfo} total={total} order_list={order_list} note={order_comments} /> }
+                      { payment_method === "local" && <div className="my-4">
+                        <button type="button" className="btn btn-primary w-100" onClick={() => this.placeOrder()}>{t('checkout.order.button')}</button>
+                      </div>}
+                    </div>
+                  </div>
+                </div>}
+              </div>
               </div>
             </div>
           </div>
+          </form>
         </div>
-      </>
+      </div>
+    </div>
     );
   }
 }

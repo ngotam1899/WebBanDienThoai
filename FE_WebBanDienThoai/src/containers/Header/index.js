@@ -273,7 +273,7 @@ class Header extends Component {
                   <Link to="/" /*  onClick={this.refreshPage} */><img src={assets("brand.png")} alt="" className="w-100" /></Link>
                 </div>
               </div>
-              <div className="col-md-6 col-9 align-self-center">
+              <div className="col-md-6 col-12 align-self-center py-1">
                 <div className="input-group shadow rounded-pill position-relative">
                   <input type="text" className="form-control rounded-pill" value={keyword} name="keyword" onKeyPress={this.pressSearch} onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
                   <div className="input-group-append position-absolute btn-circle" style={{right: '5px', top: '5px'}}>
@@ -301,7 +301,7 @@ class Header extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-3 align-self-center">
+              <div className="col-12 col-md-3 align-self-center py-1">
                 <div className="shopping-item rounded-pill shadow">
                   <Link to="/carts" className="text-decoration-none" data-tip data-for='cart'>
                     {t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> 
@@ -370,13 +370,13 @@ class Header extends Component {
             pageId="104334418256109"
             appId="804609327113718"
             htmlRef="https://localhost:5000"
-          /> */}
+          /> 
           <Widget
             socketUrl={"http://localhost:5005"}
             socketPath={"/socket.io/"}
             customData={{"language": "en"}} // arbitrary custom data. Stay minimal as this will be added to the socket
             title={"TellMe - Mobile Shopping Online"}
-          />
+          />*/}
         </div>
       </>
     );

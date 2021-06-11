@@ -7,15 +7,23 @@ table.shop_table td.product-remove a {
     padding: 0 5px 2px;
   }
   
-  .quantity {
+.quantity {
     float: left;
     margin-right: 15px;
 }
+.quantity button:hover{
+    background-color: blue;
+    color: white;
+}
 .quantity input[type="number"] {
-    border: 1px solid #5a88ca;
     padding: 5px;
     width: 50px;
 }
+
+.outline-none {
+    outline: none;
+}
+
   table.shop_table td.product-remove a:hover {color: #fff;background: red;text-decoration: none}
   table.shop_table td.product-name a{color: #222;}
   table.shop_table td.product-name a:hover {color: #5a88ca;text-decoration: none}
@@ -47,14 +55,6 @@ td.product-thumbnail img {
 }
 td.product-name {
     font-size: 18px;
-}
-div.quantity input.plus, div.quantity input.minus {
-    background: none repeat scroll 0 0 #5a88ca;
-    border: medium none;
-    color: #fff;
-    height: 25px;
-    line-height: 15px;
-    width: 25px;
 }
 td.product-quantity div.quantity {
     float: none;
@@ -125,7 +125,9 @@ div.cart-collaterals ul.products li.product .price ins {
     text-decoration: none;
 }
 
-input[type="button"], button {
+button {
     border: none;
+}
+.btn-padding {
     padding: 11px 20px;
 }

@@ -39,7 +39,15 @@ const getAllBrand = async (req, res, next) => {
 			}
 		}
 		if (req.query.min_p != undefined || req.query.max_p != undefined) {
-			condition['price_min'] = { $lte: parseInt(req.query.max_p) || 10000000, $gte: parseInt(req.query.min_p) || 0 };
+			if(req.query.min_p == undefined){
+				condition['price_min'] = { $lte: parseInt(req.query.max_p) }
+			}
+			if(req.query.max_p == undefined){
+				condition['price_min'] = { $gte: parseInt(req.query.min_p) }
+			}
+			else{
+				condition['price_min'] = { $lte: parseInt(req.query.max_p) || 50000000, $gte: parseInt(req.query.min_p) || 0 };
+			}
 		}
 		const pipeline = [
 			{

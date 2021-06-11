@@ -85,13 +85,13 @@ class SearchPage extends Component {
             </div>
             <div className="col-12">
               <button type="button" 
-              className={(filter.category === null || filter.category === undefined) ? "rounded-pill shadow-sm bg-info text-dark my-2 mr-2 position-relative" : "rounded-pill shadow-sm bg-active text-dark my-2 mr-2 position-relative"} 
+              className={(filter.category === null || filter.category === undefined) ? "rounded-pill shadow-sm bg-info text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-active text-dark my-2 mr-2 position-relative btn-padding"} 
               onClick={()=>this.onSetCategory(null)}>Tất cả</button>
               {listCategory && 
               listCategory.map((category, index) =>{
               return(
                 <button type="button" 
-                className={filter.category === category._id._id ? "rounded-pill shadow-sm bg-info text-dark mr-2 my-2 position-relative" : "rounded-pill shadow-sm bg-active text-dark mr-2 my-2 position-relative"} 
+                className={filter.category === category._id._id ? "rounded-pill shadow-sm bg-info text-dark mr-2 my-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-active text-dark mr-2 my-2 position-relative btn-padding"} 
                 key={index} onClick={()=>this.onSetCategory(category._id._id)}>
                   {category._id.name}
                   <span className="product-count">{category.count}</span>

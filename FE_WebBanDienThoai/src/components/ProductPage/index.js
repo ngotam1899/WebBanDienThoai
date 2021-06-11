@@ -92,14 +92,12 @@ class ProductPage extends Component {
 
   // Change distance price
   distancePrice = (min, max, e) => {
-    console.log(min)
     const {min_p, max_p} = this.state;
-    console.log(min_p)
-    if(min_p !== undefined && max_p !== undefined){
-      this.handleUpdateFilter({ min_p, max_p, page: 0});
+    if(min !== undefined && max !== undefined){
+      this.handleUpdateFilter({ min_p: min, max_p: max, page: 0});
     }
     else{
-      this.handleUpdateFilter({ min_p: min, max_p: max, page: 0});
+      this.handleUpdateFilter({ min_p, max_p, page: 0});
     }
   }
 
@@ -130,7 +128,7 @@ class ProductPage extends Component {
     const { listProducts, totalBrand, t, location, total, category } = this.props;
     const filter = getFilterParams(location.search);
     return (
-    <div className="container">
+    <div className="container mb-3">
       <div className="row">
         {category && <div className="my-2">
           <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
@@ -144,15 +142,19 @@ class ProductPage extends Component {
                 <div className="px-3 py-2">
                   <h3 className="mb-1">{t('shop.distance.label')}</h3>
                   <div className="mb-2 border-bottom"></div>
-                  {category && <ul className="pl-0">
-                    {/* <li className="form-check">
-                      <input type="radio" className="form-check-input" value="" id={price._id} name="price"/>
-                      <label htmlFor={price._id} className="form-check-label">{t('shop.all.radio-button')}</label>
-                    </li> */}
+                  {category && <ul className="pl-0 mb-0">
+                    <li className="form-check">
+                      <input type="radio" 
+                      checked={(filter.max_p === null || filter.max_p === undefined) && (filter.min_p === null || filter.min_p === undefined) && "checked"} 
+                      className="form-check-input" id="price" name="price" onChange={(e) => this.distancePrice(null, null, e)}/>
+                      <label htmlFor="price" className="form-check-label">{t('shop.all.radio-button')}</label>
+                    </li>
                     {category.price.map(price =>{
                       return (
                       <li className="form-check" key={price._id}>
-                        <input type="radio" id={price._id} name="price" className="form-check-input"  onChange={(e) => this.distancePrice(price.min, price.max, e)}/>
+                        <input type="radio" id={price._id} name="price"
+                        checked={(filter.max_p == price.max && filter.min_p == price.min) && "checked"} 
+                        className="form-check-input"  onChange={(e) => this.distancePrice(price.min, price.max, e)}/>
                         <label htmlFor={price._id} className="form-check-label">{price.name}</label>
                       </li>
                       )
@@ -162,7 +164,7 @@ class ProductPage extends Component {
                     <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder={t('shop.distance.from')} className="form-control w-40"></input>
                     <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} className="form-control w-40"></input>
                   </div>
-                  <button className="btn btn-primary w-100" onClick={() => this.distancePrice()}>
+                  <button className="btn btn-primary w-100 mb-2" onClick={() => this.distancePrice()}>
                   <i className="fa fa-search-dollar"></i> Áp dụng
                   </button>
                 </div>
@@ -200,13 +202,13 @@ class ProductPage extends Component {
           <div className="row">
             <div className="col-12">
             <button type="button" 
-            className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-info text-dark my-2 mr-2 position-relative" : "rounded-pill shadow-sm bg-active text-dark my-2 mr-2 position-relative"} 
+            className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-info text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-active text-dark my-2 mr-2 position-relative btn-padding"} 
             onClick={()=>this.onSetBrand(null)}>Độc quyền</button>
             {totalBrand && 
             totalBrand.map((brand, index) =>{
             return(
               <button type="button" 
-              className={filter.brand === brand._id._id ? "rounded-pill shadow-sm bg-info text-dark mr-2 my-2 position-relative" : "rounded-pill shadow-sm bg-active text-dark mr-2 my-2 position-relative"} 
+              className={filter.brand === brand._id._id ? "rounded-pill shadow-sm bg-info text-dark mr-2 my-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-active text-dark mr-2 my-2 position-relative btn-padding"} 
               key={index} onClick={()=>this.onSetBrand(brand._id._id)}>
                 <img alt={brand._id.name} style={{height: "20px"}} src={brand._id.image.public_url}/>
                 <span className="product-count">{brand.count}</span>

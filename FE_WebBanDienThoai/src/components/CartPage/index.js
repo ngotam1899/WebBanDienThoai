@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
-import Search from '../../containers/Search';
-import CartItem from '../../containers/CartItem'
 import ProductsActions from '../../redux/actions/products'
 import './styles.css';
+// Functions
+import tryConvert from '../../utils/changeMoney'
+import numberWithCommas from "../../utils/formatPrice";
 
 class CartPage extends Component {
   constructor(props) {
@@ -52,72 +53,111 @@ class CartPage extends Component {
     history.push('/carts/checkout')
   }
 
+  onUpdateQuantity = (product, color, quantity) => {
+    var {onUpdateProductInCart} = this.props;
+    if(quantity > 0){
+      onUpdateProductInCart(product,color, quantity);
+    }
+  }
+
+  onDeleteProductInCart = (product, color) => {
+    var {onDeleteProductInCart} = this.props;
+    onDeleteProductInCart(product, color);
+  }
+
   render() {
-    var {cart, onDeleteProductInCart, onUpdateProductInCart, currency, userInfo, t} = this.props;
-    return (<>
-      <div className="product-big-title-area">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="product-bit-title text-center">
-                <h2>{t('cart.page.title')}</h2>
-              </div>
+    var {totalPrice} = this.state;
+    var {cart, currency, userInfo, t} = this.props;
+    return (
+    <div className="container mb-3">
+      <div className="row">
+        <div className="col-12 my-2">
+          <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
+          <i className="fa fa-chevron-right px-2"></i>
+          <a className="text-decoration-none" href="/#/carts">Cart Page</a>
+        </div>
+        <div className="col-12 my-2">
+          <div className="rounded shadow-sm my-2">
+            <div className="px-3 py-2">
+              <h3 className="mb-1">Sản phẩm</h3>
+              <div className="mb-2 border-bottom"></div>
+              {cart && cart.map((item, index) => {
+                return (
+                  <div className="row" key={index}>
+                    <div className="col-md-1 col-2 text-center align-self-center">
+                      <div className="form-check form-switch">
+                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked disabled/>
+                      </div>
+                    </div>
+                    <div className="col-md-4 col-7">
+                      <div className="row">
+                        <div className="col-6 col-sm-4 col-md-3 text-center">
+                          <img className="float-start" alt={item.product.name} src={item.product.bigimage ? item.product.bigimage.public_url : "http://www.pha.gov.pk/img/img-02.jpg"}></img>
+                        </div>
+                        <div className="col-6 col-sm-8 col-md-9 align-self-center">
+                        <p className="font-weight-bold mb-0">{item.product.name}</p>
+                        <p className="mb-0 text-secondary">Màu {item.product.colors.find(i => i._id === item.color).name_en}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-2 col-3 align-self-center text-center">
+                    {currency==="VND" 
+                    ? numberWithCommas(item.product.colors.find(i => i._id === item.color).price) 
+                    : numberWithCommas(parseFloat(tryConvert(item.product.colors.find(i => i._id === item.color).price, currency, false)).toFixed(2))} {currency}
+                      </div>
+                    <div className="col-md-2 col-6 align-self-center text-center">
+                      <div className="quantity form-inline">
+                        <button type="button" className="rounded-circle outline-none" onClick={() => this.onUpdateQuantity(item.product, item.color, item.quantity - 1) }>
+                          <i className="fa fa-minus"></i>
+                        </button>
+                        <input type="number" size="4" className="form-control" value={item.quantity} min="0" step="1" readOnly/>
+                        <button type="button" className="rounded-circle outline-none" onClick={() => this.onUpdateQuantity(item.product, item.color, item.quantity + 1) }>
+                          <i className="fa fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="col-md-2 col-4 align-self-center text-right font-weight-bold">
+                    {currency==="VND" 
+                    ? numberWithCommas(item.quantity * item.product.colors.find(i => i._id === item.color).price) 
+                    : numberWithCommas(parseFloat(tryConvert(item.quantity * item.product.colors.find(i => i._id === item.color).price, currency, false)).toFixed(2))} {currency}
+                    </div>
+                    <div className="col-md-1 col-2 text-center align-self-center">
+                      <div className="form-check form-switch">
+                        <button type="button" className="btn-close rounded-circle bg-light p-2" onClick={()=> this.onDeleteProductInCart(item.product, item.color)}></button>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
-      </div>
-      <div className="single-product-area">
-        <div className="zigzag-bottom"></div>
-        <div className="container">
-          <div className="row">
-            <div className="d-none d-lg-block col-md-4">
-            <Search />
-            </div>
-            <div className="col-lg-8 col-12">
-              <div className="product-content-right">
-                <div className="woocommerce">
-                  <form>
-                    <table cellSpacing="0" className="shop_table cart">
-                      <thead>
-                        <tr>
-                          <th className="product-remove">&nbsp;</th>
-                          <th className="product-thumbnail">&nbsp;</th>
-                          <th className="product-name">{t('cart.product.table')}</th>
-                          <th className="product-price">{t('cart.price.table')}</th>
-                          <th className="product-quantity">{t('cart.quantity.table')}</th>
-                          <th className="product-subtotal">{t('cart.total.table')}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {cart.map((item, index) =>{
-                          return (
-                            <CartItem key={index} cart={item} onDeleteProductInCart={onDeleteProductInCart} currency={currency}
-                            onUpdateProductInCart={onUpdateProductInCart} setTotal={this.setTotal}/>
-                          )
-                        })}
-                        <tr>
-                          <td className="actions" colSpan="6">
-                            <div className="coupon">
-                              <label for="coupon_code">Coupon:</label>
-                              <input type="text" placeholder={t('cart.coupon-code.input')} value="" id="coupon_code" className="input-text"
-                                name="coupon_code" />
-                              <input type="submit" value={t('cart.apply.button')} name="apply_coupon" className="button" />
-                            </div>
-                            <input type="submit" value={t('cart.update.button')} name="update_cart" className="button" />
-                            {userInfo && cart[0] && <button className="checkout-button button alt wc-forward" onClick={() => this.checkoutOrder()}>{t('cart.checkout.button')}</button>}
-                          </td>
-                          
-                        </tr>
-                      </tbody>
-                    </table>
-                  </form>
+        <div className="col-12 my-2">
+          <div className="rounded shadow-sm my-2">
+            <div className="px-3 py-2">
+              <h3 className="mb-1">Tổng thanh toán</h3>
+              <div className="mb-2 border-bottom"></div>
+              <div className="row">
+                <div className="col-md-2 col-5 align-self-center">
+                <div className="form-check form-switch">
+                  <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked disabled/>
+                  <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Chọn tất cả</label>
+                </div>
+                </div>
+                <div className="col-md-7 col-1">
+                </div>
+                <div className="col-md-3 col-6 align-self-center form-inline justify-content-end">
+                  <p className="my-0 font-weight-bold">
+                  {currency==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}
+                  </p>
+                  {userInfo && cart[0] && <button className="btn btn-primary ml-2" onClick={() => this.checkoutOrder()}>{t('cart.checkout.button')}</button>}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
     )
   }
 }

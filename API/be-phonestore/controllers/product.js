@@ -83,7 +83,7 @@ const getAllProduct = async (req, res, next) => {
 			}
 		}
 		let products;
-		products = await Product.find(condition, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
+		products = await Product.find(condition, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1, reviewCount:1})
 			.populate({ path: 'bigimage', select: 'public_url' })
 			.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
 			.sort(sort)
@@ -401,13 +401,13 @@ const bestSellerProduct = async (req, res, next) => {
 		},
 	];
 	const order = await Order.aggregate(pipeline);
-	await Product.populate(order, {path: "_id", select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active'], 
+	await Product.populate(order, {path: "_id", select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active', 'reviewCount'], 
 	populate : {path : 'bigimage', select: "public_url"} })
 	return res.status(200).json({ success: true, code: 200, products: order });
 }
 
 const newestProduct = async (req, res, next) => {
-	let products = await Product.find({active: true}, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1})
+	let products = await Product.find({active: true}, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1, reviewCount:1})
 		.populate({ path: 'bigimage', select: 'public_url' })
 		.limit(4)
 		.sort({'createdAt' : -1})
@@ -421,7 +421,7 @@ const favoriteProduct = async (req, res, next) => {
 		}, {
 			'$limit': 4
 		},
-		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_min': 1, 'pathseo': 1, 'active' : 1 } }
+		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_min': 1, 'pathseo': 1, 'active' : 1, 'reviewCount': 1 } }
 	];
 	const products = await Product.aggregate(pipeline);
 	await Image.populate(products, {path: "bigimage", select: 'public_url'})
