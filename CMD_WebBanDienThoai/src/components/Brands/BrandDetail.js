@@ -12,7 +12,7 @@ class BrandDetail extends Component {
     const {brand} = props;
     this.state = {
       id: brand ? brand._id : '',
-      name: brand ? brand.name : '',
+      name: brand && brand.name ? brand.name : '',
       image: brand ? brand.image: '',
       previewSource: '',
       selectedFile: '',

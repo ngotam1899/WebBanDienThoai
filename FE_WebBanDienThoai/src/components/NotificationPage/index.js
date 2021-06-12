@@ -33,6 +33,36 @@ class NotificationPage extends Component {
     }
   }
 
+  componentDidMount(){
+    const {onGetList, authInfo, location} = this.props;
+    const { filter } = this.state;
+    if(authInfo){
+      const filters = getFilterParams(location.search);
+      var params = {
+        ...filter,
+        ...filters,
+        user: authInfo && authInfo._id
+      };
+      this.setState({queryParams: params})
+      onGetList(params);
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    const {location, onGetList, authInfo} = this.props;
+    const { filter } = this.state;
+    const filters = getFilterParams(location.search);
+    if(prevProps.location !== location){
+      var params = {
+        ...filter,
+        ...filters,
+        user: authInfo && authInfo._id
+      };
+      this.setState({queryParams: params})
+      onGetList(params);
+    }
+  }
+
   componentWillReceiveProps(props){
     const {authInfo} = this.props;
     document.title = "[TellMe] Trang bán hàng"
@@ -56,8 +86,7 @@ class NotificationPage extends Component {
     let queryParams = getFilterParams(search);
     queryParams = data;
     this.setState({queryParams})
-    history.push(`${pathname}?${qs.stringify(queryParams)}`);
-    window.location.reload();
+    history.push(`${pathname}?${qs.stringify(queryParams)}`)
   };
 
   onReadAllNoti = () =>{

@@ -1,5 +1,6 @@
 import { all } from "redux-saga/effects";
 
+import ad from "./ad";
 import auth from "./auth";
 import brands from "./brands";
 import categories from "./categories";
@@ -13,6 +14,6 @@ import user from "./user";
 
 export default function* rootSaga(getState) {
   yield all([
-    auth(), brands(), categories(), color(), group(), order(), notification(), products(), specification(), user(),
+    ad(), auth(), brands(), categories(), color(), group(), order(), notification(), products(), specification(), user(),
   ]);
 }

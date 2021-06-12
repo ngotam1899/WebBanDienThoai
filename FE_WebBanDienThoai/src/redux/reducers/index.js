@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 
+import ad from "./ad";
 import address from "./address";
 import auth from "./auth";
 import brands from "./brands";
@@ -16,5 +17,5 @@ import ui from "./ui";
 import user from "./user";
 
 export default combineReducers({
-  address, auth, brands, categories, cart, color, currency, group, notification, order, products, review, user, ui,
+  ad, address, auth, brands, categories, cart, color, currency, group, notification, order, products, review, user, ui,
 });

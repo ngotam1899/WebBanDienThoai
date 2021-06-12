@@ -12,13 +12,14 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import BrandDetail from './BrandDetail'
+import AdDetail from './AdDetail'
 import {INITIAL_IMAGE} from '../../constants';
 // @Actions
-import BrandActions from "../../redux/actions/brands";
-const fields = ['name', 'image',{ key: 'actions', _style: { width: '30%'} }]
+import AdActions from "../../redux/actions/ad";
 
-class BrandList extends Component {
+const fields = ['image', 'name', 'start', 'end', { key: 'actions', _style: { width: '15%'} }]
+
+class AdList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,21 +31,17 @@ class BrandList extends Component {
     onClearState();
     onGetList();
   }
-  handleListProduct = (id) =>{
-    const { history } = this.props;
-    const pathname = '/products/product-manage';
-    history.push(`${pathname}?brand=${id}`);
-  }
 
   setLarge = (large) => {
     this.setState({
       large
     })
   }
+
   submit = (id) => {
     confirmAlert({
       title: 'Thông báo',
-      message: 'Bạn có thực sự muốn xóa brand này?',
+      message: 'Bạn có thực sự muốn xóa quảng cáo này?',
       buttons: [
         {
           label: 'Yes',
@@ -56,6 +53,11 @@ class BrandList extends Component {
       ]
     });
   };
+  handleListProduct = (id) =>{
+    const { history } = this.props;
+    const pathname = '/products/product-manage';
+    history.push(`${pathname}?color=${id}`);
+  }
 
   onDelete = (_id)=>{
     const {onDelete} = this.props;
@@ -80,25 +82,25 @@ class BrandList extends Component {
 
   render () {
     const {large} = this.state;
-    const {listBrands, brandDetail, onClearDetail} = this.props;
+    const {listAd, adDetail, onClearDetail} = this.props;
     return (
       <>
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                <h5 className="float-left my-2">Danh sách thương hiệu</h5>
+                <h5 className="float-left my-2">Danh sách quảng cáo</h5>
                 <CButton
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
                   color="success"
-                > Thêm thương hiệu
+                > Thêm quảng cáo
                 </CButton>
               </CCardHeader>
 
               <CCardBody>
                 <CDataTable
-                  items={listBrands}
+                  items={listAd}
                   fields={fields}
                   hover
                   striped
@@ -111,16 +113,19 @@ class BrandList extends Component {
                         <img src={ item.image ? item.image.public_url : INITIAL_IMAGE } style={{width:'10vw'}} alt={item.name} />
                       </td>
                     ),
+                    'start': (item)=>(
+                      <td>
+                        <p>{new Date(item.startedAt).toLocaleDateString("vi-VN")}</p>
+                      </td>
+                    ),
+                    'end': (item)=>(
+                      <td>
+                        <p>{new Date(item.endedAt).toLocaleDateString("vi-VN")}</p>
+                      </td>
+                    ),
                     'actions':
                     (item)=>(
                       <td>
-                        <CButton
-                          onClick={() => this.handleListProduct(item._id)}
-                          className="mr-1 mb-1 mb-xl-0"
-                          color="success"
-                        >
-                          Danh sách
-                        </CButton>
                         <CButton
                           onClick={() => this.onUpdate(!large, item._id)}
                           className="mr-1 mb-1 mb-xl-0"
@@ -138,9 +143,9 @@ class BrandList extends Component {
                       </td>)
                   }}
                 />
-                {(brandDetail && large) && <BrandDetail large={large} brand={brandDetail} onClose={this.onClose}
+                {(adDetail && large) && <AdDetail large={large} ad={adDetail} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
-                {(!brandDetail && large) && <BrandDetail large={large} onClose={this.onClose}
+                {(!adDetail && large) && <AdDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
             </CCard>
@@ -153,29 +158,29 @@ class BrandList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    listBrands: state.brands.list,
-    brandDetail: state.brands.detail,
+    listAd: state.ad.list,
+    adDetail: state.ad.detail,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetList: () => {
-      dispatch(BrandActions.onGetList())
+      dispatch(AdActions.onGetList())
     },
     onClearState: () =>{
-      dispatch(BrandActions.onClearState())
+      dispatch(AdActions.onClearState())
     },
     onClearDetail: () =>{
-      dispatch(BrandActions.onClearDetail())
+      dispatch(AdActions.onClearDetail())
     },
     onGetDetail: (id) => {
-      dispatch(BrandActions.onGetDetail(id))
+      dispatch(AdActions.onGetDetail(id))
     },
     onDelete: (id) =>{
-      dispatch(BrandActions.onDelete({id}))
+      dispatch(AdActions.onDelete({id}))
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BrandList)
+export default connect(mapStateToProps, mapDispatchToProps)(AdList)

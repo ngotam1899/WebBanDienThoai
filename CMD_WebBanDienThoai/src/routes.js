@@ -6,6 +6,7 @@ const ColorList = React.lazy(() => import('./components/Colors/ColorList'));
 const GroupList = React.lazy(() => import('./components/Group/GroupList'));
 const SpecificationList = React.lazy(() => import('./components/Specification/SpecificationList'));
 const NotificationList = React.lazy(() => import('./components/Notifications/NotificationList'));
+const AdList = React.lazy(() => import('./components/Ads/AdList'));
 
 const UserList = React.lazy(() => import('./components/Users/UserList'));
 const OrderList = React.lazy(() => import('./components/Orders/OrderList'));
@@ -56,6 +57,7 @@ const routes = [
   { path: '/products/color-manage', name: 'Color List', component: ColorList },
   { path: '/products/group-manage', name: 'Group List', component: GroupList },
   { path: '/products/specification-manage', name: 'Specification List', component: SpecificationList },
+  { path: '/products/ad-manage', name: 'Ad List', component: AdList },
 
   { path: '/users/user-manage', name: 'User List', component: UserList },
   { path: '/users/order-manage', name: 'Order List', component: OrderList },

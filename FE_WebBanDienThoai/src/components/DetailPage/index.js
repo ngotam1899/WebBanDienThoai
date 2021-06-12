@@ -76,7 +76,10 @@ class DetailPage extends Component {
         this.setState({queryParams: params})
         this.props.onGetReviews(params);
       }
-      
+/*       if (prevProps.match !== this.props.match) {
+        console.log(this.props.history.location)
+        console.log(this.props.history.location.pathname.indexOf("/product/"))
+      } */
     }
     catch(err){
     }

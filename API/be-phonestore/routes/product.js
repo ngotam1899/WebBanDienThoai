@@ -85,7 +85,6 @@ router.route('/:IDProduct')
   .put(passport.authenticate('jwt', { session: false }), productController.updateProduct)
 	.delete(passport.authenticate('jwt', { session: false }), productController.deleteProduct);
 
-
 router.route('/:IDProduct/activate')
 	.put(passport.authenticate('jwt', { session: false }), productController.activateProduct)
 router.route('/:IDProduct/deactivate')

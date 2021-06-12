@@ -61,6 +61,11 @@ export default [
         name: 'Danh sách thuộc tính',
         to: '/products/specification-manage',
       },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách quảng cáo',
+        to: '/products/ad-manage',
+      },
     ],
   },
   {

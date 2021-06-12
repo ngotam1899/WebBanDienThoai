@@ -359,8 +359,8 @@ class Header extends Component {
                     })}
                     {location.hash.indexOf("account") !== -1 &&<>
                     <MenuLink label="Tài khoản của tôi" to={"/account/detail"} activeOnlyWhenExact={true} />
-                    <MenuLink label="Đơn mua" to={"/account/purchase"} onClick={this.refreshPage} activeOnlyWhenExact={true} />
-                    <MenuLink label="Thông báo" to={"/account/notification"} onClick={this.refreshPage} activeOnlyWhenExact={true} /></>}
+                    <MenuLink label="Đơn mua" to={"/account/purchase"} activeOnlyWhenExact={true} />
+                    <MenuLink label="Thông báo" to={"/account/notification"} activeOnlyWhenExact={true} /></>}
                   </ul>
                 </div>
               </nav>
