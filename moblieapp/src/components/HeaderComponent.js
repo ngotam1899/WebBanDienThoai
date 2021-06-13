@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1e88e5',
     justifyContent: 'space-between',
     paddingBottom: 12,
+    paddingTop:10
   },
   number: {
     fontSize: 12,

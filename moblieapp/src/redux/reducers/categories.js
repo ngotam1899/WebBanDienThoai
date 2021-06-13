@@ -1,4 +1,4 @@
-import { get, omit, cloneDeep } from "lodash";
+import { get } from "lodash";
 import { CategoryActionTypes } from "../actions/categories";
 
 const init = {
@@ -10,6 +10,8 @@ const init = {
 export default function(state = init, action) {
   switch (action.type) {
     case CategoryActionTypes.GET_LIST:
+    case CategoryActionTypes.GET_LIST_KEYWORD:
+    case CategoryActionTypes.GET_DETAIL:
       return {
         ...state,
         loading: true,
@@ -18,23 +20,39 @@ export default function(state = init, action) {
       return {
         ...state,
          loading: false,
+         list: null
       };
-
+    case CategoryActionTypes.GET_LIST_KEYWORD_ERROR:
+      return {
+        ...state,
+          loading: false,
+          search: null
+      };
     case CategoryActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
         loading: false,
         list: get(action, "payload", []), // list: action.payload
       };
+    case CategoryActionTypes.GET_DETAIL_ERROR:
+      return {
+        ...state,
+        loadingDetail: true,
+        detail: null,
+      };
+    case CategoryActionTypes.GET_DETAIL_SUCCESS:
+      return {
+        ...state,
+        loadingDetail: false,
+        detail: action.payload,
+      };
+    case CategoryActionTypes.GET_LIST_KEYWORD_SUCCESS:
+      return {
+        ...state,
+          loading: false,
+          search: action.payload
+      };
     default:
       return state;
   }
 }
-/* category: {
-      productLength: [
-        {
-          categoryId,
-          productLengthByCat
-        }
-      ]
-}*/

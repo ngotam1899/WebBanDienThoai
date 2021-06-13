@@ -94,7 +94,7 @@ class Cart extends Component {
   render() {
     const {navigation, isLogin} = this.props;
     return (
-      <ScrollView>
+      <ScrollView style={{backgroundColor: '#fff'}}>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <View style={{height: 20}} />
           <Text style={{fontSize: 28, color: '#277cdb'}}>Cart Detail</Text>

@@ -32,7 +32,7 @@ def get_recommendations(title):
     movie_indices = [i[0] for i in sim_scores]
     return _ids.iloc[movie_indices]
 
-res = get_recommendations(sys.argv[1])
+res = get_recommendations('608c1b07d1dfc82f0411a8ee')
 
 resp = {
   "data": res.tolist()

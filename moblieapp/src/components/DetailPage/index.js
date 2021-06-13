@@ -12,6 +12,7 @@ import UsersActions from '../../redux/actions/user';
 
 import styles from './style';
 
+import Header from '../HeaderComponent';
 import {INITIAL_IMAGE} from '../../constants';
 import numberWithCommas from '../../utils/formatPrice';
 import tryConvert from '../../utils/changeMoney';
@@ -52,12 +53,10 @@ class FlatListImage extends Component {
       <View
         key={this.props.item._key}
         style={{
-          backgroundColor: 'white',
+          backgroundColor: 'blue',
           flex: 1,
-          marginTop: 20,
-          width: width,
-          justifyContent: 'center',
-          alignItems: 'center',
+          marginTop: 10,
+
         }}>
         <Image
           style={styles.productImg}
@@ -72,7 +71,7 @@ class FlatListImage extends Component {
 
 class ListReview extends Component {
   render() {
-    const {item} = this.props;
+    const {item,onLiked} = this.props;
     return (
       <View style={styles.containerBoxReview}>
         <View style={styles.containerItemReview}>
@@ -118,9 +117,7 @@ class ListReview extends Component {
           </View>
         </View>
         <TouchableOpacity
-          onPress={() => {
-            this.onLiked(item._id, item.like);
-          }}
+          onPress={()=>onLiked(item._id, item.like)}
           style={styles.likeBox}>
           <FontAwesome name="thumbs-up" color="#6c757d" size={24} />
           <Text style={styles.likeItem}>
@@ -133,7 +130,7 @@ class ListReview extends Component {
 }
 class ProductItem extends Component {
   render() {
-    const {product, navigation, id} = this.props;
+    const {product, navigation} = this.props;
     return (
       <TouchableOpacity
         style={styles.itemContainer}
@@ -148,7 +145,7 @@ class ProductItem extends Component {
           style={styles.itemImage}
         />
         <Text style={styles.itemName} numberOfLines={2}>
-          {product ? product.name.substring(0, 22) : ''}
+          {product && product.name ? product.name.substring(0, 22) : ''}
           {product && product.name.length > 22 ? '...' : ''}
         </Text>
         <Text style={styles.itemPrice}>
@@ -186,8 +183,8 @@ class ProductDetail extends Component {
     } = this.props;
     onGetReviews({product: route.params.id});
     onGetDetailProduct(route.params.id);
-    onGetLike(route.params.id);
     onGetRelate(route.params.id);
+    onGetLike(route.params.id);
     AsyncStorage.getItem('AUTH_USER').then(data => {
       this.props.onGetProfile(null, data);
     });
@@ -242,7 +239,7 @@ class ProductDetail extends Component {
     if (color !== '') {
       AsyncStorage.getItem('cart')
         .then(datacart => {
-          index = this.findProductInCart(JSON.parse(datacart), data, color);
+          var index = this.findProductInCart(JSON.parse(datacart), data, color);
           if (index !== -1 && datacart !== null) {
             const cart = JSON.parse(datacart);
             cart[index].quantity += quantity;
@@ -304,7 +301,6 @@ class ProductDetail extends Component {
       review,
       total,
       count,
-      location,
       relate,
       like,
       authInfo,
@@ -333,16 +329,16 @@ class ProductDetail extends Component {
           return null;
       }
     };
-
     return (
       <>
+        <Header value="1" title="Trang Sản Phẩm" navigation={navigation} />
         {product && (
           <ScrollView style={styles.container}>
             <FlatList
               data={product.image}
               pagingEnabled={true}
               showsHorizontalScrollIndicator={true}
-              scrollEventThrottle={10}
+              scrollEventThrottle={0}
               keyExtractor={(item, index) => item._id}
               horizontal={true}
               renderItem={({item, index}) => {
@@ -352,17 +348,17 @@ class ProductDetail extends Component {
               }}></FlatList>
             <View style={{marginTop: 10}}>
               <Text style={styles.name}>{product.name}</Text>
-              <View style={{flexDirection: 'row', marginVertical:3}}>
-              <Rating
-                type="star"
-                ratingCount={5}
-                readonly={true}
-                startingValue={product.stars}
-                style={{alignItems: 'flex-start'}}
-                size={15}
-                imageSize={18}
-              />
-              <Text style={{fontSize: 16}}> | {total} đánh giá</Text>
+              <View style={{flexDirection: 'row', marginVertical: 3}}>
+                <Rating
+                  type="star"
+                  ratingCount={5}
+                  readonly={true}
+                  startingValue={product.stars}
+                  style={{alignItems: 'flex-start'}}
+                  size={15}
+                  imageSize={18}
+                />
+                <Text style={{fontSize: 16}}> | {total} đánh giá</Text>
               </View>
 
               <Text style={styles.price}>
@@ -402,7 +398,7 @@ class ProductDetail extends Component {
               {product.colors &&
                 product.colors.map((item, index) => (
                   <TouchableOpacity
-                    key={index}
+                    key={item._id}
                     style={
                       color === item._id
                         ? [styles.btnColor, styles.colorActive]
@@ -424,13 +420,31 @@ class ProductDetail extends Component {
               </TouchableOpacity>
             </View>
             <View style={styles.containerGroupNameButton}>
-              <TouchableOpacity style={recommend===-1?[styles.groupButton, styles.groupButtonActive]: styles.groupButton} onPress={()=>this.setState({recommend:-1})}>
+              <TouchableOpacity
+                style={
+                  recommend === -1
+                    ? [styles.groupButton, styles.groupButtonActive]
+                    : styles.groupButton
+                }
+                onPress={() => this.setState({recommend: -1})}>
                 <Text style={styles.textGroupButton}>SP đã xem</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={recommend=== 0?[styles.groupButton, styles.groupButtonActive]: styles.groupButton} onPress={()=>this.setState({recommend: 0})}>
+              <TouchableOpacity
+                style={
+                  recommend === 0
+                    ? [styles.groupButton, styles.groupButtonActive]
+                    : styles.groupButton
+                }
+                onPress={() => this.setState({recommend: 0})}>
                 <Text style={styles.textGroupButton}>Có thể bạn thích</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={recommend===1?[styles.groupButton, styles.groupButtonActive]: styles.groupButton} onPress={()=>this.setState({recommend:1})}>
+              <TouchableOpacity
+                style={
+                  recommend === 1
+                    ? [styles.groupButton, styles.groupButtonActive]
+                    : styles.groupButton
+                }
+                onPress={() => this.setState({recommend: 1})}>
                 <Text style={styles.textGroupButton}>SP tương tự</Text>
               </TouchableOpacity>
             </View>
@@ -640,7 +654,7 @@ class ProductDetail extends Component {
                   keyExtractor={(item, index) => item._id}
                   style={{marginBottom: 0}}
                   renderItem={({item, index}) => {
-                    return <ListReview item={item} index={index}></ListReview>;
+                    return <ListReview item={item} index={index} onLiked={this.onLiked}></ListReview>;
                   }}></FlatList>
               </View>
               {review && review.length >= 3 ? (

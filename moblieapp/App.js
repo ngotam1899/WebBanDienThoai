@@ -32,7 +32,8 @@ function HomeStackScreen() {
       screenOptions={{
         headerShown: false,
       }}>
-      <HomeStack.Screen name="Home" component={HomePage} />
+      <HomeStack.Screen name="Home" component={HomePage} options={{
+          headerShown: false}}/>
       <HomeStack.Screen name="Detail" component={DetailPage} />
       <HomeStack.Screen name="Cart" component={CartPage} />
       <HomeStack.Screen name="Notification" component={NotificationScreen} />

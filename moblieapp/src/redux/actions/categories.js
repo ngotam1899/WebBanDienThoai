@@ -2,6 +2,14 @@ export const CategoryActionTypes = {
   GET_LIST: "GET_LIST",
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
+
+  GET_LIST_KEYWORD: "GET_LIST_KEYWORD",
+  GET_LIST_KEYWORD_SUCCESS: "GET_LIST_KEYWORD_SUCCESS",
+  GET_LIST_KEYWORD_ERROR: "GET_LIST_KEYWORD_ERROR",
+
+  GET_DETAIL: "GET_DETAIL",
+  GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
+  GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
 };
 
 Object.keys(CategoryActionTypes).forEach((key) => {
@@ -9,6 +17,10 @@ Object.keys(CategoryActionTypes).forEach((key) => {
     key
   ] = `CATEGORY_${CategoryActionTypes[key]}`;
 });
+
+/**
+ * get_list
+ **/
 
 const onGetList = (payload) => ({
   type: CategoryActionTypes.GET_LIST,
@@ -25,10 +37,53 @@ const onGetListError = (error) => ({
   payload: error,
 });
 
+const onGetListKeyword = (payload) => ({
+  type: CategoryActionTypes.GET_LIST_KEYWORD,
+  payload,
+});
+
+const onGetListKeywordSuccess = (payload) => ({
+  type: CategoryActionTypes.GET_LIST_KEYWORD_SUCCESS,
+  payload,
+});
+
+const onGetListKeywordError = (error) => ({
+  type: CategoryActionTypes.GET_LIST_KEYWORD_ERROR,
+  payload: error,
+});
+
+
+/**
+ *
+ * @param String id
+ */
+const onGetDetail = (id) => ({
+  type: CategoryActionTypes.GET_DETAIL,
+  id,
+});
+
+const onGetDetailSuccess = (detail) => ({
+  type: CategoryActionTypes.GET_DETAIL_SUCCESS,
+  payload: detail,
+});
+
+const onGetDetailError = (error) => ({
+  type: CategoryActionTypes.GET_DETAIL_ERROR,
+  payload: error,
+});
+
 const CategoryActions = {
   onGetList,
   onGetListSuccess,
   onGetListError,
+
+  onGetListKeyword,
+  onGetListKeywordSuccess,
+  onGetListKeywordError,
+
+  onGetDetail,
+  onGetDetailSuccess,
+  onGetDetailError,
 };
 
 export default CategoryActions;

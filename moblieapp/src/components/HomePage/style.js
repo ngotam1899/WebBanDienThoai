@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native';
 const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     marginTop: -13,
     borderRadius: 50,
     backgroundColor: 'red',
-    color: '#fff'
+    color: '#fff',
   },
   sectionTitle: {
     fontWeight: '700',
@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   itemContainer: {
-    width: 100,
+    flex: 0.33,
+    alignItems: 'center',
     marginRight: 12,
     marginTop: 10,
   },
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    paddingTop: 50,
+    paddingTop: 12,
     paddingBottom: 4,
     backgroundColor: '#1e88e5',
   },
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 2,
-    height: 40
+    height: 40,
   },
   inputText: {
     color: '#969696',
@@ -119,13 +120,47 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   //
   bodyContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
+  //Brand
+  btnBrand: {
+    backgroundColor: '#f2f2f2',
+    height: 40,
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    marginLeft: 10,
+  },
+  btnBrandActive: {
+    backgroundColor: '#4099EA',
+    height: 40,
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    marginLeft: 10,
+  },
+  spanCount: {
+    marginTop: -10,
+    marginLeft: -3,
+    backgroundColor: 'red',
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 24,
+    height: 24,
+  },
+  txtCount: {color: '#fff', fontSize: 12},
+  textBrandActive:{color: '#fff'},
+  textBrand:{color:'#000'},
+  pickerLong: {marginLeft: 5, height: 50, width: 235},
+  pickerSort: {marginLeft: 5, height: 50, width: 160}
 });
 
 export default styles;

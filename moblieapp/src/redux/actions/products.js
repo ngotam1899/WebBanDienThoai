@@ -22,6 +22,14 @@ export const ProductsActionTypes = {
   GET_NEWEST_SUCCESS: 'GET_NEWEST_SUCCESS',
   GET_NEWEST_ERROR: 'GET_NEWEST_ERROR',
 
+  GET_LIKE: "GET_LIKE",
+  GET_LIKE_SUCCESS: "GET_LIKE_SUCCESS",
+  GET_LIKE_ERROR: "GET_LIKE_ERROR",
+
+  GET_RELATE: "GET_RELATE",
+  GET_RELATE_SUCCESS: "GET_RELATE_SUCCESS",
+  GET_RELATE_ERROR: "GET_RELATE_ERROR",
+
   CREATE: 'CREATE',
   CREATE_SUCCESS: 'CREATE_SUCCESS',
   CREATE_ERROR: 'CREATE_ERROR',
@@ -48,6 +56,44 @@ export const ProductsActionTypes = {
 
 Object.keys(ProductsActionTypes).forEach(key => {
   ProductsActionTypes[key] = `PRODUCTS_${ProductsActionTypes[key]}`;
+});
+
+/**
+ * like
+ **/
+
+ const onGetLike = (id) => ({
+  type: ProductsActionTypes.GET_LIKE,
+  id,
+});
+
+const onGetLikeSuccess = (payload) => ({
+  type: ProductsActionTypes.GET_LIKE_SUCCESS,
+  payload
+});
+
+const onGetLikeError = (error) => ({
+  type: ProductsActionTypes.GET_LIKE_ERROR,
+  payload: error,
+});
+
+/**
+ * relate
+ **/
+
+const onGetRelate = (id) => ({
+  type: ProductsActionTypes.GET_RELATE,
+  id,
+});
+
+const onGetRelateSuccess = (payload) => ({
+  type: ProductsActionTypes.GET_RELATE_SUCCESS,
+  payload
+});
+
+const onGetRelateError = (error) => ({
+  type: ProductsActionTypes.GET_RELATE_ERROR,
+  payload: error,
 });
 
 const onClearDetail = () => ({
@@ -268,6 +314,14 @@ const ProductsActions = {
   onGetNewest,
   onGetNewestSuccess,
   onGetNewestError,
+
+  onGetLike,
+  onGetLikeSuccess,
+  onGetLikeError,
+
+  onGetRelate,
+  onGetRelateSuccess,
+  onGetRelateError,
 
   onCreate,
   onCreateSuccess,

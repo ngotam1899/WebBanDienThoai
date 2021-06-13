@@ -1,5 +1,7 @@
 import {StyleSheet, Dimensions} from 'react-native'
 
+const {width} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -8,8 +10,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   productImg: {
-    width: 200,
-    height: 300,
+    flex:1,
+    width: width-40,
+    height: 460,
+    padding: 0,
+    margin:0
   },
   flatListItemName: {
     color: 'black',
@@ -298,6 +303,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontWeight: 'bold'
-  }
+  },
 });
 export default styles;

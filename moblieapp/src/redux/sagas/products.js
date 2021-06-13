@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest } from "../apis/products";
+import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest, getLikeProducts, getRelateProducts  } from "../apis/products";
 import GroupActions from "../actions/group";
 
 function* handleGetList({ payload }) {
@@ -16,7 +16,6 @@ function* handleGetList({ payload }) {
 }
 
 function* handleGetBestSeller({ payload }) {
-  
   try {
     const result = yield call(getBestSeller, payload);
     const data = get(result, "data");
@@ -50,15 +49,20 @@ function* handleGetNewest({ payload }) {
 }
 
 function* handleFilter({ payload }) {
-  yield delay(2000);
-  const { keyword } = payload;
-  yield put(
-    ProductsActions.onGetList({
+  try {
+    yield delay(1000);
+    const { keyword } = payload;
+    const result = yield call(getAllProducts, {
       keyword,
       limit: 4,
       active: 1
-    }),
-  );
+    });
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onFilterSuccess(data.products));
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function* handleGetDetail({ filters, id }) {
@@ -73,6 +77,27 @@ function* handleGetDetail({ filters, id }) {
   }
 }
 
+function* handleGetLike({ id }) {
+  try {
+    const result = yield call(getLikeProducts, id);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onGetLikeSuccess(data.result));
+  } catch (error) {
+    yield put(ProductsActions.onGetLikeError(error));
+  }
+}
+
+function* handleGetRelate({ id }) {
+  try {
+    const result = yield call(getRelateProducts, id);
+    const data = get(result, "data", {});
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onGetRelateSuccess(data.result));
+  } catch (error) {
+    yield put(ProductsActions.onGetRelateError(error));
+  }
+}
 /**
  *
  */
@@ -94,6 +119,12 @@ export function* watchGetDetail() {
 export function* watchFilter() {
   yield takeEvery(ProductsActionTypes.FILTER, handleFilter);
 }
+export function* watchGetRelate() {
+  yield takeEvery(ProductsActionTypes.GET_RELATE, handleGetRelate);
+}
+export function* watchGetLike() {
+  yield takeEvery(ProductsActionTypes.GET_LIKE, handleGetLike);
+}
 
 export default function* rootSaga() {
   yield all([
@@ -101,6 +132,8 @@ export default function* rootSaga() {
     fork(watchGetBestSeller),
     fork(watchGetFavorite),
     fork(watchGetNewest),
+    fork(watchGetLike),
+    fork(watchGetRelate),
     fork(watchGetDetail),
     fork(watchFilter),
   ]);

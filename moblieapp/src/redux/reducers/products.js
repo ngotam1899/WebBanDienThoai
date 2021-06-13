@@ -1,11 +1,11 @@
-import {get} from 'lodash';
-import {ProductsActionTypes} from '../actions/products';
+import { get } from "lodash";
+import { ProductsActionTypes } from "../actions/products";
 
 const init = {
   detail: null,
 };
 
-export default function (state = init, action) {
+export default function(state = init, action) {
   switch (action.type) {
     case ProductsActionTypes.CLEAR_DETAIL:
       return {
@@ -24,29 +24,48 @@ export default function (state = init, action) {
     case ProductsActionTypes.GET_FAVORITE_ERROR:
     case ProductsActionTypes.GET_NEWEST:
     case ProductsActionTypes.GET_NEWEST_ERROR:
+    case ProductsActionTypes.GET_LIKE:
+    case ProductsActionTypes.GET_LIKE_ERROR:
+    case ProductsActionTypes.GET_RELATE:
+    case ProductsActionTypes.GET_RELATE_ERROR:
       return {
         ...state,
       };
     case ProductsActionTypes.GET_BEST_SELLER_SUCCESS:
       return {
         ...state,
-        best: get(action, 'payload'),
+        best: get(action, "payload"), 
       };
     case ProductsActionTypes.GET_FAVORITE_SUCCESS:
       return {
         ...state,
-        favorite: get(action, 'payload'),
+        favorite: get(action, "payload"),
       };
     case ProductsActionTypes.GET_NEWEST_SUCCESS:
       return {
         ...state,
-        new: get(action, 'payload'),
+        new: get(action, "payload"),
+      };
+    case ProductsActionTypes.GET_LIKE_SUCCESS:
+      return {
+        ...state,
+        like: get(action, "payload"),
+      };
+    case ProductsActionTypes.GET_RELATE_SUCCESS:
+      return {
+        ...state,
+        relate: get(action, "payload"),
       };
     case ProductsActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        total: get(action, 'payload.total'),
-        list: get(action, 'payload.list', []), //list : action.payload.list
+        total: get(action, "payload.total"),
+        list: get(action, "payload.list", []), //list : action.payload.list
+      };
+    case ProductsActionTypes.FILTER_SUCCESS:
+      return {
+        ...state,
+        filter: get(action, "payload", []),
       };
     case ProductsActionTypes.GET_DETAIL:
       return {
@@ -80,7 +99,6 @@ export default function (state = init, action) {
         ...state,
       };
     case ProductsActionTypes.UPDATE_SUCCESS:
-    case ProductsActionTypes.FILTER_SUCCESS:
     case ProductsActionTypes.CREATE_SUCCESS:
     case ProductsActionTypes.DELETE_SUCCESS:
       return {

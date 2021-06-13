@@ -1,205 +1,177 @@
 import React, {Component} from 'react';
-import 'react-native-gesture-handler';
-import {Image, View, Text, ScrollView, StatusBar} from 'react-native';
+import {TabView, TabBar} from 'react-native-tab-view';
+import {View, Text, Dimensions} from 'react-native';
 import styles from './style';
-import {connect} from 'react-redux';
-// @Components
-import ProductItem from '../ProductItem';
-import Header from '../HeaderComponent';
-// @Actions
-import ProductsSelectors from '../../redux/selectors/products';
-import ProductsActions from '../../redux/actions/products';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import AuthorizationActions from '../../redux/actions/auth';
-import {AsyncStorage} from 'react-native';
-import numberWithCommas from '../../utils/formatPrice';
+import Header from '../HeaderComponent';
+import {connect} from 'react-redux';
 
-const section_banner = require('../../assets/section_banner.png');
+import CategoryActions from '../../redux/actions/categories';
+import ProductsActions from '../../redux/actions/products';
+import BrandActions from "../../redux/actions/brands";
+
+import HomeContainer from './HomeContainer';
+import ProductPage from './ProductPage'
+
+const {width} = Dimensions.get('window');
+
+class FirstRoute extends Component {
+  render() {
+    const {navigation} = this.props;
+    return <HomeContainer navigation={navigation}></HomeContainer>;
+  }
+}
+class SecondRoute extends Component {
+  render() {
+    const {navigation, listProducts, category, totalBrand} = this.props;
+    return <ProductPage navigation={navigation}  listProducts={listProducts} totalBrand={totalBrand} category={category}/>;
+  }
+}
+class ThirdRoute extends Component {
+  render() {
+    const {navigation, listProducts, category, totalBrand} = this.props;
+    return <ProductPage navigation={navigation} listProducts={listProducts} totalBrand={totalBrand} category={category}/>;
+  }
+}
 
 class HomePage extends Component {
   constructor(props) {
     super(props);
-    this.state = {movieName: '', releaseYear: ''};
+    this.state = {
+      routes: [{key: 'HomePage', title: 'Trang Chủ'}],
+      index: 0,
+      filter: {
+        limit: 100,
+        page: 0,
+      },
+      category: ''
+    };
+  }
+  
+  setIndex = val => {
+    this.setState({
+      index: val,
+    });
+    const {onGetList, onGetListBrand} = this.props;
+    var filters = '';
+    const {filter} = this.state;
+    if (val === 1) {
+      filters = {
+        category: '608c195b99e77e244c7db4b5',
+      };
+      this.setState({
+        category: '608c195b99e77e244c7db4b5',
+      })
+      var params = {
+        ...filter,
+        ...filters,
+      };
+      onGetList(params);
+      onGetListBrand(filters)
+    } else if (val === 2) {
+      filters = {
+        category: "608c197a99e77e244c7db4b6"
+      };
+      this.setState({
+        category: "608c197a99e77e244c7db4b6"
+      })
+      var params = {
+        ...filter,
+        ...filters,
+      };
+      onGetList(params);
+      onGetListBrand(filters)
+    }
+  };
+
+  renderScene = ({route}) => {
+    switch (route.key) {
+      case 'HomePage':
+        return <FirstRoute navigation={this.props.navigation} />;
+      case 'Earphone':
+        return <SecondRoute navigation={this.props.navigation} listProducts={this.props.listProducts} totalBrand={this.props.totalBrand} category={this.state.category}/>;
+      case 'Phone':
+        return <ThirdRoute navigation={this.props.navigation} listProducts={this.props.listProducts} totalBrand={this.props.totalBrand} category={this.state.category}/>;
+      default:
+        return null;
+    }
+  };
+
+  onSetRoute(){
+    const {listCategories} = this.props;
+    if (listCategories) {
+      listCategories.map((item, index) => {
+        this.setState(prevState => ({
+          routes: [
+            ...prevState.routes,
+            {key: (item.name_en).replace(" ",""), title: item.name},
+          ],
+        }));
+      });
+    }
+  }
+  componentDidUpdate(prevProps) {
+    var {listCategories} = this.props;
+    if (listCategories !== prevProps.listCategories) {
+      this.onSetRoute();
+    }
   }
   componentDidMount = async () => {
-    this.props.onGetList();
-    this.props.onGetBestSeller();
-    this.props.onGetFavorite();
-    this.props.onGetNewest();
-    const token = await AsyncStorage.getItem('AUTH_USER').then(data => {});
-    const {onGetProfile} = this.props;
-    onGetProfile(null, token);
+    const {onGetListCategory} = this.props;
+    onGetListCategory();
   }
+
+  renderTabBar = props => (
+    <TabBar
+      {...props}
+      scrollEnabled={true}
+      style={{backgroundColor: '#1e88e5'}}
+    />
+  );
   render() {
-    const {listProducts, bestSeller, newest, favorite, navigation} = this.props;
+    const {navigation} = this.props;
+    const {index, routes} = this.state;
     return (
-      <View style={styles.screenContainer}>
-                <StatusBar backgroundColor='#1e88e5' barStyle="light-content"/>
-      {/*  */}
-      <View style={styles.headerContainer}>
-        <View style={styles.inputContainer}>
-          <FontAwesome name="search" size={24} color="#969696" />
-          <Text style={styles.inputText}>Bạn tìm gì hôm nay?</Text>
-        </View>
-        {/*  */}
-        <Header value = "2" navigation={navigation}></Header>
-      </View>
-      {/*  */}
-      <View style={styles.bodyContainer}>
-        <ScrollView>
-          <View style={styles.sectionContainer}>
-            {/*  */}
-            <Text style={styles.sectionTitle}>Điện thoại - Máy tính bảng</Text>
-            {/*  */}
-            <Image source={section_banner} style={styles.sectionImage} />
-            {/*  */}
-            <ScrollView horizontal={true}>
-              <View style={styles.filterContainer}>
-                {[
-                  'Tất cả',
-                  'Điện thoại SmartPhone',
-                  'Máy tính bảng',
-                  'Điện thoại',
-                ].map((e, index) => (
-                  <View
-                    key={index}
-                    style={
-                      index === 0
-                        ? styles.filterActiveButtonContainer
-                        : styles.filterInactiveButtonContainer
-                    }>
-                    <Text
-                      style={
-                        index === 0
-                          ? styles.filterActiveText
-                          : styles.filterInactiveText
-                      }>
-                      {e}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </ScrollView>
-            <ScrollView horizontal={true}>
-              <View style={styles.listItemContainer}>
-                {listProducts &&
-                  listProducts.map((product, index) => (
-                    <View key={index}>
-                      <ProductItem
-                        name={product.name}
-                        image={
-                          product.bigimage
-                            ? product.bigimage.public_url
-                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
-                        }
-                        price={numberWithCommas(product.price_min)}
-                        navigation={navigation}
-                        id={product._id}
-                      />
-                    </View>
-                  ))}
-              </View>
-            </ScrollView>
-            {/*  */}
-            <View style={styles.seeMoreContainer}>
-              <Text style={styles.seeMoreText}>XEM THÊM 636 SẢN PHẨM</Text>
-            </View>
-            <Text style={styles.sectionTitle}>Sản phẩm mới</Text>
-            <ScrollView horizontal={true}>
-              <View style={styles.listItemContainer}>
-                {newest &&
-                  newest.map((product, index) => (
-                    <View key={index}>
-                      <ProductItem
-                        name={product.name}
-                        image={
-                          product.bigimage
-                            ? product.bigimage.public_url
-                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
-                        }
-                        price={numberWithCommas(product.price_min)}
-                        navigation={navigation}
-                        id={product._id}
-                      />
-                    </View>
-                  ))}
-              </View>
-            </ScrollView>
-            <Text style={styles.sectionTitle}>Sản phẩm được đánh giá cao</Text>
-            <ScrollView horizontal={true}>
-              <View style={styles.listItemContainer}>
-                {favorite &&
-                  favorite.map((product, index) => (
-                    <View key={index}>
-                      <ProductItem
-                        name={product.name}
-                        image={
-                          product.bigimage
-                            ? product.bigimage.public_url
-                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
-                        }
-                        price={numberWithCommas(product.price_min)}
-                        navigation={navigation}
-                        id={product._id}
-                      />
-                    </View>
-                  ))}
-              </View>
-            </ScrollView>
-            <Text style={styles.sectionTitle}>Sản phẩm bán chạy nhất</Text>
-            <ScrollView horizontal={true}>
-              <View style={styles.listItemContainer}>
-                {bestSeller &&
-                  bestSeller.map((product, index) => (
-                    <View key={index}>
-                      <ProductItem
-                        name={product.name}
-                        image={
-                          product.bigimage
-                            ? product.bigimage.public_url
-                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
-                        }
-                        price={product.price_min}
-                        navigation={navigation}
-                        id={product._id}
-                      />
-                    </View>
-                  ))}
-              </View>
-            </ScrollView>
+      <>
+        <View style={styles.headerContainer}>
+          <View style={styles.inputContainer}>
+            <FontAwesome name="search" size={24} color="#969696" />
+            <Text style={styles.inputText}>Bạn tìm gì hôm nay?</Text>
           </View>
-        </ScrollView>
-      </View>
-    </View>
+          <Header value="2" navigation={navigation}></Header>
+        </View>
+
+        <TabView
+          navigationState={{index, routes}}
+          renderScene={navigation => this.renderScene(navigation)}
+          onIndexChange={index => this.setIndex(index)}
+          initialLayout={{width: width}}
+          renderTabBar={this.renderTabBar}
+          style={{backgroundColor:'#fff'}}
+        />
+      </>
     );
   }
 }
-
 const mapStateToProps = state => {
   return {
-    listProducts: ProductsSelectors.getList(state),
-    bestSeller: state.products.best,
-    favorite: state.products.favorite,
-    newest: state.products.new,
+    listCategories: state.categories.list,
+    listProducts: state.products.list,
+    listBrand: state.brands.list,
+    totalBrand: state.brands.total,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    onGetListCategory: () => {
+      dispatch(CategoryActions.onGetList());
+    },
     onGetList: params => {
       dispatch(ProductsActions.onGetList(params));
     },
-    onGetBestSeller: () => {
-      dispatch(ProductsActions.onGetBestSeller());
-    },
-    onGetFavorite: () => {
-      dispatch(ProductsActions.onGetFavorite());
-    },
-    onGetNewest: () => {
-      dispatch(ProductsActions.onGetNewest());
-    },
-    onGetProfile: (data, headers) => {
-      dispatch(AuthorizationActions.onGetProfile(data, headers));
+    onGetListBrand: (params) => {
+      dispatch(BrandActions.onGetList(params))
     },
   };
 };

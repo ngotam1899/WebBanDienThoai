@@ -7,7 +7,6 @@ import {
   StyleSheet,
   ScrollView,
   Image,
-  ToastAndroid
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -400,6 +399,7 @@ class CheckoutPage extends Component {
       alert('PAYMENT FAILED. PLEASE TRY AGAIN.');
     }
   }
+
   render() {
     const {
       firstname,
@@ -857,7 +857,7 @@ class CheckoutPage extends Component {
             <WebView
               source={{uri: `${API_ENDPOINT_AUTH}/paypal?total=${parseFloat(tryConvert(ship ? totalPrice + ship.total : 0, "USD", false)).toFixed(2)}`}}
               onNavigationStateChange={data => this.handleResponse(data)}
-              onMessage={onMessage}
+              onMessage={()=>this.onMessage()}
               injectedJavaScript={`document.f1.submit()`}
             />
           </Modal>
