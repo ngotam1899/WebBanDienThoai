@@ -49,6 +49,7 @@ class ProductDetail extends Component {
       nameColor: "",
       amountColor: 0,
       priceColor: 0,
+      realPriceColor: 0,
       colorEditing: "none",
       btnStatus: "Thêm màu",
       onEditing: false,
@@ -71,13 +72,13 @@ class ProductDetail extends Component {
       selectedList: [],
       // @Product Specifition
       specifications: product
-        ? this.setValue(
-            product,
-            listCategories[
-              listCategories.findIndex((i) => i._id === product.category._id)
-            ]
-          )
-        : this.setValue(product, listCategories[0]),
+      ? this.setValue(
+          product,
+          listCategories[
+            listCategories.findIndex((i) => i._id === product.category._id)
+          ]
+        )
+      : this.setValue(product, listCategories[0]),
     };
   }
 /* eslint-disable */
@@ -133,16 +134,6 @@ class ProductDetail extends Component {
     this.setState({
       [name]: value,
     });
-  };
-  onChangeSelect = (event) => {
-    var target = event.target;
-    var name = target.name;
-    var value = target.value;
-    console.log(value)
-    console.log(name)
-/*     this.setState({
-      [name]: value,
-    }); */
   };
 
   deletePhoto = (id) => {
@@ -253,6 +244,7 @@ class ProductDetail extends Component {
         nameColor: "",
         amountColor: 0,
         priceColor: 0,
+        realPriceColor: 0,
         onEditing: false,
         imageColor: INITIAL_IMAGE,
         // Trả preview về mặc định
@@ -270,8 +262,9 @@ class ProductDetail extends Component {
       btnStatus: "Hủy",
       // Gán giá trị fields
       nameColor: item._id,
-      amountColor: item.amount,
-      priceColor: item.price,
+      amountColor: item.amount ? item.amount : 0,
+      priceColor: item.price ? item.price : 0,
+      realPriceColor: item.real_price ? item.real_price : 0,
       onEditing: true,
       imageID: item.image,
       imageColor: item.image_link ? item.image_link :  INITIAL_IMAGE,
@@ -293,6 +286,7 @@ class ProductDetail extends Component {
   onSaveColor() {
     const {nameColor,
       priceColor,
+      realPriceColor,
       amountColor,
       onEditing,
       indexColor,
@@ -317,6 +311,7 @@ class ProductDetail extends Component {
             name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
             amount: amountColor,
             price: priceColor,
+            real_price: realPriceColor,
             image: selectedColorImage,
             image_link: previewColorImage
           });
@@ -329,6 +324,7 @@ class ProductDetail extends Component {
             name_vn: listColor.find((obj) => obj._id === nameColor).name_vn,
             amount: amountColor,
             price: priceColor,
+            real_price: realPriceColor,
             image: selectedColorImage ? selectedColorImage : imageID,
             image_link: previewColorImage ? previewColorImage : imageColor
           };
@@ -344,6 +340,7 @@ class ProductDetail extends Component {
       nameColor: "",
       amountColor: 0,
       priceColor: 0,
+      realPriceColor: 0,
       onEditing: false,
       imageColor: INITIAL_IMAGE,
     });
@@ -574,6 +571,7 @@ class ProductDetail extends Component {
       colors,
       nameColor,
       priceColor,
+      realPriceColor,
       amountColor,
       colorEditing,
       btnStatus,
@@ -731,26 +729,26 @@ class ProductDetail extends Component {
                   </select>
                 </div>
 
-                <div className="row">
+              <div className="row">
                 <div className="col-12">
-                <label className="float-left">Danh sách màu:</label>
-                <div className="float-right">
-                <button
-                  className="btn btn-success mr-2"
-                  style={{ display: colorEditing }}
-                  onClick={() => this.onSaveColor()}
-                  type="button"
-                >
-                  Lưu
-                </button>
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  onClick={() => this.onAddColor(colorEditing)}
-                >
-                  {btnStatus}
-                </button>
-                </div>
+                  <label className="float-left">Danh sách màu:</label>
+                  <div className="float-right">
+                    <button
+                      className="btn btn-success mr-2"
+                      style={{ display: colorEditing }}
+                      onClick={() => this.onSaveColor()}
+                      type="button"
+                    >
+                      Lưu
+                    </button>
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={() => this.onAddColor(colorEditing)}
+                    >
+                      {btnStatus}
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -780,6 +778,21 @@ class ProductDetail extends Component {
                       />
                     </div>
                   </div>
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text">Số lượng</span>
+                    </div>
+                    <input
+                      className="form-control"
+                      placeholder="Nhập số lượng"
+                      type="number"
+                      name="amountColor"
+                      value={amountColor}
+                      onChange={this.onChange}
+                      min="0"
+                    ></input>
+                  </div>
+
                 </div>
                 <div className="col-7">
                   <select
@@ -798,24 +811,37 @@ class ProductDetail extends Component {
                       );
                     })}
                   </select>
-                  <input
-                    className="form-control my-1"
-                    placeholder="Nhập giá sản phẩm"
-                    type="number"
-                    name="priceColor"
-                    value={priceColor}
-                    onChange={this.onChange}
-                    min="0"
-                  ></input>
-                  <input
-                    className="form-control my-1"
-                    placeholder="Nhập số lượng"
-                    type="number"
-                    name="amountColor"
-                    value={amountColor}
-                    onChange={this.onChange}
-                    min="0"
-                  ></input>
+                  <label>Giá đã giảm:</label>
+                  <div className="input-group mb-0">
+                    <input
+                      className="form-control"
+                      placeholder="Nhập giá sản phẩm"
+                      type="number"
+                      name="priceColor"
+                      value={priceColor}
+                      onChange={this.onChange}
+                      min="0"
+                    ></input>
+                    <div className="input-group-append">
+                      <span className="input-group-text">VND</span>
+                    </div>
+                  </div>
+                  <label>Giá chưa giảm:</label>
+                  <div className="input-group mb-0">
+                    <input
+                      className="form-control"
+                      placeholder="Nhập giá sản phẩm"
+                      type="number"
+                      name="realPriceColor"
+                      value={realPriceColor}
+                      onChange={this.onChange}
+                      min="0"
+                    ></input>
+                    <div class="input-group-append">
+                      <span class="input-group-text">VND</span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 

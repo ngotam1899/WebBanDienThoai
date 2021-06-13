@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './styles.css';
+import { Link } from 'react-router-dom'
 import { withTranslation } from 'react-i18next'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -7,8 +8,7 @@ import {
   Carousel,
   CarouselItem,
   CarouselControl,
-  CarouselIndicators,
-  CarouselCaption
+  CarouselIndicators
 } from 'reactstrap';
 import ProductItem from "../../containers/ProductItem"
 // @Actions
@@ -63,7 +63,7 @@ class HomePage extends Component {
         <div className="zigzag-bottom"></div>
         <div className="container">
           <div className="row">
-            <div className="col-md-3 col-sm-6">
+            <div className="col-md-3 col-sm-6 d-none d-md-block">
               <div className="single-promo promo1">
                 <i className="fa fa-sync-alt"></i>
                 <p>{t('home.feature.1')}</p>
@@ -73,7 +73,7 @@ class HomePage extends Component {
                 <p>{t('cart.free-ship')}</p>
               </div>
             </div>
-            {listAd && <div className="col-12 col-sm-6">
+            {listAd && <div className="col-12 col-md-6">
               <Carousel
                 activeIndex={activeIndex}
                 next={this.next}
@@ -82,20 +82,24 @@ class HomePage extends Component {
                 <CarouselIndicators items={listAd} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
                 {listAd.map((item) => {
                   return (
-                    <CarouselItem
-                      onExiting={() => this.setState({animating: true})}
-                      onExited={() => this.setState({animating: false})}
-                      key={item._id}
-                    >
-                      <img src={item.image.public_url} alt={item.name} />
-                    </CarouselItem>
+                      <CarouselItem
+                        onExiting={() => this.setState({animating: true})}
+                        onExited={() => this.setState({animating: false})}
+                        key={item._id}
+                      >
+                        <Link to={item.link.replace("https://localhost:5000/#", "")}>
+                        <img src={item.image.public_url} alt={item.name} />
+                        </Link>
+                        
+                      </CarouselItem>
+                    
                   );
                 })}
                 <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
                 <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
               </Carousel>
             </div>}
-            <div className="col-md-3 col-sm-6">
+            <div className="col-md-3 col-sm-6 d-none d-md-block">
               <div className="single-promo promo3">
                 <i className="fa fa-lock"></i>
                 <p>{t('home.feature.3')}</p>

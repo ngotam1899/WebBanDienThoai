@@ -153,7 +153,7 @@ class ProductPage extends Component {
                       return (
                       <li className="form-check" key={price._id}>
                         <input type="radio" id={price._id} name="price"
-                        checked={(filter.max_p == price.max && filter.min_p == price.min) && "checked"} 
+                        checked={(filter.max_p === price.max && filter.min_p === price.min) && "checked"} 
                         className="form-check-input"  onChange={(e) => this.distancePrice(price.min, price.max, e)}/>
                         <label htmlFor={price._id} className="form-check-label">{price.name}</label>
                       </li>

@@ -237,7 +237,7 @@ class DetailPage extends Component {
                       <h2 className="">{product.name}</h2>
                       <div className="product-inner-price">
                         <ins>{product.price_min && this.setPrice(currency, product.price_min, product.price_max)} {currency}</ins>
-                        {/* <del>{currency=="VND" ? product.price*1.2 : parseFloat(tryConvert(product.price, currency, false)*1.2).toFixed(2)} {currency}</del> */}
+                        {product.real_price_min && <del>{this.setPrice(currency, product.real_price_min, product.real_price_max)} {currency}</del>}
                       </div>
                       <div className="row">
                         <div className="col-12">

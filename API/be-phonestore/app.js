@@ -6,6 +6,7 @@ const express = require('express');
 const cloudinary = require('cloudinary').v2;
 
 // 1.1. Import Routers
+const routerAd = require('./routes/ad');
 const routerUser = require('./routes/user');
 const routerReview = require('./routes/review');
 const routerProduct = require('./routes/product');
@@ -47,17 +48,17 @@ app.use(
 // 4. Define Database
 
 // @For tester
- mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
+/*  mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
 	useCreateIndex: true,
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false
 })
 .then(() => console.log('Connected to MongoDB!'))
-.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))  
+.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))   */
 
 //@For dev
-/* mongoose
+mongoose
 .connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
  		useCreateIndex: true,
   	useNewUrlParser: true,
@@ -66,7 +67,7 @@ app.use(
 })
 .then(() => console.log('Connected to MongoDB!'))
 .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`));
- */
+
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
@@ -92,6 +93,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // 6. Routes
+app.use('/ad', routerAd);
 app.use('/users', routerUser);
 app.use('/reviews', routerReview);
 app.use('/products', routerProduct);
@@ -129,7 +131,8 @@ const likeProducts = (req, res, next) => {
 			// Convert string to JSON
 			var _data = JSON.stringify(data.toString())
 			var result = JSON.parse(JSON.parse(_data));
-			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active'],
+			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 
+			'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
 			populate : {path : 'bigimage', select: "public_url"} });
 			return res.status(200).json({ success: true, code: 200, result: result.data });
 		})
@@ -149,7 +152,8 @@ const relateProducts = (req, res, next) => {
 			// Convert string to JSON
 			var _data = JSON.stringify(data.toString())
 			var result = JSON.parse(JSON.parse(_data));
-			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active'],
+			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 
+			'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
 			populate : {path : 'bigimage', select: "public_url"} });
 			return res.status(200).json({ success: true, code: 200, result: result.data });
 		})

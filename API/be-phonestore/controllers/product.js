@@ -83,7 +83,8 @@ const getAllProduct = async (req, res, next) => {
 			}
 		}
 		let products;
-		products = await Product.find(condition, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1, reviewCount:1})
+		products = await Product.find(condition, { name: 1, pathseo: 1, bigimage: 1, brand: 1, price_max: 1, 
+			price_min: 1, active: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1, })
 			.populate({ path: 'bigimage', select: 'public_url' })
 			.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
 			.sort(sort)
@@ -110,7 +111,6 @@ const updateProduct = async (req, res, next) => {
 		const { IDProduct } = req.params;
 		const {
 			name,
-			price,
 			amount,
 			pathseo,
 			warrently,
@@ -120,7 +120,6 @@ const updateProduct = async (req, res, next) => {
 			brand,
 			specifications,
 			colors,
-			discount,
 			group,
 			description,
 			desc_text,
@@ -132,12 +131,10 @@ const updateProduct = async (req, res, next) => {
 		const product = await Product.findById(IDProduct);
 		if (!product) return res.status(200).json({ success: false, code: 404, message: 'Can not found product need to update' });
 		if (name) product.name = name;
-		if (price) product.price = price;
 		if (amount) product.amount = amount;
 		if (pathseo) product.pathseo = pathseo;
 		if (warrently) product.warrently = warrently;
 		if (bigimage) product.bigimage = bigimage;
-		if (discount) product.discount = discount;
 		if (image) product.image = image;
 		if (description) product.description = description;
 		if (desc_text) product.desc_text = desc_text;
@@ -190,23 +187,36 @@ const updateProduct = async (req, res, next) => {
 					let name_vn = colorFound.name_vn;
 					let amount = item.amount;
 					let price = item.price;
+					let real_price = item.real_price;
 					let image = await Image.findById(item.image);
 					if(image){
 						let image_link = image.public_url
-						colorArray.push({ _id, name_en, name_vn, amount, price, image, image_link });
+						colorArray.push({ _id, name_en, name_vn, amount, price, real_price, image, image_link });
 					}
 					else{
-						colorArray.push({ _id, name_en, name_vn, amount, price });
+						colorArray.push({ _id, name_en, name_vn, amount, price, real_price });
 					}
 				}
 			}
-			
+			/* Nominal price */
 			let priceArray =[];
 			colorArray.map(item =>{
-				priceArray.push(item.price)
+				if(item.price){
+					priceArray.push(item.price)
+				}
 			})
 			product.price_max = Math.max(...priceArray)
 			product.price_min = Math.min(...priceArray)
+			/* Real price */
+			let realPriceArray =[];
+			colorArray.map(item =>{
+				if(item.real_price){
+					realPriceArray.push(item.real_price)
+				}
+			})
+			product.real_price_max = Math.max(...realPriceArray)
+			product.real_price_min = Math.min(...realPriceArray)
+
 			product.colors = colorArray;
 		}
 		await product.save();
@@ -220,7 +230,6 @@ const addProduct = async(req, res, next) => {
 	try {
 		const { 
 			name, 
-			price, 
 			amount, 
 			pathseo, 
 			warrently, 
@@ -237,7 +246,6 @@ const addProduct = async(req, res, next) => {
 			height,
 			length,
 			width,
-			discount 
 		} = req.body
 		const product = new Product();
 		if (name) {
@@ -245,7 +253,6 @@ const addProduct = async(req, res, next) => {
 			if(productFound) return res.status(200).json({ success: false, code: 404, message: 'Product had stored' });
 			else product.name = name;
 		}
-		if (price) product.price = price;
 		if (amount) product.amount = amount;
 		if (pathseo) {
 			const productFound = await Product.findOne({ pathseo })
@@ -254,7 +261,6 @@ const addProduct = async(req, res, next) => {
 		}
 		if (warrently) product.warrently = warrently;
 		if (bigimage) product.bigimage = bigimage;
-		if (discount) product.discount = discount;
 		if (image) product.image = image
 		if (description) product.description = description;
 		if (desc_text) product.desc_text = desc_text;
@@ -306,16 +312,25 @@ const addProduct = async(req, res, next) => {
 					let name_vn = colorFound.name_vn;
 					let amount = item.amount;
 					let price = item.price;
+					let real_price = item.real_price;
 					let image = item.image;
-					colorArray.push({ _id, name_en, name_vn, amount, price, image });
+					colorArray.push({ _id, name_en, name_vn, amount, price, real_price, image });
 				}
 			}
+			/* Nominal price */
 			let priceArray =[];
 			colorArray.map(item =>{
-				priceArray.push(item.price)
+				if(item.price) priceArray.push(item.price)
 			})
 			product.price_max = Math.max(...priceArray)
 			product.price_min = Math.min(...priceArray)
+			/* Real price */
+			let realPriceArray =[];
+			colorArray.map(item =>{
+				if(item.real_price) realPriceArray.push(item.real_price)
+			})
+			product.real_price_max = Math.max(...realPriceArray)
+			product.real_price_min = Math.min(...realPriceArray)
 			product.colors = colorArray;
 		}
 		await product.save()
@@ -401,13 +416,15 @@ const bestSellerProduct = async (req, res, next) => {
 		},
 	];
 	const order = await Order.aggregate(pipeline);
-	await Product.populate(order, {path: "_id", select: ['name', 'bigimage', 'stars', 'price_min', 'pathseo', 'active', 'reviewCount'], 
+	await Product.populate(order, {path: "_id", select: ['name', 'bigimage', 'stars', 'price_min', 
+	'price_max', 'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'], 
 	populate : {path : 'bigimage', select: "public_url"} })
 	return res.status(200).json({ success: true, code: 200, products: order });
 }
 
 const newestProduct = async (req, res, next) => {
-	let products = await Product.find({active: true}, {name:1, pathseo:1, bigimage:1, brand: 1, price_max: 1, price_min:1, active: 1, stars:1, reviewCount:1})
+	let products = await Product.find({active: true}, { name: 1, pathseo: 1, bigimage: 1, brand: 1, price_max: 1, 
+		price_min: 1, active: 1, stars: 1, reviewCount: 1, real_price_min: 1, real_price_max: 1 })
 		.populate({ path: 'bigimage', select: 'public_url' })
 		.limit(4)
 		.sort({'createdAt' : -1})
@@ -421,7 +438,8 @@ const favoriteProduct = async (req, res, next) => {
 		}, {
 			'$limit': 4
 		},
-		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_min': 1, 'pathseo': 1, 'active' : 1, 'reviewCount': 1 } }
+		{ '$project': { 'name': 1, 'bigimage': 1, 'stars': 1, 'price_min': 1, 'price_max': 1,
+		'pathseo': 1, 'active' : 1, 'reviewCount': 1, 'real_price_min': 1, 'real_price_max': 1, } }
 	];
 	const products = await Product.aggregate(pipeline);
 	await Image.populate(products, {path: "bigimage", select: 'public_url'})

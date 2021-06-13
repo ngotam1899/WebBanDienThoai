@@ -159,6 +159,21 @@ z-index: 999;}
     width: 36px;
     text-align: center;
 }
+.discount{
+    width: 3rem;
+    float: right;
+}
+.h-discount {
+    height: 1rem;
+}
+.text-orange{
+    color: rgb(246, 145, 19)
+}
+.discount-content{
+    color: rgb(255, 255, 255);
+    background-color: rgb(246, 145, 19);
+    font-size: x-small;
+}
 .dropdown-small select {
     background-color: transparent;
     border: none;

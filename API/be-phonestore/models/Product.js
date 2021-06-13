@@ -13,6 +13,12 @@ const ProductSchema = new Schema(
 		price_min: {
 			type: Number
 		},
+		real_price_max: {
+			type: Number
+		},
+		real_price_min: {
+			type: Number
+		},
 		amount: {
 			// Tổng số lượng các sản phẩm
 			type: Number
@@ -20,9 +26,6 @@ const ProductSchema = new Schema(
 		active: {
 			type: Boolean,
 			default: false
-		},
-		discount: {
-			type: Number
 		},
 		pathseo: {
 			type: String,
@@ -95,6 +98,9 @@ const ProductSchema = new Schema(
 					type: String
 				},
 				amount: {
+					type: Number
+				},
+				real_price: {
 					type: Number
 				},
 				price: {
