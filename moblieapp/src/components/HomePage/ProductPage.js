@@ -11,7 +11,7 @@ import {Picker} from '@react-native-community/picker';
 import {connect} from 'react-redux';
 import styles from './style';
 import numberWithCommas from '../../utils/formatPrice';
-import ProductsActions from '../../redux/actions/products';
+import ProductsActions, { ProductsActionTypes } from '../../redux/actions/products';
 
 class ProductItem extends Component {
   render() {
@@ -21,7 +21,8 @@ class ProductItem extends Component {
         style={[styles.itemContainer, (flex = 0.33)]}
         onPress={() => {
           navigation.push('Detail', {id: product._id});
-        }}>
+        }}
+        >
         <Image
           source={{
             uri:
@@ -59,13 +60,20 @@ class ProductPage extends Component {
     };
   }
   componentDidMount() {
-    const {category} = this.props;
+    const {category ,onAddParams} = this.props;
     this.setState({
       paramValue: {category: category},
     });
+    var params = {
+      category: category,
+      limit: '',
+      brand: '',
+      sort_p: 0,
+    };
+    onAddParams(params);
   }
   setSortValue = (itemValue, index) => {
-    const {onGetList,category} = this.props;
+    const {onGetList, category, onAddParams} = this.props;
     const {paramValue} = this.state;
     this.setState({
       sortValue: itemValue,
@@ -76,11 +84,11 @@ class ProductPage extends Component {
       brand: paramValue.brand,
       sort_p: itemValue,
     };
-    console.log('param: ', params)
+    onAddParams(params);
     onGetList(params);
   };
   onSetBrand = value => {
-    const {totalBrand, category, onGetList} = this.props;
+    const {totalBrand, category, onGetList, onAddParams} = this.props;
     var brandId =
       value !== 'Độc Quyền'
         ? totalBrand.find(item => item._id.name === value)._id._id
@@ -96,10 +104,23 @@ class ProductPage extends Component {
       sortValue: 0
     });
     onGetList(params);
+    onAddParams(params);
   };
+  componentDidUpdate(prevProps){
+    const {category, onAddParams} = this.props;
+    if(category !== prevProps.category){
+      var params = {
+        category: category,
+        limit: '',
+        brand: '',
+        sort_p: 0,
+      };
+      onAddParams(params);
+    }
+  }
   render() {
-    const {listProducts, navigation, category, totalBrand} = this.props;
-    const {brandName, sortValue} = this.state;
+    const {listProducts, navigation, totalBrand, params, category} = this.props;
+    const {brandName, sortValue, } = this.state;
     return (
       <View style={{paddingHorizontal: 12}}>
         <View style={{marginVertical: 8}}>
@@ -182,6 +203,7 @@ class ProductPage extends Component {
 const mapStateToProps = state => {
   return {
     listProducts: state.products.list,
+    params: state.products.params
   };
 };
 
@@ -189,6 +211,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onGetList: params => {
       dispatch(ProductsActions.onGetList(params));
+    },
+    onAddParams: params => {
+      dispatch(ProductsActions.onAddParams(params));
     },
   };
 };

@@ -53,7 +53,6 @@ class FlatListImage extends Component {
       <View
         key={this.props.item._key}
         style={{
-          backgroundColor: 'blue',
           flex: 1,
           marginTop: 10,
 

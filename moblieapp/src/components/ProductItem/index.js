@@ -12,7 +12,6 @@ export default class ProductItem extends Component {
     return (
       <TouchableOpacity style={styles.itemContainer} onPress={() => {
         navigation.push('Detail',{id});
-        navigation.openDrawer();
       }}>
         <Image source={{uri: image}} style={styles.itemImage} />
         <Text style={styles.itemName} numberOfLines={2}>

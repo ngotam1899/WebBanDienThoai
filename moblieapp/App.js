@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import HomePage from './src/components/HomePage';
@@ -14,6 +15,8 @@ import SignInPage from './src/components/SignInPage';
 import UserDetailPage from './src/components/UserDetailPage';
 import CheckoutPage from './src/components/CheckoutPage';
 import OrdersPage from './src/components/OrdersPage';
+import DrawerContent from './src/components/DrawerContent'
+import ProductPage from './src/components/HomePage/ProductPage';
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -21,10 +24,20 @@ import configureStore from './src/redux/store';
 
 const Tab = createBottomTabNavigator();
 const store = configureStore();
+const Drawer = createDrawerNavigator();
 import {createStackNavigator} from '@react-navigation/stack';
 const HomeStack = createStackNavigator();
 import {CartProvider} from './src/context/Cart';
 
+function HomeScreen({route, navigation}){
+  console.log('params', route.params);
+  return(
+    <Drawer.Navigator initialRouteName="Home" drawerContent={(props) => <DrawerContent {...props} />}>
+      <Drawer.Screen name="Home" initialParams={{ params: route.params }} component={HomePage} />
+      <Drawer.Screen name="ProductPage" component={ProductPage} />
+    </Drawer.Navigator>
+  )
+}
 
 function HomeStackScreen() {
   return (
@@ -32,7 +45,7 @@ function HomeStackScreen() {
       screenOptions={{
         headerShown: false,
       }}>
-      <HomeStack.Screen name="Home" component={HomePage} options={{
+      <HomeStack.Screen name="HomeScreen" component={HomeScreen} options={{
           headerShown: false}}/>
       <HomeStack.Screen name="Detail" component={DetailPage} />
       <HomeStack.Screen name="Cart" component={CartPage} />

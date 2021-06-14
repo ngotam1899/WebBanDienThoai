@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import 'react-native-gesture-handler';
-import {Image, View, Text, ScrollView, StatusBar, FlatList} from 'react-native';
+import {Image, View, Text, ScrollView, StatusBar, FlatList, TouchableOpacity} from 'react-native';
 import styles from './style';
 import {connect} from 'react-redux';
 

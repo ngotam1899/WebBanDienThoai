@@ -42,6 +42,8 @@ export const ProductsActionTypes = {
   CLEAR_STATE: 'CLEAR_STATE',
 
   ADD_PRODUCT_TO_CART: 'ADD_PRODUCT_TO_CART',
+  ADD_PARAMS: 'ADD_PARAMS',
+  GET_PARAMS: 'GET_PARAMS',
   UPDATE_PRODUCT_CART: 'UPDATE_PRODUCT_CART',
   DELETE_PRODUCT_CART: 'DELETE_PRODUCT_CART',
   ON_CLEAR_CART: 'ON_CLEAR_CART',
@@ -233,6 +235,17 @@ const onAddProductToCart = () => ({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
 });
 
+const onAddParams = (params) => {
+  return {
+    type: ProductsActionTypes.ADD_PARAMS,
+    params
+  }
+}
+
+const onGetParams = () => ({
+  type: ProductsActionTypes.GET_PARAMS,
+});
+
 const onClearCart = () => ({
   type: ProductsActionTypes.ON_CLEAR_CART,
 });
@@ -332,6 +345,8 @@ const ProductsActions = {
   onUpdateError,
 
   onAddProductToCart,
+  onAddParams,
+  onGetParams,
   onDeleteProductToCart,
   onClearCart,
   onPurchaseAgain,

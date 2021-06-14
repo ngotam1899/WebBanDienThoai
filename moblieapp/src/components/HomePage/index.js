@@ -52,7 +52,7 @@ class HomePage extends Component {
     this.setState({
       index: val,
     });
-    const {onGetList, onGetListBrand} = this.props;
+    const {onGetList, onGetListBrand, onAddParams} = this.props;
     var filters = '';
     const {filter} = this.state;
     if (val === 1) {
@@ -67,7 +67,8 @@ class HomePage extends Component {
         ...filters,
       };
       onGetList(params);
-      onGetListBrand(filters)
+      onGetListBrand(filters);
+      onAddParams(params);
     } else if (val === 2) {
       filters = {
         category: "608c197a99e77e244c7db4b6"
@@ -80,7 +81,8 @@ class HomePage extends Component {
         ...filters,
       };
       onGetList(params);
-      onGetListBrand(filters)
+      onGetListBrand(filters);
+      onAddParams(params)
     }
   };
 
@@ -159,6 +161,8 @@ const mapStateToProps = state => {
     listProducts: state.products.list,
     listBrand: state.brands.list,
     totalBrand: state.brands.total,
+    category : state.categories.detail,
+    params: state.products.params
   };
 };
 
@@ -172,6 +176,9 @@ const mapDispatchToProps = dispatch => {
     },
     onGetListBrand: (params) => {
       dispatch(BrandActions.onGetList(params))
+    },
+    onAddParams: params => {
+      dispatch(ProductsActions.onAddParams(params));
     },
   };
 };

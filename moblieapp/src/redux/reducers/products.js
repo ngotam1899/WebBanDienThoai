@@ -72,7 +72,7 @@ export default function(state = init, action) {
         ...state,
         detail: null,
       };
-
+    
     case ProductsActionTypes.GET_DETAIL_SUCCESS:
       return {
         ...state,
@@ -104,6 +104,16 @@ export default function(state = init, action) {
       return {
         ...state,
       };
+    case ProductsActionTypes.ADD_PARAMS:
+      return {
+        ...state,
+        params: action.params,
+      }
+    case ProductsActionTypes.GET_PARAMS:
+      return{
+        ...state,
+        params: action.params,
+      }
     default:
       return state;
   }
