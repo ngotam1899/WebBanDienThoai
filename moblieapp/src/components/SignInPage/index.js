@@ -100,7 +100,7 @@ class SignInPage extends Component {
           const {onLoginFacebook, navigation} = this.props;
           this.setState({userFacebookInfo: result});
           onLoginFacebook(token);
-          navigation.navigate('Home');
+          navigation.navigate('HomeScreen');
         }
       },
     );
@@ -167,7 +167,7 @@ class SignInPage extends Component {
   UNSAFE_componentWillReceiveProps(props) {
     const {loggedIn, navigation, isCheckout} = props;
     if (loggedIn && loggedIn === true && isCheckout === false) {
-      navigation.navigate('Home');
+      navigation.navigate('HomeScreen');
     }
     else if (loggedIn && loggedIn === true && isCheckout === true) {
       navigation.navigate('Checkout');

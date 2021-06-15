@@ -138,21 +138,6 @@ class OrderItem extends Component {
               onPress={() => this.sendData(item.item._id)}>
               <Text style={styles.textBtnDetail}>Chi tiết</Text>
             </TouchableOpacity>
-            {this.checkValid(
-              item.item.confirmed,
-              item.item.active,
-              item.item.status,
-            ) === true ? (
-              <TouchableOpacity style={styles.btnBuyAgain}>
-                <Text
-                  style={styles.textBtnDetail}
-                  onPress={() => this.onBuyAgain(item.item.order_list)}>
-                  Mua Lại
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )}
           </View>
           <View>
             <Text style={styles.textTotal}>

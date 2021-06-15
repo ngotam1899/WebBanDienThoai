@@ -17,6 +17,7 @@ import CheckoutPage from './src/components/CheckoutPage';
 import OrdersPage from './src/components/OrdersPage';
 import DrawerContent from './src/components/DrawerContent'
 import ProductPage from './src/components/HomePage/ProductPage';
+import SearchPage from './src/components/SearchPage';
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -30,7 +31,6 @@ const HomeStack = createStackNavigator();
 import {CartProvider} from './src/context/Cart';
 
 function HomeScreen({route, navigation}){
-  console.log('params', route.params);
   return(
     <Drawer.Navigator initialRouteName="Home" drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="Home" initialParams={{ params: route.params }} component={HomePage} />
@@ -48,12 +48,35 @@ function HomeStackScreen() {
       <HomeStack.Screen name="HomeScreen" component={HomeScreen} options={{
           headerShown: false}}/>
       <HomeStack.Screen name="Detail" component={DetailPage} />
-      <HomeStack.Screen name="Cart" component={CartPage} />
+      <HomeStack.Screen name="Cart" component={CartPage} options={{
+          headerShown: true,
+          title: 'TRANG GIỎ HÀNG',
+          headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 16,
+          },
+        }}/>
       <HomeStack.Screen name="Notification" component={NotificationScreen} />
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
       <HomeStack.Screen name="SignUp" component={SignUpPage} />
       <HomeStack.Screen name="SignIn" component={SignInPage} />
       <HomeStack.Screen name="Checkout" component={CheckoutPage} />
+      <HomeStack.Screen name="Search" component={SearchPage} 
+        options={{
+          headerShown: true,
+          title: 'TRANG TÌM KIẾM',
+          headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 16,
+          },
+        }}
+      />
       <HomeStack.Screen
         name="Orders"
         component={OrdersPage}

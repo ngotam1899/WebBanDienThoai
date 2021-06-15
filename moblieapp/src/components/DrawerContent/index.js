@@ -12,7 +12,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
   ScrollView,
 } from 'react-native';
 
@@ -24,158 +23,177 @@ class DrawerContent extends Component {
       max_p: null,
       min_p_temp: null,
       max_p_temp: null,
+      paramsTemp: {},
     };
   }
-  onSearch = (min, max) => {
-    const {onGetList, params} = this.props;
-    this.setState({
-      min_p: min,
-      max_p: max,
-    });
-    console.log(params);
-    if (params) {
-      var newParams = {
-        brand: params.brand,
-        category: params.category,
-        limit: 100,
-        sort_p: params.sort_p,
+
+  onSearch = async (min, max) => {
+    await this.setState(prevState => ({
+      paramsTemp: {
+        ...prevState.paramsTemp,
         min_p: min,
         max_p: max,
-      };
-      onGetList(newParams);
-    }
+        limit: 100,
+      },
+      min_p: min,
+      max_p: max,
+    }));
+    await this.onGet();
+  };
+
+  onGet = () => {
+    const {onGetList} = this.props;
+    const {paramsTemp} = this.state;
+    onGetList(paramsTemp);
   };
 
   componentDidMount() {
     const {onGetParams} = this.props;
     onGetParams();
   }
-  onSubmitPriceRange() {
-    const {params, onGetList} = this.props;
+  onSubmitPriceRange = async () => {
     const {min_p_temp, max_p_temp} = this.state;
-    if (params) {
-      var newParams = {
-        brand: params.brand,
-        category: params.category,
-        limit: 100,
-        sort_p: params.sort_p,
+    await this.setState(prevState => ({
+      paramsTemp: {
+        ...prevState.paramsTemp,
         min_p: min_p_temp,
         max_p: max_p_temp,
-      };
-      console.log("new : ",newParams)
-      onGetList(newParams);
-    }
-  }
-  onSearchFilter(name,id){
-    const {params, onGetList} = this.props;
-    const {min_p_temp, max_p_temp} = this.state;
-    this.setState({
-      [name]:id
-    })
-    if (params) {
-      var newParams = {
-        brand: params.brand,
-        category: params.category,
         limit: 100,
-        sort_p: params.sort_p,
-        min_p: min_p_temp,
-        max_p: max_p_temp,
-        [name]:id
-      };
-      console.log("new : ",newParams)
-      onGetList(newParams);
-    }
-  }
+      },
+    }));
+    await this.onGet();
+  };
+  onSearchFilter = async (name, id) => {
+    await this.setState(prevState => ({
+      paramsTemp: {
+        ...prevState.paramsTemp,
+        limit: 100,
+        [name]: id,
+      },
+    }));
+    await this.onGet();
+  };
   componentDidUpdate(prevProps) {
     const {params, onGetCategory} = this.props;
     if (params && params !== prevProps.params) {
       onGetCategory(params ? params.category : null);
+      this.setState({
+        paramsTemp: params,
+      });
     }
   }
   render() {
     const {category} = this.props;
-    const {min_p, max_p} = this.state;
+    const {min_p_temp, max_p_temp, paramsTemp} = this.state;
     return (
       <View style={styles.container}>
-        <Text style={styles.priceRange}>Price range</Text>
-        <View style={styles.checkboxPriceRange}>
-          <CheckBox
-            value={min_p === null && max_p === null}
-            onValueChange={() => this.onSearch(null, null)}
-            style={styles.checkbox}
-          />
-          <Text style={styles.textPriceRange}>All</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.textTitle}>BỘ LỌC</Text>
         </View>
-        {category && category.price ? (
-          category.price.map(price => {
-            return (
-              <View style={styles.checkboxPriceRange}>
-                <CheckBox
-                  value={min_p === price.min && max_p === price.max}
-                  onValueChange={() => this.onSearch(price.min, price.max)}
-                  style={styles.checkbox}
-                />
-                <Text style={styles.textPriceRange}>{price.name}</Text>
-              </View>
-            );
-          })
-        ) : (
-          <></>
-        )}
-        <View style={styles.inputPriceRange}>
-          <TextInput
-            style={styles.textInput}
-            value={min_p}
-            placeholder="0"
-            onChangeText={value => {
-              this.setState({
-                min_p_temp: value,
-              });
-            }}></TextInput>
-          <TextInput
-            style={styles.textInput}
-            value={max_p}
-            placeholder="10.000.000"
-            onChangeText={value => {
-              this.setState({
-                max_p_temp: value,
-              });
-            }}></TextInput>
-        </View>
-
-        <TouchableOpacity
-          style={styles.btnSearchPrice}
-          onPress={() => this.onSubmitPriceRange()}>
-          <Text style={styles.textBtnSearchPrice}>Áp Dụng</Text>
-        </TouchableOpacity>
-        {category ? (
-          category.filter.map(item => {
-            
-            return (
-              <View style={styles.operatingSystem}>
-                <Text style={styles.textOS}>{item._id.name}</Text>
+        <ScrollView style={styles.containerCrollView}>
+          <Text style={styles.priceRange}>Price range</Text>
+          <View style={styles.checkboxPriceRange}>
+            <CheckBox
+              value={
+                paramsTemp.min_p || paramsTemp.max_p
+                  ? paramsTemp.min_p === null && paramsTemp.max_p === null
+                  : true
+              }
+              onValueChange={() => this.onSearch(null, null)}
+              style={styles.checkbox}
+            />
+            <Text style={styles.textPriceRange}>All</Text>
+          </View>
+          {category && category.price ? (
+            category.price.map(price => {
+              return (
                 <View style={styles.checkboxPriceRange}>
                   <CheckBox
-                    value={this.state[`${item.query}`] === null}
-                    onValueChange={()=> this.onSearchFilter(item.query,null)}
+                    value={
+                      paramsTemp.min_p === price.min &&
+                      paramsTemp.max_p === price.max
+                    }
+                    onValueChange={() => this.onSearch(price.min, price.max)}
                     style={styles.checkbox}
                   />
-                  <Text style={styles.textPriceRange}>All</Text>
+                  <Text style={styles.textPriceRange}>{price.name}</Text>
                 </View>
-                {item._id.selections.map(selector => {
-                  return (
-                    <View style={styles.checkboxPriceRange}>
-                      <CheckBox value={this.state[`${item.query}`] === selector._id} style={styles.checkbox} onValueChange={()=> this.onSearchFilter(item.query,selector._id)}/>
-                      <Text style={styles.textPriceRange}>{selector.name}</Text>
-                    </View>
-                  );
-                })}
-              </View>
-            );
-          })
-        ) : (
-          <></>
-        )}
+              );
+            })
+          ) : (
+            <></>
+          )}
+          <View style={styles.inputPriceRange}>
+            <TextInput
+              style={styles.textInput}
+              value={min_p_temp}
+              placeholder="0"
+              onChangeText={value => {
+                this.setState({
+                  min_p_temp: value,
+                });
+              }}></TextInput>
+            <TextInput
+              style={styles.textInput}
+              value={max_p_temp}
+              placeholder="10.000.000"
+              onChangeText={value => {
+                this.setState({
+                  max_p_temp: value,
+                });
+              }}></TextInput>
+          </View>
+
+          <TouchableOpacity
+            style={styles.btnSearchPrice}
+            onPress={() => this.onSubmitPriceRange()}>
+            <Text style={styles.textBtnSearchPrice}>Áp Dụng</Text>
+          </TouchableOpacity>
+          {category ? (
+            category.filter.map(item => {
+              return (
+                <View style={styles.operatingSystem}>
+                  <Text style={styles.textOS}>{item._id.name}</Text>
+                  <View style={styles.checkboxPriceRange}>
+                    <CheckBox
+                      value={
+                        this.state.paramsTemp[`${item.query}`]
+                          ? this.state.paramsTemp[`${item.query}`] === null
+                          : true
+                      }
+                      onValueChange={() =>
+                        this.onSearchFilter(item.query, null)
+                      }
+                      style={styles.checkbox}
+                    />
+                    <Text style={styles.textPriceRange}>All</Text>
+                  </View>
+                  {item._id.selections.map(selector => {
+                    return (
+                      <View style={styles.checkboxPriceRange}>
+                        <CheckBox
+                          value={
+                            this.state.paramsTemp[`${item.query}`] ===
+                            selector._id
+                          }
+                          style={styles.checkbox}
+                          onValueChange={() =>
+                            this.onSearchFilter(item.query, selector._id)
+                          }
+                        />
+                        <Text style={styles.textPriceRange}>
+                          {selector.name}
+                        </Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              );
+            })
+          ) : (
+            <></>
+          )}
+        </ScrollView>
       </View>
     );
   }
@@ -206,7 +224,20 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(DrawerContent);
 
 const styles = StyleSheet.create({
-  container: {flex: 1, paddingHorizontal: 12, paddingVertical: 20},
+  container: {flex: 1},
+  titleContainer:{
+    backgroundColor: '#1e88e5',
+    height:40,
+    borderTopColor: '#ccc',
+    borderTopWidth: 1,
+    justifyContent:'center',
+    alignItems:'center',
+  },
+  textTitle:{
+    color: '#fff',
+    fontSize: 16
+  },
+  containerCrollView: {flex: 1, paddingHorizontal: 12, paddingTop: 20, marginBottom: 20},
   priceRange: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -243,7 +274,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 30,
   },
   textBtnSearchPrice: {
     fontSize: 16,
@@ -251,7 +282,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   operatingSystem: {
-    marginTop: 40,
+    marginBottom: 20,
   },
   textOS: {
     fontSize: 20,

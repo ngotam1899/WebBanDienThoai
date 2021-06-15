@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {TabView, TabBar} from 'react-native-tab-view';
-import {View, Text, Dimensions} from 'react-native';
+import {View, TextInput, Dimensions, TouchableOpacity} from 'react-native';
 import styles from './style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Header from '../HeaderComponent';
 import {connect} from 'react-redux';
 
 import CategoryActions from '../../redux/actions/categories';
 import ProductsActions from '../../redux/actions/products';
 import BrandActions from "../../redux/actions/brands";
 
+import Header from '../HeaderComponent';
 import HomeContainer from './HomeContainer';
 import ProductPage from './ProductPage'
 
@@ -44,10 +44,15 @@ class HomePage extends Component {
         limit: 100,
         page: 0,
       },
-      category: ''
+      category: '',
+      key:''
     };
   }
-  
+  onSearchProduct = () => {
+    const { navigation } = this.props;
+    const { key } = this.state;
+    navigation.navigate('Search', {keyword: key})
+  }
   setIndex = val => {
     this.setState({
       index: val,
@@ -137,8 +142,12 @@ class HomePage extends Component {
       <>
         <View style={styles.headerContainer}>
           <View style={styles.inputContainer}>
-            <FontAwesome name="search" size={24} color="#969696" />
-            <Text style={styles.inputText}>Bạn tìm gì hôm nay?</Text>
+            <TouchableOpacity onPress={()=>this.onSearchProduct()}>
+                <FontAwesome name="search" size={24} color="#969696" />
+            </TouchableOpacity>
+            <TextInput placeholder="Bạn tìm gì hôm nay?" style={styles.inputText} onChangeText={(val)=>{this.setState({
+              key: val
+            })}} ></TextInput>
           </View>
           <Header value="2" navigation={navigation}></Header>
         </View>

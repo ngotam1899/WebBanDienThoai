@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
   sectionContainer: {
     backgroundColor: '#fff',
     paddingHorizontal: 12,
-    marginBottom: 20
   },
   number: {
     fontSize: 12,
@@ -20,10 +19,9 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontWeight: '700',
-    fontSize: 20,
+    fontSize: 16,
     color: '#2f2f2f',
-    marginTop: 30,
-    marginBottom:10
+    marginVertical: 12,
   },
   sectionImage: {
     width: width - 24,
@@ -62,44 +60,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   itemContainer: {
-    flex: 0.5,
+    flex: 0.33,
+    alignItems: 'center',
     marginRight: 12,
     marginTop: 10,
   },
   itemImage: {
-    width: 140,
-    height: 160,
+    width: 100,
+    height: 120,
   },
   itemName: {
-    fontSize: 15,
-    color: '#222',
-    fontWeight:'bold',
+    fontSize: 14,
+    color: '#484848',
     marginVertical: 4,
-  },
-  itemPriceReal:{
-    fontSize: 14,
-    color: '#444',
-    textDecorationLine:'line-through',
-    marginRight: 0
-  },
-  reducePrice:{
-    fontSize: 14,
-    color: '#444',
-    fontWeight:'bold'
   },
   itemPrice: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#d70018',
-  },
-  rating:{
-    marginTop: 5,
-    flexDirection: 'row',
-    alignItems:'center',
-    marginRight: 0,
-  },
-  countRating:{
-    fontSize: 13
+    fontWeight: '500',
+    color: '#2a2a2a',
   },
   //
   seeMoreContainer: {
@@ -118,7 +96,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     paddingTop: 12,
-    paddingBottom: 4,
+    paddingBottom: 10,
     backgroundColor: '#1e88e5',
   },
   inputText: {

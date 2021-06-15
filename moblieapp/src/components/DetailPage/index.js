@@ -42,7 +42,7 @@ class FlatListItem extends Component {
           backgroundColor: this.props.index % 2 == 0 ? '#F9F9F9' : 'white',
         }}>
         <Text style={styles.flatListItemName}>{this.props.item.name}</Text>
-        <Text style={styles.flatListItemValue}>{this.props.item.value}</Text>
+        <Text style={styles.flatListItemValue}>{this.props.item.selection? this.props.item.selection.name: this.props.item.value}</Text>
       </View>
     );
   }

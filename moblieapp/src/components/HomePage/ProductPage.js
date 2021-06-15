@@ -8,21 +8,21 @@ import {
   ScrollView,
 } from 'react-native';
 import {Picker} from '@react-native-community/picker';
+import {Rating} from 'react-native-ratings';
 import {connect} from 'react-redux';
 import styles from './style';
 import numberWithCommas from '../../utils/formatPrice';
-import ProductsActions, { ProductsActionTypes } from '../../redux/actions/products';
+import ProductsActions from '../../redux/actions/products';
 
 class ProductItem extends Component {
   render() {
     const {product, navigation} = this.props;
     return (
       <TouchableOpacity
-        style={[styles.itemContainer, (flex = 0.33)]}
+        style={[styles.itemContainer, (flex = 0.5)]}
         onPress={() => {
           navigation.push('Detail', {id: product._id});
-        }}
-        >
+        }}>
         <Image
           source={{
             uri:
@@ -30,15 +30,55 @@ class ProductItem extends Component {
           }}
           style={styles.itemImage}
         />
-        <Text style={styles.itemName} numberOfLines={2}>
-          {product && product.name ? product.name.substring(0, 22) : ''}
-          {product && product.name.length > 22 ? '...' : ''}
-        </Text>
-        <Text style={styles.itemPrice}>
-          {product && product.price_min
-            ? numberWithCommas(product.price_min)
-            : null}
-        </Text>
+        <View style={{paddingLeft: 5}}>
+          <Text style={styles.itemName} numberOfLines={2}>
+            {product && product.name ? product.name.substring(0, 22) : ''}
+            {product && product.name.length > 22 ? '...' : ''}
+          </Text>
+          {product.real_price_min ? (
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.itemPriceReal}>
+                {numberWithCommas(product.real_price_min)}
+              </Text>
+              <Text style={styles.reducePrice}>
+              {' '}Giảm{' '}
+                {parseInt(
+                  (1 - product.price_min / product.real_price_min) * 100,
+                )}
+                %
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
+          <Text style={styles.itemPrice}>
+            {product && product.price_min
+              ? numberWithCommas(product.price_min)
+              : null}
+          </Text>
+          {product.stars && product.reviewCount ? (
+            <View style={styles.rating}>
+              <Rating
+                type="star"
+                ratingCount={5}
+                readonly={true}
+                startingValue={product.stars}
+                style={{
+                  alignItems: 'flex-start',
+                  marginRight: 5,
+                  marginLeft: 0,
+                }}
+                size={13}
+                imageSize={13}
+              />
+              <Text style={styles.countRating}>
+                {product.reviewCount} đánh giá
+              </Text>
+            </View>
+          ) : (
+            <></>
+          )}
+        </View>
       </TouchableOpacity>
     );
   }
@@ -60,7 +100,7 @@ class ProductPage extends Component {
     };
   }
   componentDidMount() {
-    const {category ,onAddParams} = this.props;
+    const {category, onAddParams} = this.props;
     this.setState({
       paramValue: {category: category},
     });
@@ -101,14 +141,14 @@ class ProductPage extends Component {
     this.setState({
       paramValue: params,
       brandName: value,
-      sortValue: 0
+      sortValue: 0,
     });
     onGetList(params);
     onAddParams(params);
   };
-  componentDidUpdate(prevProps){
+  componentDidUpdate(prevProps) {
     const {category, onAddParams} = this.props;
-    if(category !== prevProps.category){
+    if (category !== prevProps.category) {
       var params = {
         category: category,
         limit: '',
@@ -120,9 +160,9 @@ class ProductPage extends Component {
   }
   render() {
     const {listProducts, navigation, totalBrand, params, category} = this.props;
-    const {brandName, sortValue, } = this.state;
+    const {brandName, sortValue} = this.state;
     return (
-      <View style={{paddingHorizontal: 12}}>
+      <View style={{paddingHorizontal: 12, paddingBottom: 130}}>
         <View style={{marginVertical: 8}}>
           <ScrollView
             contentContainerStyle={{paddingTop: 10}}
@@ -183,7 +223,7 @@ class ProductPage extends Component {
         </View>
         <FlatList
           data={listProducts}
-          numColumns={3}
+          numColumns={2}
           contentContainerStyle={{flexGrow: 1}}
           keyExtractor={(item, index) => item._id}
           renderItem={({item, index}) => {
@@ -203,7 +243,7 @@ class ProductPage extends Component {
 const mapStateToProps = state => {
   return {
     listProducts: state.products.list,
-    params: state.products.params
+    params: state.products.params,
   };
 };
 

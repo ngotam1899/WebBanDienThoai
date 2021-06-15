@@ -77,6 +77,7 @@ class CheckoutPage extends Component {
   }
   handleResponse = data => {
     if (data.title === 'success') {
+      console.log('Success')
       this.setState({showModal: false, status: 'Complete'});
     } else if (data.title === 'cancel') {
       this.setState({showModal: false, status: 'Cancelled'});
@@ -857,7 +858,6 @@ class CheckoutPage extends Component {
             <WebView
               source={{uri: `${API_ENDPOINT_AUTH}/paypal?total=${parseFloat(tryConvert(ship ? totalPrice + ship.total : 0, "USD", false)).toFixed(2)}`}}
               onNavigationStateChange={data => this.handleResponse(data)}
-              onMessage={()=>this.onMessage()}
               injectedJavaScript={`document.f1.submit()`}
             />
           </Modal>

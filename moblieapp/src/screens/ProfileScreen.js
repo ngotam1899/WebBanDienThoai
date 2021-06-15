@@ -42,9 +42,9 @@ class ProfileScreen extends Component {
     const {onLogout, navigation} = this.props;
     localStorage.removeItem('AUTH_USER');
     onLogout();
-    navigation.navigate('Home');
+    navigation.navigate('HomeScreen');
   };
-  
+
   render() {
     const {navigation, userInfo} = this.props;
     return (
@@ -82,7 +82,7 @@ class ProfileScreen extends Component {
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={styles.welcomeText}>
-                    Chào mừng bạn đến với Tiki
+                    Chào mừng bạn đến với TelMe
                   </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('SignIn')}>
@@ -95,16 +95,9 @@ class ProfileScreen extends Component {
           )}
           {/*  */}
           <View style={styles.divider} />
-          {userInfo ? (
-            <TouchableOpacity onPress={() => navigation.navigate('Orders')}>
-              <ProfileItem
-                icon="format-list-bulleted"
-                name="Quản lý đơn hàng"
-              />
-            </TouchableOpacity>
-          ) : (
-            <></>
-          )}
+          <TouchableOpacity onPress={userInfo?() => navigation.navigate('Orders'):() => navigation.navigate('SignIn')}>
+            <ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" />
+          </TouchableOpacity>
           <ProfileItem icon="cart-outline" name="Sản phẩm đã mua" />
           <ProfileItem icon="eye-outline" name="Sản phẩm đã xem" />
           <ProfileItem icon="heart-outline" name="Sản phẩm yêu thích" />
