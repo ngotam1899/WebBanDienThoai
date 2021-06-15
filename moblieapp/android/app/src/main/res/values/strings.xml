@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">moblieapp</string>
     <string name="facebook_app_id">308035613517523</string>
+    <string name="server_client_id">294595937480-s30tch62q6up5srmmfkifqqhjfkgks4v.apps.googleusercontent.com</string>
 </resources>
