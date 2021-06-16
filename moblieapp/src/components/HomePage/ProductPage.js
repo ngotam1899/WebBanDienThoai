@@ -19,7 +19,7 @@ class ProductItem extends Component {
     const {product, navigation} = this.props;
     return (
       <TouchableOpacity
-        style={[styles.itemContainer, (flex = 0.5)]}
+        style={[styles.itemContainer, (flex = 0.33)]}
         onPress={() => {
           navigation.push('Detail', {id: product._id});
         }}>
@@ -68,8 +68,8 @@ class ProductItem extends Component {
                   marginRight: 5,
                   marginLeft: 0,
                 }}
-                size={13}
-                imageSize={13}
+                size={11}
+                imageSize={11}
               />
               <Text style={styles.countRating}>
                 {product.reviewCount} đánh giá
@@ -223,7 +223,7 @@ class ProductPage extends Component {
         </View>
         <FlatList
           data={listProducts}
-          numColumns={2}
+          numColumns={3}
           contentContainerStyle={{flexGrow: 1}}
           keyExtractor={(item, index) => item._id}
           renderItem={({item, index}) => {

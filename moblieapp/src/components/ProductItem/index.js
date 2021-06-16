@@ -50,11 +50,11 @@ export default class ProductItem extends Component {
                 startingValue={stars}
                 style={{
                   alignItems: 'flex-start',
-                  marginRight: 5,
+                  marginRight: 3,
                   marginLeft: 0,
                 }}
-                size={13}
-                imageSize={13}
+                size={11}
+                imageSize={11}
               />
               <Text style={styles.countRating}>{reviewCount} đánh giá</Text>
             </View>

@@ -16,8 +16,8 @@ const getPayPal = async(req, res, next) => {
         payment_method: "paypal"
       },
       redirect_urls: {
-        return_url: `http://192.168.1.13:3000/paypal/success`,
-        cancel_url: `http://192.168.1.13:3000/paypal/cancel`
+        return_url: `http://192.168.1.8:3000/paypal/success`,
+        cancel_url: `http://192.168.1.8:3000/paypal/cancel`
       },
       transactions: [
         {

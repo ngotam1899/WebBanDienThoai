@@ -2,33 +2,33 @@ import {StyleSheet} from 'react-native'
 
 const styles = StyleSheet.create({
   itemContainer: {
-    width: 135,
-    marginRight: 16,
+    width: 120,
+    marginRight: 8,
     marginTop: 10,
   },
   itemImage: {
-    width: 125,
+    width: 120,
     height: 140,
   },
   itemName: {
-    fontSize: 15,
+    fontSize: 13,
     color: '#222',
     fontWeight:'bold',
     marginVertical: 4,
   },
   itemPriceReal:{
-    fontSize: 14,
+    fontSize: 12,
     color: '#444',
     textDecorationLine:'line-through',
     marginRight: 0
   },
   reducePrice:{
-    fontSize: 14,
+    fontSize: 12,
     color: '#444',
     fontWeight:'bold'
   },
   itemPrice: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#d70018',
   },
@@ -36,11 +36,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
     flexDirection: 'row',
     alignItems:'center',
-    marginRight: 0
+    marginRight: 0,
   },
   countRating:{
-    fontSize: 13
-  }
+    fontSize: 11
+  },
 });
 
 export default styles;

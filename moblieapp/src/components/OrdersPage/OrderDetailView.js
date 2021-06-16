@@ -58,9 +58,7 @@ class OrderDetailView extends Component {
       params: params,
       modal: true,
     });
-    console.log('params: ', params);
 
-    //onGetReview(params);
   };
   render() {
     const {orderItem} = this.props;

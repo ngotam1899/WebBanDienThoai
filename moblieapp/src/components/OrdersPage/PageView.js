@@ -51,55 +51,7 @@ class OrderItem extends Component {
     }
     return index;
   };
-  onBuyAgain = order_list => {
-    // var product, quantity, color;
-    // order_list.map((item, index) => {
-    //   color = item.color._id;
-    //   productId = item.product;
-    //   quantity = item.quantity;
-    //   const itemCart = {
-    //     product: product,
-    //     quantity: quantity,
-    //     color: color,
-    //   };
-    //   if (color !== '') {
-    //     AsyncStorage.getItem('cart')
-    //       .then(datacart => {
-    //         index = this.findProductInCart(
-    //           JSON.parse(datacart),
-    //           product,
-    //           color,
-    //         );
-    //         if (index !== -1 && datacart !== null) {
-    //           const cart = JSON.parse(datacart);
-    //           cart[index].quantity += quantity;
-    //           AsyncStorage.setItem('cart', JSON.stringify(cart));
-    //           this.props.onAddProductToCart();
-    //         } else if (index === -1 && datacart !== null) {
-    //           const cart = JSON.parse(datacart);
-    //           cart.push(itemCart);
-    //           AsyncStorage.setItem('cart', JSON.stringify(cart));
-    //           this.props.onAddProductToCart();
-    //         } else {
-    //           const cart = [];
-    //           cart.push(itemCart);
-    //           AsyncStorage.setItem('cart', JSON.stringify(cart));
-    //           this.props.onAddProductToCart();
-    //         }
-    //         ToastAndroid.showWithGravity(
-    //           'Thêm vào giỏ hàng thành công',
-    //           ToastAndroid.SHORT,
-    //           ToastAndroid.TOP,
-    //         );
-    //       })
-    //       .catch(err => {
-    //         alert(err);
-    //       });
-    //   } else {
-    //     alert('Vui lòng chọn màu bạn muốn mua');
-    //   }
-    // });
-  };
+
   sendData = val => {
     this.props.onShowModal(val);
   };

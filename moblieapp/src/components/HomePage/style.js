@@ -62,33 +62,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   itemContainer: {
-    flex: 0.5,
-    marginRight: 12,
+    flex: 0.33,
+    marginRight: 15,
     marginTop: 10,
   },
   itemImage: {
-    width: 140,
-    height: 160,
+    width: 120,
+    height: 140,
   },
   itemName: {
-    fontSize: 15,
+    fontSize: 13,
     color: '#222',
     fontWeight:'bold',
     marginVertical: 4,
   },
   itemPriceReal:{
-    fontSize: 14,
+    fontSize: 12,
     color: '#444',
     textDecorationLine:'line-through',
     marginRight: 0
   },
   reducePrice:{
-    fontSize: 14,
+    fontSize: 12,
     color: '#444',
     fontWeight:'bold'
   },
   itemPrice: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#d70018',
   },
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   countRating:{
-    fontSize: 13
+    fontSize: 11
   },
   //
   seeMoreContainer: {
