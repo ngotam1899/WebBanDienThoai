@@ -37,7 +37,7 @@ const getAllProduct = async (req, res, next) => {
 						if (req.query[`${item.query}`] != undefined && req.query[`${item.query}`] != '') {
 							if (Validator.isValidObjId(req.query[`${item.query}`])) {
 								var value = req.query[`${item.query}`]
-								specCondition.push({specifications: { $elemMatch: { value }}})
+								specCondition.push({specifications: { $elemMatch: { selection : value }}})
 								condition.$and= specCondition;
 							}
 						}
@@ -166,8 +166,10 @@ const updateProduct = async (req, res, next) => {
 					let _id = specificationFound._id;
 					let name = specificationFound.name;
 					let value = item.value;
-					if (Validator.isValidObjId(value)) {
-						let selection = item.value;
+					if (value.indexOf("[") == 0) {
+						var _value = JSON.parse(value)
+						var selection = []
+						_value.map(i => selection.push(i))
 						specificationArray.push({ _id, name, value, selection })
 					}
 					else{

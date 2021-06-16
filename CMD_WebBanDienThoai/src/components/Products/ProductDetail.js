@@ -19,11 +19,15 @@ import Group from "./Group";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import ColorActions from "../../redux/actions/color";
 import CategoryActions from "../../redux/actions/categories";
 import GroupActions from "../../redux/actions/group";
+
+const animatedComponents = makeAnimated();
 
 class ProductDetail extends Component {
   constructor(props) {
@@ -226,6 +230,19 @@ class ProductDetail extends Component {
         obj._id === name ? Object.assign(obj, { value }) : obj
       ),
     }));
+  };
+
+  onChangeDetailSelect = (value, action) => {
+    var _value = []
+    value.map(item => {
+      _value.push(item.value)
+    })
+    this.setState((prevState) => ({
+      specifications: prevState.specifications.map((obj) =>
+        obj._id === action.name ? Object.assign(obj, { value: JSON.stringify(_value) }) : obj
+      ),
+    }));
+    console.log(value, action.name)
   };
 
   onAddColor = (value) => {
@@ -551,6 +568,36 @@ class ProductDetail extends Component {
     onFilter(keyword);
 	}
 
+  setSelections = (selections) => {
+    const custom = selections.map(({
+      name: label,
+      _id: value,
+      ...rest
+    }) => ({
+      label,
+      value,
+      ...rest
+    }));
+    return custom;
+  }
+
+  setSelector = (selection, value) => {
+    console.log("value", value)
+    const _value = JSON.parse(value)
+    var selector = []
+    for(let i=0; i<selection.length; i++){
+      for(let j=0; j<_value.length; j++){
+        if(selection[i]._id===_value[j]){
+          selector.push({
+            label: selection[i].name,
+            value: selection[i]._id
+          })
+        }
+      }
+    }
+    return selector
+  }
+
   render() {
     const {
       name,
@@ -837,8 +884,8 @@ class ProductDetail extends Component {
                       onChange={this.onChange}
                       min="0"
                     ></input>
-                    <div class="input-group-append">
-                      <span class="input-group-text">VND</span>
+                    <div className="input-group-append">
+                      <span className="input-group-text">VND</span>
                     </div>
                   </div>
 
@@ -1060,8 +1107,8 @@ class ProductDetail extends Component {
                         <label key={index + 1} className="my-0">
                           {this.setSpecification(item._id)}
                         </label>
-                        {item.selections.length > 0 ?
-                        <select className="form-control" name={item._id} value={item.value} onChange={this.onChangeDetail}>
+                        {item.selections.length > 0 ? <>
+                        {/* <select className="form-control" name={item._id} value={item.value} onChange={this.onChangeDetail}>
                           <option value="">Chọn {this.setSpecification(item._id)}</option>
                           {item.selections.map((selector, index) =>{
                             return(
@@ -1070,7 +1117,16 @@ class ProductDetail extends Component {
                               </option>
                             )
                           })}
-                        </select>
+                        </select> */}
+                        <Select
+                          options={this.setSelections(item.selections)}
+                          value = {item.value ? this.setSelector(item.selections, item.value) : []}
+                          onChange={this.onChangeDetailSelect}
+                          name={item._id}
+                          isMulti
+                          components={animatedComponents}
+                        />
+                      </>
                         : <input
                           key={item._id}
                           type="text"

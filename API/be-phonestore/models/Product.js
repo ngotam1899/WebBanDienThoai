@@ -66,10 +66,10 @@ const ProductSchema = new Schema(
 				value: {
 					type: String
 				},
-				selection: {
+				selection: [{
 					type: Schema.Types.ObjectId,
 					ref: 'Selector'
-				}
+				}]
 			}
 		],
 		description: {

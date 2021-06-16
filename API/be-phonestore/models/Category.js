@@ -38,7 +38,11 @@ const CategorySchema = new Schema({
         max: {
             type: Number, 
         }
-    }]
+    }],
+    accessories: {
+        type: Boolean,
+        default: true
+    }
 })
 
 CategorySchema.pre('findOneAndDelete', function(next) {

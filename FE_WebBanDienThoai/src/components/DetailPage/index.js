@@ -222,9 +222,9 @@ class DetailPage extends Component {
               <div className="">
                 <div className="my-2">
                   <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
-                  <i className="fa fa-chevron-right px-2"></i>
+                  <i className="fa fa-chevron-right px-2 w-25-px "></i>
                   <a className="text-decoration-none" href={`/#/products/${product.category.pathseo}/${product.category._id}`}>{product.category.name}</a>
-                  <i className="fa fa-chevron-right px-2"></i>
+                  <i className="fa fa-chevron-right px-2 w-25-px "></i>
                   <a className="text-decoration-none" href={`/#/product/${product.pathseo}/${product._id}`}>{product.name}</a>
                 </div>
                 <div className="row">

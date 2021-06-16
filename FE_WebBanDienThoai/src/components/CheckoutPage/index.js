@@ -248,7 +248,7 @@ class CheckoutPage extends Component {
       <div className="row">
         <div className="col-12 my-2">
           <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
-          <i className="fa fa-chevron-right px-2"></i>
+          <i className="fa fa-chevron-right px-2 w-25-px"></i>
           <a className="text-decoration-none" href="/#/carts/checkout">Checkout Page</a>
         </div>
         <div className="col-12">
