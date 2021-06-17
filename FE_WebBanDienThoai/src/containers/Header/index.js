@@ -36,8 +36,8 @@ class Header extends Component {
       language: "en",
       keyword: "",
       itemsCount: 0,
-      status: "",
-      order: ""
+      status: -1,
+      order: "",
     }
     this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
@@ -86,18 +86,23 @@ class Header extends Component {
     }
     if(userInfo){
       socket.on(`${userInfo._id}`, res => {
+        console.log(res)
         this.setState({itemsCount: itemsCount + 1, status: res.status, order: res.order});
       });
     }
-    
     if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
-      if(status===1){
-        toastInfo(`Đơn hàng ${order} đã vận chuyển thành công`)
+      switch (status) {
+        case 0:
+          toastInfo(`Đơn hàng ${order} đã xuất kho vận chuyển`);
+          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+          break;
+        case 1:
+          toastInfo(`Đơn hàng ${order} đã vận chuyển thành công`);
+          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+          break;
+        default:
+          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
       }
-      else{
-        toastInfo(`Đơn hàng ${order} đã xuất kho vận chuyển`)
-      }
-      onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
     }
   }
 

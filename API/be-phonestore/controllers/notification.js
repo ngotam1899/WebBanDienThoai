@@ -33,7 +33,7 @@ const getAllNotification = async(req, res, next) => {
     }
     const notifications = await Notification.find(condition)
     .populate({ path: 'image', select: 'public_url' })
-    .sort({ createAt: 1 })
+    .sort({ createAt: -1 })
     .limit(limit)
     .skip(limit * page)
     let total = await Notification.countDocuments({

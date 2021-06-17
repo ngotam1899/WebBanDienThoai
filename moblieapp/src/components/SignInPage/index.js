@@ -16,6 +16,11 @@ import {
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import {connect} from 'react-redux';
 
 import * as Animatable from 'react-native-animatable';
@@ -27,19 +32,6 @@ import Modal from 'react-native-modal';
 
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth';
-
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-
-GoogleSignin.configure({
-  scopes: [],
-  webClientId:
-    '66829264659-07n3208p778ai83rldvls9niq8vhahi0.apps.googleusercontent.com',
-  offlineAccess: true,
-});
 
 const {width} = Dimensions.get('window');
 class SignInPage extends Component {
@@ -61,29 +53,7 @@ class SignInPage extends Component {
     };
   }
 
-  signInGoogle = async () => {
-    const {onLoginGoogle} = this.props;
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo.idToken)
-      onLoginGoogle(userInfo.idToken);
-      this.setState({
-        userGoogleInfo: userInfo,
-      });
-      //navigation.navigate('Home');
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('e 1');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('e 2');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('e 3');
-      } else {
-        console.log(error.message);
-      }
-    }
-  };
+  
   getInfoFromToken = token => {
     const PROFILE_REQUEST_PARAMS = {
       fields: {
@@ -173,7 +143,32 @@ class SignInPage extends Component {
       navigation.navigate('Checkout');
     }
   }
-  componentDidMount() {}
+  componentDidMount() {
+    GoogleSignin.configure({
+      webClientId: '294595937480-1dmic1qhjg6smh36vi44sli4j5r9g6vi.apps.googleusercontent.com',
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+    });
+  }
+  signIn = async () => {
+    const {onLoginGoogle} = this.props;
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      onLoginGoogle(userInfo.idToken)
+    } catch (error) {
+      console.log('Message', error.message);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('Play Services Not Available or Outdated');
+      } else {
+        console.log('Some Other Error Happened');
+      }
+    }
+  };
 
   toggleModal = () => {
     const {isModalVisible} = this.state;
@@ -406,7 +401,7 @@ class SignInPage extends Component {
                 style={{width: 200, height: 50}}
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Dark}
-                onPress={this.signInGoogle}
+                onPress={this.signIn}
               />
             </View>
             <View style={styles.button}>

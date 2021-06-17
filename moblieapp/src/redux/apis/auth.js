@@ -29,9 +29,9 @@ export const getProfile = (data) =>{
   return axiosService.post(`${API_ENDPOINT_AUTH}${url}/api/auth/profile`, data);
 };
 
-//6. Đăng nhập với Gooogle http://localhost:3000/users/auth/google
+//6. Đăng nhập với Gooogle http://localhost:3000/users/auth/google-mobile
 export const loginGoogle = (token) =>{
-  return axiosService.post(`${API_ENDPOINT_AUTH}${url}/auth/google`, token);
+  return axiosService.post(`${API_ENDPOINT_AUTH}${url}/auth/google-mobile`, token);
 };
 
 //7. Đăng nhập với Facebook http://localhost:3000/users/auth/facebook

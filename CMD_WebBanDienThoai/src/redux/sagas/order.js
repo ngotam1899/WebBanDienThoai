@@ -46,8 +46,8 @@ function* handleUpdate({ payload }) {
     yield put(OrderActions.onUpdateSuccess(data.order));
     yield put(OrderActions.onGetList());
     /* Notification */
-    if(data.order.status === 0){
-      socket.emit(data.order.user, { status: data.order.status, user: data.order.user.toString(), order: data.order._id });
+    if(payload.params.status === "0"){
+      socket.emit('orderChangeStatus', { status: 0, user: data.order.user.toString(), order: data.order._id });
       yield put(NotificationActions.onCreate({
         user: data.order.user,
         type: 0,
@@ -56,8 +56,8 @@ function* handleUpdate({ payload }) {
         content :  `${data.order._id} vừa nhập kho vận chuyển`
       }))
     }
-    else if(data.order.status === 1){
-      socket.emit('orderChangeStatus', { status: data.order.status, user: data.order.user.toString(), order: data.order._id });
+    else if(payload.params.status === "1"){
+      socket.emit('orderChangeStatus', { status: 1, user: data.order.user.toString(), order: data.order._id });
       yield put(NotificationActions.onCreate({
         user: data.order.user,
         type: 0,
@@ -66,6 +66,7 @@ function* handleUpdate({ payload }) {
         content : 'Chúng tôi vừa ghi nhận đơn hàng của bạn vừa vận chuyển thành công. Vui lòng kiểm tra đơn hàng và bổ dung đánh giá'
       }))
     }
+
   /* Notification */
   } catch (error) {
     yield put(OrderActions.onUpdateError(error));

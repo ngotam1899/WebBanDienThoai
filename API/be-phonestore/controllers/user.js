@@ -62,6 +62,8 @@ const authGoogleMobile = async (req, res, next) => {
 			select: 'public_url'
 		});
 		if (user) {
+			const token = 'Bearer ' + service.encodedToken(user._id, '6h');
+			res.setHeader('authorization', token);
 			return res.status(200).json({ success: true, code: 200, message: '', user });
 		} else {
 			const user = await User.findOne({ email: payload.email }).populate({
@@ -71,6 +73,9 @@ const authGoogleMobile = async (req, res, next) => {
 			if (user) {
 				user.auth_google_id = payload.sub;
 				user.auth_type = 'google';
+				const token = 'Bearer ' + service.encodedToken(user._id, '6h');
+				res.setHeader('authorization', token);
+				user.token = token;
 				await user.save();
 				return res.status(200).json({ success: true, code: 200, message: '', user });
 			} else {

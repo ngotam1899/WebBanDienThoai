@@ -33,9 +33,11 @@ const ProfileItem = ({icon, name}) => (
 
 class ProfileScreen extends Component {
   componentDidMount = async () => {
-    const token = await AsyncStorage.getItem('AUTH_USER').then(data => {});
     const {onGetProfile} = this.props;
-    onGetProfile(null, token);
+    const token = await AsyncStorage.getItem('AUTH_USER');
+    if(token !== null){
+      onGetProfile(null, token);
+    }
   };
 
   setLogout = () => {
