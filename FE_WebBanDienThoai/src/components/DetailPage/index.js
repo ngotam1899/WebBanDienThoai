@@ -201,6 +201,14 @@ class DetailPage extends Component {
     }
   }
 
+  setSelector = (selection) => {
+    var selectorArray = []
+    selection.map(item => {
+      selectorArray.push(item.name)
+    })
+    return selectorArray.join(", ")
+  }
+
   render() {
     const {product, currency, t, review, group, total, count, location, relate, like, authInfo } = this.props;
     const {quantity, imageColor, check, _check } = this.state;
@@ -367,7 +375,7 @@ class DetailPage extends Component {
                                 return (
                                 <tr key={index}>
                                   <td className="font-weight-bold" scope="row">{item.name}</td>
-                                  <td>{item.selection ? item.selection.name : item.value}</td>
+                                  <td>{item.selection.length > 0 ? this.setSelector(item.selection) : item.value}</td>
                                 </tr>
                                 )
                               /* eslint-disable */
