@@ -27,7 +27,7 @@ class BrandDetail extends Component {
     })
   }
 
-  onSubmit = (e) =>{
+  onSubmit = () =>{
     const {id, name} = this.state;
     const {onUpdate, onCreate} = this.props;
     /* Xử lý ảnh */

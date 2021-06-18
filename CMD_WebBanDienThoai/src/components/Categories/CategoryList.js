@@ -15,8 +15,9 @@ import {
 import CategoryDetail from './CategoryDetail'
 // @Actions
 import CategoryActions from "../../redux/actions/categories";
-
-const fields = ['name','slug', { key: 'actions', _style: { width: '30%'} }]
+// @Functions
+import {INITIAL_IMAGE} from '../../constants';
+const fields = ['image', 'name','slug', 'accessories', { key: 'actions', _style: { width: '30%'} }]
 
 class CategoryList extends Component {
   constructor(props) {
@@ -107,6 +108,12 @@ class CategoryList extends Component {
                   itemsPerPage={10}
                   pagination
                   scopedSlots = {{
+                    'image':
+                    (item) => (
+                      <td>
+                        <img src={ item.image ? item.image.public_url : INITIAL_IMAGE } style={{width:'10vw'}} alt={item.name} />
+                      </td>
+                    ),
                     'slug': (item) => (
                       <td>{item.pathseo}</td>
                     ),

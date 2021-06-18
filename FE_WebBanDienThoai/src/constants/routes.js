@@ -1,19 +1,19 @@
-/* Lưu ý: Tất cả Component khi import phải thêm vào thư viện React */
 import React from 'react';
-/* Lưu ý */
-import HomePage from '../components/HomePage';
-import ProductPage from '../components/ProductPage';
-import CartPage from '../components/CartPage';
-import CheckoutPage from '../components/CheckoutPage';
-import NotFound from '../containers/NotFound';
+
 import ActiveAccount from '../containers/ActiveAccount';
 import ActiveOrder from '../containers/ActiveOrder';
-import DetailPage from '../components/DetailPage';
-import UserInfoPage from '../components/UserInfoPage';
-import PurchasePage from '../components/PurchasePage';
 import ActivePassword from '../containers/ActivePassword';
-import SearchPage from '../components/SearchPage';
+import AccessoryPage from '../components/AccessoryPage';
+import CartPage from '../components/CartPage';
+import CheckoutPage from '../components/CheckoutPage';
+import DetailPage from '../components/DetailPage';
+import HomePage from '../components/HomePage';
+import NotFound from '../containers/NotFound';
 import NotificationPage from '../components/NotificationPage';
+import ProductPage from '../components/ProductPage';
+import PurchasePage from '../components/PurchasePage';
+import SearchPage from '../components/SearchPage';
+import UserInfoPage from '../components/UserInfoPage';
 
 const routes = [
 	{
@@ -31,8 +31,14 @@ const routes = [
 	{
 		path: '/products/:pathseo/:categoryID',
 		exact: true,
-		name: "Product Page",
+		name: " Page",
 		main: ({match, history, location}) => <ProductPage match={match} key={match.params.categoryID} history={history} location={location} />
+	},
+	{
+		path: '/products/accessories',
+		exact: true,
+		name: "Accessory Page",
+		main: ({history}) => <AccessoryPage history={history}/>
 	},
 	{
 		path: '/carts',

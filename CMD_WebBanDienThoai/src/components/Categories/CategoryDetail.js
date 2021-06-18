@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import {get} from 'lodash'
-import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CDataTable } from '@coreui/react';
+import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CDataTable, CSwitch } from '@coreui/react';
 import { connect } from "react-redux";
+import "../Products/product.css";
 // @Actions
 import CategoryActions from "../../redux/actions/categories";
 import SpecificationActions from "../../redux/actions/specification";
 // @Functions
 import { toastError } from "../../utils/toastHelper";
-
+import {INITIAL_IMAGE} from '../../constants';
 const fields = ['name' ,{ key: 'actions', _style: { width: '10%'} }]
 const filterField = ['name' , 'query',{ key: 'actions', _style: { width: '35%'}}]
 const priceField = ['name' , 'min', 'max', { key: 'actions', _style: { width: '35%'}}]
@@ -20,19 +21,24 @@ class CategoryDetail extends Component {
       id: category ? category._id : '',
       name: category ? category.name : '',
       name_en: category ? category.name_en : '',
+      image: category ? category.image : '',
       pathseo: category ? category.pathseo :'',
       specifications: category ? category.specifications : [],
       filter: category ? category.filter : [],
       price: category ? category.price : [],
+      accessories: category ? category.accessories :'',
       keyword: "",
-      // Filter - bộ lọc
+      // @Product Image
+      previewSource: "",
+      selectedFile: "",
+      // @Filter - bộ lọc
       filterEditing: "none",
       btnStatus: "Thêm bộ lọc",
       onEditing: false,
       indexFilter: -1,
       idFilter: "",
       query: "",
-      // Price - khoảng giá
+      // @Price - khoảng giá
       priceEditing: "none",
       _btnStatus: "Thêm khoảng giá",
       _onEditing: false,
@@ -58,7 +64,7 @@ class CategoryDetail extends Component {
     const { keyword } = this.state;
     const { onFilter } = this.props;
     onFilter(keyword);
-	}
+  }
 
   onChange = (event) =>{
     var target=event.target;
@@ -69,15 +75,35 @@ class CategoryDetail extends Component {
     })
   }
 
-  onSubmit = () =>{
-    const {id, name, pathseo, name_en, specifications, filter, price} = this.state;
+  onSubmit = async () =>{
+    const {id, image} = this.state;
+    /* Xử lý ảnh */
+    const {selectedFile} = this.state;
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("image", selectedFile);
+      await this.setState({
+        image: formData,
+      });
+    }
+    else{
+      await this.setState({
+        image: image._id,
+      });
+    }
+    /* Xử lý ảnh */
+    this.onCallback(id)
+  }
+
+  onCallback = (id) => {
+    const {name, image, pathseo, name_en, specifications, filter, price, accessories} = this.state;
     const {onUpdate, onCreate} = this.props;
     /* eslint-disable */
     filter.map(item =>{
       item._id = item._id._id
     })
     /* eslint-disable */
-    var data = {name, pathseo, name_en, specifications, filter, price}
+    var data = {name, image, pathseo, name_en, specifications, filter, price, accessories}
     if (id) {
       onUpdate(id, data);
     }
@@ -86,6 +112,25 @@ class CategoryDetail extends Component {
       onCreate(data);
     }
   }
+
+  handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    // 1. Hiển thị ảnh vừa thêm
+    this.previewFile(file);
+    this.setState({
+      selectedFile: file,
+    })
+  }
+
+  previewFile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      this.setState({
+        previewSource: reader.result
+      })
+    };
+  };
 
   setSpecification = (specification) =>{
     const {listSpecification} = this.props;
@@ -289,8 +334,8 @@ class CategoryDetail extends Component {
 	render() {
     const {
       name, pathseo, name_en, specifications, filter, keyword,
-      filterEditing, btnStatus, idFilter, query,
-      priceEditing, _btnStatus, name_price, min, max, price
+      filterEditing, btnStatus, idFilter, query, image, accessories, previewSource,
+      priceEditing, _btnStatus, name_price, min, max, price,
     } = this.state;
     const { large, onClose, category, listSpecification, listSearch} = this.props;
     return (
@@ -301,20 +346,71 @@ class CategoryDetail extends Component {
 				<CModalBody>
 					<div className="row">
 						<div className="col-12 col-lg-6">
-							<form>
-								<div className="form-group">
-									<label>Tên loại sản phẩm:</label>
-                  <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
-								</div>
-								<div className="form-group">
-									<label>Slug:</label>
-                  <input type="text" className="form-control" name="pathseo" value={pathseo} onChange={this.onChange}/>
-								</div>
-                <div className="form-group">
-									<label>Tên loại sản phẩm (English):</label>
-                  <input type="text" className="form-control" name="name_en" value={name_en} onChange={this.onChange}/>
-								</div>
-              </form>
+              <div className="row">
+                <div className="col-6">
+                  <div className="form-group">
+                    <label>Tên loại sản phẩm:</label>
+                    <input type="text" className="form-control" name="name" value={name} onChange={this.onChange}/>
+                  </div>
+                  <div className="form-group">
+                    <label>Tên tiếng Anh:</label>
+                    <input type="text" className="form-control" name="name_en" value={name_en} onChange={this.onChange}/>
+                  </div>
+                  <div className="form-group">
+                    <label>Slug:</label>
+                    <input type="text" className="form-control" name="pathseo" value={pathseo} onChange={this.onChange}/>
+                  </div>
+                </div>
+                <div className="col-6">
+                {image ? (
+                <div className="form-group img-thumbnail3">
+                  {previewSource ? (
+                    <img src={previewSource} className="border rounded w-100" alt="" />
+                  ) : (
+                    <img
+                      src={image.public_url}
+                      className="border rounded w-100"
+                      alt=""
+                    />
+                  )}
+                  <div className="file btn btn-lg btn-primary">
+                    Change Photo
+                    <input
+                      type="file"
+                      name="previewSource"
+                      onChange={this.handleFileInputChange}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </div>
+                </div>
+                ) : (
+                  <div className="form-group img-thumbnail3">
+                    {previewSource ? (
+                      <img src={previewSource} className="border rounded w-100" alt="" />
+                    ) : (
+                      <img
+                        src={INITIAL_IMAGE}
+                        alt=""
+                        className="border rounded w-100"
+                      ></img>
+                    )}
+                    <div className="file btn btn-lg btn-primary">
+                      Change Photo
+                      <input
+                        type="file"
+                        name="previewSource"
+                        onChange={this.handleFileInputChange}
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </div>
+                  </div>)}
+                  <div className="form-group">
+                    <label>Phụ kiện:</label>
+                    <CSwitch className='mx-1' shape={'pill'} color={'primary'} name="accessories" defaultChecked={accessories} value={!accessories} onChange={this.onChange}/>
+                  </div>
+                </div>
+              </div>
+
               <label>Danh mục thuộc tính:</label>
               <div style={{position: "relative"}}>
                 <input className="form-control" name="keyword" value={keyword} onChange={this.handleFilter}></input>

@@ -46,7 +46,7 @@ class Header extends Component {
     const {onGetProfile, onGetListCategory} = this.props;
     const token = localStorage.getItem('AUTH_USER')
     onGetProfile(null,token);
-    onGetListCategory();
+    onGetListCategory({ accessories: -1 });
   }
 
   handleChangeCurrency = (event) => {
@@ -110,11 +110,6 @@ class Header extends Component {
     const {onLogout} = this.props;
     localStorage.removeItem('AUTH_USER')
     onLogout()
-  }
-  refreshPage() {
-    setTimeout(()=>{
-      window.location.reload(false);
-  }, 500);
   }
 
   handleFilter = (event) => {
@@ -275,7 +270,7 @@ class Header extends Component {
             <div className="row">
               <div className="col-sm-6 col-md-5 col-lg-4 col-xl-3">
                 <div className="logo">
-                  <Link to="/" /*  onClick={this.refreshPage} */><img src={assets("brand.png")} alt="" className="w-100" /></Link>
+                  <Link to="/"><img src={assets("brand.png")} alt="" className="w-100" /></Link>
                 </div>
               </div>
               <div className="col-md-6 col-12 align-self-center py-1">
@@ -356,12 +351,15 @@ class Header extends Component {
                 </button>
                 <div className="collapse navbar-collapse" id="collapsibleNavId">
                   <ul className="navbar-nav mr-auto mt-lg-0">
-                    <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true} /*  onClick={this.refreshPage} */ />
-                    {location.hash.indexOf("account") === -1 && listCategories && listCategories.map((category, index)=>{
-                      return (
-                        <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
-                      )
-                    })}
+                    <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true}/>
+                    {location.hash.indexOf("account") === -1 && listCategories && <>
+                      {listCategories.map((category, index)=>{
+                        return (
+                          <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
+                        )
+                      })
+                      }<MenuLink label="Phụ kiện" to={"/products/accessories"} activeOnlyWhenExact={true} />
+                    </>}
                     {location.hash.indexOf("account") !== -1 &&<>
                     <MenuLink label="Tài khoản của tôi" to={"/account/detail"} activeOnlyWhenExact={true} />
                     <MenuLink label="Đơn mua" to={"/account/purchase"} activeOnlyWhenExact={true} />
@@ -412,8 +410,8 @@ const mapDispatchToProps =(dispatch)=> {
     onLogout : ()=>{
       dispatch(AuthorizationActions.onLogout())
     },
-    onGetListCategory: () => {
-      dispatch(CategoryActions.onGetList())
+    onGetListCategory: (params) => {
+      dispatch(CategoryActions.onGetList(params))
     },
     onChangeCurrency: (unit) => {
       dispatch(ProductsActions.onChangeCurrency(unit));

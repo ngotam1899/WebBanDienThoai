@@ -14,6 +14,10 @@ const CategorySchema = new Schema({
         type: String,
         unique: true
     },
+    image: {
+        type: Schema.Types.ObjectId,
+        ref: "Image"
+    },
     specifications: [{
         type: Schema.Types.ObjectId,
         ref: "Specification"

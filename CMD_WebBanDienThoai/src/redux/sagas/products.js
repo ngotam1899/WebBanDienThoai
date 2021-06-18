@@ -2,7 +2,7 @@ import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
 import { getAllProducts, getDetailProduct, addProduct,updateProduct, deleteProduct, activateProduct, deactivateProduct } from "../apis/products";
-import { addImage} from "../apis/cloudinary";
+import { addImage } from "../apis/cloudinary";
 import UIActions from "../actions/ui";
 
 function* handleGetList({ payload }) {

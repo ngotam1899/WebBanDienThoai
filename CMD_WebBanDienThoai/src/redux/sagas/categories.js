@@ -2,6 +2,7 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import CategoryActions, { CategoryActionTypes } from "../actions/categories";
 import { getAllCategories, getDetailCategory, addCategory, updateCategory, deleteCategory } from "../apis/categories";
+import { addImage } from "../apis/cloudinary";
 
 function* handleGetList({ payload }) {
   try {
@@ -45,7 +46,17 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateCategory, payload.params, payload.id);
+    var result;
+    if(typeof payload.params.image !== "string"){
+      const image = yield call(addImage, payload.params.image);
+      result = yield call(updateCategory,
+      { ...payload.params,
+        "image": image.data.images[0]._id
+      }, payload.id);
+    }
+    else {
+      result = yield call(updateCategory, payload.params, payload.id);
+    }
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     const detailResult = yield call(getDetailCategory, payload.id);
