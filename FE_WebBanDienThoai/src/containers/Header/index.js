@@ -355,7 +355,7 @@ class Header extends Component {
                     {location.hash.indexOf("account") === -1 && listCategories && <>
                       {listCategories.map((category, index)=>{
                         return (
-                          <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}/${category._id}`} activeOnlyWhenExact={true} />
+                          <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}.${category._id}`} activeOnlyWhenExact={true} />
                         )
                       })
                       }<MenuLink label="Phụ kiện" to={"/products/accessories"} activeOnlyWhenExact={true} />

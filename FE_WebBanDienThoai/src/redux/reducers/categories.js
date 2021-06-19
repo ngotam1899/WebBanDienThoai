@@ -12,6 +12,7 @@ export default function(state = init, action) {
     case CategoryActionTypes.GET_LIST:
     case CategoryActionTypes.GET_LIST_KEYWORD:
     case CategoryActionTypes.GET_DETAIL:
+    case CategoryActionTypes.GET_ACCESSORY:
       return {
         ...state,
         loading: true,
@@ -25,8 +26,14 @@ export default function(state = init, action) {
     case CategoryActionTypes.GET_LIST_KEYWORD_ERROR:
       return {
         ...state,
-          loading: false,
-          search: null
+        loading: false,
+        search: null
+      };
+    case CategoryActionTypes.GET_ACCESSORY_ERROR:
+      return {
+        ...state,
+        loading: false,
+        accessories: null
       };
     case CategoryActionTypes.GET_LIST_SUCCESS:
       return {
@@ -49,8 +56,14 @@ export default function(state = init, action) {
     case CategoryActionTypes.GET_LIST_KEYWORD_SUCCESS:
       return {
         ...state,
-          loading: false,
-          search: action.payload
+        loading: false,
+        search: action.payload
+      };
+    case CategoryActionTypes.GET_ACCESSORY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        accessories: get(action, "payload", [])
       };
     default:
       return state;

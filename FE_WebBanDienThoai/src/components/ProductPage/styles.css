@@ -9,16 +9,16 @@
 }
 
 .product-carousel-price ins {
-    color: #5a88ca;
-    font-weight: 700;
-    margin-right: 5px;
-    text-decoration: none;
-  }
-  .product-carousel {
-    padding-top: 40px;
-  }
+  color: #5a88ca;
+  font-weight: 700;
+  margin-right: 5px;
+  text-decoration: none;
+}
+.product-carousel {
+  padding-top: 40px;
+}
 .product-option-shop {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .add_to_cart_button {
@@ -46,4 +46,23 @@ select {border: none;}
 }
 .font-size-12{
   font-size: 12px;
+}
+.bg-aqua {
+  background-color: #DBE7F2;
+}
+.description {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+.view-more {
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding-top: 50px;
+  text-align: center;
+  background: linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,0.91) 50%,#fff 55%);
 }

@@ -65,13 +65,13 @@ const getAllOrder = async (req, res, next) => {
 				page = number_page;
 			}
 		}
-		let sort = {};
+/* 		let sort = {};
 		if (req.query.sort != undefined && req.query.sort != '0') {
-			sort['createAt'] = req.query.sort == '1' ? 1 : -1;
-		}
+			sort['createdAt'] = req.query.sort == '1' ? 1 : -1;
+		} */
 		const orders = await Order.find(condition)
 		.populate({ path: 'order_list.color', select: 'name_vn' })
-		.sort(sort)
+		.sort({ createdAt: -1 })
 		.limit(limit)
 		.skip(limit * page);
 		let total = await Order.countDocuments(condition);
@@ -204,7 +204,7 @@ const updateOrder = async (req, res, next) => {
 				}
 				else {
 					// Hủy đơn hàng thì cập nhật lại số lượng
-					if(active==false){
+					if(active == false && order.status == -1){
 						for (let item of order.order_list){
 							let productFound = await Product.findById(item.product);
 							if(productFound){

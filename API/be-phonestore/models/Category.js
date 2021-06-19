@@ -46,7 +46,10 @@ const CategorySchema = new Schema({
     accessories: {
         type: Boolean,
         default: true
-    }
+    },
+    description: {
+        type: String
+    },
 })
 
 CategorySchema.pre('findOneAndDelete', function(next) {

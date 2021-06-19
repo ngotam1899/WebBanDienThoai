@@ -29,7 +29,7 @@ const routes = [
 		main: ({match, location, history}) => <SearchPage match={match} location={location} history={history}/>
 	},
 	{
-		path: '/products/:pathseo/:categoryID',
+		path: '/products/:pathseo.:categoryID',
 		exact: true,
 		name: " Page",
 		main: ({match, history, location}) => <ProductPage match={match} key={match.params.categoryID} history={history} location={location} />
@@ -89,7 +89,7 @@ const routes = [
 		main: ({match}) => <ActiveOrder match={match}/>
 	},
 	{
-		path: '/product/:pathseo/:productID',
+		path: '/product/:pathseo.:productID',
 		exact: true,
 		name: "Detail Page",
 		main: ({match, history, location}) => <DetailPage match={match} history={history} location={location}/>

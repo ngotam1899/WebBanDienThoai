@@ -89,9 +89,9 @@ class UserInfoPage extends Component {
                 <button type="button" className="btn mx-5 my-2 shadow-sm" style={{width: "-webkit-fill-available", backgroundColor: "#E9F3FF"}} data-bs-toggle="modal" data-bs-target="#passwdModal">
                   <div className="row">
                     <div className="col-3">
-                      <i className="fa fa-unlock-alt rounded-circle bg-primary p-2 text-white"></i>
+                      <i className="fa fa-unlock-alt rounded-circle bg-primary p-2 text-white h-36-px w-auto"></i>
                     </div>
-                    <div className="col-9 py-1 text-left" style={{fontWeight: 500}}>
+                    <div className="col-9 align-self-center h-100 text-left" style={{fontWeight: 500}}>
                       {t('user.change-password.button')}
                     </div>
                   </div>

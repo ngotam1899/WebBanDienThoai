@@ -3,6 +3,9 @@ import {get} from 'lodash'
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CDataTable, CSwitch } from '@coreui/react';
 import { connect } from "react-redux";
 import "../Products/product.css";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 // @Actions
 import CategoryActions from "../../redux/actions/categories";
 import SpecificationActions from "../../redux/actions/specification";
@@ -27,8 +30,9 @@ class CategoryDetail extends Component {
       filter: category ? category.filter : [],
       price: category ? category.price : [],
       accessories: category ? category.accessories :'',
+      description: category && category.description ? EditorState.createWithContent(convertFromRaw(JSON.parse(category.description))) : EditorState.createEmpty(),
       keyword: "",
-      // @Product Image
+      // @Category Image
       previewSource: "",
       selectedFile: "",
       // @Filter - bộ lọc
@@ -96,14 +100,17 @@ class CategoryDetail extends Component {
   }
 
   onCallback = (id) => {
-    const {name, image, pathseo, name_en, specifications, filter, price, accessories} = this.state;
+    const {name, image, pathseo, name_en, specifications, filter, price, accessories, description} = this.state;
     const {onUpdate, onCreate} = this.props;
     /* eslint-disable */
     filter.map(item =>{
       item._id = item._id._id
     })
     /* eslint-disable */
-    var data = {name, image, pathseo, name_en, specifications, filter, price, accessories}
+    var data = {
+      name, image, pathseo, name_en, specifications, filter, price, accessories, 
+      description: JSON.stringify(convertToRaw(description.getCurrentContent()))
+    }
     if (id) {
       onUpdate(id, data);
     }
@@ -333,7 +340,7 @@ class CategoryDetail extends Component {
 
 	render() {
     const {
-      name, pathseo, name_en, specifications, filter, keyword,
+      name, pathseo, name_en, specifications, description, filter, keyword,
       filterEditing, btnStatus, idFilter, query, image, accessories, previewSource,
       priceEditing, _btnStatus, name_price, min, max, price,
     } = this.state;
@@ -541,7 +548,6 @@ class CategoryDetail extends Component {
                   )
                 }}
               />}
-
               <label className="float-left">Danh mục khoảng giá:</label>
               <div className="float-right">
                 <button
@@ -604,6 +610,17 @@ class CategoryDetail extends Component {
                   )
                 }}
               />}
+            </div>
+            <div className="col-12">
+              <Editor
+                editorState={description}
+                wrapperClassName="desc-wrapper"
+                editorClassName="desc-editor"
+                onEditorStateChange={(description) => this.setState({description})}
+                toolbar={{
+                  image: { uploadCallback: this.uploadImageCallBack, alt: { present: true, mandatory: true } },
+                }}
+              />
             </div>
 					</div>
 				</CModalBody>

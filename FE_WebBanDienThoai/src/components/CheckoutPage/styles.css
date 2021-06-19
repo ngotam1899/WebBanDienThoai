@@ -64,3 +64,21 @@ a.about_paypal {
     margin-left: 5px;
     font-weight: 700;
 }
+.square {
+    position: relative;
+    width: 100%;
+}
+.square:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+.content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.col-1div10 {
+    flex: 0 0 auto;
+    width: 10%;
+}

@@ -65,7 +65,7 @@ class OrderDetail extends Component {
                 <div className="col-6 form-inline">
                   <i className="fa fa-calendar-day text-xl bill-icon"></i>
                   <div className="form-floating">
-                    <input type="text" className="form-control border-0" id="createdAt" name="createdAt" value={Date(orderItem.createdAt)}/>
+                    <input type="text" className="form-control border-0" id="createdAt" name="createdAt" value={orderItem.createdAt}/>
                     <label for="createdAt">{t('user.date.input')}</label>
                   </div>
                 </div>

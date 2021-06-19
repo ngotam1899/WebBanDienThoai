@@ -53,7 +53,7 @@ const getAllCategory = async(req, res, next) => {
 }
 const addCategory = async(req, res, next) => {
   try {
-    const { name, image, specifications, filter, price, accessories } = req.body
+    const { name, image, specifications, filter, price, accessories, description } = req.body
     const category = new Category();
     if (name) category.name = name;
     if (image) category.image = image;
@@ -79,6 +79,7 @@ const addCategory = async(req, res, next) => {
     }
     if(price) category.price = price;
     if(accessories) category.accessories = accessories;
+    if(description) category.description = description;
     await category.save()
     return res.status(200).json({ success: true, code: 201, message: '', category })
   } catch (error) {
@@ -88,7 +89,7 @@ const addCategory = async(req, res, next) => {
 const updateCategory = async(req, res, next) => {
   try {
     const { IDCategory } = req.params
-    const { name, image, specifications, filter, price, accessories } = req.body
+    const { name, image, specifications, filter, price, accessories, description } = req.body
     const category = await Category.findById(IDCategory);
     if(name) category.name = name;
     if (image) category.image = image;
@@ -114,6 +115,7 @@ const updateCategory = async(req, res, next) => {
     }
     if(price) category.price = price;
     if(accessories) category.accessories = accessories;
+    if(description) category.description = description;
     await category.save();
     return res.status(200).json({ success: true, code: 200, message: '' })
   } catch (error) {

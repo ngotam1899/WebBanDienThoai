@@ -48,7 +48,7 @@ app.use(
 // 4. Define Database
 
 // @For tester
-/*   mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
+/* mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
 	useCreateIndex: true,
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
@@ -60,10 +60,10 @@ app.use(
 //@For dev
 mongoose
 .connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
- 		useCreateIndex: true,
-  	useNewUrlParser: true,
-  	useUnifiedTopology: true,
-  	useFindAndModify: false
+	useCreateIndex: true,
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useFindAndModify: false
 })
 .then(() => console.log('Connected to MongoDB!'))
 .catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`));

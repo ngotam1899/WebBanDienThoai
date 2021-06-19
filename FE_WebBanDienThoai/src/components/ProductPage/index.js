@@ -3,9 +3,11 @@ import { connect } from "react-redux";
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 import qs from "query-string";
+import draftToHtml from 'draftjs-to-html';
 import './styles.css';
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
+import {LOCAL} from '../../constants/index';
 // @Components
 import ProductItem from "../../containers/ProductItem"
 import Pagination from "react-js-pagination";
@@ -30,7 +32,7 @@ class ProductPage extends Component {
         active: 1,
         category: match.params.categoryID ? match.params.categoryID : null
       },
-
+      more: false
     }
   }
 
@@ -59,22 +61,50 @@ class ProductPage extends Component {
     onGetListBrand(params);
     onGetList(params);
     onGetCategory(match.params.categoryID);
+    /* FB comment plugin */
+    window.fbAsyncInit = () => {
+      /* eslint-disable */
+      window.FB.init({
+        appId: '308035613517523',
+        xfbml: true,
+        version: 'v2.6'
+      });
+      FB.XFBML.parse();
+      /* eslint-disable */
+    };
+
+    (function(d, s, id){
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = '//connect.facebook.net/en_US/sdk.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    /* FB comment plugin */
   }
 
   componentDidUpdate(prevProps) {
-    const {location, category, onGetList, onGetListBrand} = this.props
-    if (prevProps.location.search !== location.search) {
-      const filters = getFilterParams(location.search);
-      const { filter } = this.state;
-      var params = {
-        ...filter,
-        ...filters
-      };
-      onGetList(params);
-      onGetListBrand(params);
+    try{
+      /*global FB*/
+      if (FB) {
+        FB.XFBML.parse();
+      }
+      const {location, category, onGetList, onGetListBrand} = this.props
+      if (prevProps.location.search !== location.search) {
+        const filters = getFilterParams(location.search);
+        const { filter } = this.state;
+        var params = {
+          ...filter,
+          ...filters
+        };
+        onGetList(params);
+        onGetListBrand(params);
+      }
+      if(prevProps.category !== category && category){
+        document.title = `${category.name} | ${category.name_en}`
+      }
     }
-    if(prevProps.category !== category && category){
-      document.title = `${category.name} | ${category.name_en}`
+    catch(err){
     }
   }
 
@@ -124,7 +154,7 @@ class ProductPage extends Component {
   }
 
   render() {
-    const {min_p, max_p} = this.state;
+    const {min_p, max_p, more} = this.state;
     const { listProducts, totalBrand, t, location, total, category } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -133,7 +163,7 @@ class ProductPage extends Component {
         {category && <div className="my-2">
           <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
           <i className="fa fa-chevron-right px-2 w-25-px "></i>
-          <a className="text-decoration-none" href={`/#/products/${category.pathseo}/${category._id}`}>{category.name}</a>
+          <a className="text-decoration-none" href={`/#/products/${category.pathseo}.${category._id}`}>{category.name}</a>
         </div>}
         <div className="col-12 col-md-3">
           <div className="row">
@@ -202,13 +232,13 @@ class ProductPage extends Component {
           <div className="row">
             <div className="col-12">
             <button type="button" 
-            className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-info text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-active text-dark my-2 mr-2 position-relative btn-padding"} 
+            className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-aqua text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark my-2 mr-2 position-relative btn-padding"} 
             onClick={()=>this.onSetBrand(null)}>Độc quyền</button>
             {totalBrand && 
             totalBrand.map((brand, index) =>{
             return(
               <button type="button" 
-              className={filter.brand === brand._id._id ? "rounded-pill shadow-sm bg-info text-dark mr-2 my-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-active text-dark mr-2 my-2 position-relative btn-padding"} 
+              className={filter.brand === brand._id._id ? "rounded-pill shadow-sm bg-aqua text-dark mr-2 my-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark mr-2 my-2 position-relative btn-padding"} 
               key={index} onClick={()=>this.onSetBrand(brand._id._id)}>
                 <img alt={brand._id.name} style={{height: "20px"}} src={brand._id.image.public_url}/>
                 <span className="product-count">{brand.count}</span>
@@ -228,7 +258,6 @@ class ProductPage extends Component {
             </select>
             </div>
           </div>
-          
           <div className="row">
             {listProducts.map((product, index) => {
               return (
@@ -258,6 +287,18 @@ class ProductPage extends Component {
           </div>
         </div>
       </div>
+      {category && <>
+      <div className={ more ? "row" : "row description"}>
+        {category.description ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : ""}
+        <div className="view-more" onClick={() => this.setState({ more: true })}>
+          <p>Đọc thêm giới thiệu<span><i className="fa fa-angle-down ml-2"></i></span></p>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <div className="fb-comments" data-href={`${LOCAL}/#/products/${category.pathseo}.${category._id}`} data-width="100%" data-numposts="5"></div>
+        </div>
+      </div></>}
     </div>
     );
   }

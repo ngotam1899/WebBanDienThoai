@@ -28,6 +28,17 @@ function* handleGetList({ payload }) {
   }
 }
 
+function* handleGetAccessory({ payload }) {
+  try {
+    const result = yield call(getAllCategories, payload);
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(CategoryActions.onGetAccessorySuccess(data.categorys));
+  } catch (error) {
+    yield put(CategoryActions.onGetAccessoryError(error));
+  }
+}
+
 function* handleGetDetail({ id }) {
   try {
     const result = yield call(getDetailCategory, id);
@@ -48,6 +59,9 @@ export function* watchGetListKeyword() {
 export function* watchGetList() {
   yield takeEvery(CategoryActionTypes.GET_LIST, handleGetList);
 }
+export function* watchGetAccessory() {
+  yield takeEvery(CategoryActionTypes.GET_ACCESSORY, handleGetAccessory);
+}
 export function* watchGetDetail() {
   yield takeEvery(CategoryActionTypes.GET_DETAIL, handleGetDetail);
 }
@@ -56,6 +70,7 @@ export default function* rootSaga() {
   yield all([
     fork(watchGetListKeyword),
     fork(watchGetList),
+    fork(watchGetAccessory),
     fork(watchGetDetail),
   ]);
 }
