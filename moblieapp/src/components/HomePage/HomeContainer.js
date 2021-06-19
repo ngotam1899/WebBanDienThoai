@@ -118,7 +118,7 @@ class HomeContainer extends Component {
                             ? item.bigimage.public_url
                             : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
                         }
-                        price={numberWithCommas(item.price_min)}
+                        price={item.price_min}
                         price_real={item.real_price_min}
                         reviewCount={item.reviewCount}
                         stars={item.stars}

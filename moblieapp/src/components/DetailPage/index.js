@@ -15,7 +15,6 @@ import styles from './style';
 import Header from '../HeaderComponent';
 import {INITIAL_IMAGE} from '../../constants';
 import numberWithCommas from '../../utils/formatPrice';
-import tryConvert from '../../utils/changeMoney';
 
 import {
   Text,
@@ -168,7 +167,6 @@ class ProductDetail extends Component {
       recommend: -1,
     };
     const token = AsyncStorage.getItem('AUTH_USER').then(data => {});
-    console.log('token: ', token);
     this.props.onGetProfile(null, token);
   }
 
@@ -189,7 +187,7 @@ class ProductDetail extends Component {
     });
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const {authInfo, onHistoryProduct} = this.props;
     if (nextProps.authInfo !== authInfo && nextProps.authInfo) {
       var history = [];
@@ -202,7 +200,6 @@ class ProductDetail extends Component {
         if (history.length > 4) {
           history.shift();
         }
-        console.log(history);
         onHistoryProduct(nextProps.authInfo._id, {history});
       }
     }

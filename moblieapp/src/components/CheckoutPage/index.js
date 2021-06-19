@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-  ScrollView,
-  Image,
-} from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Image } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -24,12 +16,9 @@ import OrdersActions from '../../redux/actions/order';
 import numberWithCommas from '../../utils/formatPrice';
 import tryConvert from '../../utils/changeMoney';
 
-import {
-  SHIPPING_EXPRESS,
-  SHIPPING_STANDARD,
-  API_ENDPOINT_AUTH,
-} from '../../constants';
+import { SHIPPING_EXPRESS, SHIPPING_STANDARD, API_ENDPOINT_AUTH } from '../../constants';
 
+import styles from './style';
 
 import {connect} from 'react-redux';
 import {compose} from 'redux';
@@ -95,44 +84,18 @@ class CheckoutPage extends Component {
     var totalLength = 0;
     for (var i = 0; i < dataCart.length; i++) {
       total = total + dataCart[i].quantity;
-      totalPrice =
-        totalPrice +
-        dataCart[i].quantity *
-          dataCart[i].product.colors.find(
-            item => item._id === dataCart[i].color,
-          ).price;
-      totalWeight =
-        totalWeight + dataCart[i].quantity * dataCart[i].product.weight;
-      totalHeight =
-        totalHeight + dataCart[i].quantity * dataCart[i].product.height;
-      totalWidth =
-        totalWidth < dataCart[i].product.width
-          ? dataCart[i].product.width
-          : totalWidth;
-      totalLength =
-        totalLength < dataCart[i].product.width
-          ? dataCart[i].product.width
-          : totalLength;
+      totalPrice = totalPrice + dataCart[i].quantity * dataCart[i].product.colors.find(item => item._id === dataCart[i].color).price;
+      totalWeight = totalWeight + dataCart[i].quantity * dataCart[i].product.weight;
+      totalHeight = totalHeight + dataCart[i].quantity * dataCart[i].product.height;
+      totalWidth = totalWidth < dataCart[i].product.width ? dataCart[i].product.width : totalWidth;
+      totalLength = totalLength < dataCart[i].product.width ? dataCart[i].product.width : totalLength;
     }
 
-    this.setState({
-      total,
-      totalPrice,
-      totalWeight,
-      totalHeight,
-      totalWidth,
-      totalLength,
-    });
+    this.setState({ total, totalPrice, totalWeight, totalHeight, totalWidth, totalLength });
   }
 
   componentWillReceiveProps(props) {
-    const {
-      service_type_id,
-      totalHeight,
-      totalLength,
-      totalWeight,
-      totalWidth,
-    } = this.state;
+    const { service_type_id, totalHeight, totalLength, totalWeight, totalWidth } = this.state;
     const {
       authInfo,
       onGetListDistrict,
@@ -143,29 +106,16 @@ class CheckoutPage extends Component {
     if (authInfo !== props.authInfo && authInfo === null) {
       onGetListCity();
     }
-    if (authInfo && authInfo.address) {
-      if (listCity !== props.listCity && props.listCity) {
-        onGetListDistrict({
-          province_id: props.listCity.find(
-            obj => obj.ProvinceName === authInfo.address.split(', ')[3],
-          ).ProvinceID,
-        });
+    if(authInfo && authInfo.address){
+      if(listCity !== props.listCity && props.listCity){
+        onGetListDistrict({province_id:props.listCity.find(obj => obj.ProvinceName === authInfo.address.split(', ')[3]).ProvinceID})
       }
-      if (listDistrict !== props.listDistrict && listDistrict === null) {
-        var districtID = props.listDistrict.find(
-          obj => obj.DistrictName === authInfo.address.split(', ')[2],
-        ).DistrictID;
+      if(listDistrict !== props.listDistrict && listDistrict===null){
+        var districtID = props.listDistrict.find(obj => obj.DistrictName === authInfo.address.split(', ')[2]).DistrictID
         this.setState({
-          districtID,
-        });
-        this.calculateShipping(
-          service_type_id,
-          districtID,
-          totalHeight,
-          totalLength,
-          totalWeight,
-          totalWidth,
-        );
+          districtID
+        })
+        this.calculateShipping(service_type_id, districtID, totalHeight, totalLength, totalWeight, totalWidth)
       }
     }
   }
@@ -454,7 +404,7 @@ class CheckoutPage extends Component {
                 style={[
                   styles.text_footer,
                   {
-                    marginTop: 20,
+                    marginTop: 10,
                   },
                 ]}>
                 First Name
@@ -479,7 +429,7 @@ class CheckoutPage extends Component {
                 style={[
                   styles.text_footer,
                   {
-                    marginTop: 20,
+                    marginTop: 10,
                   },
                 ]}>
                 Last Name
@@ -504,7 +454,7 @@ class CheckoutPage extends Component {
                 style={[
                   styles.text_footer,
                   {
-                    marginTop: 20,
+                    marginTop: 10,
                   },
                 ]}>
                 Phone Number
@@ -528,7 +478,7 @@ class CheckoutPage extends Component {
                 style={[
                   styles.text_footer,
                   {
-                    marginTop: 20,
+                    marginTop: 10,
                   },
                 ]}>
                 New Your Address
@@ -610,10 +560,10 @@ class CheckoutPage extends Component {
                 style={[
                   styles.text_footer,
                   {
-                    marginTop: 20,
+                    marginTop: 10,
                   },
                 ]}>
-                First Name
+                Name
               </Text>
               <View style={styles.action}>
                 <FontAwesome name="user-o" color="#05375a" size={20} />
@@ -621,13 +571,8 @@ class CheckoutPage extends Component {
                   placeholder="Your First Name"
                   style={styles.textInput}
                   autoCapitalize="none"
-                  value={firstname}
+                  value={`${lastname} ${firstname}`}
                   editable={false}
-                  onChangeText={val => {
-                    this.setState({
-                      firstname: val,
-                    });
-                  }}
                 />
               </View>
 
@@ -635,32 +580,7 @@ class CheckoutPage extends Component {
                 style={[
                   styles.text_footer,
                   {
-                    marginTop: 20,
-                  },
-                ]}>
-                Last Name
-              </Text>
-              <View style={styles.action}>
-                <FontAwesome name="user-o" color="#05375a" size={20} />
-                <TextInput
-                  placeholder="Your Last Name"
-                  style={styles.textInput}
-                  autoCapitalize="none"
-                  value={lastname}
-                  editable={false}
-                  onChangeText={val => {
-                    this.setState({
-                      lastname: val,
-                    });
-                  }}
-                />
-              </View>
-
-              <Text
-                style={[
-                  styles.text_footer,
-                  {
-                    marginTop: 20,
+                    marginTop: 10,
                   },
                 ]}>
                 Phone Number
@@ -684,7 +604,7 @@ class CheckoutPage extends Component {
                 style={[
                   styles.text_footer,
                   {
-                    marginTop: 20,
+                    marginTop: 10,
                   },
                 ]}>
                 Your Address
@@ -694,6 +614,7 @@ class CheckoutPage extends Component {
                 <TextInput
                   placeholder="Your Address"
                   style={styles.textInput}
+                  multiline={true}
                   autoCapitalize="none"
                   value={addressInfo}
                   editable={false}
@@ -740,7 +661,7 @@ class CheckoutPage extends Component {
           {/* ----------- Chọn hình thức giao hàng -------------- */}
           <Text
             style={[
-              styles.text_footer,
+              styles.nameTitle,
               {
                 marginTop: 20,
               },
@@ -795,10 +716,10 @@ class CheckoutPage extends Component {
           {/* ----------------- Thông tin đặt hàng ---------------- */}
           <Text
             style={[
-              styles.text_footer,
+              styles.nameTitle,
               {
-                marginTop: 20,
-                marginBottom: 10,
+                marginTop: 30,
+                marginBottom: 20,
               },
             ]}>
             Your Order:
@@ -826,10 +747,10 @@ class CheckoutPage extends Component {
           {/* ------------------- Shipping method ---------------- */}
           <Text
             style={[
-              styles.text_footer,
+              styles.nameTitle,
               {
-                marginTop: 20,
-                marginBottom: 10,
+                marginTop: 30,
+                marginBottom: 0,
               },
             ]}>
             Payment Methods:
@@ -880,10 +801,10 @@ class CheckoutPage extends Component {
                 }}
                 onPress={() => this.setState({showModal: true})}>
                 <Image
-                  style={{width: 100, height: 40}}
+                  style={{width: 150, height: 36}}
                   source={{
                     uri:
-                      'https://lh3.googleusercontent.com/proxy/_Kv4UvVVjBMbWm4dUNu0rJlw8kQSM6TzrPp6iQdawytOLR_G1mriHqo7EAclgfHIn5qSAEco9HG0WO1sr7m50Od3ll9aHwRBBbNvNx4jLLgh2-vdE8cpm1LiPF4',
+                      'https://pngimg.com/uploads/paypal/paypal_PNG5.png',
                   }}></Image>
               </TouchableOpacity>
             </View>
@@ -893,18 +814,6 @@ class CheckoutPage extends Component {
 
           {/* ---------------------------------------------------- */}
           <View style={styles.textPrivate}>
-            <Text style={styles.color_textPrivate}>
-              By signing up you agree to our
-            </Text>
-            <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-              {' '}
-              Terms of service
-            </Text>
-            <Text style={styles.color_textPrivate}> and</Text>
-            <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-              {' '}
-              Privacy policy
-            </Text>
           </View>
           <View style={styles.button}>
             <TouchableOpacity
@@ -976,143 +885,3 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CheckoutPage);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: 20,
-    paddingHorizontal: 20,
-  },
-  header: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingBottom: 50,
-  },
-  footer: {
-    flex: Platform.OS === 'ios' ? 3 : 5,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-  },
-  textTitle: {
-    color: '#1e88e5',
-    fontWeight: 'bold',
-    fontSize: 30,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  nameTitle: {
-    fontSize: 20,
-    marginVertical: 0,
-    fontWeight: 'bold',
-  },
-  text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 30,
-  },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18,
-  },
-
-  action: {
-    flexDirection: 'row',
-    marginTop: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 0,
-  },
-  textInput: {
-    flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
-    paddingLeft: 10,
-    color: '#05375a',
-  },
-  button: {
-    alignItems: 'center',
-    marginTop: 50,
-  },
-  signIn: {
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  textSign: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  confirmPassword: {
-    height: 50,
-    paddingVertical: 5,
-    paddingHorizontal: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  textPrivate: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 20,
-  },
-  color_textPrivate: {
-    color: 'grey',
-  },
-  avatarUser: {
-    height: 230,
-    marginHorizontal: 25,
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  containerAddress: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 20,
-  },
-  shippingContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 20,
-  },
-  labelShipping: {
-    margin: 0,
-    fontSize: 14,
-  },
-  checkbox: {
-    alignSelf: 'flex-end',
-    marginBottom: -5,
-  },
-  label: {
-    fontSize: 18,
-    color: '#05375a',
-    fontStyle: 'italic',
-  },
-  //Modal change password
-  button: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  signIn: {
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  textSign: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});

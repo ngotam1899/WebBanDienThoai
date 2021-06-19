@@ -3,6 +3,8 @@ import {AsyncStorage, ScrollView} from 'react-native';
 import ProductsActions from '../../redux/actions/products';
 import {connect} from 'react-redux';
 import {Text, View, Image, TouchableOpacity, Dimensions} from 'react-native';
+import numberWithCommas from '../../utils/formatPrice';
+import styles from './style'
 var {width} = Dimensions.get('window');
 
 // import icons
@@ -38,7 +40,6 @@ class Cart extends Component {
     AsyncStorage.getItem('cart')
       .then(cart => {
         if (cart !== null) {
-          // We have data!!
           const cartData = JSON.parse(cart);
           this.setState({dataCart: cartData});
           this.setTotalPrice(cartData);
@@ -94,65 +95,42 @@ class Cart extends Component {
   render() {
     const {navigation, isLogin} = this.props;
     return (
-      <ScrollView style={{backgroundColor: '#fff'}}>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <View style={{height: 20}} />
-          <Text style={{fontSize: 28, color: '#277cdb'}}>Cart Detail</Text>
-          <View style={{height: 10}} />
+      <ScrollView style={styles.container}>
+        <View style={styles.boxContainer}>
+          <Text style={styles.title}>Cart Detail</Text>
           {this.state.dataCart.map((item, index) => {
             return (
-              <View style={{flex: 1}} key={index}>
+              <View style={styles.itemContainer} key={index}>
                 <View
-                  style={{
-                    width: width - 20,
-                    margin: 10,
-                    backgroundColor: 'transparent',
-                    flexDirection: 'row',
-                    borderBottomWidth: 2,
-                    borderColor: '#cccccc',
-                    paddingBottom: 10,
-                  }}>
+                  style={styles.boxItemContainer}>
                   <Image
                     resizeMode={'contain'}
-                    style={{width: width / 3, height: width / 3}}
+                    style={styles.imgItem}
                     source={{
                       uri: item.product.bigimage.public_url,
                     }}
                   />
                   <View
-                    style={{
-                      flex: 1,
-                      backgroundColor: 'transparent',
-                      padding: 10,
-                      justifyContent: 'space-between',
-                    }}>
+                    style={styles.titleContainer}>
                     <View>
-                      <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                      <Text style={styles.name}>
                         {item.product.name}
                       </Text>
-                      <Text style={{fontWeight: 'bold', fontSize: 20}}>
-                        {
+                      <Text style={styles.color}>
+                        Màu: {
                           item.product.colors.find(i => i._id === item.color)
-                            .name_en
+                            .name_vn
                         }
                       </Text>
                     </View>
                     <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
+                      style={styles.boxPrice}>
                       <Text
-                        style={{
-                          fontWeight: 'bold',
-                          color: '#9fd236',
-                          fontSize: 20,
-                        }}>
-                        {item.product.colors.find(i => i._id === item.color)
-                          .price * item.quantity}
+                        style={styles.price}>
+                        {numberWithCommas(item.product.colors.find(i => i._id === item.color).price * item.quantity)} VNĐ
                       </Text>
                       <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        style={styles.boxCountNumber}>
                         <TouchableOpacity
                           onPress={() => this.onChangeQual(index, false)}>
                           <Icon
@@ -162,11 +140,7 @@ class Cart extends Component {
                           />
                         </TouchableOpacity>
                         <Text
-                          style={{
-                            paddingHorizontal: 8,
-                            fontWeight: 'bold',
-                            fontSize: 18,
-                          }}>
+                          style={styles.number}>
                           {item.quantity}
                         </Text>
                         <TouchableOpacity
@@ -185,59 +159,31 @@ class Cart extends Component {
             );
           })}
 
-          <View style={{height: 20}} />
-          <View style={{width: width, marginLeft: 20}}>
-            <Text style={{fontWeight: 'bold'}}>
-              Tạm tính: {this.state.totalPrice}
-            </Text>
-            <Text style={{fontWeight: 'bold'}}>Phí ship: Free</Text>
-            <Text style={{fontWeight: 'bold'}}>
-              Thành tiền: {this.state.totalPrice}
+          <View style={styles.totalPriceContainer}>
+            <Text style={styles.totalPrice}>
+              Tạm tính: {numberWithCommas(this.state.totalPrice)} VNĐ
             </Text>
           </View>
-          <View style={{height: 20}} />
 
           {isLogin ? (
             <TouchableOpacity
-              style={{
-                backgroundColor: '#1e88e5',
-                width: width - 40,
-                alignItems: 'center',
-                padding: 10,
-                borderRadius: 5,
-              }}
+              style={styles.btnContainer}
               onPress={() => navigation.navigate('Checkout')}>
               <Text
-                style={{
-                  fontSize: 24,
-                  fontWeight: 'bold',
-                  color: 'white',
-                }}>
+                style={styles.btn}>
                 CHECKOUT
               </Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              style={{
-                backgroundColor: '#1e88e5',
-                width: width - 40,
-                alignItems: 'center',
-                padding: 10,
-                borderRadius: 5,
-              }}
+              style={styles.btnContainer}
               onPress={() => this.checkOut()}>
               <Text
-                style={{
-                  fontSize: 24,
-                  fontWeight: 'bold',
-                  color: 'white',
-                }}>
+                style={styles.btn}>
                 CHECKOUT
               </Text>
             </TouchableOpacity>
           )}
-
-          <View style={{height: 20}} />
         </View>
       </ScrollView>
     );

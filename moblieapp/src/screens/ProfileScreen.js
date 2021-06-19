@@ -34,12 +34,9 @@ const ProfileItem = ({icon, name}) => (
 class ProfileScreen extends Component {
   componentDidMount = async () => {
     const {onGetProfile} = this.props;
-    const token = await AsyncStorage.getItem('AUTH_USER');
-    if(token !== null){
-      onGetProfile(null, token);
-    }
+    await AsyncStorage.getItem('AUTH_USER').then(data => {onGetProfile(null, data);});
   };
-
+  
   setLogout = () => {
     const {onLogout, navigation} = this.props;
     localStorage.removeItem('AUTH_USER');
@@ -52,9 +49,7 @@ class ProfileScreen extends Component {
     return (
       <View style={styles.screenContainer}>
         <StatusBar barStyle="light-content" />
-        {/*  */}
         <Header value="1" title="Cá nhân" navigation={navigation} />
-        {/*  */}
         <View style={styles.bodyContainer}>
           {userInfo ? (
             <View style={styles.userContainer}>
@@ -95,22 +90,10 @@ class ProfileScreen extends Component {
               </View>
             </>
           )}
-          {/*  */}
           <View style={styles.divider} />
           <TouchableOpacity onPress={userInfo?() => navigation.navigate('Orders'):() => navigation.navigate('SignIn')}>
             <ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" />
           </TouchableOpacity>
-          <ProfileItem icon="cart-outline" name="Sản phẩm đã mua" />
-          <ProfileItem icon="eye-outline" name="Sản phẩm đã xem" />
-          <ProfileItem icon="heart-outline" name="Sản phẩm yêu thích" />
-          <ProfileItem icon="bookmark-outline" name="Sản phẩm mua sau" />
-          <ProfileItem icon="star-outline" name="Sản phẩm đánh giá" />
-          {/*  */}
-          <View style={styles.divider} />
-          <ProfileItem name="Ưu đãi cho chủ thẻ ngân hàng" />
-          <ProfileItem name="Cài đặt" />
-          {/*  */}
-          <View style={styles.divider} />
           <ProfileItem icon="headphones" name="Hỗ trợ" />
         </View>
         {userInfo ? (
@@ -190,8 +173,8 @@ const styles = StyleSheet.create({
   },
   avatarImg: {
     borderRadius: 50,
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
   },
   textContainer: {
     flex: 1,

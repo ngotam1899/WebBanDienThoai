@@ -687,20 +687,6 @@ class UserDetailPage extends Component {
               </View>
             </View>
           </Modal>
-          <View style={styles.textPrivate}>
-            <Text style={styles.color_textPrivate}>
-              By signing up you agree to our
-            </Text>
-            <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-              {' '}
-              Terms of service
-            </Text>
-            <Text style={styles.color_textPrivate}> and</Text>
-            <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-              {' '}
-              Privacy policy
-            </Text>
-          </View>
           <View style={styles.button}>
             <TouchableOpacity
               style={styles.signIn}
@@ -850,11 +836,12 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 10
   },
   checkbox: {
     alignSelf: 'flex-end',
-    marginBottom: -10,
   },
   label: {
     margin: 0,

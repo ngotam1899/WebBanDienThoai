@@ -107,7 +107,7 @@ class DrawerContent extends Component {
           {category && category.price ? (
             category.price.map(price => {
               return (
-                <View style={styles.checkboxPriceRange}>
+                <View key={price._id} style={styles.checkboxPriceRange}>
                   <CheckBox
                     value={
                       paramsTemp.min_p === price.min &&
@@ -152,7 +152,7 @@ class DrawerContent extends Component {
           {category ? (
             category.filter.map(item => {
               return (
-                <View style={styles.operatingSystem}>
+                <View key={item._id._id} style={styles.operatingSystem}>
                   <Text style={styles.textOS}>{item._id.name}</Text>
                   <View style={styles.checkboxPriceRange}>
                     <CheckBox
@@ -170,7 +170,7 @@ class DrawerContent extends Component {
                   </View>
                   {item._id.selections.map(selector => {
                     return (
-                      <View style={styles.checkboxPriceRange}>
+                      <View key={selector._id} style={styles.checkboxPriceRange}>
                         <CheckBox
                           value={
                             this.state.paramsTemp[`${item.query}`] ===

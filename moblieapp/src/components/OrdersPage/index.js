@@ -1,17 +1,14 @@
 import * as React from 'react';
 import {Component} from 'react';
-import {
-  StyleSheet, Dimensions
-} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 
-import PageView from './PageView'
+import PageView from './PageView';
 
 import {TabView, TabBar} from 'react-native-tab-view';
 
 import ProductsActions from '../../redux/actions/products';
 import OrdersActions from '../../redux/actions/order';
 import AuthorizationActions from '../../redux/actions/auth';
-
 
 import {connect} from 'react-redux';
 import {compose} from 'redux';
@@ -21,42 +18,42 @@ const {width} = Dimensions.get('window');
 
 class FirstRoute extends Component {
   render() {
-    const {orderList, authInfoID} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID}/>;
+    const {orderList, authInfoID, params} = this.props;
+    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
   }
 }
 class SecondRoute extends Component {
   render() {
-    const {orderList, authInfoID} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID}/>;
+    const {orderList, authInfoID, params} = this.props;
+    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
   }
 }
 
 class ThirdRoute extends Component {
   render() {
-    const {orderList, authInfoID} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID}/>;
+    const {orderList, authInfoID, params} = this.props;
+    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
   }
 }
 
 class FourRoute extends Component {
   render() {
-    const {orderList, authInfoID} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID}/>;
+    const {orderList, authInfoID, params} = this.props;
+    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
   }
 }
 
 class FiveRoute extends Component {
   render() {
-    const {orderList, authInfoID} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID}/>;
+    const {orderList, authInfoID, params} = this.props;
+    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
   }
 }
 
 class SixRoute extends Component {
   render() {
-    const {orderList, authInfoID} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID}/>;
+    const {orderList, authInfoID, params} = this.props;
+    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
   }
 }
 
@@ -77,6 +74,10 @@ class Orders extends Component {
         limit: 12,
         page: 0,
       },
+      params: {
+        limit: 12,
+        page: 0,
+      },
     };
   }
 
@@ -90,23 +91,41 @@ class Orders extends Component {
     const {authInfo} = this.props;
     if (val === 0) {
       filters = '';
-      var params = {
+      var params1 = {
         ...filter,
         ...filters,
         user: authInfo._id,
       };
-      onGetList(params);
+      this.setState({
+        params: {
+          ...params,
+          user: authInfo._id,
+          active: "",
+          confirmed: "",
+          status: ""
+        },
+      });
+      onGetList(params1);
     } else if (val === 1) {
       filters = {
         confirmed: -1,
-        status: 1,
+        active: 1,
       };
-      var params = {
+      var params1 = {
         ...filter,
         ...filters,
         user: authInfo._id,
       };
-      onGetList(params);
+      this.setState({
+        params: {
+          ...params,
+          user: authInfo._id,
+          confirmed: -1,
+          status: 1,
+          active: ""
+        },
+      });
+      onGetList(params1);
     } else if (val === 2) {
       filters = {
         confirmed: 1,
@@ -117,12 +136,30 @@ class Orders extends Component {
         ...filters,
         user: authInfo._id,
       };
+      this.setState({
+        params: {
+          ...params,
+          user: authInfo._id,
+          confirmed: 1,
+          status: -1,
+          active: ""
+        },
+      });
       onGetList(params);
     } else if (val === 3) {
       filters = {
         confirmed: 1,
         status: 0,
       };
+      this.setState({
+        params: {
+          ...params,
+          user: authInfo._id,
+          confirmed: 1,
+          status: 0,
+          active: ""
+        },
+      });
       var params = {
         ...filter,
         ...filters,
@@ -134,6 +171,15 @@ class Orders extends Component {
         confirmed: 1,
         status: 1,
       };
+      this.setState({
+        params: {
+          ...params,
+          user: authInfo._id,
+          confirmed: 1,
+          status: 1,
+          active: ""
+        },
+      });
       var params = {
         ...filter,
         ...filters,
@@ -144,6 +190,15 @@ class Orders extends Component {
       filters = {
         active: -1,
       };
+      this.setState({
+        params: {
+          ...params,
+          user: authInfo._id,
+          confirmed: "",
+          status: "",
+          active: -1
+        },
+      });
       var params = {
         ...filter,
         ...filters,
@@ -175,7 +230,8 @@ class Orders extends Component {
 
   renderScene = ({route}) => {
     var authInfo = this.props.authInfo;
-    if(authInfo){
+    const params = this.state;
+    if (authInfo) {
       var authInfoID = authInfo._id;
     }
     switch (route.key) {
@@ -183,44 +239,42 @@ class Orders extends Component {
         return (
           <FirstRoute
             orderList={this.props.orderList}
-            authInfoID = {authInfoID}
+            authInfoID={authInfoID}
+            params={params}
           />
         );
       case 'second':
         return (
           <SecondRoute
             orderList={this.props.orderList}
-            authInfoID = {authInfoID}
+            authInfoID={authInfoID}
+            params={params}
           />
         );
       case 'third':
         return (
           <ThirdRoute
             orderList={this.props.orderList}
-            authInfoID = {authInfoID}
+            authInfoID={authInfoID}
+            params={params}
           />
         );
       case 'four':
         return (
           <FourRoute
             orderList={this.props.orderList}
-            authInfoID = {authInfoID}
+            authInfoID={authInfoID}
             keyword={this.state.keyword}
+            params={params}
           />
         );
       case 'five':
         return (
-          <FiveRoute
-            orderList={this.props.orderList}
-            authInfoID = {authInfoID}
-          />
+          <FiveRoute orderList={this.props.orderList} authInfoID={authInfoID} params={params}/>
         );
       case 'six':
         return (
-          <SixRoute
-            orderList={this.props.orderList}
-            authInfoID = {authInfoID}
-          />
+          <SixRoute orderList={this.props.orderList} authInfoID={authInfoID} params={params}/>
         );
       default:
         return null;

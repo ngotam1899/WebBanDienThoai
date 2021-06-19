@@ -25,11 +25,6 @@ export default function(state = init, action) {
         processing: false,
       };
     case UsersActionTypes.UPDATE_SUCCESS:
-      ToastAndroid.showWithGravity(
-        "Cập nhật thông tin thành công",
-        ToastAndroid.SHORT,
-        ToastAndroid.TOP
-      );
       return {
         ...state,
         processing: false,

@@ -16,7 +16,7 @@ import ProductsActions from '../../redux/actions/products';
 
 class ProductItem extends Component {
   render() {
-    const {product, navigation} = this.props;
+    const {product, navigation } = this.props;
     return (
       <TouchableOpacity
         style={[styles.itemContainer, (flex = 0.33)]}
@@ -187,14 +187,13 @@ class ProductPage extends Component {
             {totalBrand ? (
               totalBrand.map((brand, index) => {
                 return (
-                  <View style={{flexDirection: 'row'}}>
+                  <View key={brand._id._id} style={{flexDirection: 'row'}}>
                     <TouchableOpacity
                       style={
                         brandName && brandName === brand._id.name
                           ? styles.btnBrandActive
                           : styles.btnBrand
                       }
-                      key={brand._id._id}
                       onPress={() => this.onSetBrand(brand._id.name)}>
                       <Text>{brand._id.name}</Text>
                     </TouchableOpacity>

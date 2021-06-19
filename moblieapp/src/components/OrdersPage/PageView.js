@@ -55,6 +55,22 @@ class OrderItem extends Component {
   sendData = val => {
     this.props.onShowModal(val);
   };
+  onDeleteOrder = (id) => {
+    const {onUpdateOrder} = this.props;
+    onUpdateOrder(id, {active: false});
+  }
+
+  setStatus = (confirmed, status, active) => {
+    if(active===false) return "Đã hủy"
+    else{
+      if(confirmed===false) return "Chờ xác nhận"
+      else{
+        if(status===-1) return "Chờ giao hàng";
+        else if(status===0) return "Đang giao";
+        else return "Đã giao";
+      }
+    }
+  }
   render() {
     const item = this.props;
     return (
@@ -90,6 +106,14 @@ class OrderItem extends Component {
               onPress={() => this.sendData(item.item._id)}>
               <Text style={styles.textBtnDetail}>Chi tiết</Text>
             </TouchableOpacity>
+            {this.setStatus(item.item.confirmed, item.item.status, item.item.active) ===
+              'Chờ xác nhận' && (
+              <TouchableOpacity
+                style={[styles.btnDetail, {backgroundColor:'red', marginLeft: 10}]}
+                onPress={()=> this.onDeleteOrder(item.item._id)}>
+                <Text style={styles.textBtnDetail}>Hủy đơn</Text>
+              </TouchableOpacity>
+            )}
           </View>
           <View>
             <Text style={styles.textTotal}>
@@ -117,16 +141,19 @@ class PageView extends Component {
     const {onGetDetail} = this.props;
     onGetDetail(val);
   };
+
   onCloseModal = () => {
     this.setState({
       showModal: false,
     });
   };
+
   textInputChange = val => {
     this.setState({
       keyword: val,
     });
   };
+
   searchKeyWord = () => {
     const {onGetList, authInfoID} = this.props;
     const {filter} = {
@@ -144,9 +171,12 @@ class PageView extends Component {
       onGetList(params);
     }
   };
-
+  onReset(){
+    const {params} = this.props;
+    onGetList(params);
+  }
   render() {
-    const {orderList, orderItem, onAddProductToCart} = this.props;
+    const {orderList, orderItem, onAddProductToCart, onUpdateOrder, params} = this.props;
 
     return (
       <View style={styles.container}>
@@ -164,8 +194,8 @@ class PageView extends Component {
                       </TouchableOpacity>
                     </View>
                     <OrderDetailView
-                      orderItem={orderItem ? orderItem: null}
-                      onCloseModal={this.onCloseModal}></OrderDetailView>
+                      orderItem={orderItem ? orderItem : null}
+                      onCloseModal={this.onCloseModal} params={params}></OrderDetailView>
                   </View>
                 </View>
               </View>
@@ -185,7 +215,7 @@ class PageView extends Component {
               </TouchableOpacity>
             </View>
             <FlatList
-              data={orderList?orderList:null}
+              data={orderList ? orderList : null}
               pagingEnabled={true}
               showsHorizontalScrollIndicator={true}
               scrollEventThrottle={10}
@@ -196,6 +226,7 @@ class PageView extends Component {
                     item={item}
                     index={index}
                     key={index}
+                    onUpdateOrder={onUpdateOrder}
                     onAddProductToCart={onAddProductToCart}
                     onShowModal={this.onShowModal}></OrderItem>
                 );
@@ -225,7 +256,7 @@ const mapDispatchToProps = dispatch => {
     onGetDetail: id => {
       dispatch(OrdersActions.onGetDetail(id));
     },
-    onUpdate: (id, params) => {
+    onUpdateOrder: (id, params) => {
       dispatch(OrdersActions.onUpdate(id, params));
     },
     onPurchaseAgain: order_list => {

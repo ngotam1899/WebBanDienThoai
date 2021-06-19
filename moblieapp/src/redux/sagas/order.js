@@ -3,8 +3,10 @@ import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
 import ProductsActions from "../actions/products";
 import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, updateOrder, getAllOrder } from "../apis/order";
-import io from 'socket.io-client';
+import {API_ENDPOINT_AUTH} from '../../constants/index'
+import io from "socket.io-client";
 import {AsyncStorage} from 'react-native';
+const socket = io(API_ENDPOINT_AUTH);
 
 function* handleGetList({payload}) {
   try {
@@ -45,7 +47,7 @@ function* handleReConfirm({ payload }) {
  *
  * create
  */
-function* handleCreate({ payload }) {
+ function* handleCreate({ payload }) {
   try {
     const result = yield call(addOrder, payload);
     const data = get(result, "data", {});
@@ -54,10 +56,17 @@ function* handleCreate({ payload }) {
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
     AsyncStorage.removeItem("cart");
-    /*  */
-    const socket = io('http://localhost:3000');
-    socket.emit('order', { email, order: data.order._id });
-    /*  */
+    /* Notification */
+    if(payload.payment_method ==="paypal"){
+      socket.emit('order', { email: data.order.email, order: data.order._id });
+      yield put(NotificationActions.onCreate({
+        name : "Đơn hàng mới được xác nhận",
+        image : data.order.order_list[0].image,
+        type: 0,
+        content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
+      }))
+    }
+    /* Notification */
     yield put(ProductsActions.onClearCart())
   } catch (error) {
     yield put(OrdersActions.onCreateError(error));
@@ -70,6 +79,15 @@ function* handleConfirmOrder({ payload}) {
     const data = get(result, "data", {});  
     if (data.code !== 200) throw data;
     yield put(OrdersActions.onConfirmOrderSuccess(data));
+    /* Notification */
+    socket.emit('order', { email: data.order.email, order: data.order._id });
+    yield put(NotificationActions.onCreate({
+      name : "Đơn hàng mới được xác nhận",
+      image : data.order.user.image,
+      type: 0,
+      content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
+    }))
+    /* Notification */
   } catch (error) {
     yield put(OrdersActions.onConfirmOrderError(error));
   }
