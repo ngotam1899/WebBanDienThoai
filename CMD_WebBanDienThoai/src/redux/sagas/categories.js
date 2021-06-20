@@ -30,7 +30,17 @@ function* handleGetDetail({ filters, id }) {
  */
 function* handleCreate({ payload }) {
   try {
-    const result = yield call(addCategory, payload.params);
+    var result;
+    if(typeof payload.params.image !== "string"){
+      const image = yield call(addImage, payload.params.image);
+      result = yield call(addCategory,
+      { ...payload.params,
+        "image": image.data.images[0]._id
+      });
+    }
+    else {
+      result = yield call(addCategory, payload.params);
+    }
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(CategoryActions.onCreateSuccess(data.category));

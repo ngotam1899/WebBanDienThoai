@@ -8,7 +8,6 @@ import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
-import tryConvert from '../../utils/changeMoney'
 import { withTranslation } from 'react-i18next'
 import ReactTooltip from 'react-tooltip';
 import Widget from 'rasa-webchat';
@@ -18,10 +17,12 @@ import CategoryActions from "../../redux/actions/categories";
 import ProductsActions from '../../redux/actions/products'
 import NotificationActions from '../../redux/actions/notification'
 import io from 'socket.io-client';
-import { toastInfo } from '../../utils/toastHelper';
+
 // @Functions
 import numberWithCommas from '../../utils/formatPrice'
 import getFilterParams from "../../utils/getFilterParams";
+import tryConvert from '../../utils/changeMoney'
+import { toastInfo } from '../../utils/toastHelper';
 import {INITIAL_IMAGE} from '../../constants';
 const ENDPOINT = 'http://localhost:3000';
 let socket = io(ENDPOINT);

@@ -6,7 +6,6 @@ import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest
 import GroupActions from "../actions/group";
 
 function* handleGetList({ payload }) {
-  //yield put(UIActions.showLoading());
   try {
     const result = yield call(getAllProducts, payload);
     const data = get(result, "data");
@@ -15,7 +14,6 @@ function* handleGetList({ payload }) {
   } catch (error) {
     yield put(ProductsActions.onGetListError(error));
   }
-  //yield put(UIActions.hideLoading());
 }
 
 function* handleGetBestSeller({ payload }) {
@@ -101,6 +99,7 @@ function* handleGetDetail({ id }) {
     const result = yield call(getDetailProduct, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
+    yield delay(2000)
     yield put(ProductsActions.onGetDetailSuccess(data.product));
     if(data.product.group) yield put(GroupActions.onGetDetail(data.product.group._id))
   } catch (error) {

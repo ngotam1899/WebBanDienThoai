@@ -29,7 +29,7 @@ const getAllBrand = async (req, res, next) => {
 						if (req.query[`${item.query}`] != undefined && req.query[`${item.query}`] != '') {
 							if (Validator.isValidObjId(req.query[`${item.query}`])) {
 								var value = req.query[`${item.query}`]
-								specCondition.push({specifications: { $elemMatch: { value }}})
+								specCondition.push({specifications: { $elemMatch: { selection : ObjectId(value) }}})
 								condition['$and']= specCondition;
 							}
 						}

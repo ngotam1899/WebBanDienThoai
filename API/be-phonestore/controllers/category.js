@@ -53,9 +53,11 @@ const getAllCategory = async(req, res, next) => {
 }
 const addCategory = async(req, res, next) => {
   try {
-    const { name, image, specifications, filter, price, accessories, description } = req.body
+    const { name, name_en, pathseo, image, specifications, filter, price, accessories, description } = req.body
     const category = new Category();
     if (name) category.name = name;
+    if (name_en) category.name_en = name_en;
+    if (pathseo) category.pathseo = pathseo;
     if (image) category.image = image;
     if(specifications){
       var specArray=[];
@@ -89,10 +91,12 @@ const addCategory = async(req, res, next) => {
 const updateCategory = async(req, res, next) => {
   try {
     const { IDCategory } = req.params
-    const { name, image, specifications, filter, price, accessories, description } = req.body
+    const { name, name_en, pathseo, image, specifications, filter, price, accessories, description } = req.body
     const category = await Category.findById(IDCategory);
     if(name) category.name = name;
     if (image) category.image = image;
+    if (name_en) category.name_en = name_en;
+    if (pathseo) category.pathseo = pathseo;
     if(specifications){
       var specArray=[];
       for (let item of specifications) {

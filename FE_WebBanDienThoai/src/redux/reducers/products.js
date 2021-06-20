@@ -30,6 +30,7 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_RELATE_ERROR:
       return {
         ...state,
+        list: null
       };
     case ProductsActionTypes.GET_BEST_SELLER_SUCCESS:
       return {

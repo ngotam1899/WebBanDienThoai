@@ -453,6 +453,10 @@ const clusterData = async (req, res, next) => {
 	return res.status(200).json({ success: true, code: 200, products });
 }
 
+const accessoryProduct = async (req, res, next) => {
+	
+}
+
 module.exports = {
 	getAllProduct,
 	getProductDetail,

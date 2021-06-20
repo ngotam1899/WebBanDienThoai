@@ -6,14 +6,13 @@ import { connect } from "react-redux";
 
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth'
-
 // @Components
 import { GoogleLogin } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import ForgotPassword from './ForgotPass';
-
+import { toastError } from '../../utils/toastHelper';
 // @Constance
 import { GOOGLE_ID, FACEBOOK_ID } from '../../constants'
 
@@ -27,11 +26,17 @@ class LoginPage extends Component {
 	}
 
 	onLogin = () =>{
-		const { email, password} = this.state;
-		const {onLogin} = this.props;
-		const data = {email, password};
-		if(data){
+		const { email, password } = this.state;
+		const { onLogin } = this.props;
+		const data = {
+			email, 
+			password
+		};
+		if(email && password){
 			onLogin(data);
+		}
+		else{
+			toastError("Vui lòng nhập email và password")
 		}
 	}
 	onSubmit = (event) =>{
@@ -125,7 +130,7 @@ class LoginPage extends Component {
 								<div className="col-12">
 									<button type="button" className="btn" onClick={()=> this.onLogin()}>Login</button>
 								</div>
-								<div className="col-12 ">
+								<div className="col-12">
 									<form action="/user/dang-ky">
 										<button type="submit" className="btn" value="Register">Register</button>
 									</form>
@@ -142,7 +147,7 @@ class LoginPage extends Component {
 									)}
 									/>
 								</div>
-								<form onSubmit={this.onSubmit} className="col-12">
+								<form onSubmit={this.onSubmit} className="col-12 w-100">
 									<div className="row">
 										<div className="col-12">
 											<FacebookLogin

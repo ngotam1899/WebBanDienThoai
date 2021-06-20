@@ -73,7 +73,7 @@ class HomePage extends Component {
                 <p>{t('cart.free-ship')}</p>
               </div>
             </div>
-            {listAd && <div className="col-12 col-md-6">
+            {listAd && <div className="col-12 col-md-6 align-self-center">
               <Carousel
                 activeIndex={activeIndex}
                 next={this.next}

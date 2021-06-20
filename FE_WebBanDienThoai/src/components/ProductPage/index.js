@@ -16,6 +16,7 @@ import ProductsSelectors from "../../redux/selectors/products";
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
+import Loader from '../../containers/ProductItem/ItemLoader';
 
 class ProductPage extends Component {
   constructor(props) {
@@ -259,11 +260,11 @@ class ProductPage extends Component {
             </div>
           </div>
           <div className="row">
-            {listProducts.map((product, index) => {
+            {listProducts ? listProducts.map((product, index) => {
               return (
-                  <ProductItem product={product} key={index} />
+                  <ProductItem product={product} key={index}/>
                 )
-            })}
+            }) : <Loader/>}
           </div>
         </div>
       </div>
@@ -290,9 +291,9 @@ class ProductPage extends Component {
       {category && <>
       <div className={ more ? "row" : "row description"}>
         {category.description ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : ""}
-        <div className="view-more" onClick={() => this.setState({ more: true })}>
+        {!more && <div className="view-more" onClick={() => this.setState({ more: true })}>
           <p>Đọc thêm giới thiệu<span><i className="fa fa-angle-down ml-2"></i></span></p>
-        </div>
+        </div>}
       </div>
       <div className="row">
         <div className="col-12">

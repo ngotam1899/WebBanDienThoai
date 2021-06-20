@@ -87,7 +87,7 @@ class AccessoryPage extends Component {
                         <img src={item.image.public_url} alt=""></img>
                         </button>
                       </div>
-                      <p className="text-center font-weight-bold">{item.name}</p>
+                      <p className="text-center font-weight-bold x-small">{item.name}</p>
                     </div>
                     )
                   })}
@@ -115,7 +115,7 @@ class AccessoryPage extends Component {
             )
           })}
           </div>
-          { !more && <div className="view-more" onClick={() => this.setState({ more: true })}>
+          {!more && <div className="view-more" onClick={() => this.setState({ more: true })}>
             <p>Đọc thêm giới thiệu<span><i className="fa fa-angle-down ml-2"></i></span></p>
           </div>}
         </div>

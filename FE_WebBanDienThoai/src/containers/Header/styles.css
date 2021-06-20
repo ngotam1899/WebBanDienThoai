@@ -1,3 +1,6 @@
+span {
+    font-family: inherit !important;
+}
 .header-area {
     background: none repeat scroll 0 0 #f4f4f4;
 }

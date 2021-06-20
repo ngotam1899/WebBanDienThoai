@@ -36,6 +36,9 @@ h3 {
 .smaller{
     font-size: smaller;
 }
+.x-small{
+    font-size: x-small;
+}
 .create-account {
     background: none repeat scroll 0 0 #f4f4f4;
     margin-bottom: 50px;

@@ -22,6 +22,7 @@ import numberWithCommas from "../../utils/formatPrice";
 import { toastError } from '../../utils/toastHelper';
 import {INITIAL_IMAGE} from '../../constants';
 import getFilterParams from "../../utils/getFilterParams";
+import ImageLoader from './ImageLoader';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -210,7 +211,9 @@ class DetailPage extends Component {
   }
 
   render() {
-    const {product, currency, t, review, group, total, count, location, relate, like, authInfo } = this.props;
+    const {
+      product, currency, t, review, group, total, count, location, relate, like, authInfo,
+    } = this.props;
     const {quantity, imageColor, check, _check } = this.state;
     const filter = getFilterParams(location.search);
     
@@ -224,7 +227,7 @@ class DetailPage extends Component {
       </div>
       
       <div className="">
-        {product && <div className="container">
+        {product ? <div className="container">
           <div className="row">
             <div className="col-md-12">
               <div className="">
@@ -494,6 +497,26 @@ class DetailPage extends Component {
               </section>
             </div>
           </div>
+        </div>
+        : <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="">
+              {/* <div className="my-2">
+                <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
+                <i className="fa fa-chevron-right px-2 w-25-px "></i>
+                <a className="text-decoration-none" href={`/#/products/${product.category.pathseo}/${product.category._id}`}>{product.category.name}</a>
+                <i className="fa fa-chevron-right px-2 w-25-px "></i>
+                <a className="text-decoration-none" href={`/#/product/${product.pathseo}/${product._id}`}>{product.name}</a>
+              </div> */}
+              <div className="row">
+                <div className="col-sm-5">
+                  <ImageLoader/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         </div>
       }</div>
     </>
