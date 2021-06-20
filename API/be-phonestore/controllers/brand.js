@@ -71,6 +71,31 @@ const getAllBrand = async (req, res, next) => {
 		return next(error);
 	}
 };
+
+const accessoryBrand = async (req, res, next) => {
+	var accessories = await Category.find({ accessories: true }, { _id: 1 });
+	for(let i=0; i<accessories.length; i++){
+		accessories[i] = ObjectId(accessories[i]._id)
+	}
+	const pipeline = [
+		{
+			'$match': {'active': true, 'category' : { '$in': accessories }}
+		},
+		{	'$group': 	
+			{
+				'_id': '$brand',
+				'count': { '$sum': 1 }
+			}
+		},
+		{
+			'$sort': { 'count': -1, '_id': -1 }
+		}
+	];
+	const brands = await Product.aggregate(pipeline);
+	await Brand.populate(brands, {path: "_id", select: ['name', 'image'], populate: {path: 'image', select: 'public_url'}});
+	return res.status(200).json({ success: true, code: 200, message: '', brands });
+}
+
 const addBrand = async (req, res, next) => {
 	const {name} = req.body;
   const newBrand = new Brand();
@@ -122,5 +147,6 @@ module.exports = {
 	addBrand,
 	updateBrand,
 	deleteBrand,
-	getDetailBrand
+	getDetailBrand,
+	accessoryBrand
 };

@@ -158,6 +158,7 @@ class ProductPage extends Component {
     const {min_p, max_p, more} = this.state;
     const { listProducts, totalBrand, t, location, total, category } = this.props;
     const filter = getFilterParams(location.search);
+    console.log(filter)
     return (
     <div className="container mb-3">
       <div className="row">
@@ -184,7 +185,7 @@ class ProductPage extends Component {
                       return (
                       <li className="form-check" key={price._id}>
                         <input type="radio" id={price._id} name="price"
-                        checked={(filter.max_p === price.max && filter.min_p === price.min) && "checked"} 
+                        checked={(filter.max_p === (price.max === null ? null : price.max.toString()) && (filter.min_p === (price.min == null ? null : price.min.toString()))) && "checked"} 
                         className="form-check-input"  onChange={(e) => this.distancePrice(price.min, price.max, e)}/>
                         <label htmlFor={price._id} className="form-check-label">{price.name}</label>
                       </li>

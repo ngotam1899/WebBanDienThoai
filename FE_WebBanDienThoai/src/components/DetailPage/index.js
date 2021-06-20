@@ -15,6 +15,9 @@ import Rating from 'react-rating'
 import ImageGalleries from './ImageGalleries';
 import Pagination from "react-js-pagination";
 import ProductItem from "../../containers/ProductItem"
+import ImageLoader from './ImageLoader';
+import ProductInfoLoader from './ProductInfoLoader';
+import Loader from '../../containers/ProductItem/ItemLoader';
 import './styles.css';
 // @Functions
 import tryConvert from '../../utils/changeMoney'
@@ -22,7 +25,6 @@ import numberWithCommas from "../../utils/formatPrice";
 import { toastError } from '../../utils/toastHelper';
 import {INITIAL_IMAGE} from '../../constants';
 import getFilterParams from "../../utils/getFilterParams";
-import ImageLoader from './ImageLoader';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -318,29 +320,30 @@ class DetailPage extends Component {
                   <div className="tab-content" id="myTabContent">
                     <div className="tab-pane fade show active" id="recent" role="tab" aria-labelledby="recent-tab">
                       <div className="row">
-                        {authInfo && authInfo.history.map((product, index) => {
+                        {authInfo ? authInfo.history.map((product, index) => {
                           return (
                               <ProductItem product={product} key={index} />
                             )
-                        })}
+                        })
+                      : <Loader/>}
                       </div>
                     </div>
                     <div className="tab-pane fade" id="like" role="tab" aria-labelledby="like-tab">
                       <div className="row">
-                        {like && like.map((product, index) => {
+                        {like ? like.map((product, index) => {
                           return (
                               <ProductItem product={product} key={index} />
                             )
-                        })}
+                        }) : <Loader/>}
                       </div>
                     </div>
                     <div className="tab-pane fade" id="relate" role="tab" aria-labelledby="relate-tab">
                       <div className="row">
-                        {relate && relate.map((product, index) => {
+                        {relate ? relate.map((product, index) => {
                           return (
                               <ProductItem product={product} key={index}/>
                             )
-                        })}
+                        }) : <Loader/>}
                       </div>
                     </div>
                   </div>
@@ -502,21 +505,59 @@ class DetailPage extends Component {
         <div className="row">
           <div className="col-md-12">
             <div className="">
-              {/* <div className="my-2">
+              <div className="my-2">
                 <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
                 <i className="fa fa-chevron-right px-2 w-25-px "></i>
-                <a className="text-decoration-none" href={`/#/products/${product.category.pathseo}/${product.category._id}`}>{product.category.name}</a>
-                <i className="fa fa-chevron-right px-2 w-25-px "></i>
-                <a className="text-decoration-none" href={`/#/product/${product.pathseo}/${product._id}`}>{product.name}</a>
-              </div> */}
+              </div>
               <div className="row">
                 <div className="col-sm-5">
                   <ImageLoader/>
+                </div>
+                <div className="col-sm-7">
+                  <ProductInfoLoader/>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div className="row">
+            <div className="col-12">
+            <section className="product_description_area pb-0">
+                <div className="container">
+                  <ul className="nav nav-tabs" id="myTab" role="tablist">
+                    <li className="nav-item">
+                      <a className="nav-link active" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent">Recent viewed</a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
+                      aria-selected="false">You may also like</a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link " id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
+                      aria-selected="false">Related products</a>
+                    </li>
+                  </ul>
+                  <div className="tab-content" id="myTabContent">
+                    <div className="tab-pane fade show active" id="recent" role="tab" aria-labelledby="recent-tab">
+                      <div className="row">
+                        <Loader/>
+                      </div>
+                    </div>
+                    <div className="tab-pane fade" id="like" role="tab" aria-labelledby="like-tab">
+                      <div className="row">
+                        <Loader/>
+                      </div>
+                    </div>
+                    <div className="tab-pane fade" id="relate" role="tab" aria-labelledby="relate-tab">
+                      <div className="row">
+                        <Loader/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
         </div>
       }</div>
     </>

@@ -90,7 +90,7 @@ const getAllProduct = async (req, res, next) => {
 			.sort(sort)
 			.limit(limit)
 			.skip(limit * page);
-		let count = await Product.countDocuments(condition);
+		const count = await Product.countDocuments(condition);
 		return res
 			.status(200)
 			.json({
@@ -454,7 +454,50 @@ const clusterData = async (req, res, next) => {
 }
 
 const accessoryProduct = async (req, res, next) => {
-	
+	const accessories = await Category.find({ accessories: true }, { _id: 1 });
+	let condition = {
+		active: true,
+		category : { $in: accessories }
+	};
+	if (req.query.brand != undefined && req.query.brand != '') {
+		if (Validator.isValidObjId(req.query.brand)) {
+			condition.brand = req.query.brand;
+		}
+	}
+	let limit = 5;
+	let page = 0;
+	if (req.query.limit != undefined && req.query.limit != '') {
+		const number_limit = parseInt(req.query.limit);
+		if (number_limit && number_limit > 0) {
+			limit = number_limit;
+		}
+	}
+	if (req.query.page != undefined && req.query.page != '') {
+		const number_page = parseInt(req.query.page);
+		if (number_page && number_page > 0) {
+			page = number_page;
+		}
+	}
+	let sort = {};
+	if (req.query.sort_n != undefined && req.query.sort_n != '0') {
+		sort['name'] = req.query.sort_n == '1' ? 1 : -1;
+	}
+
+	if (req.query.sort_p != undefined && req.query.sort_p != '0') {
+		sort['price_min'] = req.query.sort_p == '1' ? 1 : -1;
+	}
+	const count = await Product.countDocuments(condition);
+	const products = await Product.find(condition, 
+		{ name: 1, pathseo: 1, bigimage: 1, brand: 1, price_max: 1, price_min: 1, active: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1, })
+		.populate({ path: 'bigimage', select: 'public_url' })
+		.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
+		.sort(sort)
+		.limit(limit)
+		.skip(limit * page);
+	return res.status(200).json({ success: true, code: 200, page,
+		limit,
+		total: count,
+		products });
 }
 
 module.exports = {
@@ -468,5 +511,6 @@ module.exports = {
 	bestSellerProduct,
 	favoriteProduct,
 	newestProduct,
-	clusterData
+	clusterData,
+	accessoryProduct
 };

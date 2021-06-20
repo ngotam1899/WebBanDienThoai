@@ -16,6 +16,8 @@ require('../middlewares/passport');
 router.route('/brands')
 	.get(brandController.getAllBrand)
 	.post(passport.authenticate('jwt', { session: false }), brandController.addBrand);
+router.route('/brands/accessory')
+	.get(brandController.accessoryBrand)
 router.route('/brands/:IDBrand')
 	.get(passport.authenticate('jwt', { session: false }), brandController.getDetailBrand)
 	.put(passport.authenticate('jwt', { session: false }), brandController.updateBrand)
@@ -76,6 +78,9 @@ router.route('/newest')
 
 router.route('/cluster')
 	.get(productController.clusterData)
+
+router.route('/accessory')
+	.get(productController.accessoryProduct)
 
 router.route('/')
 	.get(productController.getAllProduct)
