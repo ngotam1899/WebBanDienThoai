@@ -119,9 +119,34 @@ const updateReview = async(req, res, next) => {
   }
 }
 
+const deleteReview = async(req, res, next) => {
+  try {
+    const { IDReview } = req.params;
+    const review = await Review.findById(IDReview)
+    const result = await Review.findByIdAndDelete(IDReview);
+    // Cập nhật lại số sao cho product
+    const reviews = await Review.find({ product: review.product });
+    var ratingTotal = 0;
+    reviews.map(item =>{
+      ratingTotal += item.rating;
+    })
+    const productFound = await Product.findById(review.product);
+    productFound.stars = (ratingTotal/ reviews.length).toFixed(2);
+    productFound.reviewCount = reviews.length
+    await productFound.save()
+    if (!result) {
+      return res.status(200).json({ success: 'false', code: 400, message: 'id review is not correctly' })
+    }
+    return res.status(200).json({ success: 'true', code: 200, review: result })
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getAllProductReView,
   getAProductReView,
   addReview,
-  updateReview
+  updateReview,
+  deleteReview
 }

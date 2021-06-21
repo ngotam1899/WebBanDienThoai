@@ -12,6 +12,7 @@ const routerReview = require('./routes/review');
 const routerProduct = require('./routes/product');
 const routerOrder = require('./routes/order');
 const routerImage = require('./routes/image');
+const routerInstallment = require('./routes/installment');
 const routerPaypal = require('./routes/paypal');
 
 // 1.2. Import Packages
@@ -48,17 +49,17 @@ app.use(
 // 4. Define Database
 
 // @For tester
-mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
+/* mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongodb?retryWrites=true&w=majority', {
 	useCreateIndex: true,
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false
 })
 .then(() => console.log('Connected to MongoDB!'))
-.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`)) 
+.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))  */
 
 //@For dev
-/* mongoose
+mongoose
 .connect(process.env.MONGODB_URI || 'mongodb://localhost/LearnAPI', {
 	useCreateIndex: true,
 	useNewUrlParser: true,
@@ -66,7 +67,7 @@ mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongo
 	useFindAndModify: false
 })
 .then(() => console.log('Connected to MongoDB!'))
-.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`)); */
+.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`));
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_NAME,
@@ -99,6 +100,7 @@ app.use('/reviews', routerReview);
 app.use('/products', routerProduct);
 app.use('/orders', routerOrder);
 app.use('/image', routerImage);
+app.use('/installment', routerInstallment);
 app.use('/paypal', routerPaypal)
 
 // 7. SocketIO Realtime

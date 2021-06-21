@@ -358,8 +358,9 @@ class Header extends Component {
                         return (
                           <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}.${category._id}`} activeOnlyWhenExact={true} />
                         )
-                      })
-                      }<MenuLink label="Phụ kiện" to={"/products/accessories"} activeOnlyWhenExact={true} />
+                      })}
+                      <MenuLink label="Phụ kiện" to={"/products/accessories"} activeOnlyWhenExact={true} />
+                      <MenuLink label="Khuyến mãi" to={"/promotion"} activeOnlyWhenExact={true} />
                     </>}
                     {location.hash.indexOf("account") !== -1 &&<>
                     <MenuLink label="Tài khoản của tôi" to={"/account/detail"} activeOnlyWhenExact={true} />

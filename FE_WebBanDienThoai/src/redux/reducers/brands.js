@@ -9,11 +9,13 @@ const init = {
 export default function(state = init, action) {
   switch (action.type) {
     case BrandActionTypes.GET_LIST:
+    case BrandActionTypes.GET_ACCESSORY:
       return {
         ...state,
         loading: true,
       };
     case BrandActionTypes.GET_LIST_ERROR:
+    case BrandActionTypes.GET_ACCESSORY_ERROR:
       return {
         ...state,
          loading: false,
@@ -23,8 +25,14 @@ export default function(state = init, action) {
       return {
         ...state,
         loading: false,
+        total: action.payload.count,
         list: action.payload.brands,
-        total: action.payload.count
+      };
+    case BrandActionTypes.GET_ACCESSORY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        list: action.payload.brands,
       };
     default:
       return state;

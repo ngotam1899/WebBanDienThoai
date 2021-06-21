@@ -10,13 +10,14 @@ import getFilterParams from "../../utils/getFilterParams";
 import {LOCAL} from '../../constants/index';
 // @Components
 import ProductItem from "../../containers/ProductItem"
+import Loader from '../../containers/ProductItem/ItemLoader';
 import Pagination from "react-js-pagination";
 // @Actions
 import ProductsSelectors from "../../redux/selectors/products";
 import ProductsActions from "../../redux/actions/products";
 import BrandActions from "../../redux/actions/brands";
 import CategoryActions from "../../redux/actions/categories";
-import Loader from '../../containers/ProductItem/ItemLoader';
+
 
 class ProductPage extends Component {
   constructor(props) {
@@ -154,11 +155,14 @@ class ProductPage extends Component {
     this.handleUpdateFilter({ page: pageNumber-1 });
   }
 
+  componentWillUnmount(){
+
+  }
+
   render() {
     const {min_p, max_p, more} = this.state;
     const { listProducts, totalBrand, t, location, total, category } = this.props;
     const filter = getFilterParams(location.search);
-    console.log(filter)
     return (
     <div className="container mb-3">
       <div className="row">
@@ -242,7 +246,7 @@ class ProductPage extends Component {
               <button type="button" 
               className={filter.brand === brand._id._id ? "rounded-pill shadow-sm bg-aqua text-dark mr-2 my-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark mr-2 my-2 position-relative btn-padding"} 
               key={index} onClick={()=>this.onSetBrand(brand._id._id)}>
-                <img alt={brand._id.name} style={{height: "20px"}} src={brand._id.image.public_url}/>
+                <img alt={brand._id.name} style={{height: "20px"}} src={brand._id.image && brand._id.image.public_url}/>
                 <span className="product-count">{brand.count}</span>
               </button>
             )})}
@@ -275,7 +279,7 @@ class ProductPage extends Component {
           <nav className="float-end">
           <Pagination
             activePage={filter.page ? parseInt(filter.page)+1 : 1}
-            itemsCountPerPage={4}
+            itemsCountPerPage={12}
             totalItemsCount={total ? total : 10}
             pageRangeDisplayed={3}
             linkClass="page-link"
@@ -290,11 +294,15 @@ class ProductPage extends Component {
         </div>
       </div>
       {category && <>
-      <div className={ more ? "row" : "row description"}>
+      <div className={ more ? "row rounded shadow-sm" : "row description rounded shadow-sm"}>
+        <div className="px-3 py-2">
+          <h3 className="mb-1">Giới thiệu</h3>
+          <div className="mb-2 border-bottom"></div>
         {category.description ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : ""}
         {!more && <div className="view-more" onClick={() => this.setState({ more: true })}>
           <p>Đọc thêm giới thiệu<span><i className="fa fa-angle-down ml-2"></i></span></p>
         </div>}
+        </div>
       </div>
       <div className="row">
         <div className="col-12">

@@ -6,9 +6,8 @@ export default class ProductInfoLoader extends Component {
     return (
       <ContentLoader 
         speed={0}
-        width={480}
+        width="100%"
         height={360}
-        viewBox="0 0 480 360"
         backgroundColor="#f3f3f3"
         foregroundColor="#ecebeb"
       >
@@ -19,7 +18,7 @@ export default class ProductInfoLoader extends Component {
         <rect x="0" y="211" rx="10" ry="10" width="178" height="19" /> 
         <rect x="0" y="316" rx="20" ry="20" width="175" height="37" /> 
         <circle cx="49" cy="114" r="15" /> 
-        <circle cx="84" cy="115" r="15" /> 
+        <circle cx="84" cy="114" r="15" /> 
         <circle cx="119" cy="114" r="15" /> 
         <circle cx="156" cy="114" r="15" /> 
         <rect x="183" y="105" rx="11" ry="11" width="90" height="22" /> 

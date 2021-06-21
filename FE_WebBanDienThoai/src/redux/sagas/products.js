@@ -2,7 +2,10 @@ import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import UIActions from "../actions/ui";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest, getLikeProducts, getRelateProducts } from "../apis/products";
+import { 
+  getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest, getLikeProducts, getRelateProducts,
+  getAllAccessory
+} from "../apis/products";
 import GroupActions from "../actions/group";
 
 function* handleGetList({ payload }) {
@@ -13,6 +16,17 @@ function* handleGetList({ payload }) {
     yield put(ProductsActions.onGetListSuccess(data.products, data.total));
   } catch (error) {
     yield put(ProductsActions.onGetListError(error));
+  }
+}
+
+function* handleGetAccessory({ payload }) {
+  try {
+    const result = yield call(getAllAccessory, payload);
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onGetAccessorySuccess(data.products, data.total));
+  } catch (error) {
+    yield put(ProductsActions.onGetAccessoryError(error));
   }
 }
 
@@ -114,6 +128,9 @@ function* handleGetDetail({ id }) {
 export function* watchGetList() {
   yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
 }
+export function* watchGetAccessory() {
+  yield takeEvery(ProductsActionTypes.GET_ACCESSORY, handleGetAccessory);
+}
 export function* watchGetBestSeller() {
   yield takeEvery(ProductsActionTypes.GET_BEST_SELLER, handleGetBestSeller);
 }
@@ -139,6 +156,7 @@ export function* watchFilter() {
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
+    fork(watchGetAccessory),
     fork(watchGetBestSeller),
     fork(watchGetFavorite),
     fork(watchGetNewest),

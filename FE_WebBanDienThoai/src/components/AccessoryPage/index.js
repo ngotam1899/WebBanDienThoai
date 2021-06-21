@@ -2,17 +2,33 @@ import React, { Component } from 'react'
 import { withTranslation } from 'react-i18next'
 import {connect} from 'react-redux';
 import {compose} from 'redux';
+import qs from "query-string";
 // @Actions
 import CategoryActions from "../../redux/actions/categories";
+import BrandActions from "../../redux/actions/brands";
+import ProductsActions from "../../redux/actions/products";
+// @Components
+import ProductItem from "../../containers/ProductItem"
+import Loader from '../../containers/ProductItem/ItemLoader';
+import Pagination from "react-js-pagination";
 // @Functions
 import {LOCAL} from '../../constants/index';
 import accessoryData from './accessory.json'
+import getFilterParams from "../../utils/getFilterParams";
 
 class AccessoryPage extends Component {
   constructor(props){
     super(props);
+    const {location} = props;
+    const filter = getFilterParams(location.search);
     this.state = {
-      more: false
+      more: false,
+      min_p: filter.min_p ===null ? "" : filter.min_p,
+      max_p: filter.max_p ===null ? "" : filter.max_p,
+      filter: {
+        limit: 12,
+        page: 0,
+      },
     }
   }
 
@@ -40,17 +56,35 @@ class AccessoryPage extends Component {
   }
 
   componentDidMount(){
-    const { onGetAccessory } = this.props;
+    const { onGetAccessory, onGetListBrand, onGetListProduct, location } = this.props;
+    const { filter } = this.state;
+    const filters = getFilterParams(location.search);
+    var params = {
+      ...filter,
+      ...filters
+    };
     onGetAccessory({
       accessories : 1
     })
+    onGetListBrand();
+    onGetListProduct(params)
   }
 
   componentDidUpdate(prevProps) {
+    const {location, onGetListProduct} = this.props
     try{
       /*global FB*/
       if (FB) {
         FB.XFBML.parse();
+      }
+      if (prevProps.location.search !== location.search) {
+        const filters = getFilterParams(location.search);
+        const { filter } = this.state;
+        var params = {
+          ...filter,
+          ...filters
+        };
+        onGetListProduct(params);
       }
     }
     catch(err){
@@ -62,9 +96,32 @@ class AccessoryPage extends Component {
     history.push(`/products/${category.pathseo}.${category._id}`)
   }
 
+  // Sort with brands
+  onSetBrand = (value) => {
+    this.handleUpdateFilter({ brand: value, page: 0 });
+  }
+
+  // phân trang
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
+  // Chuyển router (thêm vào params) 
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
+
   render() {
     const { more } = this.state;
-    const { t, listAccessory } = this.props;
+    const { t, listAccessory, totalBrand, listProducts, total, location } = this.props;
+    const filter = getFilterParams(location.search);
     return (
       <div className="container mb-3">
         <div className="row">
@@ -93,6 +150,50 @@ class AccessoryPage extends Component {
                   })}
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <button type="button" 
+            className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-aqua text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark my-2 mr-2 position-relative btn-padding"} 
+            onClick={()=>this.onSetBrand(null)}>Độc quyền</button>
+            {totalBrand && 
+            totalBrand.map((brand, index) =>{
+            return(
+              <button type="button" 
+              className={filter.brand === brand._id._id ? "rounded-pill shadow-sm bg-aqua text-dark mr-2 my-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark mr-2 my-2 position-relative btn-padding"} 
+              key={index} onClick={()=>this.onSetBrand(brand._id._id)}>
+                <img alt={brand._id.name} style={{height: "20px"}} src={brand._id.image && brand._id.image.public_url}/>
+                <span className="product-count">{brand.count}</span>
+              </button>
+            )})}
+          </div>
+        </div>
+        <div className="row">
+          {listProducts ? listProducts.map((product, index) => {
+            return (
+                <ProductItem product={product} key={index}/>
+              )
+          }) : <Loader/>}
+        </div>
+        <div className="row">
+          <div className="col-md-12">
+            <div className="product-pagination text-center">
+              <nav className="float-end">
+              <Pagination
+                activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                itemsCountPerPage={12}
+                totalItemsCount={total ? total : 10}
+                pageRangeDisplayed={3}
+                linkClass="page-link"
+                itemClass="page-item"
+                prevPageText={t('shop.pagination.prev')}
+                nextPageText={t('shop.pagination.next')}
+                hideFirstLastPages={true}
+                onChange={this.handlePageChange.bind(this)}
+              />
+              </nav>
             </div>
           </div>
         </div>
@@ -132,13 +233,22 @@ class AccessoryPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     listAccessory: state.categories.accessories,
+    totalBrand: state.brands.list,
+    listProducts: state.products.list,
+    total: state.products.total,
   }
 }
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
+    onGetListProduct: (params) => {
+      dispatch(ProductsActions.onGetAccessory(params))
+    },
     onGetAccessory: (payload) => {
       dispatch(CategoryActions.onGetAccessory(payload))
+    },
+    onGetListBrand: (params) => {
+      dispatch(BrandActions.onGetAccessory(params))
     },
   }
 }

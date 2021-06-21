@@ -263,35 +263,33 @@ class DetailPage extends Component {
                         </div>
                       
                       </div>
-                      {group && <div className="row row-cols-lg-auto g-3">
-                        {group.products.map((item, index)=>{
-                          return(
-                            <div key={index} >
-                              <button type="button" key={item._id} 
-                                className="card text-dark py-2 px-3 my-2"
-                                onClick={()=> this.onReload(`/product/${item.product.pathseo}/${item.product._id}`)}>
-                                <p className="mb-0 h6">{item.name} <span className="fa fa-check" style={{"display": _check===item.product._id ? "inline-block" : "none"}}></span></p>
-                                <p className="mb-0 h7">{item.product.price_min ? this.setPrice(currency, item.product.price_min, item.product.price_min) : 'NaN'} {currency}</p>
-                              </button>
-                            </div>
-                          )
-                        })}
+                      {group && <div className="row">
+                        <div className="col-12 form-inline">
+                          {group.products.map((item, index)=>{
+                            return(<button type="button" key={item._id} 
+                              className="card text-dark py-2 px-3 my-2 mr-3 w-auto"
+                              onClick={()=> this.onReload(`/product/${item.product.pathseo}/${item.product._id}`)}>
+                              <p className="mb-0 h6">{item.name} <span className="fa fa-check" style={{"display": _check===item.product._id ? "inline-block" : "none"}}></span></p>
+                              <p className="mb-0 h7">{item.product.price_min ? this.setPrice(currency, item.product.price_min, item.product.price_min) : 'NaN'} {currency}</p>
+                            </button>)
+                          })}
+                        </div>
+                        
                       </div>}
                       <p className="mb-0 font-weight-bold">Vui lòng chọn màu</p>
-                      <div className="row row-cols-lg-auto g-3">
-                        {product.colors.map((item, index)=>{
-                          return(
-                            <div className="" key={index}>
-                              <button type="button" key={item._id} 
-                                className={item.amount===0 ? "card text-dark py-2 px-3 my-2 bg-active" :"card text-dark py-2 px-3 my-2"} 
-                                onClick={() => this.setColor(item)} 
-                                disabled={item.amount===0 ? true : false}>
-                                <p className="mb-0 h6">{item.name_vn} <span className="fa fa-check" style={{"display": check===item._id ? "inline-block" : "none"}}></span></p>
-                                <p className="mb-0 h7">{this.setPrice(currency, item.price, item.price)} {currency}</p>
-                              </button>
-                            </div>
-                          )
-                        })}
+                      <div className="row">
+                        <div className="col-12 form-inline">
+                          {product.colors.map((item, index)=>{
+                            return(
+                            <button type="button" key={item._id} 
+                              className={item.amount===0 ? "card text-dark py-2 px-3 my-2 mr-3 bg-active" :"card text-dark py-2 px-3 my-2 mr-3"} 
+                              onClick={() => this.setColor(item)} 
+                              disabled={item.amount===0 ? true : false}>
+                              <p className="mb-0 h6">{item.name_vn} <span className="fa fa-check" style={{"display": check===item._id ? "inline-block" : "none"}}></span></p>
+                              <p className="mb-0 h7">{this.setPrice(currency, item.price, item.price)} {currency}</p>
+                            </button>)
+                          })}
+                        </div>
                       </div>
                       <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
                     </div>
@@ -306,19 +304,20 @@ class DetailPage extends Component {
                 <div className="container">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
-                      <a className="nav-link active" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent">Recent viewed</a>
+                      <a className="nav-link" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent"
+                      aria-selected="false">Recent viewed</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
                       aria-selected="false">You may also like</a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link " id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
-                      aria-selected="false">Related products</a>
+                      <a className="nav-link active" id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
+                      >Related products</a>
                     </li>
                   </ul>
                   <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane fade show active" id="recent" role="tab" aria-labelledby="recent-tab">
+                    <div className="tab-pane fade" id="recent" role="tab" aria-labelledby="recent-tab">
                       <div className="row">
                         {authInfo ? authInfo.history.map((product, index) => {
                           return (
@@ -337,7 +336,7 @@ class DetailPage extends Component {
                         }) : <Loader/>}
                       </div>
                     </div>
-                    <div className="tab-pane fade" id="relate" role="tab" aria-labelledby="relate-tab">
+                    <div className="tab-pane fade show active" id="relate" role="tab" aria-labelledby="relate-tab">
                       <div className="row">
                         {relate ? relate.map((product, index) => {
                           return (
@@ -526,19 +525,20 @@ class DetailPage extends Component {
                 <div className="container">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
-                      <a className="nav-link active" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent">Recent viewed</a>
+                      <a className="nav-link" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent"
+                      aria-selected="false">Recent viewed</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
                       aria-selected="false">You may also like</a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link " id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
-                      aria-selected="false">Related products</a>
+                      <a className="nav-link active" id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
+                      >Related products</a>
                     </li>
                   </ul>
                   <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane fade show active" id="recent" role="tab" aria-labelledby="recent-tab">
+                    <div className="tab-pane fade" id="recent" role="tab" aria-labelledby="recent-tab">
                       <div className="row">
                         <Loader/>
                       </div>
@@ -548,7 +548,7 @@ class DetailPage extends Component {
                         <Loader/>
                       </div>
                     </div>
-                    <div className="tab-pane fade" id="relate" role="tab" aria-labelledby="relate-tab">
+                    <div className="tab-pane fade show active" id="relate" role="tab" aria-labelledby="relate-tab">
                       <div className="row">
                         <Loader/>
                       </div>

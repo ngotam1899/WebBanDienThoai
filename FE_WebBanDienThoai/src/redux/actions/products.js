@@ -30,6 +30,10 @@ export const ProductsActionTypes = {
   GET_RELATE_SUCCESS: "GET_RELATE_SUCCESS",
   GET_RELATE_ERROR: "GET_RELATE_ERROR",
 
+  GET_ACCESSORY: "GET_ACCESSORY",
+  GET_ACCESSORY_SUCCESS: "GET_ACCESSORY_SUCCESS",
+  GET_ACCESSORY_ERROR: "GET_ACCESSORY_ERROR",
+
   CREATE: "CREATE",
   CREATE_SUCCESS: "CREATE_SUCCESS",
   CREATE_ERROR: "CREATE_ERROR",
@@ -185,6 +189,25 @@ const onGetRelateError = (error) => ({
 });
 
 /**
+ * accessory
+ **/
+
+const onGetAccessory = (payload) => ({
+  type: ProductsActionTypes.GET_ACCESSORY,
+  payload,
+});
+
+const onGetAccessorySuccess = (list, total) => ({
+  type: ProductsActionTypes.GET_ACCESSORY_SUCCESS,
+  payload: {list, total}
+});
+
+const onGetAccessoryError = (error) => ({
+  type: ProductsActionTypes.GET_ACCESSORY_ERROR,
+  payload: error,
+});
+
+/**
  *
  * @param String id
  */
@@ -332,6 +355,10 @@ const ProductsActions = {
   onGetLike,
   onGetLikeSuccess,
   onGetLikeError,
+
+  onGetAccessory,
+  onGetAccessorySuccess,
+  onGetAccessoryError,
 
   onGetRelate,
   onGetRelateSuccess,

@@ -11,6 +11,7 @@ import HomePage from '../components/HomePage';
 import NotFound from '../containers/NotFound';
 import NotificationPage from '../components/NotificationPage';
 import ProductPage from '../components/ProductPage';
+import PromotionPage from '../components/PromotionPage';
 import PurchasePage from '../components/PurchasePage';
 import SearchPage from '../components/SearchPage';
 import UserInfoPage from '../components/UserInfoPage';
@@ -31,20 +32,26 @@ const routes = [
 	{
 		path: '/products/:pathseo.:categoryID',
 		exact: true,
-		name: " Page",
+		name: "Product Page",
 		main: ({match, history, location}) => <ProductPage match={match} key={match.params.categoryID} history={history} location={location} />
 	},
 	{
 		path: '/products/accessories',
 		exact: true,
 		name: "Accessory Page",
-		main: ({history}) => <AccessoryPage history={history}/>
+		main: ({history, location}) => <AccessoryPage history={history} location={location}/>
 	},
 	{
 		path: '/carts',
 		exact: true,
 		name: "Cart Page",
 		main: ({history}) => <CartPage history={history} />
+	},
+	{
+		path: '/promotion',
+		exact: true,
+		name: "Promotion Page",
+		main: ({history}) => <PromotionPage history={history} />
 	},
 	{
 		path: '/carts/checkout',

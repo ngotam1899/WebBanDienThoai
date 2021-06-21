@@ -7,8 +7,8 @@ export default class ImageLoader extends Component {
       <ContentLoader 
         speed={0}
         width="100%"
-        height={550}
-        viewBox="0 0 480 550"
+        height="50vh"
+        viewBox="0 0 442 550"
         backgroundColor="#f3f3f3"
         foregroundColor="#ecebeb"
       >

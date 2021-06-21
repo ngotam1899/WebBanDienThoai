@@ -18,6 +18,8 @@ export default function(state = init, action) {
       };
     case ProductsActionTypes.GET_LIST:
     case ProductsActionTypes.GET_LIST_ERROR:
+    case ProductsActionTypes.GET_ACCESSORY:
+    case ProductsActionTypes.GET_ACCESSORY_ERROR:
     case ProductsActionTypes.GET_BEST_SELLER:
     case ProductsActionTypes.GET_BEST_SELLER_ERROR:
     case ProductsActionTypes.GET_FAVORITE:
@@ -58,6 +60,7 @@ export default function(state = init, action) {
         relate: get(action, "payload"),
       };
     case ProductsActionTypes.GET_LIST_SUCCESS:
+    case ProductsActionTypes.GET_ACCESSORY_SUCCESS:
       return {
         ...state,
         total: get(action, "payload.total"),
