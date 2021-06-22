@@ -89,7 +89,7 @@ class ProductPage extends Component {
     super(props);
     const {category} = this.props;
     this.state = {
-      brandName: 'Độc Quyền',
+      brandName: 'Tất cả',
       paramValue: {
         category: category,
         brand: '',
@@ -130,7 +130,7 @@ class ProductPage extends Component {
   onSetBrand = value => {
     const {totalBrand, category, onGetList, onAddParams} = this.props;
     var brandId =
-      value !== 'Độc Quyền'
+      value !== 'Tất cả'
         ? totalBrand.find(item => item._id.name === value)._id._id
         : '';
     var params = {
@@ -170,18 +170,18 @@ class ProductPage extends Component {
             scrollEnabled={true}>
             <TouchableOpacity
               style={
-                brandName && brandName === 'Độc Quyền'
+                brandName && brandName === 'Tất cả'
                   ? styles.btnBrandActive
                   : styles.btnBrand
               }>
               <Text
                 style={
-                  brandName && brandName === 'Độc Quyền'
+                  brandName && brandName === 'Tất cả'
                     ? styles.textBrandActive
                     : styles.textBrand
                 }
-                onPress={() => this.onSetBrand('Độc Quyền')}>
-                Độc Quyền
+                onPress={() => this.onSetBrand('Tất cả')}>
+                Tất cả
               </Text>
             </TouchableOpacity>
             {totalBrand ? (

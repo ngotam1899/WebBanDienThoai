@@ -23,8 +23,6 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 #
 #
-import mysql.connector
-from mysql.connector import Error, errorcode
 import gc
 
 class act_greeting(Action):

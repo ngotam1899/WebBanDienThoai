@@ -115,18 +115,6 @@ const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
   },
-  headerContainer: {
-    flexDirection: 'row',
-    paddingTop: 12,
-    paddingBottom: 4,
-    backgroundColor: '#1e88e5',
-  },
-  inputText: {
-    color: '#969696',
-    fontSize: 14,
-    marginLeft: 8,
-    fontWeight: '500',
-  },
   cartContainer: {
     paddingHorizontal: 20,
     alignItems: 'center',
@@ -182,6 +170,12 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     paddingHorizontal: 12,
     borderRadius: 2,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    paddingTop: 12,
+    paddingBottom: 4,
+    backgroundColor: '#1e88e5',
   },
   inputText: {
     color: '#969696',

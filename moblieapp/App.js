@@ -20,6 +20,10 @@ import DrawerContent from './src/components/DrawerContent';
 import ProductPage from './src/components/HomePage/ProductPage';
 import SearchPage from './src/components/SearchPage';
 import NotificationBottom from './src/components/NotificationBottom';
+import RasaChat from './src/components/RasaChatPage/RasaChat';
+import AccessoriesPage from './src/components/AccessoriesPage';
+import AccProductPage from './src/components/AccProductPage';
+
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -44,8 +48,32 @@ function HomeScreen({route, navigation}) {
     </Drawer.Navigator>
   );
 }
-
-function HomeStackScreen() {
+function AccProductTemp({route, navigation}) {
+  return (
+    <Drawer.Navigator
+      initialRouteName="AccProduct"
+      drawerContent={props => <DrawerContent {...props} />}>
+      <Drawer.Screen
+        name="AccProduct"
+        component={AccProductPage}
+        initialParams={{id: route.params.id}}
+        options={{
+          headerShown: true,
+          title: 'TRANG PHỤ KIỆN',
+          headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 16,
+            marginLeft: 65
+          },
+        }}
+      />
+    </Drawer.Navigator>
+  );
+}
+function HomeStackScreen({route, navigation}) {
   return (
     <HomeStack.Navigator
       screenOptions={{
@@ -58,7 +86,13 @@ function HomeStackScreen() {
           headerShown: false,
         }}
       />
+      <HomeStack.Screen
+        name="AccProductTemp"
+        component={AccProductTemp}
+        initialParams={{params: route.params}}
+      />
       <HomeStack.Screen name="Detail" component={DetailPage} />
+      <HomeStack.Screen name="Accessories" component={AccessoriesPage} />
       <HomeStack.Screen
         name="Cart"
         component={CartPage}
@@ -77,8 +111,9 @@ function HomeStackScreen() {
       <HomeStack.Screen name="Notification" component={NotificationScreen} />
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
       <HomeStack.Screen name="SignUp" component={SignUpPage} />
-      <HomeStack.Screen name="SignIn" component={SignInPage} /> 
+      <HomeStack.Screen name="SignIn" component={SignInPage} />
       <HomeStack.Screen name="Checkout" component={CheckoutPage} />
+      <HomeStack.Screen name="AccProduct" component={AccProductPage} />
       <HomeStack.Screen
         name="Search"
         component={SearchPage}
@@ -165,6 +200,16 @@ class App extends Component {
               options={{
                 title: 'Thông báo',
                 tabBarIcon: ({color}) => <NotificationBottom color={color} />,
+              }}
+            />
+            <Tab.Screen
+              name="Rasa"
+              component={RasaChat}
+              options={{
+                tabBarLabel: 'Hỗ trợ',
+                tabBarIcon: ({color}) => (
+                  <MaterialIcons name="message" size={26} color={color} />
+                ),
               }}
             />
             <Tab.Screen

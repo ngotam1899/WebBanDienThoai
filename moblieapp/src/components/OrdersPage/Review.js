@@ -39,9 +39,7 @@ class Review extends Component {
   }
   onReview = () => {
     const {rating, message} = this.state;
-    console.log(message,' ',rating)
     const {onAddReview, onUpdateReview, authInfo, product, review} = this.props;
-    console.log(review._id)
     var data = {
       content: message,
       user: authInfo._id,
@@ -49,6 +47,7 @@ class Review extends Component {
       rating,
       color: product.color._id,
     };
+    console.log('Review', review)
     if (review) {
       onUpdateReview(review._id, data);
     } else {

@@ -1,19 +1,28 @@
 import React, {Component} from 'react';
 import {TabView, TabBar} from 'react-native-tab-view';
-import {View, TextInput, Dimensions, TouchableOpacity} from 'react-native';
+import {
+  View,
+  TextInput,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+
 import styles from './style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 
 import CategoryActions from '../../redux/actions/categories';
 import ProductsActions from '../../redux/actions/products';
-import BrandActions from "../../redux/actions/brands";
+import BrandActions from '../../redux/actions/brands';
 
 import Header from '../HeaderComponent';
 import HomeContainer from './HomeContainer';
-import ProductPage from './ProductPage'
+import ProductPage from './ProductPage';
+import AccessoriesPage from '../AccessoriesPage';
+const HOST = 'http://192.168.1.5:5000';
 
 const {width} = Dimensions.get('window');
+
 
 class FirstRoute extends Component {
   render() {
@@ -23,14 +32,38 @@ class FirstRoute extends Component {
 }
 class SecondRoute extends Component {
   render() {
-    const {navigation, listProducts, category, totalBrand} = this.props;
-    return <ProductPage navigation={navigation}  listProducts={listProducts} totalBrand={totalBrand} category={category}/>;
+    const {navigation} = this.props;
+    return (
+      <AccessoriesPage
+        navigation={navigation}/>
+    );
   }
 }
 class ThirdRoute extends Component {
   render() {
     const {navigation, listProducts, category, totalBrand} = this.props;
-    return <ProductPage navigation={navigation} listProducts={listProducts} totalBrand={totalBrand} category={category}/>;
+    return (
+      <ProductPage
+        navigation={navigation}
+        listProducts={listProducts}
+        totalBrand={totalBrand}
+        category={category}
+      />
+    );
+  }
+}
+
+class FourRoute extends Component {
+  render() {
+    const {navigation, listProducts, category, totalBrand} = this.props;
+    return (
+      <ProductPage
+        navigation={navigation}
+        listProducts={listProducts}
+        totalBrand={totalBrand}
+        category={category}
+      />
+    );
   }
 }
 
@@ -38,21 +71,22 @@ class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      routes: [{key: 'HomePage', title: 'Trang Chủ'}],
+      routes: [{key: 'HomePage', title: 'Trang Chủ'}, {key: 'Accessories', title: 'Phụ Kiện'}],
       index: 0,
       filter: {
         limit: 100,
         page: 0,
       },
       category: '',
-      key:''
+      key: '',
     };
   }
   onSearchProduct = () => {
-    const { navigation } = this.props;
-    const { key } = this.state;
-    navigation.navigate('Search', {keyword: key})
-  }
+    const {navigation} = this.props;
+    const {key} = this.state;
+    navigation.navigate('Search', {keyword: key});
+  };
+
   setIndex = val => {
     this.setState({
       index: val,
@@ -66,7 +100,7 @@ class HomePage extends Component {
       };
       this.setState({
         category: '608c195b99e77e244c7db4b5',
-      })
+      });
       var params = {
         ...filter,
         ...filters,
@@ -76,18 +110,33 @@ class HomePage extends Component {
       onAddParams(params);
     } else if (val === 2) {
       filters = {
-        category: "608c197a99e77e244c7db4b6"
+        category: '608c197a99e77e244c7db4b6',
       };
       this.setState({
-        category: "608c197a99e77e244c7db4b6"
-      })
+        category: '608c197a99e77e244c7db4b6',
+      });
       var params = {
         ...filter,
         ...filters,
       };
       onGetList(params);
       onGetListBrand(filters);
-      onAddParams(params)
+      onAddParams(params);
+    }
+    else if (val === 3) {
+      filters = {
+        category: '60cf08806a958c26284fa8ad',
+      };
+      this.setState({
+        category: '60cf08806a958c26284fa8ad',
+      });
+      var params = {
+        ...filter,
+        ...filters,
+      };
+      onGetList(params);
+      onGetListBrand(filters);
+      onAddParams(params);
     }
   };
 
@@ -95,23 +144,45 @@ class HomePage extends Component {
     switch (route.key) {
       case 'HomePage':
         return <FirstRoute navigation={this.props.navigation} />;
-      case 'Earphone':
-        return <SecondRoute navigation={this.props.navigation} listProducts={this.props.listProducts} totalBrand={this.props.totalBrand} category={this.state.category}/>;
+      case 'Accessories':
+        return (
+          <SecondRoute
+            navigation={this.props.navigation}
+            params={true}
+            category={this.state.category}
+          />
+        );
       case 'Phone':
-        return <ThirdRoute navigation={this.props.navigation} listProducts={this.props.listProducts} totalBrand={this.props.totalBrand} category={this.state.category}/>;
+        return (
+          <ThirdRoute
+            navigation={this.props.navigation}
+            listProducts={this.props.listProducts}
+            totalBrand={this.props.totalBrand}
+            category={this.state.category}
+          />
+        );
+      case 'PC':
+        return (
+          <FourRoute
+            navigation={this.props.navigation}
+            listProducts={this.props.listProducts}
+            totalBrand={this.props.totalBrand}
+            category={this.state.category}
+          />
+        );
       default:
         return null;
     }
   };
 
-  onSetRoute(){
+  onSetRoute() {
     const {listCategories} = this.props;
     if (listCategories) {
       listCategories.map((item, index) => {
         this.setState(prevState => ({
           routes: [
             ...prevState.routes,
-            {key: (item.name_en).replace(" ",""), title: item.name},
+            {key: item.name_en.replace(' ', ''), title: item.name},
           ],
         }));
       });
@@ -125,8 +196,8 @@ class HomePage extends Component {
   }
   componentDidMount = async () => {
     const {onGetListCategory} = this.props;
-    onGetListCategory();
-  }
+    onGetListCategory({ accessories: -1 });
+  };
 
   renderTabBar = props => (
     <TabBar
@@ -142,23 +213,27 @@ class HomePage extends Component {
       <>
         <View style={styles.headerContainer}>
           <View style={styles.inputContainer}>
-            <TouchableOpacity onPress={()=>this.onSearchProduct()}>
-                <FontAwesome name="search" size={24} color="#969696" />
+            <TouchableOpacity onPress={() => this.onSearchProduct()}>
+              <FontAwesome name="search" size={24} color="#969696" />
             </TouchableOpacity>
-            <TextInput placeholder="Bạn tìm gì hôm nay?" style={styles.inputText} onChangeText={(val)=>{this.setState({
-              key: val
-            })}} ></TextInput>
+            <TextInput
+              placeholder="Bạn tìm gì hôm nay?"
+              style={styles.inputText}
+              onChangeText={val => {
+                this.setState({
+                  key: val,
+                });
+              }}></TextInput>
           </View>
           <Header value="2" navigation={navigation}></Header>
         </View>
-
         <TabView
           navigationState={{index, routes}}
           renderScene={navigation => this.renderScene(navigation)}
           onIndexChange={index => this.setIndex(index)}
           initialLayout={{width: width}}
           renderTabBar={this.renderTabBar}
-          style={{backgroundColor:'#fff'}}
+          style={{backgroundColor: '#fff'}}
         />
       </>
     );
@@ -170,21 +245,21 @@ const mapStateToProps = state => {
     listProducts: state.products.list,
     listBrand: state.brands.list,
     totalBrand: state.brands.total,
-    category : state.categories.detail,
-    params: state.products.params
+    category: state.categories.detail,
+    params: state.products.params,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onGetListCategory: () => {
-      dispatch(CategoryActions.onGetList());
+    onGetListCategory: (params) => {
+      dispatch(CategoryActions.onGetList(params));
     },
     onGetList: params => {
       dispatch(ProductsActions.onGetList(params));
     },
-    onGetListBrand: (params) => {
-      dispatch(BrandActions.onGetList(params))
+    onGetListBrand: params => {
+      dispatch(BrandActions.onGetList(params));
     },
     onAddParams: params => {
       dispatch(ProductsActions.onAddParams(params));

@@ -10,6 +10,10 @@ export const CategoryActionTypes = {
   GET_DETAIL: "GET_DETAIL",
   GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
   GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
+
+  GET_ACCESSORY: "GET_ACCESSORY",
+  GET_ACCESSORY_SUCCESS: "GET_ACCESSORY_SUCCESS",
+  GET_ACCESSORY_ERROR: "GET_ACCESSORY_ERROR",
 };
 
 Object.keys(CategoryActionTypes).forEach((key) => {
@@ -21,6 +25,18 @@ Object.keys(CategoryActionTypes).forEach((key) => {
 /**
  * get_list
  **/
+ const onGetAccessory = (payload) => ({
+  type: CategoryActionTypes.GET_ACCESSORY,
+  payload,
+});
+const onGetAccessorySuccess = (payload) => ({
+  type: CategoryActionTypes.GET_ACCESSORY_SUCCESS,
+  payload,
+});
+const onGetAccessoryError = (error) => ({
+  type: CategoryActionTypes.GET_ACCESSORY_ERROR,
+  payload: error,
+});
 
 const onGetList = (payload) => ({
   type: CategoryActionTypes.GET_LIST,
@@ -84,6 +100,10 @@ const CategoryActions = {
   onGetDetail,
   onGetDetailSuccess,
   onGetDetailError,
+
+  onGetAccessory,
+  onGetAccessorySuccess,
+  onGetAccessoryError,
 };
 
 export default CategoryActions;

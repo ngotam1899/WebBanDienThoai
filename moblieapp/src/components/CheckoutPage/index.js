@@ -66,7 +66,7 @@ class CheckoutPage extends Component {
   }
   handleResponse = data => {
     if (data.title === 'success') {
-      console.log('Success')
+      this.paypalOrder()
       this.setState({showModal: false, status: 'Complete'});
     } else if (data.title === 'cancel') {
       this.setState({showModal: false, status: 'Cancelled'});
@@ -118,6 +118,52 @@ class CheckoutPage extends Component {
         this.calculateShipping(service_type_id, districtID, totalHeight, totalLength, totalWeight, totalWidth)
       }
     }
+  }
+  paypalOrder(){
+    const {onCreateAnOrder, authInfo, ship} = this.props;
+    const {
+      shipToDifferentAddress,
+      order_comments,
+      total,
+      totalPrice,
+      phonenumber,
+      address,
+      city,
+      district,
+      ward,
+      order_list,
+    } = this.state;
+    var data = {};
+    if(shipToDifferentAddress === true) {
+      data = {
+        order_list,
+        total_price: parseInt(ship ? totalPrice + ship.total : totalPrice),
+        total_quantity: total,
+        shipping_phonenumber: phonenumber,
+        email: authInfo.email,
+        shipping_address: `${address}, ${ward}, ${district}, ${city}`,
+        note: order_comments,
+        status: -1,
+        payment_method: "paypal",
+        paid: true
+      }
+    }
+    else{
+      data = {
+        order_list,
+        total_price: parseInt(ship ? totalPrice + ship.total : totalPrice),
+        total_quantity: total,
+        shipping_phonenumber: authInfo.phonenumber,
+        email: authInfo.email,
+        shipping_address: authInfo.address,
+        status: -1,
+        payment_method: "paypal",
+        note: order_comments,
+        paid: true
+      }
+    }
+    console.log('data', data)
+    onCreateAnOrder(data);
   }
   placeOrder() {
     const {onCreateAnOrder, authInfo, ship} = this.props;

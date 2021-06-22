@@ -10,14 +10,12 @@ import ProductItem from '../ProductItem';
 import ProductsActions from '../../redux/actions/products';
 import AuthorizationActions from '../../redux/actions/auth';
 import {AsyncStorage} from 'react-native';
-import numberWithCommas from '../../utils/formatPrice';
 
 const section_banner = require('../../assets/section_banner.png');
 
 class HomeContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {movieName: '', releaseYear: ''};
   }
   componentDidMount = async () => {
     this.props.onGetList();

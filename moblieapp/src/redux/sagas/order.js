@@ -2,11 +2,13 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
 import ProductsActions from "../actions/products";
+import NotificationActions from "../actions/notification"
 import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, updateOrder, getAllOrder } from "../apis/order";
-import {API_ENDPOINT_AUTH} from '../../constants/index'
-import io from "socket.io-client";
 import {AsyncStorage} from 'react-native';
-const socket = io(API_ENDPOINT_AUTH);
+import io from 'socket.io-client';
+import {API_ENDPOINT_AUTH} from '../../constants';
+
+let socket = io(API_ENDPOINT_AUTH);
 
 function* handleGetList({payload}) {
   try {
@@ -57,15 +59,17 @@ function* handleReConfirm({ payload }) {
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
     AsyncStorage.removeItem("cart");
     /* Notification */
-    if(payload.payment_method ==="paypal"){
-      socket.emit('order', { email: data.order.email, order: data.order._id });
-      yield put(NotificationActions.onCreate({
-        name : "Đơn hàng mới được xác nhận",
-        image : data.order.order_list[0].image,
-        type: 0,
-        content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
-      }))
-    }
+    // if(payload.payment_method ==="paypal"){
+    //   console.log('data: ',data.order)
+    //   socket.emit('order', { email: data.order.email, order: data.order._id });
+    //   console.log('11111111111')
+    //   yield put(NotificationActions.onCreate({
+    //     name : "Đơn hàng mới được xác nhận",
+    //     image : data.order.order_list[0].image,
+    //     type: 0,
+    //     content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
+    //   }))
+    // }
     /* Notification */
     yield put(ProductsActions.onClearCart())
   } catch (error) {
