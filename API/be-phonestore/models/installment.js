@@ -1,62 +1,70 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const InstallmentSchema = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  staff: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  product: {
-    _id: {
+const InstallmentSchema = new Schema(
+  {
+    user: {
       type: Schema.Types.ObjectId,
-      ref: 'Product'
+      ref: 'User'
     },
-    color: {
+    staff: {
       type: Schema.Types.ObjectId,
-      ref: 'Color'
+      ref: 'User'
     },
-    product_price: {
-      type: Number
-    }
-  },
-  status: {
-    type: Boolean,
-    default: false
-  },
-  paid: {
-    type: Number
-  },
-  period: {
-    type: Number
-  },
-  interest_rate: {
-    type: Number
-  },
-  startedAt: {
-    type: Date
-  },
-  endedAt: {
-    type: Date
-  },
-  detail: [{
-    month: {
+    product: {
+      _id: {
+        type: Schema.Types.ObjectId,
+        ref: 'Product'
+      },
+      color: {
+        type: Schema.Types.ObjectId,
+        ref: 'Color'
+      },
+      product_price: {
+        type: Number
+      }
+    },
+    status: { // -1 (chưa duyệt), 0 (Chưa hoàn tất), 1 (Đã hoàn tất)
+      type: Number,
+      default: -1
+    },
+    paid: {
       type: Number
     },
-    due_date: {
+    debt: {
+      type: Number
+    },
+    period: {
+      type: Number
+    },
+    interest_rate: {
+      type: Number
+    },
+    startedAt: {
       type: Date
     },
-    payable: {
-      type: Number
+    endedAt: {
+      type: Date
     },
-    status: {
-      type: Boolean
-    }
-  }]
-})
+    detail: [{
+      month: {
+        type: Number
+      },
+      due_date: {
+        type: Date
+      },
+      payable: {
+        type: Number
+      },
+      status: { // -1 (Qúa hạn), 0 (Chưa tới hạn), 1 (Hoàn tất)
+        type: Number
+      }
+    }]
+  },
+	{
+		timestamps: true
+	}
+)
 
 const Installment = mongoose.model('Installment', InstallmentSchema)
 

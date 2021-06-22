@@ -27,6 +27,9 @@ export const UsersActionTypes = {
   GET_SESSION_SUCCESS: "GET_SESSION_SUCCESS",
   GET_SESSION_ERROR: "GET_SESSION_ERROR",
 
+  FILTER: "FILTER",
+  FILTER_SUCCESS: "FILTER_SUCCESS",
+
   CLEAR_DETAIL: "CLEAR_DETAIL",
   CLEAR_STATE: "CLEAR_STATE",
 };
@@ -176,6 +179,23 @@ const onGetSessionError = (error) => ({
   payload: error,
 });
 
+/**
+ *
+ * filter
+ */
+
+const onFilter = keyword => ({
+  type: UsersActionTypes.FILTER,
+  payload: {
+    keyword,
+  },
+});
+
+const onFilterSuccess = data => ({
+  type: UsersActionTypes.FILTER_SUCCESS,
+  payload: data,
+});
+
 const UsersActions = {
   onClearDetail,
   onClearState,
@@ -207,6 +227,9 @@ const UsersActions = {
   onGetSession,
   onGetSessionSuccess,
   onGetSessionError,
+
+  onFilter,
+  onFilterSuccess,
 };
 
 export default UsersActions;

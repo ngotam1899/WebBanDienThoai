@@ -84,6 +84,16 @@ export default [
         name: 'Danh sách đơn hàng',
         to: '/users/order-manage',
       },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách đánh giá',
+        to: '/users/review-manage',
+      },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Danh sách trả góp',
+        to: '/users/installment-manage',
+      },
     ],
   },
 ]

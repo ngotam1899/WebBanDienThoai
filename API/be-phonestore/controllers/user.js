@@ -287,6 +287,7 @@ const sendEmailPassword = (email) => {
 
 const getAllUser = async (req, res, next) => {
 	try {
+		var condition = {}
 		let limit = 5;
 		let page = 0;
 		if (req.query.limit != undefined && req.query.limit != '') {
@@ -301,7 +302,13 @@ const getAllUser = async (req, res, next) => {
 				page = number_page;
 			}
 		}
-		const users = await User.find().limit(limit).skip(limit * page);;
+		if (req.query.phone != undefined && req.query.phone != '') {
+			condition.phonenumber = req.query.phone
+		}
+		const users = await User.find(condition)
+		.populate({path : 'image', select: "public_url"})
+		.limit(limit)
+		.skip(limit * page);
 		let total = await User.countDocuments()
 		return res.status(200).json({ 
 			success: true, 

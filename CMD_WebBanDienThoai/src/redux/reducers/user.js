@@ -19,7 +19,13 @@ export default function(state = init, action) {
       return {
         ...init,
       };
-
+    case UsersActionTypes.FILTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        listSearch: action.payload,
+      };
+    case UsersActionTypes.FILTER:
     case UsersActionTypes.GET_LIST:
     case UsersActionTypes.GET_ONLINE:
     case UsersActionTypes.GET_SESSION:

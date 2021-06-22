@@ -29,6 +29,7 @@ const getAllProductReView = async(req, res, next) => {
     const reviews = await Review.find(condition)
     .populate({ path: 'user', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
     .populate({ path: 'color', select: "name_vn"})
+    .populate({ path: 'product', select: ["bigimage", "name", "stars", "reviewCount"], populate : {path : 'bigimage', select: "public_url"}})
     .limit(limit)
     .skip(limit * page)
     const pipeline = [

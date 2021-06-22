@@ -1,11 +1,9 @@
-import { takeEvery, fork, all, call, put } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
 import { get } from "lodash";
 import UsersActions, { UsersActionTypes } from "../actions/user";
 import { getAllUsers, getDetailUser,  deleteUser, updateUser, getOnlineUsers, getSessionUsers } from "../apis/user";
-import UIActions from "../actions/ui";
 
 function* handleGetList({ payload }) {
-  yield put(UIActions.showLoading());
   try {
     const result = yield call(getAllUsers, payload);
     const data = get(result, "data");
@@ -13,7 +11,22 @@ function* handleGetList({ payload }) {
   } catch (error) {
     yield put(UsersActions.onGetListError(error));
   }
-  yield put(UIActions.hideLoading());
+}
+
+function* handleFilter({ payload }) {
+  yield delay(500);
+  const { keyword } = payload;
+  console.log(keyword)
+  try {
+    const result = yield call(getAllUsers, {
+      phone: keyword,
+      limit: 5,
+      page:0
+    });
+    const data = get(result, "data");
+    yield put(UsersActions.onFilterSuccess(data.users));
+  } catch (error) {
+  }
 }
 
 function* handleGetDetail({ filters, id }) {
@@ -100,6 +113,9 @@ export function* watchGetOnline() {
 export function* watchGetSession() {
   yield takeEvery(UsersActionTypes.GET_SESSION, handleGetSession);
 }
+export function* watchFilter() {
+  yield takeEvery(UsersActionTypes.FILTER, handleFilter);
+}
 
 export default function* rootSaga() {
   yield all([
@@ -109,5 +125,6 @@ export default function* rootSaga() {
     fork(watchDelete),
     fork(watchGetOnline),
     fork(watchGetSession),
+    fork(watchFilter),
   ]);
 }

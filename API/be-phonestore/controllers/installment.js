@@ -3,7 +3,11 @@ const Validator = require('../validators/validator');
 
 const getAllInstallment = async (req, res, next) => {
 	try {
-		const installments = await Installment.find();
+    const installments = await Installment.find()
+    .populate({ path: 'user', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
+    .populate({ path: 'staff', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
+    .populate({ path: 'product.color', select: "name_vn"})
+    .populate({ path: 'product._id', select: ["bigimage", "name"], populate : {path : 'bigimage', select: "public_url"}});
 		return res.status(200).json({ success: true, code: 200, message: '', installments });
 	} catch (error) {
 		return next(error);
@@ -56,7 +60,11 @@ const getDetailInstallment = async (req, res, next) => {
     if (!isValid) {
       return res.status(200).json({ success: false, code: 400, message: 'id installment is not correctly' });
     } else {
-      const result = await Installment.findById(IDInstallment);
+      const result = await Installment.findById(IDInstallment)
+      .populate({ path: 'user', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
+      .populate({ path: 'staff', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
+      .populate({ path: 'product.color', select: "name_vn"})
+      .populate({ path: 'product._id', select: ["bigimage", "name"], populate : {path : 'bigimage', select: "public_url"}});
       return res.status(200).json({ success: true, code: 200, message: '', installment: result });
     }
   } catch (error) {

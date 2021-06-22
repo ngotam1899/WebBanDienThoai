@@ -261,7 +261,6 @@ class DetailPage extends Component {
                             readonly
                         /><span className="ml-2">{total} đánh giá</span>
                         </div>
-                      
                       </div>
                       {group && <div className="row">
                         <div className="col-12 form-inline">
