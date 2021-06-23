@@ -84,7 +84,7 @@ const getAllProduct = async (req, res, next) => {
 		}
 		let products;
 		products = await Product.find(condition, { name: 1, pathseo: 1, bigimage: 1, brand: 1, price_max: 1, 
-			price_min: 1, active: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1, })
+			price_min: 1, active: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1, colors: 1 })
 			.populate({ path: 'bigimage', select: 'public_url' })
 			.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
 			.sort(sort)
@@ -488,7 +488,7 @@ const accessoryProduct = async (req, res, next) => {
 	}
 	const count = await Product.countDocuments(condition);
 	const products = await Product.find(condition, 
-		{ name: 1, pathseo: 1, bigimage: 1, brand: 1, price_max: 1, price_min: 1, active: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1, })
+		{ name: 1, pathseo: 1, bigimage: 1, brand: 1, price_max: 1, price_min: 1, active: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1})
 		.populate({ path: 'bigimage', select: 'public_url' })
 		.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
 		.sort(sort)

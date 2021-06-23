@@ -8,6 +8,7 @@ import CartPage from '../components/CartPage';
 import CheckoutPage from '../components/CheckoutPage';
 import DetailPage from '../components/DetailPage';
 import HomePage from '../components/HomePage';
+import InstallmentPage from '../components/InstallmentPage';
 import NotFound from '../containers/NotFound';
 import NotificationPage from '../components/NotificationPage';
 import ProductPage from '../components/ProductPage';
@@ -100,6 +101,12 @@ const routes = [
 		exact: true,
 		name: "Detail Page",
 		main: ({match, history, location}) => <DetailPage match={match} history={history} location={location}/>
+	},
+	{
+		path: '/installment/:pathseo.:productID.:colorID',
+		exact: true,
+		name: "Installment Page",
+		main: ({match, history, location}) => <InstallmentPage match={match} history={history} location={location}/>
 	},
 	{
 		path: '',

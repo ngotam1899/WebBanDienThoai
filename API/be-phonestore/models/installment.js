@@ -24,12 +24,16 @@ const InstallmentSchema = new Schema(
         type: Number
       }
     },
-    status: { // -1 (chưa duyệt), 0 (Chưa hoàn tất), 1 (Đã hoàn tất)
+    status: { // -1 (chưa duyệt), 0 (Chưa hoàn tất), 1 (Đã hoàn tất), 2 (Qúa hạn)
       type: Number,
       default: -1
     },
-    paid: {
+    prepay: {
       type: Number
+    },
+    paid: {
+      type: Number,
+      default: 0
     },
     debt: {
       type: Number

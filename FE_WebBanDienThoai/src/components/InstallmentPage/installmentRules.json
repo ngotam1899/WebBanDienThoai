@@ -1,0 +1,28 @@
+{
+  "rules": [
+    {
+      "title": "Mức giá tối thiểu sẽ hỗ trợ trả góp mua sản phẩm",
+      "content": "Chỉ hỗ trợ trả góp những sản phẩm trên 2.500.000 VND"
+    },
+    {
+      "title": "Độ tuổi",
+      "content": "20 - 60 tuổi"
+    },
+    {
+      "title": "Hồ sơ",
+      "content": "CMND + Bằng lái (nếu số tiền vay < 10 triệu) CMND + Hộ khẩu (nếu số tiền vay > 10 triệu)"
+    },
+    {
+      "title": "Thời gian duyệt hồ sơ",
+      "content": "5 - 10 phút"
+    },
+    {
+      "title": "Tỉ lệ duyệt hồ sơ thành công",
+      "content": "90%"
+    },
+    {
+      "title": "Phương thức thanh toán",
+      "content": "Miễn phí: - Bưu điện - Ngân hàng BIDV, Đông Á, Sacombank Các ngân hàng khác: Có phí giao dịch ngân hàng Miễn phí 1 tháng cuối (không cần đóng cả vốn & lãi) Áp dụng cho thời gian góp 12 tháng"
+    }
+  ]
+}

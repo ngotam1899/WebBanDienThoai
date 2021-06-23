@@ -55,6 +55,7 @@ class CheckoutPage extends Component {
       service_type_id: "1",
     }
   }
+
   onChange = (event) =>{
     var target=event.target;
     var name=target.name;
@@ -389,7 +390,7 @@ class CheckoutPage extends Component {
                       <div className="col-lg-4 col-md-6 col-12">
                         <div className="form-floating mb-3">
                           <select className="form-select"  id="floatingSelect" onChange={this.setDistrict} required>
-                            <option selected>Chọn tỉnh/ thành</option>
+                            <option defaultValue>Chọn tỉnh/ thành</option>
                             {listCity && listCity.map((item, index)=>{
                                 return(
                                   <option key={index} value={item.ProvinceID} name="shipping_city">{item.ProvinceName}</option>
@@ -403,7 +404,7 @@ class CheckoutPage extends Component {
                       <div className="col-lg-4 col-md-6 col-12">
                         <div className="form-floating mb-3">
                           <select className="form-select"  id="floatingSelect" onChange={this.setWard} required>
-                            <option selected>Chọn quận huyện</option>
+                            <option defaultValue>Chọn quận huyện</option>
                             {listDistrict && listDistrict.map((item, index)=>{
                                 return(
                                   <option key={index} value={item.DistrictID} name="shipping_district">{item.DistrictName}</option>
@@ -417,7 +418,7 @@ class CheckoutPage extends Component {
                       <div className="col-lg-4 col-md-6 col-12">
                         <div className="form-floating mb-3">
                           <select className="form-select"  id="floatingSelect" onChange={this.setAddress} required>
-                            <option selected>Chọn phường xã</option>
+                            <option defaultValue>Chọn phường xã</option>
                             {listWard && listWard.map((item, index)=>{
                               return(
                                 <option key={index} value={item.WardCode} name="shipping_ward">{item.WardName}</option>

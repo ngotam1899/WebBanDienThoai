@@ -12,7 +12,7 @@ import {
 import UsersActions from "../../redux/actions/user";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-const fields = ['first name', 'last name','phone','email', 'role',{ key: 'actions', _style: { width: '20%'} }]
+const fields = ['first name', 'last name', 'email', 'role',{ key: 'actions', _style: { width: '40%'} }]
 
 class UserList extends Component {
   constructor(props) {
@@ -109,9 +109,6 @@ class UserList extends Component {
                     'last name': (item) => (
                       <td>{item.lastname}</td>
                     ),
-                    'phone': (item) => (
-                      <td>{item.phonenumber}</td>
-                    ),
                     'email': (item) => (
                       <td>{item.email}</td>
                     ),
@@ -127,6 +124,20 @@ class UserList extends Component {
                           color="success"
                         >
                           Đơn mua
+                        </CButton>
+                        <CButton
+                          onClick={() => this.handleListOrder(item._id)}
+                          className="mr-1 mb-1 mb-xl-0"
+                          color="primary"
+                        >
+                          Bình luận
+                        </CButton>
+                        <CButton
+                          onClick={() => this.handleListOrder(item._id)}
+                          className="mr-1 mb-1 mb-xl-0"
+                          color="warning"
+                        >
+                          Trả góp
                         </CButton>
                         <CButton
                           onClick={() => this.onSubmit(item._id, item.role)}

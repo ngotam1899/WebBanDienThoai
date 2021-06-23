@@ -32,7 +32,16 @@
 	padding: 6px 25px;
 	border-radius: 40px;
 }
-.add_to_cart_button:hover {
+
+.installment_button {
+	background: none repeat scroll 0 0 #ffffff;
+	border: 2px solid rgb(22, 0, 145);
+	color: rgb(22, 0, 145);
+	padding: 6px 25px;
+	border-radius: 40px;
+}
+
+.add_to_cart_button:hover, .installment_button:hover {
 	background-color: #222;
 	color: #fff;
 	text-decoration: none;

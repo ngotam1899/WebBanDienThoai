@@ -7,6 +7,7 @@ import brands from "./brands";
 import categories from "./categories";
 import color from "./color";
 import group from "./group";
+import installment from "./installment";
 import notification from "./notification";
 import order from "./order";
 import products from "./products";
@@ -15,6 +16,18 @@ import user from "./user";
 
 export default function* rootSaga(getState) {
   yield all([
-    ad(), address(), auth(), brands(), categories(), color(), group(), notification(), order(), products(), review(), user(),
+    ad(), 
+    address(), 
+    auth(), 
+    brands(), 
+    categories(), 
+    color(), 
+    group(), 
+    installment(),
+    notification(), 
+    order(), 
+    products(), 
+    review(), 
+    user(),
   ]);
 }

@@ -22,11 +22,13 @@ const fields = ['date', 'user', 'content',{ key: 'actions', _style: { width: '10
 class NotificationList extends Component {
   constructor(props) {
     super(props);
+    const {authInfo} = props;
     this.state = {
       queryParams: {},
       filter: {
         limit: 10,
         page: 0,
+        admin: authInfo && authInfo._id
       },
     }
   }
@@ -176,6 +178,7 @@ const mapStateToProps = (state) => {
   return {
     listNotification: state.notification.list,
     total : state.notification.total,
+    authInfo: state.auth.detail
   }
 }
 

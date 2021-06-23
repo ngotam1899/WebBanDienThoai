@@ -9,6 +9,7 @@ import cart from "./cart";
 import color from "./color";
 import currency from "./currency";
 import group from "./group";
+import installment from "./installment";
 import notification from "./notification";
 import order from "./order";
 import products from "./products";
@@ -17,5 +18,20 @@ import ui from "./ui";
 import user from "./user";
 
 export default combineReducers({
-  ad, address, auth, brands, categories, cart, color, currency, group, notification, order, products, review, user, ui,
+  ad, 
+  address, 
+  auth, 
+  brands, 
+  categories, 
+  cart, 
+  color, 
+  currency, 
+  group, 
+  installment, 
+  notification, 
+  order, 
+  products, 
+  review, 
+  user, 
+  ui,
 });

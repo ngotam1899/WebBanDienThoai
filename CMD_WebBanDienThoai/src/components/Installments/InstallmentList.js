@@ -18,7 +18,7 @@ import InstallmentDetail from './InstallmentDetail'
 import InstallmentActions from "../../redux/actions/installment";
 // @Functions
 import {INITIAL_IMAGE} from '../../constants';
-const fields = ['period', 'user', { key: 'product', _style: { width: '20%'} }, 'total_payable', 'paid', 'status', { key: 'actions', _style: { width: '15%'} }]
+const fields = ['period', 'user', { key: 'product', _style: { width: '20%'} }, 'total_payable', 'prepay', 'status', { key: 'actions', _style: { width: '15%'} }]
 
 class InstallmentList extends Component {
   constructor(props) {
@@ -154,10 +154,10 @@ class InstallmentList extends Component {
                       </td>
                     ),
                     'total_payable': (item) => (
-                      <td>{Math.ceil(((item.product.product_price-item.paid)*(1 + item.interest_rate*0.01))/10000)* 10000} VND</td>
+                      <td>{Math.ceil(((item.product.product_price-item.prepay)*(1 + item.interest_rate*0.01))/10000)* 10000} VND</td>
                     ),
-                    'paid': (item) => (
-                    <td>{item.paid ? item.paid : 0} VND</td>
+                    'prepay': (item) => (
+                    <td>{item.prepay ? item.prepay : 0} VND</td>
                     ),
                     'status': (item) => (
                     <td>{this.setStatus(item.status)}</td>

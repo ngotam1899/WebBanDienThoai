@@ -65,10 +65,6 @@ const getAllOrder = async (req, res, next) => {
 				page = number_page;
 			}
 		}
-/* 		let sort = {};
-		if (req.query.sort != undefined && req.query.sort != '0') {
-			sort['createdAt'] = req.query.sort == '1' ? 1 : -1;
-		} */
 		const orders = await Order.find(condition)
 		.populate({ path: 'order_list.color', select: 'name_vn' })
 		.sort({ createdAt: -1 })

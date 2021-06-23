@@ -79,10 +79,6 @@ class DetailPage extends Component {
         this.setState({queryParams: params})
         this.props.onGetReviews(params);
       }
-/*       if (prevProps.match !== this.props.match) {
-        console.log(this.props.history.location)
-        console.log(this.props.history.location.pathname.indexOf("/product/"))
-      } */
     }
     catch(err){
     }
@@ -125,13 +121,24 @@ class DetailPage extends Component {
   }
 
   onAddToCart = (product, quantity) =>{
-    var {onAddProductToCart} = this.props;
-    const {check} = this.state;
-    if(check===0){
+    var { onAddProductToCart } = this.props;
+    const { check } = this.state;
+    if(check === 0){
       toastError("Chưa chọn màu sản phẩm")
     }
     else{
       onAddProductToCart(product, check, quantity);
+    }
+  }
+
+  onInstallment = (product) => {
+    const { history } = this.props;
+    const { check } = this.state;
+    if(check === 0){
+      toastError("Chưa chọn màu sản phẩm")
+    }
+    else{
+      history.push(`/installment/${product.pathseo}.${product._id}.${check}`)
     }
   }
   
@@ -268,12 +275,12 @@ class DetailPage extends Component {
                             return(<button type="button" key={item._id} 
                               className="card text-dark py-2 px-3 my-2 mr-3 w-auto"
                               onClick={()=> this.onReload(`/product/${item.product.pathseo}/${item.product._id}`)}>
-                              <p className="mb-0 h6">{item.name} <span className="fa fa-check" style={{"display": _check===item.product._id ? "inline-block" : "none"}}></span></p>
+                              <p className="mb-0 h6">{item.name} <span className={_check===item.product._id ? "d-inline-block" : "d-none"}>
+                                <i className="fa fa-check"></i></span></p>
                               <p className="mb-0 h7">{item.product.price_min ? this.setPrice(currency, item.product.price_min, item.product.price_min) : 'NaN'} {currency}</p>
                             </button>)
                           })}
                         </div>
-                        
                       </div>}
                       <p className="mb-0 font-weight-bold">Vui lòng chọn màu</p>
                       <div className="row">
@@ -284,13 +291,15 @@ class DetailPage extends Component {
                               className={item.amount===0 ? "card text-dark py-2 px-3 my-2 mr-3 bg-active" :"card text-dark py-2 px-3 my-2 mr-3"} 
                               onClick={() => this.setColor(item)} 
                               disabled={item.amount===0 ? true : false}>
-                              <p className="mb-0 h6">{item.name_vn} <span className="fa fa-check" style={{"display": check===item._id ? "inline-block" : "none"}}></span></p>
+                              <p className="mb-0 h6">{item.name_vn} <span className={check===item._id ? "d-inline-block" : "d-none"}>
+                                <i className="fa fa-check"></i></span></p>
                               <p className="mb-0 h7">{this.setPrice(currency, item.price, item.price)} {currency}</p>
                             </button>)
                           })}
                         </div>
                       </div>
                       <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
+                      <button className="ml-2 installment_button" type="button" onClick={() => this.onInstallment(product)}>Mua trả góp</button>
                     </div>
                   </div>
                 </div>
