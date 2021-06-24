@@ -255,6 +255,9 @@
 .w-25-px {
   width: 25px !important;
 }
+.w-90{
+  width: 90%
+}
 .product-widget-area .zigzag-bottom{background: #f4f4f4;}
 .caption-group h2{
   font-size: 2vw

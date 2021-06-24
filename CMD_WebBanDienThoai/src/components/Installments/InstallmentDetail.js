@@ -17,21 +17,21 @@ class InstallmentDetail extends Component {
     const { installment, userInfo } = props;
     this.state = {
       id: installment ? installment._id : '',
-      startedAt: installment ? installment.startedAt.slice(0,10) : new Date().toISOString().slice(0, 10),
-      endedAt: installment ? installment.endedAt.slice(0,10) : '',
+      startedAt: installment ? (installment.startedAt ? installment.startedAt.slice(0,10) : '') : new Date().toISOString().slice(0, 10),
+      endedAt: installment && installment.endedAt ? installment.endedAt.slice(0,10) : '',
       period: installment ? installment.period : '',
       interest_rate: installment ? installment.interest_rate : '',
       prepay: installment ? installment.prepay : 0,
       product: installment ? installment.product : '',
       status: installment ? installment.status : -1,
-      staff: installment ? installment.staff : {
+      staff: installment && installment.staff ? installment.staff : {
         _id: userInfo._id,
         firstname: userInfo.firstname,
         lastname: userInfo.lastname,
         image: userInfo.image
       },
       user: installment ? installment.user : '',
-      detail: installment ? installment.detail : [],
+      detail: installment && installment.detail ? installment.detail : [],
       debt: installment ? installment.debt : 0,
       // Search
       keywordUser: '',
@@ -45,7 +45,7 @@ class InstallmentDetail extends Component {
     var target=event.target;
     var name=target.name;
     var value=target.value;
-    const { product, startedAt } = this.state;
+    const { product, startedAt, period } = this.state;
     if(name === "period"){
       var interest_rate = 0;
       var _startedAt = new Date(startedAt);
@@ -55,6 +55,12 @@ class InstallmentDetail extends Component {
       this.setState({
         interest_rate,
         endedAt: new Date(_startedAt.setMonth(_startedAt.getMonth() + parseInt(value))).toISOString().slice(0, 10)
+      })
+    }
+    if(name === "startedAt"){
+      var _startedAt = new Date(value);
+      this.setState({
+        endedAt: new Date(_startedAt.setMonth(_startedAt.getMonth() + parseInt(period))).toISOString().slice(0, 10)
       })
     }
     if(name === "selectedColor"){
@@ -309,7 +315,7 @@ class InstallmentDetail extends Component {
             <div className="col-12 col-lg-6">
               <div className="form-group">
                 <label>Ngày lập phiếu:</label>
-                <input type="date" className="form-control" name="startedAt" value={startedAt} onChange={this.onChange} disabled={id ? true : false}></input>
+                <input type="date" className="form-control" name="startedAt" value={startedAt} onChange={this.onChange}></input>
               </div>
               <div className="form-group">
                 <label>Ngày đáo hạn:</label>

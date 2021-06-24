@@ -85,3 +85,25 @@ a.about_paypal {
     flex: 0 0 auto;
     width: 10%;
 }
+.c-avatar {
+    position: relative;
+    display: -webkit-inline-flex;
+    display: inline-flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    border-radius: 50em;
+    width: 36px;
+    height: 36px;
+    font-size: 14.4px;
+}
+.c-avatar-img {
+    width: 100%;
+    height: auto;
+    border-radius: 50em;
+}
+/* img {
+    vertical-align: middle;
+    border-style: none;
+} */

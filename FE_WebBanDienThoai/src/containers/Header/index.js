@@ -87,7 +87,6 @@ class Header extends Component {
     }
     if(userInfo){
       socket.on(`${userInfo._id}`, res => {
-        console.log(res)
         this.setState({itemsCount: itemsCount + 1, status: res.status, order: res.order});
       });
     }
@@ -365,6 +364,7 @@ class Header extends Component {
                     {location.hash.indexOf("account") !== -1 &&<>
                     <MenuLink label="Tài khoản của tôi" to={"/account/detail"} activeOnlyWhenExact={true} />
                     <MenuLink label="Đơn mua" to={"/account/purchase"} activeOnlyWhenExact={true} />
+                    <MenuLink label="Trả góp" to={"/account/installment"} activeOnlyWhenExact={true} />
                     <MenuLink label="Thông báo" to={"/account/notification"} activeOnlyWhenExact={true} /></>}
                   </ul>
                 </div>
@@ -381,7 +381,8 @@ class Header extends Component {
             socketPath={"/socket.io/"}
             customData={{"language": "en"}} // arbitrary custom data. Stay minimal as this will be added to the socket
             title={"TellMe - Mobile Shopping Online"}
-          />*/}
+            profileAvatar={assets("logo_fe.png")}
+          /> */}
         </div>
       </>
     );

@@ -1,0 +1,16 @@
+{
+  "questions": [
+    {
+      "title": "Các thông tin cần thiết khác khi mua hàng trả góp điện thoại là gì?",
+      "content": "Số điện thoại nơi làm việc, người thân, bạn bè, đồng nghiệp. Mức thu nhập hàng tháng của người tham gia trả góp sản phẩm"
+    },
+    {
+      "title": "Mua hàng trả góp có được hỗ trợ từ xa hay không?",
+      "content": "Hiện tại, TellMe hỗ trợ trả góp hàng tháng online thông qua Paypal. Nhưng để xác thực hồ sơ trả góp, bạn phải đến trực tiếp cửa hàng chính của TellMe"
+    },
+    {
+      "title": "Đăng ký mua với kỳ hạn là 06 tháng, đến tháng thứ 03 muốn thanh toán hết có được không?",
+      "content": "Được. Khách hàng có thể làm thủ tục tất toán hợp đồng sớm nhất có thể"
+    }
+  ]
+}

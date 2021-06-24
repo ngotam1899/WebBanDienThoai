@@ -16,6 +16,7 @@ import PromotionPage from '../components/PromotionPage';
 import PurchasePage from '../components/PurchasePage';
 import SearchPage from '../components/SearchPage';
 import UserInfoPage from '../components/UserInfoPage';
+import UserInstallmentPage from '../components/UserInstallmentPage';
 
 const routes = [
 	{
@@ -79,6 +80,12 @@ const routes = [
 		main: () => <UserInfoPage/>
 	},
 	{
+		path: '/account/installment',
+		exact: true,
+		name: "User Installment Page",
+		main: ({history, location}) => <UserInstallmentPage history={history} location={location}/>
+	},
+	{
 		path: '/account/purchase',
 		exact: true,
 		name: "Purchase",
@@ -106,7 +113,7 @@ const routes = [
 		path: '/installment/:pathseo.:productID.:colorID',
 		exact: true,
 		name: "Installment Page",
-		main: ({match, history, location}) => <InstallmentPage match={match} history={history} location={location}/>
+		main: ({match}) => <InstallmentPage match={match}/>
 	},
 	{
 		path: '',

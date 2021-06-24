@@ -63,7 +63,11 @@ const InstallmentSchema = new Schema(
       status: { // -1 (Qúa hạn), 0 (Chưa tới hạn), 1 (Hoàn tất)
         type: Number
       }
-    }]
+    }],
+    active: {
+      type: Boolean,
+      default: true,
+    }
   },
 	{
 		timestamps: true

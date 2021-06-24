@@ -257,7 +257,7 @@ class ProductPage extends Component {
             <p>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
             </div>
             <div className="col-6">
-            <select value={filter.sort_p} className="form-select float-end" style={{width: "fit-content"}} onChange={this.handleChangeSortPrice}>
+            <select value={filter.sort_p} className="form-select float-end w-fit-content" onChange={this.handleChangeSortPrice}>
               <option key={-1} value="0">{t('shop.sort.price')}</option>
               <option value="1">{t('shop.sort.inc')}</option>
               <option value="-1">{t('shop.sort.des')}</option>

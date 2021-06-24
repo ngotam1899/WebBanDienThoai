@@ -9,6 +9,7 @@ import ReviewDetail from '../ReviewDetail'
 import ReviewActions from '../../redux/actions/review'
 // @Functions
 import numberWithCommas from '../../utils/formatPrice'
+import {INITIAL_IMAGE} from '../../constants';
 
 class OrderDetail extends Component {
   constructor(props){
@@ -63,49 +64,61 @@ class OrderDetail extends Component {
             <div className="modal-body">
               <div className="row">
                 <div className="col-6 form-inline">
-                  <i className="fa fa-calendar-day text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-calendar-day text-xl "></i>
+                  </div>
                   <div className="form-floating">
-                    <input type="text" className="form-control border-0" id="createdAt" name="createdAt" value={orderItem.createdAt}/>
-                    <label for="createdAt">{t('user.date.input')}</label>
+                    <input type="date" className="form-control border-0" id="createdAt" name="createdAt" value={orderItem.createdAt.slice(0,10)}/>
+                    <label htmlFor="createdAt">{t('user.date.input')}</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
-                  <i className="fa fa-money-bill-wave text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-money-bill-wave text-xl"></i>
+                  </div>
                   <div className="form-floating">
                     <input type="number" className="form-control border-0" id="total_price" name="total_price" value={orderItem.total_price}/>
-                    <label for="total_price">{t('user.total.input')} (VND)</label>
+                    <label htmlFor="total_price">{t('user.total.input')} (VND)</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
-                  <i className="fa fa-gifts text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-gifts text-xl"></i>
+                  </div>
                   <div className="form-floating">
                     <input type="text" className="form-control border-0 " id="status" name="status" 
                     value={orderItem.status===true ? `${t('user.status.true')}` : `${t('user.status.false')}`}/>
-                    <label for="status">{t('user.status.label')}</label>
+                    <label htmlFor="status">{t('user.status.label')}</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
-                  <i className="fa fa-money-check-alt text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-money-check-alt text-xl"></i>
+                  </div>
                   <div className="form-floating">
                     <input type="text" className="form-control border-0" id="payment_method" name="payment_method" 
                     value={orderItem.payment_method === "local" ? `${t('checkout.cod.button')}` : 'Paypal'}/>
-                    <label for="payment_method">{t('user.payment.way')}</label>
+                    <label htmlFor="payment_method">{t('user.payment.way')}</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
-                  <i className="fa fa-shopping-basket text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-shopping-basket text-xl"></i>
+                  </div>
                   <div className="form-floating">
                     <input type="number" className="form-control border-0" id="total_price" name="total_price" value={orderItem.total_price}/>
-                    <label for="total_price">{t('user.total.input')} (VND)</label>
+                    <label htmlFor="total_price">{t('user.total.input')} (VND)</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
-                  <i className="fa fa-file-invoice-dollar text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-file-invoice-dollar text-xl"></i>
+                  </div>
                   {orderItem.payment_method==="local" 
                   ? <>
                   <div className="form-floating">
                     <input type="text" className="form-control border-0" name="confirmed" id="confirmed" value={ orderItem.confirmed===true ? `${t('user.confirm.true')}` : `${t('user.confirm.false')}`}/>
-                    <label for="confirmed">{t('user.confirm.label')}</label>
+                    <label htmlFor="confirmed">{t('user.confirm.label')}</label>
                     <span className={orderItem.confirmed===true && "d-none"}>
                       <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>{t('user.confirm.button')}</button>
                     </span>
@@ -114,7 +127,7 @@ class OrderDetail extends Component {
                   : <>
                   <div className="form-floating">
                     <input type="text" className="form-control border-0" id="paid" name="paid" value={ orderItem.paid===true ? `${t('user.payment.true')}` : `${t('user.payment.false')}`}/>
-                    <label for="paid">{t('user.payment.label')}</label>  
+                    <label htmlFor="paid">{t('user.payment.label')}</label>  
                   </div>
                   </>}
                 </div>
@@ -125,7 +138,7 @@ class OrderDetail extends Component {
                   <div className="card my-1" key={index}>
                     <div className="row no-gutters text-center">
                       <div className="col-sm-3 h-120" onClick={()=>this.onRenderDetail(item.product)}>
-                        <img className="h-100" src={item.image ? item.image : "http://www.pha.gov.pk/img/img-02.jpg"} alt={item.name} />
+                        <img className="h-100" src={item.image ? item.image : INITIAL_IMAGE} alt={item.name} />
                       </div>
                       <div className="col-sm-3 align-self-center text-left">
                         <p className="text-dark m-0 font-weight-bold">{item.name}</p>
@@ -145,24 +158,30 @@ class OrderDetail extends Component {
               </div>
               <div className="row">
                 <div className="col-6 form-inline">
-                  <i className="fa fa-mobile-alt text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-mobile-alt text-xl"></i>
+                  </div>
                   <div className="form-floating" style={{width: "90%"}}>
                     <input type="number" className="form-control border-0" id="shipping_phonenumber" name="shipping_phonenumber" value={orderItem.shipping_phonenumber}/>
-                    <label for="shipping_phonenumber">{t('user.phone.order')}</label>
+                    <label htmlFor="shipping_phonenumber">{t('user.phone.order')}</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
-                  <i className="fa fa-envelope text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-envelope text-xl"></i>
+                  </div>
                   <div className="form-floating">
                     <input type="email" className="form-control border-0" name="email" id="email" value={orderItem.email}/>
-                    <label for="email">{t('user.email.order')}:</label>
+                    <label htmlFor="email">{t('user.email.order')}:</label>
                   </div>
                 </div>
                 <div className="col-12 form-inline">
-                  <i className="fa fa-home text-xl bill-icon"></i>
+                  <div className="bill-icon">
+                    <i className="fa fa-home text-xl"></i>
+                  </div>
                   <div className="form-floating" style={{width: "90%"}}>
                     <input type="text" className="form-control border-0 w-100" name="shipping_address" id="shipping_address" value={orderItem.shipping_address}/>
-                    <label for="shipping_address">{t('user.address.order')}:</label>
+                    <label htmlFor="shipping_address">{t('user.address.order')}:</label>
                   </div>
                 </div>
               </div>

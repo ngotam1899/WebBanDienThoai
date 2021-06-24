@@ -6,10 +6,10 @@ const ObjectId = mongoose.Types.ObjectId;
 const getAllProductReView = async(req, res, next) => {
   try {
     let condition = {};
-    if (req.query.product != undefined) {
+    if (req.query.product != undefined && req.query.product != '') {
 			condition.product = req.query.product;
     }
-    if (req.query.user != undefined) {
+    if (req.query.user != undefined && req.query.user != '') {
 			condition.user = req.query.user;
     }
     let limit = 10;
