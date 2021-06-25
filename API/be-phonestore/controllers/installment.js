@@ -30,7 +30,8 @@ const getAllInstallment = async (req, res, next) => {
 			if (number_page && number_page > 0) {
 				page = number_page;
 			}
-		}
+    }
+    const total = await Installment.countDocuments(condition);
     const installments = await Installment.find(condition, {user: 1, product: 1, startedAt: 1, endedAt: 1, status: 1, debt: 1, paid: 1, prepay: 1, active: 1})
     .populate({ path: 'user', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
     .populate({ path: 'staff', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
@@ -38,8 +39,8 @@ const getAllInstallment = async (req, res, next) => {
     .populate({ path: 'product._id', select: ["bigimage", "name"], populate : {path : 'bigimage', select: "public_url"}})
     .sort({ createdAt: -1 })
     .limit(limit)
-		.skip(limit * page);;
-		return res.status(200).json({ success: true, code: 200, message: '', installments });
+		.skip(limit * page);
+		return res.status(200).json({ success: true, code: 200, message: '', total, installments });
 	} catch (error) {
 		return next(error);
 	}

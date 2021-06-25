@@ -21,7 +21,7 @@ const NotificationSchema = new Schema({
 		type: Boolean,
 		default: true
 	},
-	type: {						// 0: đơn hàng, 1: event
+	type: {						// 0: đơn hàng, 1: event, 2: trả góp
 		type: Number
 	}
 },{

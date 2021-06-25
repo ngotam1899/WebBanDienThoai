@@ -288,7 +288,7 @@ const sendEmailPassword = (email) => {
 const getAllUser = async (req, res, next) => {
 	try {
 		var condition = {}
-		let limit = 5;
+		let limit = 10;
 		let page = 0;
 		if (req.query.limit != undefined && req.query.limit != '') {
 			const number_limit = parseInt(req.query.limit);
@@ -309,7 +309,7 @@ const getAllUser = async (req, res, next) => {
 		.populate({path : 'image', select: "public_url"})
 		.limit(limit)
 		.skip(limit * page);
-		let total = await User.countDocuments()
+		const total = await User.countDocuments(condition)
 		return res.status(200).json({ 
 			success: true, 
 			code: 200, 

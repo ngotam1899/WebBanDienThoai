@@ -3,6 +3,7 @@ import { get } from "lodash";
 import { connect } from "react-redux";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import qs from "query-string";
 // @Components
 import {
   CCard,
@@ -13,9 +14,12 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import SpecificationDetail from '../Specification/SpecificationDetail'
+import SpecificationDetail from '../Specification/SpecificationDetail';
+import Pagination from "react-js-pagination";
 // @Actions
 import SpecificationActions from "../../redux/actions/specification";
+// @Functions
+import getFilterParams from "../../utils/getFilterParams";
 const fields = ['name', { key: 'actions', _style: { width: '15%'} }]
 
 class ProductList extends Component {
@@ -23,11 +27,34 @@ class ProductList extends Component {
     super(props);
     this.state = {
       large: false,
+      filter: {
+        limit: 10,
+        page: 0,
+      },
     }
   }
   componentDidMount() {
-    const { onGetListSpecification } = this.props;
-    onGetListSpecification();
+    const { onClearState, onGetList, location } = this.props;
+    const filters = getFilterParams(location.search);
+    const { filter } = this.state;
+    var params = {
+      ...filter,
+      ...filters
+    };
+    onClearState();
+    onGetList(params);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      const filters = getFilterParams(this.props.location.search);
+      const { filter } = this.state;
+      var params = {
+        ...filter,
+        ...filters
+      };
+      this.props.onGetList(params);
+    }
   }
 
   setLarge = (large) => {
@@ -94,21 +121,38 @@ class ProductList extends Component {
     onDelete(_id);
   }
 
+  // phân trang
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
+  // Chuyển router (thêm vào params)
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
+
   render () {
-    const {large} = this.state;
-    const {listSpecification, specificationDetail, onClearDetail} = this.props;
+    const { large } = this.state;
+    const { listSpecification, specificationDetail, onClearDetail, total, location } = this.props;
+    const filter = getFilterParams(location.search);
     return (
-      <>
         <CRow>
           <CCol>
             <CCard>
               <CCardHeader>
-                <h5 className="float-left my-2">Danh sách hệ thuộc tính</h5>
+                <h5 className="float-left my-2">Danh sách thuộc tính</h5>
                 <CButton
                   onClick={() => this.setLarge(!large)}
                   className="mb-1 float-right"
                   color="success"
-                > Thêm hệ điều hành
+                > Thêm thuộc tính
                 </CButton>
               </CCardHeader>
 
@@ -119,8 +163,6 @@ class ProductList extends Component {
                   hover
                   striped
                   bordered
-                  itemsPerPage={10}
-                  pagination
                   scopedSlots = {{
                     'name': (item) => (
                       <td>{item.name}</td>
@@ -150,10 +192,23 @@ class ProductList extends Component {
                 {(!specificationDetail && large) && <SpecificationDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
+              <div className="row justify-content-center">
+              {total && <Pagination
+                activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                itemsCountPerPage={this.state.filter.limit}
+                totalItemsCount={total}
+                pageRangeDisplayed={2}
+                linkClass="page-link"
+                itemClass="page-item"
+                prevPageText="Previous"
+                nextPageText="Next"
+                hideFirstLastPages={true}
+                onChange={this.handlePageChange.bind(this)}
+              />}
+              </div>
             </CCard>
           </CCol>
         </CRow>
-      </>
     )
   }
 }
@@ -162,12 +217,13 @@ const mapStateToProps = (state) => {
   return {
     listSpecification: state.specification.list,
     specificationDetail: state.specification.detail,
+    total: state.specification.total,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetListSpecification : (params) => {
+    onGetList : (params) => {
       dispatch(SpecificationActions.onGetList(params))
     },
     onGetDetail: (id) => {

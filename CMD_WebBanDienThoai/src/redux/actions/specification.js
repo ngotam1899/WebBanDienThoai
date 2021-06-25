@@ -48,9 +48,9 @@ const onGetList = (payload) => ({
   payload,
 });
 
-const onGetListSuccess = (payload) => ({
+const onGetListSuccess = (list, total) => ({
   type: SpecificationActionTypes.GET_LIST_SUCCESS,
-  payload,
+  payload: {list, total},
 });
 
 const onGetListError = (error) => ({

@@ -65,80 +65,119 @@ const getAllBrand = async (req, res, next) => {
 		];
 		const count = await Product.aggregate(pipeline);
 		await Brand.populate(count, {path: "_id", select: ['name', 'image'], populate: {path: 'image', select: 'public_url'}});
-		const brands = await Brand.find().populate({path: 'image', select: 'public_url'});
-		return res.status(200).json({ success: true, code: 200, message: '', count, brands });
+
+		let limit = 10;
+		let page = 0;
+		if (req.query.limit != undefined && req.query.limit != '') {
+			const number_limit = parseInt(req.query.limit);
+			if (number_limit && number_limit > 0) {
+				limit = number_limit;
+			}
+		}
+		if (req.query.page != undefined && req.query.page != '') {
+			const number_page = parseInt(req.query.page);
+			if (number_page && number_page > 0) {
+				page = number_page;
+			}
+		}
+		const total = await Brand.countDocuments();
+		const brands = await Brand.find()
+		.populate({path: 'image', select: 'public_url'})
+		.limit(limit)
+		.skip(limit * page);
+		return res.status(200).json({ success: true, code: 200, message: '', count, total, brands });
 	} catch (error) {
 		return next(error);
 	}
 };
 
 const accessoryBrand = async (req, res, next) => {
-	var accessories = await Category.find({ accessories: true }, { _id: 1 });
-	for(let i=0; i<accessories.length; i++){
-		accessories[i] = ObjectId(accessories[i]._id)
-	}
-	const pipeline = [
-		{
-			'$match': {'active': true, 'category' : { '$in': accessories }}
-		},
-		{	'$group': 	
-			{
-				'_id': '$brand',
-				'count': { '$sum': 1 }
-			}
-		},
-		{
-			'$sort': { 'count': -1, '_id': -1 }
+	try {
+		var accessories = await Category.find({ accessories: true }, { _id: 1 });
+		for(let i=0; i<accessories.length; i++){
+			accessories[i] = ObjectId(accessories[i]._id)
 		}
-	];
-	const brands = await Product.aggregate(pipeline);
-	await Brand.populate(brands, {path: "_id", select: ['name', 'image'], populate: {path: 'image', select: 'public_url'}});
-	return res.status(200).json({ success: true, code: 200, message: '', brands });
+		const pipeline = [
+			{
+				'$match': {'active': true, 'category' : { '$in': accessories }}
+			},
+			{	'$group': 	
+				{
+					'_id': '$brand',
+					'count': { '$sum': 1 }
+				}
+			},
+			{
+				'$sort': { 'count': -1, '_id': -1 }
+			}
+		];
+		const brands = await Product.aggregate(pipeline);
+		await Brand.populate(brands, {path: "_id", select: ['name', 'image'], populate: {path: 'image', select: 'public_url'}});
+		return res.status(200).json({ success: true, code: 200, message: '', brands });
+	} catch (error) {
+		return next(error);
+	}
 }
 
 const addBrand = async (req, res, next) => {
-	const {name} = req.body;
-  const newBrand = new Brand();
-  if (name) newBrand.name = name;
-  if (req.files){
-    const {image} = req.files;
-    const newImage = await imageController.upload(image,Image)
-    newBrand.image = newImage._id;
-  }
-	await newBrand.save();
-	return res.status(200).json({ success: true, code: 201, message: '', brand: newBrand });
+	try {
+		const {name} = req.body;
+		const newBrand = new Brand();
+		if (name) newBrand.name = name;
+		if (req.files){
+			const {image} = req.files;
+			const newImage = await imageController.upload(image,Image)
+			newBrand.image = newImage._id;
+		}
+		await newBrand.save();
+		return res.status(200).json({ success: true, code: 201, message: '', brand: newBrand });
+	} catch (error) {
+		return next(error);
+	}
 };
 const updateBrand = async (req, res, next) => {
-	const { IDBrand } = req.params;
-  const {name} = req.body;
-  const brand = await Brand.findById(IDBrand);
-  if (name) brand.name = name;
-  if (req.files){
-    const {image} = req.files;
-    const newImage = await imageController.upload(image,Image)
-    brand.image = newImage._id;
-  }
-	await brand.save();
-	return res.status(200).json({ success: true, code: 200, data: brand });
+	try {
+		const { IDBrand } = req.params;
+		const {name} = req.body;
+		const brand = await Brand.findById(IDBrand);
+		if (name) brand.name = name;
+		if (req.files){
+			const {image} = req.files;
+			const newImage = await imageController.upload(image,Image)
+			brand.image = newImage._id;
+		}
+		await brand.save();
+		return res.status(200).json({ success: true, code: 200, data: brand });
+	} catch (error) {
+		return next(error);
+	}
 };
 const deleteBrand = async (req, res, next) => {
-	const { IDBrand } = req.params;
-	const isValid = await Validator.isValidObjId(IDBrand);
-	if (!isValid) {
-		return res.status(200).json({ success: false, code: 400, message: 'id brand is not correctly' });
-	} else {
-		const result = await Brand.findByIdAndDelete(IDBrand);
-		if (result) return res.status(200).json({ success: true, code: 200, message: '' });
+	try {
+		const { IDBrand } = req.params;
+		const isValid = await Validator.isValidObjId(IDBrand);
+		if (!isValid) {
+			return res.status(200).json({ success: false, code: 400, message: 'id brand is not correctly' });
+		} else {
+			const result = await Brand.findByIdAndDelete(IDBrand);
+			if (result) return res.status(200).json({ success: true, code: 200, message: '' });
+		}
+	} catch (error) {
+		return next(error);
 	}
 };
 const getDetailBrand = async (req, res, next) => {
-	const { IDBrand } = req.params;
-	const isValid = await Validator.isValidObjId(IDBrand);
-	if (!isValid) {
-		return res.status(200).json({ success: false, code: 400, message: 'id Brand is not correctly' });
-	} else {
-		const result = await Brand.findById(IDBrand).populate('image');
-		return res.status(200).json({ success: true, code: 200, message: '', category: result });
+	try {
+		const { IDBrand } = req.params;
+		const isValid = await Validator.isValidObjId(IDBrand);
+		if (!isValid) {
+			return res.status(200).json({ success: false, code: 400, message: 'id Brand is not correctly' });
+		} else {
+			const result = await Brand.findById(IDBrand).populate('image');
+			return res.status(200).json({ success: true, code: 200, message: '', category: result });
+		}
+	} catch (error) {
+		return next(error);
 	}
 };
 

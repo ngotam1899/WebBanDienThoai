@@ -31,14 +31,14 @@ export default function(state = init, action) {
       return {
         ...state,
          loading: false,
-        /*apiResultGetList: omit(get(action, "payload"), ["data"]), */
       };
 
     case CategoryActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
         loading: false,
-        list: get(action, "payload", []),
+        total: get(action, "payload.total"),
+        list: get(action, "payload.list", []),
       };
     case CategoryActionTypes.GET_DETAIL:
     case CategoryActionTypes.GET_DETAIL_ERROR:

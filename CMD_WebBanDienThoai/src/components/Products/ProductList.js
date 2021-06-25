@@ -26,7 +26,7 @@ import SpecificationActions from "../../redux/actions/specification";
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
 import {INITIAL_IMAGE} from '../../constants';
-const fields = ['name','image','brand', { key: 'actions', _style: { width: '25%'} }]
+const fields = ['name','image','brand', { key: 'actions', _style: { width: '30%'} }]
 
 class ProductList extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class ProductList extends Component {
       active: filter.active ===null ? "" : filter.active,
       queryParams: {},
       filter: {
-        limit: 5,
+        limit: 10,
         page: 0,
         active: 1
       },
@@ -175,8 +175,8 @@ class ProductList extends Component {
   }
 
   render () {
-    const {large, keyword, min_p, max_p, queryParams} = this.state;
-    const {listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location} = this.props;
+    const { large, keyword, min_p, max_p, queryParams } = this.state;
+    const { listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <>
@@ -271,18 +271,25 @@ class ProductList extends Component {
                     'image':
                     (item) => (
                       <td>
-                        <img src={ item.bigimage ? item.bigimage.public_url : INITIAL_IMAGE } style={{width:'10vw'}} alt={item.name} />
+                        <img src={ item.bigimage ? item.bigimage.public_url : INITIAL_IMAGE } style={{height:'10vh'}} alt={item.name} />
                       </td>
                     ),
                     'brand': (item) => (
-                      <td><img src={item.brand && item.brand.image ? item.brand.image.public_url: INITIAL_IMAGE} style={{width:'8vw'}} alt={item.name}></img></td>
+                      <td><img src={item.brand && item.brand.image ? item.brand.image.public_url: INITIAL_IMAGE} style={{height:'10vh'}} alt={item.name}></img></td>
                     ),
                     'actions':
                     (item)=>(
                       <td>
                         <CButton
+                          onClick={() => this.onUpdate(!large, item._id)}
+                          className="mr-1 mb-1 mb-xl-0"
+                          color="primary"
+                        >
+                          Bình luận
+                        </CButton>
+                        <CButton
                           onClick={() => this.onSubmit(item._id, "đổi trạng thái", item.active)}
-                          className={item.active ? "mr-1 mb-1 mb-xl-0 bg-primary text-white" : "mr-1 mb-1 mb-xl-0 bg-success text-white"}
+                          className={item.active ? "mr-1 mb-1 mb-xl-0 bg-purple" : "mr-1 mb-1 mb-xl-0 bg-orange"}
                         >
                           {item.active ? "Deactivate" : "Activate"}
                         </CButton>
@@ -312,7 +319,7 @@ class ProductList extends Component {
               <div className="row justify-content-center">
               {total && <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
-                  itemsCountPerPage={5}
+                  itemsCountPerPage={this.state.filter.limit}
                   totalItemsCount={total}
                   pageRangeDisplayed={2}
                   linkClass="page-link"

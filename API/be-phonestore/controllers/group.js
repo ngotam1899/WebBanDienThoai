@@ -8,7 +8,7 @@ const getAllGroup = async(req, res, next) => {
       let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
       condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
     }
-    let limit = 30;
+    let limit = 10;
     let page = 0;
     if (req.query.limit != undefined && req.query.limit != "") {
       const number_limit = parseInt(req.query.limit);
@@ -25,8 +25,8 @@ const getAllGroup = async(req, res, next) => {
     const groups = await Group.find(condition, {products: 0})
     .limit(limit)
     .skip(limit * page);
-    let count = await Group.countDocuments(condition);
-    return res.status(200).json({ success: true, code: 200, message: '', page, limit, total: count, groups })
+    const total = await Group.countDocuments(condition);
+    return res.status(200).json({ success: true, code: 200, message: '', page, limit, total, groups })
   } catch (error) {
     return next(error)
   }

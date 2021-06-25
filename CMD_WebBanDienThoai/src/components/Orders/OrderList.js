@@ -33,7 +33,7 @@ class OrderList extends Component {
       large: false,
       phone: filter.phone ===null ? "" : filter.phone,
       filter: {
-        limit: 5,
+        limit: 10,
         page: 0,
         active: 1
       },
@@ -151,7 +151,6 @@ class OrderList extends Component {
     const {listOrder, orderDetail, onClearDetail, total, location,} = this.props;
     const filter = getFilterParams(location.search);
     return (
-      <>
         <CRow>
           <CCol>
             <CCard>
@@ -261,24 +260,7 @@ class OrderList extends Component {
                           </CButton>
                           </PopoverBody>
                         </UncontrolledPopover>
-                      </td>
-                      /* {
-                        <td>
-                        <CButton
-                          onClick={() => this.onUpdate(!large, item._id)}
-                          className="mr-1 mb-1 mb-xl-0"
-                          color="warning"
-                        >
-                          Sửa
-                        </CButton>
-                        <CButton
-                          onClick={() => this.submit(item._id)}
-                          className="mr-1"
-                          color="danger"
-                        >
-                          Hủy đơn
-                        </CButton>
-                      </td> }*/)
+                      </td>)
                   }}
                 />
                 {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}
@@ -292,7 +274,7 @@ class OrderList extends Component {
               <div className="row justify-content-center">
               {total && <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
-                  itemsCountPerPage={5}
+                  itemsCountPerPage={this.state.filter.limit}
                   totalItemsCount={total}
                   pageRangeDisplayed={2}
                   linkClass="page-link"
@@ -306,7 +288,6 @@ class OrderList extends Component {
             </CCard>
           </CCol>
         </CRow>
-      </>
     )
   }
 }

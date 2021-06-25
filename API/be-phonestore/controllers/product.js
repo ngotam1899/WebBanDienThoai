@@ -46,7 +46,7 @@ const getAllProduct = async (req, res, next) => {
 				/* Filter area */
 			}
 		}
-		let limit = 5;
+		let limit = 10;
 		let page = 0;
 		if (req.query.limit != undefined && req.query.limit != '') {
 			const number_limit = parseInt(req.query.limit);
@@ -90,7 +90,7 @@ const getAllProduct = async (req, res, next) => {
 			.sort(sort)
 			.limit(limit)
 			.skip(limit * page);
-		const count = await Product.countDocuments(condition);
+		const total = await Product.countDocuments(condition);
 		return res
 			.status(200)
 			.json({
@@ -99,7 +99,7 @@ const getAllProduct = async (req, res, next) => {
 				message: '',
 				page,
 				limit,
-				total: count,
+				total,
 				products
 			});
 	} catch (error) {

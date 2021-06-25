@@ -2,6 +2,7 @@ import React, { Component }  from 'react'
 import { connect } from "react-redux";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import qs from "query-string";
 // @Components
 import {
   CCard,
@@ -13,6 +14,9 @@ import {
   CRow,
 } from '@coreui/react'
 import AdDetail from './AdDetail'
+import Pagination from "react-js-pagination";
+// @Functions
+import getFilterParams from "../../utils/getFilterParams";
 import {INITIAL_IMAGE} from '../../constants';
 // @Actions
 import AdActions from "../../redux/actions/ad";
@@ -24,12 +28,34 @@ class AdList extends Component {
     super(props);
     this.state = {
       large: false,
+      filter: {
+        limit: 10,
+        page: 0,
+      },
     }
   }
   componentDidMount() {
-    const { onClearState, onGetList } = this.props;
+    const { onClearState, onGetList, location } = this.props;
+    const filters = getFilterParams(location.search);
+    const { filter } = this.state;
+    var params = {
+      ...filter,
+      ...filters
+    };
     onClearState();
-    onGetList();
+    onGetList(params);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      const filters = getFilterParams(this.props.location.search);
+      const { filter } = this.state;
+      var params = {
+        ...filter,
+        ...filters
+      };
+      this.props.onGetList(params);
+    }
   }
 
   setLarge = (large) => {
@@ -80,11 +106,28 @@ class AdList extends Component {
     onClearDetail();
   }
 
+  // phân trang
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
+  // Chuyển router (thêm vào params)
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
+
   render () {
-    const {large} = this.state;
-    const {listAd, adDetail, onClearDetail} = this.props;
+    const { large } = this.state;
+    const { listAd, adDetail, onClearDetail, total, location } = this.props;
+    const filter = getFilterParams(location.search);
     return (
-      <>
         <CRow>
           <CCol>
             <CCard>
@@ -105,8 +148,6 @@ class AdList extends Component {
                   hover
                   striped
                   bordered
-                  itemsPerPage={10}
-                  pagination
                   scopedSlots = {{
                     'image': (item)=>(
                       <td>
@@ -148,10 +189,23 @@ class AdList extends Component {
                 {(!adDetail && large) && <AdDetail large={large} onClose={this.onClose}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
+              <div className="row justify-content-center">
+              {total && <Pagination
+                  activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                  itemsCountPerPage={this.state.filter.limit}
+                  totalItemsCount={total}
+                  pageRangeDisplayed={2}
+                  linkClass="page-link"
+                  itemClass="page-item"
+                  prevPageText="Previous"
+                  nextPageText="Next"
+                  hideFirstLastPages={true}
+                  onChange={this.handlePageChange.bind(this)}
+                />}
+              </div>
             </CCard>
           </CCol>
         </CRow>
-      </>
     )
   }
 }
@@ -160,13 +214,14 @@ const mapStateToProps = (state) => {
   return {
     listAd: state.ad.list,
     adDetail: state.ad.detail,
+    total: state.ad.total,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetList: () => {
-      dispatch(AdActions.onGetList())
+    onGetList: (params) => {
+      dispatch(AdActions.onGetList(params))
     },
     onClearState: () =>{
       dispatch(AdActions.onClearState())

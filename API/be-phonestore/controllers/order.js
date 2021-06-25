@@ -70,7 +70,7 @@ const getAllOrder = async (req, res, next) => {
 		.sort({ createdAt: -1 })
 		.limit(limit)
 		.skip(limit * page);
-		let total = await Order.countDocuments(condition);
+		const total = await Order.countDocuments(condition);
 		return res
 			.status(200)
 			.json({ success: true, code: 200, message: '', page, limit, total, orders });

@@ -2,6 +2,7 @@ import React, { Component }  from 'react'
 import { connect } from "react-redux";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import qs from "query-string";
 // @Components
 import {
   CCard,
@@ -13,17 +14,48 @@ import {
   CRow,
 } from '@coreui/react'
 import Rating from 'react-rating'
+import Pagination from "react-js-pagination";
 // @Actions
 import ReviewActions from "../../redux/actions/review";
+// @Functions
+import getFilterParams from "../../utils/getFilterParams";
 import { INITIAL_IMAGE } from '../../constants';
 
 const fields = [{ key: 'product', _style: { width: '30%'} }, 'content', 'rating', 'like', { key: 'actions', _style: { width: '10%'} }]
 
 class ReviewList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filter: {
+        limit: 10,
+        page: 0,
+      },
+    }
+  }
+
   componentDidMount() {
-    const { onClearState, onGetList } = this.props;
+    const { onClearState, onGetList, location } = this.props;
+    const filters = getFilterParams(location.search);
+    const { filter } = this.state;
+    var params = {
+      ...filter,
+      ...filters
+    };
     onClearState();
-    onGetList();
+    onGetList(params);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      const filters = getFilterParams(this.props.location.search);
+      const { filter } = this.state;
+      var params = {
+        ...filter,
+        ...filters
+      };
+      this.props.onGetList(params);
+    }
   }
 
   submit = (id) => {
@@ -46,10 +78,27 @@ class ReviewList extends Component {
     onDelete(_id);
   }
 
+  // phân trang
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
+  // Chuyển router (thêm vào params)
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
+
   render () {
-    const { listReview } = this.props;
+    const { listReview, total, location } = this.props;
+    const filter = getFilterParams(location.search);
     return (
-      <>
         <CRow>
           <CCol>
             <CCard>
@@ -64,8 +113,6 @@ class ReviewList extends Component {
                   hover
                   striped
                   bordered
-                  itemsPerPage={10}
-                  pagination
                   scopedSlots = {{
                     'product': (item) => (
                       <td className="row">
@@ -105,10 +152,23 @@ class ReviewList extends Component {
                   }}
                 />
               </CCardBody>
+              <div className="row justify-content-center">
+              {total && <Pagination
+                  activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                  itemsCountPerPage={this.state.filter.limit}
+                  totalItemsCount={total}
+                  pageRangeDisplayed={2}
+                  linkClass="page-link"
+                  itemClass="page-item"
+                  prevPageText="Previous"
+                  nextPageText="Next"
+                  hideFirstLastPages={true}
+                  onChange={this.handlePageChange.bind(this)}
+                />}
+              </div>
             </CCard>
           </CCol>
         </CRow>
-      </>
     )
   }
 }
@@ -116,13 +176,14 @@ class ReviewList extends Component {
 const mapStateToProps = (state) => {
   return {
     listReview: state.review.list,
+    total: state.review.total,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetList: () => {
-      dispatch(ReviewActions.onGetList())
+    onGetList: (params) => {
+      dispatch(ReviewActions.onGetList(params))
     },
     onClearState: () =>{
       dispatch(ReviewActions.onClearState())

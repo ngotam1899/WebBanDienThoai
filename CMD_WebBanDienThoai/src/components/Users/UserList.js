@@ -9,9 +9,14 @@ import {
   CButton,
   CRow,
 } from '@coreui/react'
-import UsersActions from "../../redux/actions/user";
+import Pagination from "react-js-pagination";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import qs from "query-string";
+// @Actions
+import UsersActions from "../../redux/actions/user";
+// @Functions
+import getFilterParams from "../../utils/getFilterParams";
 const fields = ['first name', 'last name', 'email', 'role',{ key: 'actions', _style: { width: '40%'} }]
 
 class UserList extends Component {
@@ -19,12 +24,34 @@ class UserList extends Component {
     super(props);
     this.state = {
       large: false,
+      filter: {
+        limit: 10,
+        page: 0,
+      },
     }
   }
   componentDidMount() {
-    const { onClearState, onGetList } = this.props;
+    const { onClearState, onGetList, location } = this.props;
+    const filters = getFilterParams(location.search);
+    const { filter } = this.state;
+    var params = {
+      ...filter,
+      ...filters
+    };
     onClearState();
-    onGetList();
+    onGetList(params);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      const filters = getFilterParams(this.props.location.search);
+      const { filter } = this.state;
+      var params = {
+        ...filter,
+        ...filters
+      };
+      this.props.onGetList(params);
+    }
   }
 
   setLarge = (large) => {
@@ -59,9 +86,8 @@ class UserList extends Component {
     }
   }
 
-  handleListOrder = (id) =>{
+  handleRedirect = (id, pathname) =>{
     const { history } = this.props;
-    const pathname = '/users/order-manage';
     history.push(`${pathname}?user=${id}`);
   }
 
@@ -81,11 +107,27 @@ class UserList extends Component {
     onClearDetail();
   }
 
+  // phân trang
+  handlePageChange(pageNumber) {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
+  // Chuyển router (thêm vào params)
+  handleUpdateFilter = (data) => {
+    const {location, history} = this.props;
+    const {pathname, search} = location;
+    let queryParams = getFilterParams(search);
+    queryParams = {
+      ...queryParams,
+      ...data,
+    };
+    history.push(`${pathname}?${qs.stringify(queryParams)}`);
+  };
+
   render () {
-    const {large} = this.state;
-    const {listUser, onClearDetail} = this.props;
+    const { listUser, total, location } = this.props;
+    const filter = getFilterParams(location.search);
     return (
-      <>
         <CRow>
           <CCol>
             <CCard>
@@ -100,8 +142,6 @@ class UserList extends Component {
                   hover
                   striped
                   bordered
-                  itemsPerPage={10}
-                  pagination
                   scopedSlots = {{
                     'first name': (item) => (
                       <td>{item.firstname}</td>
@@ -119,21 +159,21 @@ class UserList extends Component {
                     (item)=>(
                       <td>
                         <CButton
-                          onClick={() => this.handleListOrder(item._id)}
+                          onClick={() => this.handleRedirect(item._id, '/users/order-manage')}
                           className="mr-1 mb-1 mb-xl-0"
                           color="success"
                         >
                           Đơn mua
                         </CButton>
                         <CButton
-                          onClick={() => this.handleListOrder(item._id)}
+                          onClick={() => this.handleRedirect(item._id, '/users/review-manage')}
                           className="mr-1 mb-1 mb-xl-0"
                           color="primary"
                         >
                           Bình luận
                         </CButton>
                         <CButton
-                          onClick={() => this.handleListOrder(item._id)}
+                          onClick={() => this.handleRedirect(item._id, '/users/installment-manage')}
                           className="mr-1 mb-1 mb-xl-0"
                           color="warning"
                         >
@@ -149,10 +189,23 @@ class UserList extends Component {
                   }}
                 />
               </CCardBody>
+              <div className="row justify-content-center">
+              {total && <Pagination
+                activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                itemsCountPerPage={this.state.filter.limit}
+                totalItemsCount={total}
+                pageRangeDisplayed={2}
+                linkClass="page-link"
+                itemClass="page-item"
+                prevPageText="Previous"
+                nextPageText="Next"
+                hideFirstLastPages={true}
+                onChange={this.handlePageChange.bind(this)}
+              />}
+              </div>
             </CCard>
           </CCol>
         </CRow>
-      </>
     )
   }
 }
@@ -160,13 +213,14 @@ class UserList extends Component {
 const mapStateToProps = (state) => {
   return {
     listUser: state.user.list,
+    total: state.user.total,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetList: () => {
-      dispatch(UsersActions.onGetList())
+    onGetList: (params) => {
+      dispatch(UsersActions.onGetList(params))
     },
     onUpdate: (id, params) => {
       dispatch(UsersActions.onUpdate(id, params))

@@ -8,7 +8,7 @@ function* handleGetList({ payload }) {
     const result = yield call(getAllColors, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(ColorActions.onGetListSuccess(data.colors));
+    yield put(ColorActions.onGetListSuccess(data.colors, data.total));
   } catch (error) {
     yield put(ColorActions.onGetListError(error));
   }

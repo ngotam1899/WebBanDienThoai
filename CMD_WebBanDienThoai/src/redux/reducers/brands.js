@@ -27,7 +27,8 @@ export default function(state = init, action) {
     case BrandActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        list: get(action, "payload", []),
+        total: get(action, "payload.total"),
+        list: get(action, "payload.list", []),
       };
     case BrandActionTypes.GET_DETAIL:
       return {

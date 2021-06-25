@@ -8,7 +8,7 @@ function* handleGetList({ payload }) {
     const result = yield call(getAllReviews, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(ReviewActions.onGetListSuccess(data.reviews));
+    yield put(ReviewActions.onGetListSuccess(data.reviews, data.total));
   } catch (error) {
     yield put(ReviewActions.onGetListError(error));
   }

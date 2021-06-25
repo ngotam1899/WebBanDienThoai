@@ -42,11 +42,28 @@ const getAllCategory = async(req, res, next) => {
     let condition = {};
     if (req.query.accessories != undefined && req.query.accessories != '0') {
 			condition.accessories = req.query.accessories=='1' ? true : false;
+    }
+    let limit = 10;
+		let page = 0;
+		if (req.query.limit != undefined && req.query.limit != '') {
+			const number_limit = parseInt(req.query.limit);
+			if (number_limit && number_limit > 0) {
+				limit = number_limit;
+			}
 		}
+		if (req.query.page != undefined && req.query.page != '') {
+			const number_page = parseInt(req.query.page);
+			if (number_page && number_page > 0) {
+				page = number_page;
+			}
+    }
+    const total = await Category.countDocuments(condition);
     const categorys = await Category.find(condition)
     .populate({ path: 'specifications', select: ['selections', 'name'], populate : {path : 'selections', select: "name"}  })
-    .populate({ path: 'image', select: 'public_url' });
-    return res.status(200).json({ success: true, code: 200, message: '', categorys})
+    .populate({ path: 'image', select: 'public_url' })
+    .limit(limit)
+		.skip(limit * page);
+    return res.status(200).json({ success: true, code: 200, message: '', total, categorys})
   } catch (error) {
     return next(error)
   }

@@ -17,19 +17,19 @@ import InstallmentActions from "../../redux/actions/installment";
 const statusList = [
   { 
     name: "Chờ duyệt",
-    state: {status:-1},
+    state: { status:-1, active:1 },
   },{
     name: "Chưa hoàn tất",
-    state: {status:0}
+    state: { status:0, active:1 }
   },{
     name: "Đã hoàn tất",
-    state: {status:1}
+    state: { status:1, active:1 }
   },{
     name: "Qúa hạn",
-    state: {status:2}
+    state: { status:2, active:1 }
   },{
     name: "Đã hủy",
-    state: {active:-1}
+    state: { active:-1 }
   }
 ];
 

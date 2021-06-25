@@ -9,7 +9,7 @@ const getAllSpecification = async(req, res, next) => {
         let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
         condition.name = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
     }
-    let limit = 30;
+    let limit = 10;
     let page = 0;
     if (req.query.limit != undefined && req.query.limit != "") {
         const number_limit = parseInt(req.query.limit);
@@ -32,8 +32,8 @@ const getAllSpecification = async(req, res, next) => {
     const specifications = await Specification.find(condition, {__v : 0})
     .limit(limit)
     .skip(limit * page);
-    let count = await Specification.countDocuments(condition);
-    return res.status(200).json({ success: true, code: 200, message: '', page: page, limit: limit, total: count, specifications: specifications })
+    const total = await Specification.countDocuments(condition);
+    return res.status(200).json({ success: true, code: 200, message: '', page, limit, total, specifications })
   } catch (error) {
       return next(error)
   }

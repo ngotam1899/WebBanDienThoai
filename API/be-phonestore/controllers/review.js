@@ -43,7 +43,7 @@ const getAllProductReView = async(req, res, next) => {
     ];
     const count = await Review.aggregate(pipeline)
 		let total = await Review.countDocuments(condition);
-    return res.status(200).json({ success: true, code: 200, page, limit, total,count, reviews })
+    return res.status(200).json({ success: true, code: 200, page, limit, total, count, reviews })
   } catch {
     new next(error)
   }

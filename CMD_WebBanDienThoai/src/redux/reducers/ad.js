@@ -29,7 +29,8 @@ export default function(state = init, action) {
       return {
         ...state,
         loading: false,
-        list: get(action, "payload", []),
+        total: get(action, "payload.total"),
+        list: get(action, "payload.list", []),
       };
     case AdActionTypes.GET_DETAIL:
       return {

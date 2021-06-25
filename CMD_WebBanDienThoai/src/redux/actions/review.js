@@ -28,9 +28,9 @@ const onGetList = (payload) => ({
   payload,
 });
 
-const onGetListSuccess = (payload) => ({
+const onGetListSuccess = (list, total) => ({
   type: ReviewActionTypes.GET_LIST_SUCCESS,
-  payload,
+  payload: {list, total}
 });
 
 const onGetListError = (error) => ({

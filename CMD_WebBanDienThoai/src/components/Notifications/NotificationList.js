@@ -100,7 +100,6 @@ class NotificationList extends Component {
     const {listNotification, total, location} = this.props;
     const filter = getFilterParams(location.search);
     return (
-      <>
         <CRow>
           <CCol>
             <CCard>
@@ -156,7 +155,7 @@ class NotificationList extends Component {
               </CCardBody>
               {total && <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
-                  itemsCountPerPage={5}
+                  itemsCountPerPage={this.state.filter.limit}
                   totalItemsCount={total}
                   pageRangeDisplayed={2}
                   linkClass="page-link"
@@ -169,7 +168,6 @@ class NotificationList extends Component {
             </CCard>
           </CCol>
         </CRow>
-      </>
     )
   }
 }

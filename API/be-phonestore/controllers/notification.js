@@ -17,7 +17,7 @@ const getAllNotification = async(req, res, next) => {
     if (req.query.active != undefined && req.query.active != "") {
 			conditions.active = req.query.active=='1' ? true : false;
 		}
-    let limit = 5;
+    let limit = 10;
     let page = 0;
     if (req.query.limit != undefined && req.query.limit != "") {
       const number_limit = parseInt(req.query.limit);
@@ -36,7 +36,7 @@ const getAllNotification = async(req, res, next) => {
     .sort({ createAt: -1 })
     .limit(limit)
     .skip(limit * page)
-    let total = await Notification.countDocuments({
+    const total = await Notification.countDocuments({
       ...condition, 
       ...conditions
     });

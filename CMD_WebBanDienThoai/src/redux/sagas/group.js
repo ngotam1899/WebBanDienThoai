@@ -8,7 +8,7 @@ function* handleGetList({ payload }) {
   try {
     const result = yield call(getAllGroups, payload);
     const data = get(result, "data");
-    yield put(GroupActions.onGetListSuccess(data.groups));
+    yield put(GroupActions.onGetListSuccess(data.groups, data.total));
   } catch (error) {
     yield put(GroupActions.onGetListError(error));
   }
@@ -51,11 +51,6 @@ function* handleCreate({ payload }) {
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(GroupActions.onCreateSuccess(data.group));
-/*     let product = yield select(state => state.products.detail);
-    yield put(ProductsActions.onUpdateImage({
-      id: product._id,
-      params: {group: data.group._id},
-      formData: null})); */
   } catch (error) {
     yield put(GroupActions.onCreateError(error));
   }
