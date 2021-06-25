@@ -1,5 +1,7 @@
 const Ad = require('../models/ad');
 const Image = require('../models/Image');
+const Notification = require('../models/notification');
+const User = require('../models/User');
 const Validator = require('../validators/validator');
 const imageController = require('./image');
 
@@ -47,6 +49,18 @@ const addAd = async (req, res, next) => {
       ad.image = newImage._id;
     }
     await ad.save();
+    const users = await User.find({},{_id:1});
+    var notifications = []
+    for(let i=0; i<users.length; i++){
+      notifications[i] = await {
+        user : users[i]._id,
+        content,
+        name,
+        image : ad.image ? ad.image : "",
+        type: 1
+      }
+    }
+    await Notification.insertMany(notifications)
     return res.status(200).json({ success: true, code: 201, message: '', ad });
   } 
   catch(error) {

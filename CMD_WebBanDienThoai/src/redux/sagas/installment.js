@@ -2,6 +2,11 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import InstallmentActions, { InstallmentActionTypes } from "../actions/installment";
 import { getAllInstallments, getDetailInstallment, addInstallment, updateInstallment, deleteInstallment } from "../apis/installment";
+/* Notification */
+import io from 'socket.io-client';
+import NotificationActions from "../actions/notification";
+const socket = io('http://localhost:3000');
+/* Notification */
 
 function* handleGetList({ payload }) {
   try {
@@ -53,6 +58,19 @@ function* handleUpdate({ payload }) {
     const detailResult = yield call(getDetailInstallment, payload.id);
     yield put(InstallmentActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(InstallmentActions.onGetList());
+    const instRes = yield call(getDetailInstallment, data.installment._id);
+    /* Notification */
+    if(data.installment.status > -1){
+      socket.emit('installmentChangeStatus', { status: 0, user: data.installment.user.toString(), installment: data.installment._id });
+      yield put(NotificationActions.onCreate({
+        user: data.installment.user,
+        type: 2,
+        name : `Phiếu trả góp ${data.installment._id} vừa được duyệt`,
+        image : instRes.data.installment.product._id.bigimage._id,
+        content :  `${data.installment._id} đã được duyệt thành công. Vui lòng kiểm tra thông tin trong Trang trả góp của bạn`
+      }))
+    }
+  /* Notification */
   } catch (error) {
     yield put(InstallmentActions.onUpdateError(error));
   }

@@ -24,13 +24,14 @@ class TheHeaderDropdownNotif extends Component {
     super(props);
     this.state = {
       itemsCount : 0,
-      email: ""
+      email: "",
+      type: -1  // type: 0 (order), type: 2 (installment)
     }
   }
 
   componentDidUpdate(prevProps, prevState){
-    const {itemsCount, email} = this.state;
-    const {onGetAllNotifications, totalNotification, userInfo} = this.props
+    const { itemsCount, email, type } = this.state;
+    const { onGetAllNotifications, totalNotification, userInfo } = this.props
     if (userInfo !== prevProps.userInfo && userInfo) {
       var admin = userInfo._id;
       onGetAllNotifications({admin, limit: 5, page: 0, active: 1})
@@ -39,20 +40,24 @@ class TheHeaderDropdownNotif extends Component {
       this.setState({itemsCount: totalNotification})
     }
     socket.on('newOrder', res => {
-      this.setState({itemsCount: itemsCount + res.newOrders, email: res.email});
+      this.setState({itemsCount: itemsCount + res.newOrders, email: res.email, type: 0});
     });
-    if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
-      toastInfo(`${email} vừa xác thực đơn hàng`)
+    socket.on('newInstallment', res => {
+      this.setState({itemsCount: itemsCount + res.newInstallments, email: res.email, type: 2});
+    });
+    if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification && type !== -1) {
+      if(type === 0) toastInfo(`${email} vừa xác thực đơn hàng`)
+      else toastInfo(`${email} vừa gửi yêu cầu trả góp`)
       var admin = userInfo._id;
       onGetAllNotifications({admin, limit: 5, page: 0, active: 1})
     }
   }
 
   onReadAllNotification = () =>{
-    const {onUpdateAllNotifications} = this.props;
+    const { onUpdateAllNotifications, userInfo } = this.props;
     const {itemsCount} = this.state;
     if(itemsCount > 0){
-      onUpdateAllNotifications({user: null})
+      onUpdateAllNotifications({admin: userInfo._id})
       this.setState({itemsCount : 0})
     }
   }

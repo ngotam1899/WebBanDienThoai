@@ -90,7 +90,7 @@ class InstallmentDetail extends Component {
                   <div className="row">
                     <div className="col-12 form-inline">
                       <div className="bill-icon">
-                        <i className="fa fa-business-time text-xl "></i>
+                        <i className="fa fa-luggage-cart text-xl "></i>
                       </div>
                       <div className="ml-3 my-1" style={{width: "75%"}}>
                         <p className="text-secondary smaller mb-0">Sản phẩm trả góp</p>
@@ -130,7 +130,7 @@ class InstallmentDetail extends Component {
                     </div>
                     <div className="col-12 form-inline">
                       <div className="bill-icon">
-                        <i className="fa fa-gifts text-xl"></i>
+                        <i className="fa fa-percent text-xl"></i>
                       </div>
                       <div className="form-floating">
                         <input type="text" className="form-control border-0 " id="status" name="status" 
@@ -140,7 +140,7 @@ class InstallmentDetail extends Component {
                     </div>
                     <div className="col-12 form-inline">
                       <div className="bill-icon">
-                        <i className="fa fa-business-time text-xl "></i>
+                        <i className="fa fa-address-card text-xl "></i>
                       </div>
                       <div className="ml-3 my-1" style={{width: "75%"}}>
                         <p className="text-secondary smaller mb-0">Nhân viên phụ trách</p>
@@ -173,7 +173,7 @@ class InstallmentDetail extends Component {
                   <div className="row">
                     <div className="col-12 form-inline">
                       <div className="bill-icon">
-                        <i className="fa fa-money-bill-wave text-xl"></i>
+                        <i className="fa fa-money-check-alt text-xl"></i>
                       </div>
                       <div className="form-floating">
                         <input type="number" className="form-control border-0" id="prepay" name="prepay" value={installmentItem.prepay}/>
@@ -182,7 +182,7 @@ class InstallmentDetail extends Component {
                     </div>
                     <div className="col-12 form-inline">
                       <div className="bill-icon">
-                        <i className="fa fa-money-bill-wave text-xl"></i>
+                        <i className="fa fa-coins text-xl"></i>
                       </div>
                       <div className="form-floating">
                         <input type="number" className="form-control border-0" id="debt" name="debt" value={installmentItem.debt}/>
@@ -191,7 +191,7 @@ class InstallmentDetail extends Component {
                     </div>
                     <div className="col-12 form-inline">
                       <div className="bill-icon">
-                        <i className="fa fa-shopping-basket text-xl"></i>
+                        <i className="fa fa-hand-holding-usd text-xl"></i>
                       </div>
                       <div className="form-floating w-90">
                         <input type="number" className="form-control border-0" id="paid" name="paid" value={installmentItem.paid}/>

@@ -2,6 +2,12 @@ import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import InstallmentActions, { InstallmentActionTypes } from "../actions/installment";
 import { getAllInstallments, getDetailInstallment, addInstallment, updateInstallment, deleteInstallment } from "../apis/installment";
+import { getUser } from "../apis/user";
+/* Notification */
+import io from 'socket.io-client';
+import NotificationActions from "../actions/notification";
+const socket = io('http://localhost:3000');
+/* Notification */
 
 function* handleGetList({ payload }) {
   try {
@@ -36,6 +42,17 @@ function* handleCreate({ payload }) {
     if (data.code !== 201) throw data;
     yield put(InstallmentActions.onCreateSuccess(data.installment));
     yield put(InstallmentActions.onGetList());
+    const userRes = yield call(getUser, payload.params.user);
+    const instRes = yield call(getDetailInstallment, data.installment._id);
+    /* Notification */
+    socket.emit('installment', { email: userRes.data.user.email, installment: data.installment._id });
+    yield put(NotificationActions.onCreate({
+      name : "Yêu cầu trả góp mới cần duyệt",
+      image : instRes.data.installment.product._id.bigimage._id,
+      type: 2,
+      content :  `${userRes.data.user.email} vừa gửi yêu cầu trả góp cho sản phẩm`
+    }))
+    /* Notification */
   } catch (error) {
     yield put(InstallmentActions.onCreateError(error));
   }

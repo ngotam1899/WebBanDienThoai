@@ -190,8 +190,8 @@ class UserInstallmentPage extends Component {
                       <p className="float-end mb-0">| {this.setStatus(installment.status, installment.active)}</p>
                     </div>
                     <div className="card-body">
-                      <div className="row h-120">
-                        <div className="col-6 col-md-3 text-center h-100">
+                      <div className="row">
+                        <div className="col-6 col-md-3 text-center  h-120">
                           <img className="h-100" src={installment.product._id.bigimage ? installment.product._id.bigimage.public_url : INITIAL_IMAGE} alt={installment.product._id.name}></img>
                         </div>
                         <div className="col-6 col-md-3 align-self-center">

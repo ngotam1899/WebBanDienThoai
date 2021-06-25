@@ -39,6 +39,7 @@ class Header extends Component {
       itemsCount: 0,
       status: -1,
       order: "",
+      installment: "",
     }
     this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
@@ -67,7 +68,7 @@ class Header extends Component {
     var total = 0;
     var totalPrice = 0;
     const { cart, onGetAllNotifications, totalNotification, userInfo } = this.props;
-    const { itemsCount, order, status } = this.state;
+    const { itemsCount, order, installment, status, type } = this.state;
     if (cart !== prevProps.cart) {
       for (let i = 0; i < cart.length; i++) {
         total = total + cart[i].quantity
@@ -86,22 +87,31 @@ class Header extends Component {
       this.setState({itemsCount: totalNotification})
     }
     if(userInfo){
-      socket.on(`${userInfo._id}`, res => {
-        this.setState({itemsCount: itemsCount + 1, status: res.status, order: res.order});
+      socket.on(`order_${userInfo._id}`, res => {
+        this.setState({itemsCount: itemsCount + 1, status: res.status, order: res.order, type: 0});
+      });
+      socket.on(`installment_${userInfo._id}`, res => {
+        this.setState({itemsCount: itemsCount + 1, status: res.status, installment: res.installment, type: 2});
       });
     }
     if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
-      switch (status) {
-        case 0:
-          toastInfo(`Đơn hàng ${order} đã xuất kho vận chuyển`);
-          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
-          break;
-        case 1:
-          toastInfo(`Đơn hàng ${order} đã vận chuyển thành công`);
-          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
-          break;
-        default:
-          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+      if(type === 2){
+        toastInfo(`Phiếu trả góp ${installment} đã được duyệt thành công`);
+        onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+      }
+      else {
+        switch (status) {
+          case 0:
+            toastInfo(`Đơn hàng ${order} đã xuất kho vận chuyển`);
+            onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+            break;
+          case 1:
+            toastInfo(`Đơn hàng ${order} đã vận chuyển thành công`);
+            onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+            break;
+          default:
+            onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+        }
       }
     }
   }
@@ -152,6 +162,73 @@ class Header extends Component {
     window.location.reload()
   }
 
+  sortNotification = (listNotification) => {
+    var order = [];
+    var ad = [];
+    var installment = [];
+    listNotification.map(item => {
+      if(item.type === 0){
+        order.push(item)
+      }
+      else if(item.type === 1){
+        ad.push(item)
+      }
+      else {
+        installment.push(item)
+      }
+    })
+    return (<>
+      {order.length > 0 && <>
+        <h4>Đơn hàng</h4>
+        {order.map((notification, index)=>{
+          return(
+          <div className="row" key={index}>
+            <div className="col-3">
+            <img className="w-100 rounded" src={notification.image ? notification.image.public_url : INITIAL_IMAGE} alt={index}></img>
+            </div>
+            <div className="col-9">
+        <p className="mb-0">{notification.name}</p>
+            </div>
+          </div>
+          )
+        })}
+        <div className="my-2 border-bottom"></div>
+      </>}
+      {ad.length > 0 && <>
+        <h4>Sự kiện</h4>
+        {ad.map((notification, index)=>{
+          return(
+          <div className="row" key={index}>
+            <div className="col-3">
+            <img className="w-100 rounded" src={notification.image ? notification.image.public_url : INITIAL_IMAGE} alt={index}></img>
+            </div>
+            <div className="col-9">
+        <p className="mb-0">{notification.name}</p>
+            </div>
+          </div>
+          )
+        })}
+        <div div className="my-2 border-bottom"></div>
+      </>}
+      {installment.length > 0 && <>
+        <h4>Trả góp</h4>
+        {installment.map((notification, index)=>{
+          return(
+          <div className="row" key={index}>
+            <div className="col-3">
+            <img className="w-100 rounded" src={notification.image ? notification.image.public_url : INITIAL_IMAGE} alt={index}></img>
+            </div>
+            <div className="col-9">
+        <p className="mb-0">{notification.name}</p>
+            </div>
+          </div>
+          )
+        })}
+      </>}
+      </>
+    )
+  }
+
   render() {
     const MenuLink = ({ label, to, activeOnlyWhenExact, onClick }) => {
       return (
@@ -196,18 +273,7 @@ class Header extends Component {
                           <div>
                             <h3 className="mb-1">Thông báo</h3>
                             <div className="mb-2 border-bottom"></div>
-                            {listNotification && listNotification.length > 0 ? listNotification.map((notification, index)=>{
-                              return(
-                              <div className="row" key={index}>
-                                <div className="col-3">
-                                <img className="w-100 rounded" src={notification.image ? notification.image.public_url : INITIAL_IMAGE} alt={index}></img>
-                                </div>
-                                <div className="col-9">
-                            <p className="mb-0">{notification.name}</p>
-                                </div>
-                              </div>
-                              )
-                            })
+                            {listNotification && listNotification.length > 0 ? this.sortNotification(listNotification)
                             : <div className="row">
                               <div className="col-12 text-center">
                                 <div className="h-120">

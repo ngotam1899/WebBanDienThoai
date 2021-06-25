@@ -233,7 +233,7 @@ class InstallmentPage extends Component {
                     </div>
                     <div className="form-floating">
                       <input type="text" className="form-control border-0" name="prepay" id="prepay" value={prepay}/>
-                      <label for="text">Thanh toán trước:</label>
+                      <label htmlFor="text">Thanh toán trước:</label>
                     </div>
                   </div>
                   <div className="col-6 form-inline">
@@ -242,7 +242,7 @@ class InstallmentPage extends Component {
                     </div>
                     <div className="form-floating">
                       <input type="text" className="form-control border-0" name="loan" id="loan" value={loan}/>
-                      <label for="text">Tổng số tiền cần vay</label>
+                      <label htmlFor="text">Tổng số tiền cần vay</label>
                     </div>
                   </div>
                   <div className="col-12">
@@ -275,7 +275,7 @@ class InstallmentPage extends Component {
                     </div>
                     <div className="form-floating">
                       <input type="text" className="form-control border-0" name="total_interest" id="total_interest" value={total_interest}/>
-                      <label for="text">Tổng lãi chênh lệch</label>
+                      <label htmlFor="text">Tổng lãi chênh lệch</label>
                     </div>
                   </div>
                   <div className="col-6 form-inline">
@@ -284,7 +284,7 @@ class InstallmentPage extends Component {
                     </div>
                     <div className="form-floating">
                       <input type="text" className="form-control border-0" name="total" id="total" value={total}/>
-                      <label for="text">Tổng tiền phải trả</label>
+                      <label htmlFor="text">Tổng tiền phải trả</label>
                     </div>
                   </div>
                   <div className="col-12 text-center">

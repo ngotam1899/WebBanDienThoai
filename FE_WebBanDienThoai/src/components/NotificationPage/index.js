@@ -12,8 +12,12 @@ import NotificationActions from "../../redux/actions/notification";
 const statusList = [
   { 
     name: "Đơn hàng",
-  },{
+  },
+  {
     name: "Khuyến mãi",
+  },
+  {
+    name: "Trả góp",
   }
 ];
 
@@ -137,7 +141,7 @@ class NotificationPage extends Component {
                 </div>
               )
             })}
-            <div className="col-6 text-right align-self-center">
+            <div className="col-4 text-right align-self-center">
               <button className="btn btn-primary mr-2" onClick={()=> this.onReadAllNoti()}>Đọc tất cả</button>
               <button className="btn btn-danger" onClick={()=> this.onDeleteAllNoti()}>Xóa tất cả</button>
             </div>

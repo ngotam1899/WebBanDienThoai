@@ -106,8 +106,13 @@ app.use('/paypal', routerPaypal)
 // 7. SocketIO Realtime
 io.on('connection', (socket) => {
 	socket.on('orderChangeStatus', ({ status, user, order }) => {
-		io.sockets.emit(`${user}`, {
+		io.sockets.emit(`order_${user}`, {
 			status, order
+		});
+	})
+	socket.on('installmentChangeStatus', ({ status, user, installment }) => {
+		io.sockets.emit(`installment_${user}`, {
+			status, installment
 		});
 	})
   socket.on('order', ({ email, order }) => {
@@ -118,7 +123,14 @@ io.on('connection', (socket) => {
 			email
 		})
 	});
-	
+	socket.on('installment', ({ email, installment }) => {
+		var installments = [];
+    installments.push(installment);
+		io.sockets.emit("newInstallment", {
+			newInstallments: installments.length,
+			email
+		})
+	});
 });
 
 // 8. Child process python machine learning
