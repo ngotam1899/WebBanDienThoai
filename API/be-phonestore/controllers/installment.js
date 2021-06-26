@@ -1,4 +1,5 @@
 const Installment = require('../models/installment');
+const Product = require('../models/Product');
 const Validator = require('../validators/validator');
 const CronJob = require('cron').CronJob;
 
@@ -117,7 +118,14 @@ const updateInstallment = async (req, res, next) => {
     if (!installment) {
       return res.status(200).json({ success: false, code: 400, message: 'id installment is not correctly' });
     }
-    if(status) installment.status = status;
+    if(status) {
+      if(status == 0 && installment.status == -1){  // Nếu từ chưa duyệt chuyển sang chưa hoàn tất -> giảm số lượng sp
+        const productFound = await Product.findById(installment.product._id)
+        productFound.colors.find(i => i._id == installment.product.color).amount -= 1;
+        await productFound.save();
+      }
+      installment.status = status;
+    }
     if(staff) installment.staff = staff;
     if(active == false && installment.status == -1) installment.active = active;
     if(money > 0){

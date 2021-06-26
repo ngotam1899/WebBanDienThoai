@@ -1,5 +1,6 @@
 import React, { Component }  from 'react'
 import { connect } from "react-redux";
+import { compose } from 'redux';
 import qs from "query-string";
 // @Components
 import {
@@ -12,8 +13,12 @@ import {
   CRow,
 } from '@coreui/react'
 import Pagination from "react-js-pagination";
+import InstallmentDetail from '../Installments/InstallmentDetail'
+import OrderDetail from '../Orders/OrderDetail'
 // @Actions
 import NotificationActions from "../../redux/actions/notification";
+import InstallmentActions from "../../redux/actions/installment";
+import OrderActions from "../../redux/actions/order";
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
 
@@ -30,28 +35,33 @@ class NotificationList extends Component {
         page: 0,
         admin: authInfo && authInfo._id
       },
+      large: false,
     }
   }
 
   componentDidMount() {
     const {filter} = this.state;
-    const { onGetList, location } = this.props;
-    const filters = getFilterParams(location.search);
-    var params = {
-      ...filter,
-      ...filters
-    };
-    this.setState({queryParams: params})
-    onGetList(params);
+    const { onGetList, location, authInfo } = this.props;
+    if(authInfo){
+      const filters = getFilterParams(location.search);
+      var params = {
+        ...filter,
+        ...filters
+      };
+      this.setState({queryParams: params})
+      onGetList(params);
+    }
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.location.search !== this.props.location.search) {
+    const { authInfo } = this.props
+    if (prevProps.location.search !== this.props.location.search || (prevProps.authInfo !== authInfo && authInfo)) {
       const filters = getFilterParams(this.props.location.search);
       const { filter } = this.state;
       var params = {
         ...filter,
-        ...filters
+        ...filters,
+        admin: authInfo._id
       };
       this.setState({queryParams: params})
       this.props.onGetList(params);
@@ -96,8 +106,33 @@ class NotificationList extends Component {
     onDelete(id, queryParams)
   }
 
+  showModal = (item) => {
+    const { large } = this.state;
+    const { onGetDetailInstallment, onGetDetailOrder } = this.props;
+    switch(item.type){
+      case 0:
+        this.setState({ large: !large })
+        if(item){onGetDetailOrder(item.link)}
+        break;
+      case 2:
+        this.setState({ large: !large })
+        if(item){onGetDetailInstallment(item.link)}
+        break;
+      default:
+        break;
+    }
+  }
+
+  onClose = (large) =>{
+    const { onClearDetailInstallment, onClearDetailOrder } = this.props;
+    this.setState({large})
+    onClearDetailInstallment();
+    onClearDetailOrder();
+  }
+
   render () {
-    const {listNotification, total, location} = this.props;
+    const { large } = this.state;
+    const { listNotification, total, location, installmentDetail, orderDetail } = this.props;
     const filter = getFilterParams(location.search);
     return (
         <CRow>
@@ -126,6 +161,7 @@ class NotificationList extends Component {
                   hover
                   striped
                   bordered
+                  onRowClick={(item) => this.showModal(item)}
                   scopedSlots = {{
                     'date': (item) => (
                       <td>{new Date(item.createdAt).toLocaleDateString("vi-VN")}</td>
@@ -153,20 +189,24 @@ class NotificationList extends Component {
                   }}
                 />
               </CCardBody>
+              <div className="row justify-content-center">
               {total && <Pagination
-                  activePage={filter.page ? parseInt(filter.page)+1 : 1}
-                  itemsCountPerPage={this.state.filter.limit}
-                  totalItemsCount={total}
-                  pageRangeDisplayed={2}
-                  linkClass="page-link"
-                  itemClass="page-item"
-                  prevPageText="Previous"
-                  nextPageText="Next"
-                  hideFirstLastPages={true}
-                  onChange={this.handlePageChange.bind(this)}
-                />}
+                activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                itemsCountPerPage={this.state.filter.limit}
+                totalItemsCount={total}
+                pageRangeDisplayed={2}
+                linkClass="page-link"
+                itemClass="page-item"
+                prevPageText="Previous"
+                nextPageText="Next"
+                hideFirstLastPages={true}
+                onChange={this.handlePageChange.bind(this)}
+              />}
+              </div>
             </CCard>
           </CCol>
+          {(installmentDetail && large) && <InstallmentDetail large={large} installment={installmentDetail} onClose={this.onClose}/>}
+          {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}/>}
         </CRow>
     )
   }
@@ -176,12 +216,26 @@ const mapStateToProps = (state) => {
   return {
     listNotification: state.notification.list,
     total : state.notification.total,
-    authInfo: state.auth.detail
+    authInfo: state.auth.detail,
+    installmentDetail: state.installment.detail,
+    orderDetail: state.order.detail,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    onGetDetailInstallment: (id) => {
+      dispatch(InstallmentActions.onGetDetail(id))
+    },
+    onClearDetailInstallment: () =>{
+      dispatch(InstallmentActions.onClearDetail())
+    },
+    onGetDetailOrder: (id) => {
+      dispatch(OrderActions.onGetDetail(id))
+    },
+    onClearDetailOrder: () =>{
+      dispatch(OrderActions.onClearDetail())
+    },
     onGetList: (payload) => {
       dispatch(NotificationActions.onGetList(payload))
     },
@@ -196,5 +250,8 @@ const mapDispatchToProps = (dispatch) => {
     },
   }
 }
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default connect(mapStateToProps, mapDispatchToProps)(NotificationList)
+export default compose(
+  withConnect
+)(NotificationList)

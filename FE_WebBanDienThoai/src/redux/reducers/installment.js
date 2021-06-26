@@ -14,11 +14,6 @@ export default function(state = init, action) {
       return {
         ...state,
         detail: null,
-        loadingDetail: true,
-      };
-    case InstallmentActionTypes.CLEAR_STATE:
-      return {
-        ...init,
       };
     case InstallmentActionTypes.GET_LIST:
       return {

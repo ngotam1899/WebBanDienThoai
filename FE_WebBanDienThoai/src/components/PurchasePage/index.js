@@ -213,7 +213,7 @@ class PurchasePage extends Component {
                         return(
                           <div className="row h-120" key={_index}>
                           <div className="col-3 text-center h-100">
-                            <img className="h-100" src={product.image} alt={product.name}></img>
+                            <img className="h-100" src={product.image ? product.image : INITIAL_IMAGE} alt={product.name}></img>
                           </div>
                           <div className="col-6 align-self-center ">
                             <p className="font-weight-bold mb-0">{product.name}</p>
@@ -229,7 +229,7 @@ class PurchasePage extends Component {
                     </div>
                     <div className="card-footer">
                       <div className="float-start">
-                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#myModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
+                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#orderModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
                         {this.setStatus(order.confirmed, order.status, order.active)==="Chờ xác nhận" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(order._id)}>Hủy đơn hàng</button>}
                       </div>
                       <div className="float-end font-weight-bold">

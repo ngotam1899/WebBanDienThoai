@@ -65,6 +65,7 @@ function* handleUpdate({ payload }) {
       yield put(NotificationActions.onCreate({
         user: data.installment.user,
         type: 2,
+        link: data.installment._id,
         name : `Phiếu trả góp ${data.installment._id} vừa được duyệt`,
         image : instRes.data.installment.product._id.bigimage._id,
         content :  `${data.installment._id} đã được duyệt thành công. Vui lòng kiểm tra thông tin trong Trang trả góp của bạn`

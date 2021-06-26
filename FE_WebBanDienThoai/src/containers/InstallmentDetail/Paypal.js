@@ -23,7 +23,7 @@ export default function Paypal({ id, moneyUSD, money, onUpdate }) {
         },
         onApprove: async (data, actions) => {
           data = {
-            money: parseInt(tryConvert(money, "USD", true))
+            money
           }
           onUpdate(id, data);
           await actions.order.capture();

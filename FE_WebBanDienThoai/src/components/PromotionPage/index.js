@@ -45,10 +45,20 @@ class PromotionPage extends Component {
     catch(err){
     }
   }
+  
+  setStatus = (startedAt, endedAt) => {
+    var today = new Date();
+    if(new Date(startedAt) > today) return "Chưa diễn ra"
+    else {
+      if(new Date(endedAt) > today) return "Đang diễn ra"
+      else return "Đã kết thúc"
+    }
+    return ""
+  }
 
   render() {
     var { t, listAd, history } = this.props;
-    var today = new Date();
+    
     return (
       <div className="container mb-3">
         <div className="row">
@@ -66,7 +76,7 @@ class PromotionPage extends Component {
                   <div className="row px-3 py-2">
                     <div className="col-12">
                       <h4 className="font-weight-bold float-start">{ad.name}</h4>
-                      <p className="font-weight-bold float-end mb-0 text-danger">{new Date(ad.endedAt) > today && "Đang diễn ra"}</p>
+                      <p className="font-weight-bold float-end mb-0 text-danger">{this.setStatus(ad.startedAt, ad.endedAt)}</p>
                     </div>
                     <div className="col-12 mb-2">
                       <p className="float-start mb-0">{ad.content}</p>

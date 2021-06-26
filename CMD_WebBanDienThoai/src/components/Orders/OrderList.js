@@ -148,7 +148,7 @@ class OrderList extends Component {
 
   render () {
     const {large, phone} = this.state;
-    const {listOrder, orderDetail, onClearDetail, total, location,} = this.props;
+    const {listOrder, orderDetail, total, location,} = this.props;
     const filter = getFilterParams(location.search);
     return (
         <CRow>
@@ -218,7 +218,7 @@ class OrderList extends Component {
                   bordered
                   scopedSlots = {{
                     'Date of create': (item) => (
-                      <td>{item.createdAt}</td>
+                      <td>{new Date(item.createdAt).toLocaleDateString("vn-VN")}</td>
                     ),
                     'Phone': (item) => (
                       <td>{item.shipping_phonenumber}</td>
@@ -263,13 +263,8 @@ class OrderList extends Component {
                       </td>)
                   }}
                 />
-                {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}
-                onClearDetail={onClearDetail}
-                />}
-
-                {(!orderDetail && large) && <OrderDetail large={large} onClose={this.onClose}
-                onClearDetail={onClearDetail}
-                />}
+                {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}/>}
+                {(!orderDetail && large) && <OrderDetail large={large} onClose={this.onClose}/>}
               </CCardBody>
               <div className="row justify-content-center">
               {total && <Pagination

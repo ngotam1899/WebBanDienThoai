@@ -1,4 +1,11 @@
 import React, {Component} from 'react'
+
+import { connect } from 'react-redux';
+import { compose } from "redux";
+// @Components
+import CIcon from '@coreui/icons-react'
+import { toastInfo } from '../utils/toastHelper';
+import { Link } from 'react-router-dom'
 import {
   CBadge,
   CDropdown,
@@ -6,16 +13,15 @@ import {
   CDropdownMenu,
   CDropdownToggle
 } from '@coreui/react'
-import { connect } from 'react-redux';
-import { compose } from "redux";
-import CIcon from '@coreui/icons-react'
-import io from 'socket.io-client';
-import { toastInfo } from '../utils/toastHelper';
+import InstallmentDetail from '../components/Installments/InstallmentDetail'
+import OrderDetail from '../components/Orders/OrderDetail'
 // @Actions
 import NotificationActions from '../redux/actions/notification'
+import InstallmentActions from "../redux/actions/installment";
+import OrderActions from "../redux/actions/order";
 // @Functions
 import {INITIAL_IMAGE} from '../constants';
-
+import io from 'socket.io-client';
 const ENDPOINT = 'http://localhost:3000';
 let socket = io(ENDPOINT);
 
@@ -23,6 +29,7 @@ class TheHeaderDropdownNotif extends Component {
   constructor(props){
     super(props);
     this.state = {
+      large: false,
       itemsCount : 0,
       email: "",
       type: -1  // type: 0 (order), type: 2 (installment)
@@ -32,8 +39,9 @@ class TheHeaderDropdownNotif extends Component {
   componentDidUpdate(prevProps, prevState){
     const { itemsCount, email, type } = this.state;
     const { onGetAllNotifications, totalNotification, userInfo } = this.props
+    var admin = "";
     if (userInfo !== prevProps.userInfo && userInfo) {
-      var admin = userInfo._id;
+      admin = userInfo._id;
       onGetAllNotifications({admin, limit: 5, page: 0, active: 1})
     }
     if (totalNotification !== prevProps.totalNotification && totalNotification) {
@@ -48,7 +56,7 @@ class TheHeaderDropdownNotif extends Component {
     if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification && type !== -1) {
       if(type === 0) toastInfo(`${email} vừa xác thực đơn hàng`)
       else toastInfo(`${email} vừa gửi yêu cầu trả góp`)
-      var admin = userInfo._id;
+      admin = userInfo._id;
       onGetAllNotifications({admin, limit: 5, page: 0, active: 1})
     }
   }
@@ -62,9 +70,34 @@ class TheHeaderDropdownNotif extends Component {
     }
   }
 
+  showModal = (item) => {
+    console.log(item)
+    const { large } = this.state;
+    const { onGetDetailInstallment, onGetDetailOrder } = this.props;
+    switch(item.type){
+      case 0:
+        this.setState({ large: !large })
+        if(item){onGetDetailOrder(item.link)}
+        break;
+      case 2:
+        this.setState({ large: !large })
+        if(item){onGetDetailInstallment(item.link)}
+        break;
+      default:
+        break;
+    }
+  }
+
+  onClose = (large) =>{
+    const { onClearDetailInstallment, onClearDetailOrder } = this.props;
+    this.setState({large})
+    onClearDetailInstallment();
+    onClearDetailOrder();
+  }
+
   render(){
-    const {itemsCount} = this.state;
-    const {listNotification} = this.props;
+    const { itemsCount, large } = this.state;
+    const { listNotification, installmentDetail, orderDetail } = this.props;
     return (
       <CDropdown
         inNav
@@ -79,18 +112,17 @@ class TheHeaderDropdownNotif extends Component {
           ? listNotification.map((notification, index)=>{
             return(
             <CDropdownItem key={index} className="d-block dropdown-normal">
-              <div className="row">
+              <div className="row" onClick={()=> this.showModal(notification)}>
                 <div className="col-3">
                   <img className="w-100 rounded-circle" src={notification.image ? notification.image.public_url : INITIAL_IMAGE} alt={index}></img>
                 </div>
                 <div className="col-9">
                   <CIcon name="cil-basket" className="mr-2 text-success" />
-                  <span className="font-weight-bold mb-0">{notification.name}</span>
-                  <p className="mb-0">{notification.content}</p>
+                  <span className="font-weight-bold mb-0 text-dark">{notification.name}</span>
+                  <p className="mb-0 text-dark">{notification.content}</p>
                   <p className="mb-0 text-secondary">{new Date(notification.createdAt).toLocaleDateString("vi-VN")}</p>
                 </div>
               </div>
-
             </CDropdownItem>
             )
           })
@@ -102,6 +134,8 @@ class TheHeaderDropdownNotif extends Component {
           </div>
         </CDropdownItem>}
         </CDropdownMenu>
+        {(installmentDetail && large) && <InstallmentDetail large={large} installment={installmentDetail} onClose={this.onClose}/>}
+        {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}/>}
       </CDropdown>
     )
   }
@@ -113,11 +147,25 @@ const mapStateToProps = (state) =>{
     totalNotification: state.notification._total,
     userInfo: state.auth.detail,
     isLogin: state.auth.loggedIn,
+    installmentDetail: state.installment.detail,
+    orderDetail: state.order.detail,
   }
 }
 
 const mapDispatchToProps =(dispatch)=> {
 	return {
+    onGetDetailInstallment: (id) => {
+      dispatch(InstallmentActions.onGetDetail(id))
+    },
+    onClearDetailInstallment: () =>{
+      dispatch(InstallmentActions.onClearDetail())
+    },
+    onGetDetailOrder: (id) => {
+      dispatch(OrderActions.onGetDetail(id))
+    },
+    onClearDetailOrder: () =>{
+      dispatch(OrderActions.onClearDetail())
+    },
 		onGetAllNotifications : (data) =>{
 			dispatch(NotificationActions.onGetNewest(data))
     },

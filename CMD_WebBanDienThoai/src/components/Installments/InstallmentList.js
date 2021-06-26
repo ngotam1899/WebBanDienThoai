@@ -136,7 +136,7 @@ class InstallmentList extends Component {
 
   render () {
     const { large } = this.state;
-    const { listInstallment, installmentDetail, onClearDetail, total, location } = this.props;
+    const { listInstallment, installmentDetail, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
         <CRow>
@@ -220,10 +220,8 @@ class InstallmentList extends Component {
                       </td>)
                   }}
                 />
-                {(installmentDetail && large) && <InstallmentDetail large={large} installment={installmentDetail} onClose={this.onClose}
-                onClearDetail={onClearDetail}/>}
-                {(!installmentDetail && large) && <InstallmentDetail large={large} onClose={this.onClose}
-                onClearDetail={onClearDetail}/>}
+                {(installmentDetail && large) && <InstallmentDetail large={large} installment={installmentDetail} onClose={this.onClose}/>}
+                {(!installmentDetail && large) && <InstallmentDetail large={large} onClose={this.onClose}/>}
               </CCardBody>
               <div className="row justify-content-center">
               {total && <Pagination

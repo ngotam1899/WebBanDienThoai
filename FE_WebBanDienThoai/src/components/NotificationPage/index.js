@@ -3,11 +3,16 @@ import { connect } from "react-redux";
 import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 import qs from "query-string";
+// @Components
+import OrderDetail from '../../containers/OrderDetail'
+import InstallmentDetail from '../../containers/InstallmentDetail'
 // @Functions
 import getFilterParams from "../../utils/getFilterParams";
 import {INITIAL_IMAGE} from '../../constants';
 // @Actions
 import NotificationActions from "../../redux/actions/notification";
+import InstallmentActions from "../../redux/actions/installment";
+import OrdersActions from "../../redux/actions/order";
 
 const statusList = [
   { 
@@ -34,6 +39,7 @@ class NotificationPage extends Component {
         limit: 8,
         page: 0,
       },
+      type: 2,
     }
   }
 
@@ -107,11 +113,26 @@ class NotificationPage extends Component {
     onDeleteAll(id, queryParams)
   }
 
-  onReadNoti = (id) =>{
-    const {onUpdate} = this.props;
-    const {queryParams} = this.state;
+  onReadNoti = (id, type, link) =>{
+    const { onUpdate, history, onGetDetailInstallment, onGetDetailOrder } = this.props;
+    const { queryParams } = this.state;
     const data = {
       active : false
+    }
+    switch(type){
+      case 0:
+        this.setState({type})
+        onGetDetailOrder(link);
+        break;
+      case 1:
+        history.push(link.replace("https://localhost:5000/#", ""))
+        break;
+      case 2:
+        this.setState({type})
+        onGetDetailInstallment(link);
+        break;
+      default:
+        return null
     }
     onUpdate(id, data, queryParams)
   }
@@ -122,8 +143,22 @@ class NotificationPage extends Component {
     onDelete(id, queryParams)
   }
 
+  setModal = (type) => {
+    switch(type){
+      case 0:
+        return "#orderModal"
+      case 1:
+        return ""
+      case 2:
+        return "#myModal"
+      default:
+        return ""
+    }
+  }
+
   render() {
-    const {listNotification, location, t} = this.props;
+    const { listNotification, location, t, installmentItem, orderItem, history } = this.props;
+    const { type } = this.state;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
@@ -162,7 +197,9 @@ class NotificationPage extends Component {
             <p className="mb-0 text-secondary">{notification.content}</p>
                 </div>
                 <div className="col-2 text-right align-self-center">
-                  <button type="button" className="btn btn-success mr-2" onClick={()=> this.onReadNoti(notification._id)}>
+                  <button type="button" className="btn btn-success mr-2" 
+                  data-bs-toggle={notification.type === 1 ? "" : "modal"} data-bs-target={this.setModal(notification.type)} 
+                  onClick={()=> this.onReadNoti(notification._id, notification.type, notification.link)}>
                     <i className="fa fa-book-reader"></i>
                   </button>
                   <button type="button" className="btn btn-info" onClick={()=> this.onDeleteNoti(notification._id)}>
@@ -183,6 +220,8 @@ class NotificationPage extends Component {
             </div>
           </div>}
         </div>
+        <InstallmentDetail installmentItem={installmentItem} history={history}/>}
+        <OrderDetail orderItem={orderItem} history={history}/>
       </div>
     )
   }
@@ -193,6 +232,8 @@ const mapStateToProps = (state) =>{
     authInfo: state.auth.detail,
     listNotification: state.notification.list,
     total : state.notification.total,
+    installmentItem: state.installment.detail,
+    orderItem: state.order.detail
   }
 }
 
@@ -200,6 +241,12 @@ const mapDispatchToProps =(dispatch)=> {
 	return {
     onGetList: (payload) => {
       dispatch(NotificationActions.onGetList(payload))
+    },
+    onGetDetailInstallment: (id) => {
+      dispatch(InstallmentActions.onGetDetail(id))
+    },
+    onGetDetailOrder: (id) => {
+      dispatch(OrdersActions.onGetDetail(id))
     },
     onUpdate: (id, data, params) => {
       dispatch(NotificationActions.onUpdate(id, data, params))

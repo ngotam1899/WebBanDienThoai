@@ -273,7 +273,7 @@ class Header extends Component {
                           <div>
                             <h3 className="mb-1">Thông báo</h3>
                             <div className="mb-2 border-bottom"></div>
-                            {listNotification && listNotification.length > 0 ? this.sortNotification(listNotification)
+                            {listNotification && listNotification.length > 0 ? <>{this.sortNotification(listNotification)}</>
                             : <div className="row">
                               <div className="col-12 text-center">
                                 <div className="h-120">

@@ -26,7 +26,7 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
           if(shipToDifferentAddress === true) {
             data = {
               order_list,
-              total_price: parseInt(tryConvert(total_price, "USD", true)),
+              total_price: Math.round(parseInt(tryConvert(total_price, "USD", true))/10000)* 10000,
               total_quantity: total,
               shipping_phonenumber: shipping_phone,
               email: authInfo.email,
@@ -40,7 +40,7 @@ export default function Paypal({total_price,total, onCreateAnOrder, order_list, 
           else{
             data = {
               order_list,
-              total_price: parseInt(tryConvert(total_price, "USD", true)),
+              total_price: Math.round(parseInt(tryConvert(total_price, "USD", true))/10000)* 10000,
               total_quantity: total,
               shipping_phonenumber: authInfo.phonenumber,
               email: authInfo.email,

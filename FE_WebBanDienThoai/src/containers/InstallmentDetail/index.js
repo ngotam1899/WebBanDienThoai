@@ -4,6 +4,7 @@ import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 // @Components
 import Paypal from './Paypal';
+import { toastError } from '../../utils/toastHelper';
 // @Functions
 import numberWithCommas from '../../utils/formatPrice'
 import tryConvert from '../../utils/changeMoney'
@@ -16,6 +17,7 @@ class InstallmentDetail extends Component {
     super(props);
     this.state = {
       money: 0,
+      paypal: false
     }
   }
 
@@ -73,16 +75,21 @@ class InstallmentDetail extends Component {
     }
   }
 
+  onClose = () => {
+    const { onClearDetail } = this.props;
+    onClearDetail();
+  }
+
   render() {
     const { installmentItem, t, onUpdate } = this.props;
-    const { money } = this.state;
+    const { money, paypal } = this.state;
     return (
       <div show="true" className="modal fade" id="myModal" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div className="modal-dialog modal-lg">
           {installmentItem && <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Installment information {installmentItem._id}</h5>
-              <button type="button" className="close" data-bs-dismiss="modal">&times;</button>
+              <button type="button" className="close" data-bs-dismiss="modal" onClick={() => this.onClose()}>&times;</button>
             </div>
             <div className="modal-body">
               <div className="row">
@@ -114,7 +121,7 @@ class InstallmentDetail extends Component {
                       </div>
                       <div className="form-floating w-90">
                         <input type="text" className="form-control border-0 w-100" id="startedAt" name="startedAt" 
-                        value={`Từ ${new Date(installmentItem.startedAt).toLocaleDateString("vn-VN")} đến ${new Date(installmentItem.endedAt).toLocaleDateString("vn-VN")} (${installmentItem.period} tháng)`}/>
+                        defaultValue={`Từ ${new Date(installmentItem.startedAt).toLocaleDateString("vn-VN")} đến ${new Date(installmentItem.endedAt).toLocaleDateString("vn-VN")} (${installmentItem.period} tháng)`}/>
                         <label htmlFor="startedAt">Thời gian trả góp</label>
                       </div>
                     </div>
@@ -161,12 +168,22 @@ class InstallmentDetail extends Component {
                     <div className="col-12 my-2">
                       <div className="mb-2 border-bottom"></div>
                       <h4>Thanh toán trả góp online</h4>
-                      <div className="form-floating mb-3">
-                        <input type="text" className="form-control" name="money" value={money} onChange={this.onChange}/>
-                        <label>Số tiền muốn trả</label>
+                      <div className="row">
+                        <div className="col-9">
+                          <div className="form-floating mb-3">
+                            <input type="text" className="form-control" name="money" value={money} onChange={this.onChange} disabled={paypal}/>
+                            <label>Số tiền muốn trả (VND)</label>
+                          </div>
+                        </div>
+                        <div className="col-3 my-2">
+                          <button className="btn btn-primary w-100" onClick={()=> {
+                            if(money !== 0) this.setState({paypal: !paypal})
+                            else toastError("Hãy nhập số tiền muốn thanh toán")
+                          }}>{paypal ? "Edit" : "Submit"}</button>
+                        </div>
                       </div>
-                      {money !==0 && <Paypal money={money} moneyUSD={parseFloat(tryConvert(money, "USD", false)).toFixed(2)} onUpdate={onUpdate} id={installmentItem._id}/>}
                     </div>
+                    {money !== 0 && paypal && <Paypal money={money} moneyUSD={parseFloat(tryConvert(money, "USD", false)).toFixed(2)} onUpdate={onUpdate} id={installmentItem._id}/>}
                   </div>
                 </div>
                 <div className="col-12 col-md-6">
@@ -234,7 +251,7 @@ class InstallmentDetail extends Component {
               
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">{t('user.close.button')}</button>
+              <button type="button" className="btn btn-secondary" onClick={() => this.onClose()} data-bs-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }
         </div>
@@ -254,7 +271,10 @@ const mapDispatchToProps =(dispatch)=> {
   return {
     onUpdate: (id, params) =>{
       dispatch(InstallmentActions.onUpdate({id, params}))
-    }
+    },
+    onClearDetail: () =>{
+      dispatch(InstallmentActions.onClearDetail())
+    },
 	}
 };
 

@@ -56,6 +56,7 @@ const addAd = async (req, res, next) => {
         user : users[i]._id,
         content,
         name,
+        link,
         image : ad.image ? ad.image : "",
         type: 1
       }

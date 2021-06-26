@@ -22,12 +22,18 @@ export const OrdersActionsTypes = {
   GET_DETAIL: "GET_DETAIL",
   GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
   GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
+
+  CLEAR_DETAIL: "CLEAR_DETAIL",
 };
 
 Object.keys(OrdersActionsTypes).forEach((key) => {
   OrdersActionsTypes[
     key
   ] = `ORDER_${OrdersActionsTypes[key]}`;
+});
+
+const onClearDetail = () => ({
+  type: OrdersActionsTypes.CLEAR_DETAIL,
 });
 
 const onGetDetail = (id) => ({
@@ -112,6 +118,8 @@ const onUpdateError = (error) => ({
 });
 
 const OrdersActions = {
+  onClearDetail,
+
   onCreate,
   onCreateError,
   onCreateSuccess,

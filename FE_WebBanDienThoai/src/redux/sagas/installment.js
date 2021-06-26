@@ -49,6 +49,7 @@ function* handleCreate({ payload }) {
     yield put(NotificationActions.onCreate({
       name : "Yêu cầu trả góp mới cần duyệt",
       image : instRes.data.installment.product._id.bigimage._id,
+      link: data.installment._id,
       type: 2,
       content :  `${userRes.data.user.email} vừa gửi yêu cầu trả góp cho sản phẩm`
     }))

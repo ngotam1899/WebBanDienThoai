@@ -10,6 +10,11 @@ const init = {
 
 export default function(state = init, action) {
   switch (action.type) {
+    case OrdersActionsTypes.CLEAR_DETAIL:
+      return {
+        ...state,
+        detail: null,
+      };
     case OrdersActionsTypes.CREATE:
       return {...state};
     case OrdersActionsTypes.CREATE_SUCCESS:

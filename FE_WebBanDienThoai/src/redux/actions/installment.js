@@ -23,7 +23,6 @@ export const InstallmentActionTypes = {
   FILTER_SUCCESS: "FILTER_SUCCESS",
 
   CLEAR_DETAIL: "CLEAR_DETAIL",
-  CLEAR_STATE: "CLEAR_STATE",
 }
 
 Object.keys(InstallmentActionTypes).forEach((key) => {
@@ -34,10 +33,6 @@ Object.keys(InstallmentActionTypes).forEach((key) => {
 
 const onClearDetail = () => ({
   type: InstallmentActionTypes.CLEAR_DETAIL,
-});
-
-const onClearState = () => ({
-  type: InstallmentActionTypes.CLEAR_STATE,
 });
 
 
@@ -144,7 +139,6 @@ const InstallmentActions = {
   onGetListError,
 
   onClearDetail,
-  onClearState,
 
   onFilter,
   onFilterSuccess,

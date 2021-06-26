@@ -49,17 +49,22 @@ class OrderDetail extends Component {
     this.onCloseModal("modal", true)
   }
 
+  onClose = () => {
+    const { onClearDetail } = this.props;
+    onClearDetail();
+  }
+
   render() {
     const {orderItem, t, review} = this.props;
     const {modal, product} = this.state;
     console.log('review: ',review)
     return (
-      <div show="true" className="modal fade" id="myModal" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
+      <div show="true" className="modal fade" id="orderModal" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div className="modal-dialog modal-lg">
           {orderItem && <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">{t('user.info-bill.card')} {orderItem._id}</h5>
-              <button type="button" className="close" data-bs-dismiss="modal">&times;</button>
+              <button type="button" className="close" data-bs-dismiss="modal" onClick={() => this.onClose()}>&times;</button>
             </div>
             <div className="modal-body">
               <div className="row">
@@ -187,7 +192,7 @@ class OrderDetail extends Component {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">{t('user.close.button')}</button>
+              <button type="button" className="btn btn-secondary" onClick={() => this.onClose()} data-bs-dismiss="modal">{t('user.close.button')}</button>
             </div>
           </div> }
         </div>
@@ -212,6 +217,9 @@ const mapDispatchToProps =(dispatch)=> {
     },
     onGetReview: (params) => {
       dispatch(ReviewActions.onGetDetail(params));
+    },
+    onClearDetail: () =>{
+      dispatch(OrdersActions.onClearDetail())
     },
 	}
 };

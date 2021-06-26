@@ -14,6 +14,9 @@ const NotificationSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Image',
 	},
+	link: {
+		type: String
+	},
 	content: {
 		type: String,
 	},

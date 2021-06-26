@@ -92,7 +92,6 @@ class UserInstallmentPage extends Component {
   }
 
   setStatus = (status, active) => {
-    console.log(active)
     if(active===false) return "Đã hủy"
     else{
       switch(status) {
@@ -247,7 +246,6 @@ class UserInstallmentPage extends Component {
               </div>
             </div>}
           </div>
-          
         </div>
         <InstallmentDetail installmentItem={installmentItem} history={history}/>
       </div>
