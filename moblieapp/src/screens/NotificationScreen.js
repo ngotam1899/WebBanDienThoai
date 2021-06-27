@@ -50,7 +50,6 @@ class NotificationScreen extends Component {
       onGetProfile(null, data);
     });
   };
-
   componentDidUpdate(prevProps) {
     const {
       onGetAllNotifications,
@@ -65,7 +64,7 @@ class NotificationScreen extends Component {
     }
     if (totalNotification !== prevProps.totalNotification && userInfo) {
       var user = userInfo._id;
-      onGetAllNotifications({user, limit: 5, page: 0, active: 1})
+      onGetAllNotifications({user, limit: 5, page: 0, active: 1});
       onGetList({user, limit: 5, page: 0, active: 1});
     }
   }

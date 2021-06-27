@@ -22,19 +22,18 @@ class Review extends Component {
       message: '',
     };
   }
-  componentWillMount(){
+  UNSAFE_componentWillMount() {
     const {onGetReview, params} = this.props;
     onGetReview(params);
-
   }
-  componentDidUpdate(){
-    const { review } = this.props;
+  componentDidUpdate() {
+    const {review} = this.props;
     const {rating, message} = this.state;
-    if(review && rating === 0 && message === ''){
+    if (review && rating === 0 && message === '') {
       this.setState({
         rating: review ? review.rating : 0,
         message: review ? review.content : '',
-      })
+      });
     }
   }
   onReview = () => {
@@ -47,7 +46,6 @@ class Review extends Component {
       rating,
       color: product.color._id,
     };
-    console.log('Review', review)
     if (review) {
       onUpdateReview(review._id, data);
     } else {
@@ -58,7 +56,6 @@ class Review extends Component {
   render() {
     const {product} = this.props;
     const {rating, message} = this.state;
-    console.log(rating)
     return (
       <View>
         <Text style={styles.title}>ĐÁNH GIÁ SẢN PHẨM</Text>
@@ -92,14 +89,25 @@ class Review extends Component {
           />
         </View>
         <TextInput
-          style={{borderWidth:1, borderColor: '#ccc',borderRadius: 5, marginTop: 10, paddingVertical:10, paddingHorizontal: 20}}
+          style={{
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 5,
+            marginTop: 10,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+          }}
           multiline
           numberOfLines={4}
-          onChangeText={value => this.setState({message:value})}
+          onChangeText={value => this.setState({message: value})}
           value={message}></TextInput>
-          <View style={styles.boxBtn}>
-            <TouchableOpacity style={styles.btnSubmit} onPress={()=>this.onReview()}><Text style={styles.txtSubmit}>Đánh Giá</Text></TouchableOpacity>
-          </View>
+        <View style={styles.boxBtn}>
+          <TouchableOpacity
+            style={styles.btnSubmit}
+            onPress={() => this.onReview()}>
+            <Text style={styles.txtSubmit}>Đánh Giá</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -171,17 +179,17 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   boxBtn: {
-    alignItems:'center',
-    marginTop: 30
+    alignItems: 'center',
+    marginTop: 30,
   },
-  btnSubmit:{
+  btnSubmit: {
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: '#fac107',
-    borderRadius: 5
+    borderRadius: 5,
   },
-  txtSubmit:{
+  txtSubmit: {
     fontSize: 14,
     fontWeight: 'bold',
-  }
+  },
 });

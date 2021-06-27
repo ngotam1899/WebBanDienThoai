@@ -27,10 +27,10 @@ class AccessoriesPage extends Component {
     });
   };
 
-  onSelect = (id) => {
-    const { navigation } = this.props;
+  onSelect = id => {
+    const {navigation} = this.props;
     navigation.navigate('AccProductTemp', {id: id});
-  }
+  };
 
   render() {
     const {listAccessory} = this.props;
@@ -41,7 +41,10 @@ class AccessoriesPage extends Component {
           {listAccessory &&
             listAccessory.map(item => {
               return (
-                <TouchableOpacity key={item._id} style={styles.boxItem} onPress={()=>this.onSelect(item._id)}>
+                <TouchableOpacity
+                  key={item._id}
+                  style={styles.boxItem}
+                  onPress={() => this.onSelect(item._id)}>
                   <Image
                     style={{
                       width: 50,
@@ -56,12 +59,12 @@ class AccessoriesPage extends Component {
             })}
         </ScrollView>
         <ScrollView style={styles.containerContent}>
-          {accessoryData.accessoryAd.map(item => {
+          {accessoryData.accessoryAd.map((item, index) => {
             return (
-              <View style={styles.boxContent}>
+              <View key={index} style={styles.boxContent}>
                 <Text style={styles.titleName}>{item.title}</Text>
-                {item.content.map(line => {
-                  return <Text>{line}</Text>;
+                {item.content.map((line, index) => {
+                  return <Text key={index}>{line}</Text>;
                 })}
                 {item.image && (
                   <View className="text-center">

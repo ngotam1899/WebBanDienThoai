@@ -1,0 +1,20 @@
+{
+  "installments": [
+    {
+      "month_sum" : 3,
+      "percent" : 2.9
+    },
+    {
+      "month_sum" : 6,
+      "percent" : 3.9
+    },
+    {
+      "month_sum" : 9,
+      "percent" : 4.9
+    },
+    {
+      "month_sum" : 12,
+      "percent" : 6.5
+    }
+  ]
+}

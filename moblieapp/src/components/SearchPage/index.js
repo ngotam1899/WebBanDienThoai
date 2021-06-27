@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import numberWithCommas from '../../utils/formatPrice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ProductsActions from '../../redux/actions/products';
-import CategoryActions from '../../redux/actions/categories'
+import CategoryActions from '../../redux/actions/categories';
 
 import Header from '../HeaderComponent';
 import styles from './style';
@@ -36,7 +36,6 @@ class ProductItem extends Component {
         />
         <Text style={styles.itemName} numberOfLines={2}>
           {product && product.name ? product.name.substring(0, 22) : ''}
-          {product && product.name.length > 22 ? '...' : ''}
         </Text>
         <Text style={styles.itemPrice}>
           {product && product.price_min
@@ -62,10 +61,10 @@ class SearchPage extends Component {
     navigation.replace('Search', {keyword: key});
   };
   componentDidMount() {
-    const {onGetList,onGetListCategory, route} = this.props;
+    const {onGetList, onGetListCategory, route} = this.props;
     const params = {keyword: route.params.keyword, limit: 100};
     onGetList(params);
-    onGetListCategory(params)
+    onGetListCategory(params);
   }
 
   onSetCategory = value => {
@@ -77,7 +76,7 @@ class SearchPage extends Component {
     var params = {
       category: categoryId,
       limit: 100,
-      keyword: route.params.keyword
+      keyword: route.params.keyword,
     };
     this.setState({
       categoryName: value,
@@ -135,7 +134,7 @@ class SearchPage extends Component {
                     <View style={{flexDirection: 'row'}}>
                       <TouchableOpacity
                         style={
-                          categoryName && categoryName ===category._id.name
+                          categoryName && categoryName === category._id.name
                             ? styles.btnBrandActive
                             : styles.btnBrand
                         }
@@ -187,8 +186,8 @@ const mapDispatchToProps = dispatch => {
     onGetList: params => {
       dispatch(ProductsActions.onGetList(params));
     },
-    onGetListCategory: (params) => {
-      dispatch(CategoryActions.onGetListKeyword(params))
+    onGetListCategory: params => {
+      dispatch(CategoryActions.onGetListKeyword(params));
     },
   };
 };

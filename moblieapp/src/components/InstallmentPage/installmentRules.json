@@ -1,0 +1,28 @@
+{
+  "rules": [
+    {
+      "title": "Mức giá tối thiểu sẽ hỗ trợ trả góp mua sản phẩm",
+      "content": "Chỉ hỗ trợ trả góp những sản phẩm trên 2.500.000 VND"
+    },
+    {
+      "title": "Độ tuổi",
+      "content": "20 - 60 tuổi"
+    },
+    {
+      "title": "Hồ sơ",
+      "content": "CMND + Bằng lái (nếu số tiền vay < 10 triệu) CMND + Hộ khẩu (nếu số tiền vay > 10 triệu)"
+    },
+    {
+      "title": "Thời gian duyệt hồ sơ",
+      "content": "5 - 10 phút"
+    },
+    {
+      "title": "Tỉ lệ duyệt hồ sơ thành công",
+      "content": "90%"
+    },
+    {
+      "title": "Phương thức thanh toán",
+      "content": "Khi đến kỳ hạn thanh toán, bạn có thể thanh toán trực tiếp tại cửa hàng của TellMe hoặc thanh toán online qua Paypal"
+    }
+  ]
+}

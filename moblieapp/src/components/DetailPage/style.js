@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native';
 
 const {width} = Dimensions.get('window');
 
@@ -10,11 +10,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   productImg: {
-    flex:1,
-    width: width-40,
+    flex: 1,
+    width: width - 40,
     height: 460,
     padding: 0,
-    margin:0
+    margin: 0,
   },
   flatListItemName: {
     color: 'black',
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     color: '#101010',
     fontWeight: 'bold',
     marginLeft: 0,
-    marginBottom: 3
+    marginBottom: 3,
   },
   titleName: {
     marginBottom: 10,
@@ -40,12 +40,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  titleDescription:{
+  titleDescription: {
     marginBottom: 10,
     marginTop: 20,
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   textDescription: {
     marginBottom: 10,
@@ -129,11 +129,11 @@ const styles = StyleSheet.create({
   shareButton: {
     marginVertical: 10,
     height: 45,
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: '#1e88e5',
+    borderRadius: 10,
+    flex: 0.6,
+    backgroundColor: 'red',
   },
   shareButtonText: {
     color: '#FFFFFF',
@@ -141,59 +141,60 @@ const styles = StyleSheet.create({
   },
   addToCarContainer: {
     marginHorizontal: 0,
-    marginVertical: 5
+    marginVertical: 5,
+    flexDirection: 'row',
   },
-  viewMore:{
+  viewMore: {
     height: 130,
     flex: 1,
   },
-  lessMore:{
-    flex: 1
+  lessMore: {
+    flex: 1,
   },
-  btnViewMore:{
+  btnViewMore: {
     marginTop: 20,
     marginBottom: 40,
-    justifyContent:'center',
-     alignItems:'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  btnViewMoreReview:{
+  btnViewMoreReview: {
     marginTop: 0,
     marginBottom: 15,
-    justifyContent:'center',
-     alignItems:'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  backgroundOpacity:{
+  backgroundOpacity: {
     height: 40,
-    paddingVertical:10,
+    paddingVertical: 10,
   },
-  textViewMore:{
+  textViewMore: {
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   containerReviews: {
-    marginVertical:10
+    marginVertical: 10,
   },
   containerOverallReview: {
-    flexDirection:'row',
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'center',
+    justifyContent: 'center',
   },
   overallReview: {
     flex: 4,
-    backgroundColor:'#f1f6f7',
+    backgroundColor: '#f1f6f7',
     paddingHorizontal: 30,
-    paddingVertical:30
+    paddingVertical: 30,
   },
   baseOnReview: {
     flex: 6,
-    paddingLeft: 20
+    paddingLeft: 20,
   },
-  titleOverall:{
+  titleOverall: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
-  textOverall:{
+  textOverall: {
     fontSize: 14,
     textAlign: 'center',
   },
@@ -201,64 +202,64 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 5
+    marginVertical: 5,
   },
   lineBaseReview: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 2
+    marginBottom: 2,
   },
   titleBaseOn: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 5
-  }, 
-  containerDetailReview:{
+    marginBottom: 5,
+  },
+  containerDetailReview: {
     marginVertical: 20,
-    height: 290
+    height: 290,
   },
-  containerDetailReviewMore:{
+  containerDetailReviewMore: {
     marginVertical: 20,
   },
-  containerBoxReview:{
-    marginBottom: 20
+  containerBoxReview: {
+    marginBottom: 20,
   },
-  containerItemReview:{
+  containerItemReview: {
     flexDirection: 'row',
   },
-  boxImage:{
-    flex: 3
+  boxImage: {
+    flex: 3,
   },
-  boxContentReview:{
+  boxContentReview: {
     flex: 7,
-    padding: 5
+    padding: 5,
   },
-  imgUser:{
-    flex:1,
+  imgUser: {
+    flex: 1,
     borderRadius: 50,
-    margin: 5
+    margin: 5,
   },
-  nameUser:{
+  nameUser: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom:5
+    marginBottom: 5,
   },
-  colorReview:{
-    fontStyle:'italic',
-    marginBottom:5
+  colorReview: {
+    fontStyle: 'italic',
+    marginBottom: 5,
   },
-  contentReview:{
+  contentReview: {
     fontSize: 18,
   },
-  likeBox:{
-    flexDirection: 'row', 
-    alignItems:'center',
+  likeBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginLeft: 5,
-    marginTop:5
+    marginTop: 5,
   },
-  likeItem:{
+  likeItem: {
     marginLeft: 10,
-    fontSize: 16
+    fontSize: 16,
   },
   itemContainer: {
     width: 100,
@@ -279,30 +280,30 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#2a2a2a',
   },
-  containerGroupNameButton:{
-    flexDirection:'row',
+  containerGroupNameButton: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: '#f1f6f7',
     paddingVertical: 8,
     paddingHorizontal: 10,
     borderRadius: 20,
-    marginVertical: 10
+    marginVertical: 10,
   },
-  groupButton:{
-    paddingHorizontal:15,
-    paddingVertical:8,
+  groupButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: '#fff',
   },
-  groupButtonActive:{
+  groupButtonActive: {
     backgroundColor: '#9DDCF1',
   },
   textGroupButton: {
     textAlign: 'center',
     fontSize: 14,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 });
 export default styles;

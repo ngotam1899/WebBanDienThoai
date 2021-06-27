@@ -25,6 +25,7 @@ import {
   Dimensions,
   FlatList,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 
 const {width} = Dimensions.get('window');
@@ -41,7 +42,11 @@ class FlatListItem extends Component {
           backgroundColor: this.props.index % 2 == 0 ? '#F9F9F9' : 'white',
         }}>
         <Text style={styles.flatListItemName}>{this.props.item.name}</Text>
-        <Text style={styles.flatListItemValue}>{this.props.item.selection? this.props.item.selection.name: this.props.item.value}</Text>
+        <Text style={styles.flatListItemValue}>
+          {this.props.item.selection
+            ? this.props.item.selection.name
+            : this.props.item.value}
+        </Text>
       </View>
     );
   }
@@ -54,7 +59,6 @@ class FlatListImage extends Component {
         style={{
           flex: 1,
           marginTop: 10,
-
         }}>
         <Image
           style={styles.productImg}
@@ -69,7 +73,7 @@ class FlatListImage extends Component {
 
 class ListReview extends Component {
   render() {
-    const {item,onLiked} = this.props;
+    const {item, onLiked} = this.props;
     return (
       <View style={styles.containerBoxReview}>
         <View style={styles.containerItemReview}>
@@ -115,7 +119,7 @@ class ListReview extends Component {
           </View>
         </View>
         <TouchableOpacity
-          onPress={()=>onLiked(item._id, item.like)}
+          onPress={() => onLiked(item._id, item.like)}
           style={styles.likeBox}>
           <FontAwesome name="thumbs-up" color="#6c757d" size={24} />
           <Text style={styles.likeItem}>
@@ -144,7 +148,6 @@ class ProductItem extends Component {
         />
         <Text style={styles.itemName} numberOfLines={2}>
           {product && product.name ? product.name.substring(0, 22) : ''}
-          {product && product.name.length > 22 ? '...' : ''}
         </Text>
         <Text style={styles.itemPrice}>
           {product && product.price_min
@@ -262,7 +265,33 @@ class ProductDetail extends Component {
           alert(err);
         });
     } else {
-      alert('Vui lòng chọn màu bạn muốn mua');
+      alert('Vui lòng chọn màu sản phẩm bạn muốn mua');
+    }
+  };
+  showAlert = () => {
+    Alert.alert(
+      'Sorry',
+      'Vui lòng chọn màu sản phẩm bạn muốn mua',
+      [
+        {
+          text: 'OK',
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
+  onCreateInstallment = (data, color) => {
+    const {navigation} = this.props;
+    if (color !== '') {
+      navigation.navigate('Installment', {
+        productID: data._id,
+        color: color,
+      });
+    } else {
+      this.showAlert();
     }
   };
   onChangeViewMore = value => {
@@ -412,7 +441,15 @@ class ProductDetail extends Component {
               <TouchableOpacity
                 style={styles.shareButton}
                 onPress={() => this.onClickAddCart(product, color, 1)}>
-                <Text style={styles.shareButtonText}>Chọn Mua</Text>
+                <Text style={styles.shareButtonText}>Mua Ngay</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.shareButton,
+                  {marginLeft: 5, flex: 0.4, backgroundColor: '#1e88e5'},
+                ]}
+                onPress={() => this.onCreateInstallment(product, color)}>
+                <Text style={styles.shareButtonText}>Trả Góp</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.containerGroupNameButton}>
@@ -528,7 +565,6 @@ class ProductDetail extends Component {
               </TouchableOpacity>
             </View>
             <Text style={styles.titleName}>Thông số kỹ thuật</Text>
-
             <FlatList
               data={product.specifications}
               keyExtractor={(item, index) => item._id}
@@ -650,7 +686,12 @@ class ProductDetail extends Component {
                   keyExtractor={(item, index) => item._id}
                   style={{marginBottom: 0}}
                   renderItem={({item, index}) => {
-                    return <ListReview item={item} index={index} onLiked={this.onLiked}></ListReview>;
+                    return (
+                      <ListReview
+                        item={item}
+                        index={index}
+                        onLiked={this.onLiked}></ListReview>
+                    );
                   }}></FlatList>
               </View>
               {review && review.length >= 3 ? (

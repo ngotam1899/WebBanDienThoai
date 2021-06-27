@@ -85,7 +85,7 @@ class UserDetailPage extends Component {
     });
   }
 
-  componentWillMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     const token = await AsyncStorage.getItem('AUTH_USER');
     const {onGetProfile, onGetListCity} = this.props;
     //Get profile
@@ -254,7 +254,7 @@ class UserDetailPage extends Component {
   changePassword() {
     const {oldPassword, newPassword, confirmPassword} = this.state;
     const {onChangePassword, t, userInfo} = this.props;
- 
+
     if (newPassword === confirmPassword && newPassword !== null) {
       if (userInfo.password) {
         onChangePassword({
@@ -291,17 +291,18 @@ class UserDetailPage extends Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-          {previewSource ? (
-            <Image style={styles.avatarUser} source={previewSource} />
-          ) : (
-            <Image
-              style={styles.avatarUser}
-              source={{
-                uri: imageURL,
-              }}
-            />
-          )}
-
+          <View style={styles.containerAvatar}>
+            {previewSource ? (
+              <Image style={styles.avatarUser} source={previewSource} />
+            ) : (
+              <Image
+                style={styles.avatarUser}
+                source={{
+                  uri: imageURL,
+                }}
+              />
+            )}
+          </View>
           <View
             style={{
               flex: 1,
@@ -754,13 +755,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
+    paddingBottom: 15,
   },
   header: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
     paddingBottom: 50,
   },
   footer: {
@@ -768,7 +769,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
     paddingVertical: 30,
   },
   text_header: {
@@ -825,10 +826,15 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   avatarUser: {
-    height: 230,
-    marginHorizontal: 25,
-    marginTop: 20,
-    marginBottom: 30,
+    height: width - 60,
+    width: width - 60,
+    marginHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 20,
+    borderRadius: 200,
+  },
+  containerAvatar: {
+    alignItems: 'center',
   },
   containerAddress: {
     flexDirection: 'row',
@@ -838,7 +844,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginTop: 10
+    marginTop: 10,
   },
   checkbox: {
     alignSelf: 'flex-end',

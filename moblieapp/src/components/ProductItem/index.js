@@ -20,10 +20,10 @@ export default class ProductItem extends Component {
       <TouchableOpacity
         style={styles.itemContainer}
         onPress={() => {
-          navigation.push('Detail', {id});
+          navigation.navigate('Detail', {id});
         }}>
         <Image source={{uri: image}} style={styles.itemImage} />
-        <View style={{paddingLeft:6}}>
+        <View style={{paddingLeft: 6}}>
           <Text style={styles.itemName} numberOfLines={2}>
             {name}
           </Text>

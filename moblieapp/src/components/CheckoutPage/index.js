@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  Image,
+} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -16,7 +23,11 @@ import OrdersActions from '../../redux/actions/order';
 import numberWithCommas from '../../utils/formatPrice';
 import tryConvert from '../../utils/changeMoney';
 
-import { SHIPPING_EXPRESS, SHIPPING_STANDARD, API_ENDPOINT_AUTH } from '../../constants';
+import {
+  SHIPPING_EXPRESS,
+  SHIPPING_STANDARD,
+  API_ENDPOINT_AUTH,
+} from '../../constants';
 
 import styles from './style';
 
@@ -66,7 +77,7 @@ class CheckoutPage extends Component {
   }
   handleResponse = data => {
     if (data.title === 'success') {
-      this.paypalOrder()
+      this.paypalOrder();
       this.setState({showModal: false, status: 'Complete'});
     } else if (data.title === 'cancel') {
       this.setState({showModal: false, status: 'Cancelled'});
@@ -84,18 +95,44 @@ class CheckoutPage extends Component {
     var totalLength = 0;
     for (var i = 0; i < dataCart.length; i++) {
       total = total + dataCart[i].quantity;
-      totalPrice = totalPrice + dataCart[i].quantity * dataCart[i].product.colors.find(item => item._id === dataCart[i].color).price;
-      totalWeight = totalWeight + dataCart[i].quantity * dataCart[i].product.weight;
-      totalHeight = totalHeight + dataCart[i].quantity * dataCart[i].product.height;
-      totalWidth = totalWidth < dataCart[i].product.width ? dataCart[i].product.width : totalWidth;
-      totalLength = totalLength < dataCart[i].product.width ? dataCart[i].product.width : totalLength;
+      totalPrice =
+        totalPrice +
+        dataCart[i].quantity *
+          dataCart[i].product.colors.find(
+            item => item._id === dataCart[i].color,
+          ).price;
+      totalWeight =
+        totalWeight + dataCart[i].quantity * dataCart[i].product.weight;
+      totalHeight =
+        totalHeight + dataCart[i].quantity * dataCart[i].product.height;
+      totalWidth =
+        totalWidth < dataCart[i].product.width
+          ? dataCart[i].product.width
+          : totalWidth;
+      totalLength =
+        totalLength < dataCart[i].product.width
+          ? dataCart[i].product.width
+          : totalLength;
     }
 
-    this.setState({ total, totalPrice, totalWeight, totalHeight, totalWidth, totalLength });
+    this.setState({
+      total,
+      totalPrice,
+      totalWeight,
+      totalHeight,
+      totalWidth,
+      totalLength,
+    });
   }
 
   componentWillReceiveProps(props) {
-    const { service_type_id, totalHeight, totalLength, totalWeight, totalWidth } = this.state;
+    const {
+      service_type_id,
+      totalHeight,
+      totalLength,
+      totalWeight,
+      totalWidth,
+    } = this.state;
     const {
       authInfo,
       onGetListDistrict,
@@ -106,20 +143,33 @@ class CheckoutPage extends Component {
     if (authInfo !== props.authInfo && authInfo === null) {
       onGetListCity();
     }
-    if(authInfo && authInfo.address){
-      if(listCity !== props.listCity && props.listCity){
-        onGetListDistrict({province_id:props.listCity.find(obj => obj.ProvinceName === authInfo.address.split(', ')[3]).ProvinceID})
+    if (authInfo && authInfo.address) {
+      if (listCity !== props.listCity && props.listCity) {
+        onGetListDistrict({
+          province_id: props.listCity.find(
+            obj => obj.ProvinceName === authInfo.address.split(', ')[3],
+          ).ProvinceID,
+        });
       }
-      if(listDistrict !== props.listDistrict && listDistrict===null){
-        var districtID = props.listDistrict.find(obj => obj.DistrictName === authInfo.address.split(', ')[2]).DistrictID
+      if (listDistrict !== props.listDistrict && listDistrict === null) {
+        var districtID = props.listDistrict.find(
+          obj => obj.DistrictName === authInfo.address.split(', ')[2],
+        ).DistrictID;
         this.setState({
-          districtID
-        })
-        this.calculateShipping(service_type_id, districtID, totalHeight, totalLength, totalWeight, totalWidth)
+          districtID,
+        });
+        this.calculateShipping(
+          service_type_id,
+          districtID,
+          totalHeight,
+          totalLength,
+          totalWeight,
+          totalWidth,
+        );
       }
     }
   }
-  paypalOrder(){
+  paypalOrder() {
     const {onCreateAnOrder, authInfo, ship} = this.props;
     const {
       shipToDifferentAddress,
@@ -134,7 +184,7 @@ class CheckoutPage extends Component {
       order_list,
     } = this.state;
     var data = {};
-    if(shipToDifferentAddress === true) {
+    if (shipToDifferentAddress === true) {
       data = {
         order_list,
         total_price: parseInt(ship ? totalPrice + ship.total : totalPrice),
@@ -144,11 +194,10 @@ class CheckoutPage extends Component {
         shipping_address: `${address}, ${ward}, ${district}, ${city}`,
         note: order_comments,
         status: -1,
-        payment_method: "paypal",
-        paid: true
-      }
-    }
-    else{
+        payment_method: 'paypal',
+        paid: true,
+      };
+    } else {
       data = {
         order_list,
         total_price: parseInt(ship ? totalPrice + ship.total : totalPrice),
@@ -157,12 +206,12 @@ class CheckoutPage extends Component {
         email: authInfo.email,
         shipping_address: authInfo.address,
         status: -1,
-        payment_method: "paypal",
+        payment_method: 'paypal',
         note: order_comments,
-        paid: true
-      }
+        paid: true,
+      };
     }
-    console.log('data', data)
+    console.log('data', data);
     onCreateAnOrder(data);
   }
   placeOrder() {
@@ -733,14 +782,14 @@ class CheckoutPage extends Component {
           </View>
           <View style={{flexDirection: 'row'}}>
             <Text style={{fontSize: 16, fontStyle: 'italic', width: 180}}>
-              {service_type_id === '2' ? SHIPPING_EXPRESS : SHIPPING_STANDARD}
+              {service_type_id === '2' ? SHIPPING_STANDARD : SHIPPING_EXPRESS}
             </Text>
             <Text style={{fontSize: 16}}>
               {ship ? ': ' + numberWithCommas(ship.total) + ' VNĐ' : ''}
             </Text>
           </View>
           <View style={styles.shippingContainer}>
-            <Text style={styles.labelShipping}>Express</Text>
+            <Text style={styles.labelShipping}>Standard</Text>
             <CheckBox
               value={shipToDifferentAddress}
               onValueChange={() => this.changeShipping('2')}
@@ -748,7 +797,7 @@ class CheckoutPage extends Component {
               value={service_type_id === '2' ? true : false}
             />
             <Text style={[styles.labelShipping, {marginLeft: 10}]}>
-              Standard
+              Express
             </Text>
             <CheckBox
               value={shipToDifferentAddress}
@@ -823,7 +872,11 @@ class CheckoutPage extends Component {
             visible={this.state.showModal}
             onRequestClose={() => this.setState({showModal: false})}>
             <WebView
-              source={{uri: `${API_ENDPOINT_AUTH}/paypal?total=${parseFloat(tryConvert(ship ? totalPrice + ship.total : 0, "USD", false)).toFixed(2)}`}}
+              source={{
+                uri: `${API_ENDPOINT_AUTH}/paypal?total=${parseFloat(
+                  tryConvert(ship ? totalPrice + ship.total : 0, 'USD', false),
+                ).toFixed(2)}`,
+              }}
               onNavigationStateChange={data => this.handleResponse(data)}
               injectedJavaScript={`document.f1.submit()`}
             />
@@ -849,37 +902,33 @@ class CheckoutPage extends Component {
                 <Image
                   style={{width: 150, height: 36}}
                   source={{
-                    uri:
-                      'https://pngimg.com/uploads/paypal/paypal_PNG5.png',
+                    uri: 'https://pngimg.com/uploads/paypal/paypal_PNG5.png',
                   }}></Image>
               </TouchableOpacity>
             </View>
           ) : (
-            <></>
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.signIn}
+                onPress={() => this.placeOrder()}>
+                <LinearGradient
+                  colors={['#1F7cdb', '#1e88e5']}
+                  style={styles.signIn}>
+                  <Text
+                    style={[
+                      styles.textSign,
+                      {
+                        color: '#fff',
+                      },
+                    ]}>
+                    THANH TOÁN
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
           )}
 
           {/* ---------------------------------------------------- */}
-          <View style={styles.textPrivate}>
-          </View>
-          <View style={styles.button}>
-            <TouchableOpacity
-              style={styles.signIn}
-              onPress={() => this.placeOrder()}>
-              <LinearGradient
-                colors={['#1F7cdb', '#1e88e5']}
-                style={styles.signIn}>
-                <Text
-                  style={[
-                    styles.textSign,
-                    {
-                      color: '#fff',
-                    },
-                  ]}>
-                  THANH TOÁN
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
       </View>
     );
@@ -930,4 +979,3 @@ const mapDispatchToProps = dispatch => {
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(CheckoutPage);
-

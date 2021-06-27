@@ -55,22 +55,22 @@ class OrderItem extends Component {
   sendData = val => {
     this.props.onShowModal(val);
   };
-  onDeleteOrder = (id) => {
+  onDeleteOrder = id => {
     const {onUpdateOrder} = this.props;
     onUpdateOrder(id, {active: false});
-  }
+  };
 
   setStatus = (confirmed, status, active) => {
-    if(active===false) return "Đã hủy"
-    else{
-      if(confirmed===false) return "Chờ xác nhận"
-      else{
-        if(status===-1) return "Chờ giao hàng";
-        else if(status===0) return "Đang giao";
-        else return "Đã giao";
+    if (active === false) return 'Đã hủy';
+    else {
+      if (confirmed === false) return 'Chờ xác nhận';
+      else {
+        if (status === -1) return 'Chờ giao hàng';
+        else if (status === 0) return 'Đang giao';
+        else return 'Đã giao';
       }
     }
-  }
+  };
   render() {
     const item = this.props;
     return (
@@ -79,7 +79,7 @@ class OrderItem extends Component {
           <Text style={styles.orderCode}>Mã đơn hàng: {item.item._id}</Text>
         </View>
         {item.item.order_list.map((itemProduct, index) => (
-          <View style={styles.bodyCart}>
+          <View key={itemProduct._id} style={styles.bodyCart}>
             <Image
               style={styles.imgProduct}
               source={{
@@ -106,11 +106,17 @@ class OrderItem extends Component {
               onPress={() => this.sendData(item.item._id)}>
               <Text style={styles.textBtnDetail}>Chi tiết</Text>
             </TouchableOpacity>
-            {this.setStatus(item.item.confirmed, item.item.status, item.item.active) ===
-              'Chờ xác nhận' && (
+            {this.setStatus(
+              item.item.confirmed,
+              item.item.status,
+              item.item.active,
+            ) === 'Chờ xác nhận' && (
               <TouchableOpacity
-                style={[styles.btnDetail, {backgroundColor:'red', marginLeft: 10}]}
-                onPress={()=> this.onDeleteOrder(item.item._id)}>
+                style={[
+                  styles.btnDetail,
+                  {backgroundColor: 'red', marginLeft: 10},
+                ]}
+                onPress={() => this.onDeleteOrder(item.item._id)}>
                 <Text style={styles.textBtnDetail}>Hủy đơn</Text>
               </TouchableOpacity>
             )}
@@ -171,15 +177,35 @@ class PageView extends Component {
       onGetList(params);
     }
   };
-  onReset(){
+  onReset() {
     const {params} = this.props;
     onGetList(params);
   }
   render() {
-    const {orderList, orderItem, onAddProductToCart, onUpdateOrder, params} = this.props;
+    const {
+      orderList,
+      orderItem,
+      onAddProductToCart,
+      onUpdateOrder,
+      params,
+    } = this.props;
 
     return (
       <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <FontAwesome name="search" size={24} color="#969696" />
+          <TextInput
+            style={styles.inputText}
+            placeholder="Nhập hóa đơn tìm kiếm..."
+            placeholderTextColor="#666666"
+            onChangeText={val => this.textInputChange(val)}
+          />
+          <TouchableOpacity
+            style={styles.btnSearch}
+            onPress={() => this.searchKeyWord()}>
+            <Text style={styles.textSearch}>Tìm kiếm</Text>
+          </TouchableOpacity>
+        </View>
         {orderList && orderList.length != 0 ? (
           <>
             <Modal visible={this.state.showModal}>
@@ -195,25 +221,13 @@ class PageView extends Component {
                     </View>
                     <OrderDetailView
                       orderItem={orderItem ? orderItem : null}
-                      onCloseModal={this.onCloseModal} params={params}></OrderDetailView>
+                      onCloseModal={this.onCloseModal}
+                      params={params}></OrderDetailView>
                   </View>
                 </View>
               </View>
             </Modal>
-            <View style={styles.inputContainer}>
-              <FontAwesome name="search" size={24} color="#969696" />
-              <TextInput
-                style={styles.inputText}
-                placeholder="Nhập hóa đơn tìm kiếm..."
-                placeholderTextColor="#666666"
-                onChangeText={val => this.textInputChange(val)}
-              />
-              <TouchableOpacity
-                style={styles.btnSearch}
-                onPressOut={this.searchKeyWord()}>
-                <Text style={styles.textSearch}>Tìm kiếm</Text>
-              </TouchableOpacity>
-            </View>
+
             <FlatList
               data={orderList ? orderList : null}
               pagingEnabled={true}

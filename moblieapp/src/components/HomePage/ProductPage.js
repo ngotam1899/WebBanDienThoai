@@ -16,7 +16,7 @@ import ProductsActions from '../../redux/actions/products';
 
 class ProductItem extends Component {
   render() {
-    const {product, navigation } = this.props;
+    const {product, navigation} = this.props;
     return (
       <TouchableOpacity
         style={[styles.itemContainer, (flex = 0.33)]}
@@ -33,7 +33,6 @@ class ProductItem extends Component {
         <View style={{paddingLeft: 5}}>
           <Text style={styles.itemName} numberOfLines={2}>
             {product && product.name ? product.name.substring(0, 22) : ''}
-            {product && product.name.length > 22 ? '...' : ''}
           </Text>
           {product.real_price_min ? (
             <View style={{flexDirection: 'row'}}>
@@ -41,7 +40,8 @@ class ProductItem extends Component {
                 {numberWithCommas(product.real_price_min)}
               </Text>
               <Text style={styles.reducePrice}>
-              {' '}Giảm{' '}
+                {' '}
+                Giảm{' '}
                 {parseInt(
                   (1 - product.price_min / product.real_price_min) * 100,
                 )}

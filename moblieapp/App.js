@@ -23,7 +23,7 @@ import NotificationBottom from './src/components/NotificationBottom';
 import RasaChat from './src/components/RasaChatPage/RasaChat';
 import AccessoriesPage from './src/components/AccessoriesPage';
 import AccProductPage from './src/components/AccProductPage';
-
+import InstallmentPage from './src/components/InstallmentPage';
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -66,7 +66,7 @@ function AccProductTemp({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
-            marginLeft: 65
+            marginLeft: 65,
           },
         }}
       />
@@ -105,6 +105,22 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
+          },
+        }}
+      />
+      <HomeStack.Screen
+        name="Installment"
+        component={InstallmentPage}
+        options={{
+          headerShown: true,
+          title: 'TRANG TRẢ GÓP',
+          headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 16,
+            marginLeft: 80,
           },
         }}
       />
