@@ -255,9 +255,22 @@ class DetailPage extends Component {
                   <div className="col-sm-7">
                     <div className="">
                       <h2 className="">{product.name}</h2>
-                      <div className="product-inner-price">
+                      <div className="product-inner-price form-inline">
                         <ins>{product.price_min && this.setPrice(currency, product.price_min, product.price_max)} {currency}</ins>
                         {product.real_price_min && <del>{this.setPrice(currency, product.real_price_min, product.real_price_max)} {currency}</del>}
+                        {product.real_price_min && product.real_price_min > product.price_min && 
+            <div className="discount ml-2">
+              <div className="d-flex h-discount text-orange">
+                <svg className="_2DRZW" viewBox="-0.5 -0.5 4 16">
+                  <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="" stroke="currentColor" fill="#f69113"></path>
+                </svg>
+            <div className="discount-content">Giảm {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
+                <svg className="h-discount" viewBox="-0.5 -0.5 4 16">
+                  <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="rotate(180) translate(-3 -15)" stroke="currentColor" fill="#f69113">
+                  </path>
+                </svg>
+              </div>
+            </div>}
                       </div>
                       <div className="row">
                         <div className="col-12">

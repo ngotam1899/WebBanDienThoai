@@ -4,7 +4,6 @@ const Validator = require('../validators/validator')
 const getAllNotification = async(req, res, next) => {
   try {
     let condition = {}
-    let conditions = {}
     if (req.query.user != undefined && req.query.user != "") {
 			condition.user = req.query.user;
     }
@@ -14,9 +13,6 @@ const getAllNotification = async(req, res, next) => {
     if (req.query.type != undefined && req.query.type != "") {
 			condition.type = parseInt(req.query.type);
     }
-    if (req.query.active != undefined && req.query.active != "") {
-			conditions.active = req.query.active=='1' ? true : false;
-		}
     let limit = 10;
     let page = 0;
     if (req.query.limit != undefined && req.query.limit != "") {
@@ -36,9 +32,46 @@ const getAllNotification = async(req, res, next) => {
     .sort({ createdAt: -1 })
     .limit(limit)
     .skip(limit * page)
+    const total = await Notification.countDocuments(condition);
+    return res.status(200).json({ success: true, code: 200, message: '', total, notifications })
+  } catch (error) {
+    return next(error)
+  }
+}
+
+const getNewestNotification = async(req, res, next) => {
+  try {
+    let condition = {}
+    if (req.query.user != undefined && req.query.user != "") {
+			condition.user = req.query.user;
+    }
+    if (req.query.admin != undefined && req.query.admin != "") {
+			condition.user = null;
+    }
+    if (req.query.type != undefined && req.query.type != "") {
+			condition.type = parseInt(req.query.type);
+    }
+    let limit = 5;
+    let page = 0;
+    if (req.query.limit != undefined && req.query.limit != "") {
+      const number_limit = parseInt(req.query.limit);
+      if (number_limit && number_limit > 0) {
+        limit = number_limit;
+      }
+    }
+    if (req.query.page != undefined && req.query.page != "") {
+      const number_page = parseInt(req.query.page);
+      if (number_page && number_page > 0) {
+        page = number_page;
+      }
+    }
+    const notifications = await Notification.find(condition)
+    .populate({ path: 'image', select: 'public_url' })
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .skip(limit * page)
     const total = await Notification.countDocuments({
-      ...condition, 
-      ...conditions
+      ...condition, active: 1
     });
     return res.status(200).json({ success: true, code: 200, message: '', total, notifications })
   } catch (error) {
@@ -95,6 +128,7 @@ const deleteAllNotification = async (req, res, next) => {
 
 module.exports = {
   getAllNotification,
+  getNewestNotification,
   addNotification,
 
   updateNotification,

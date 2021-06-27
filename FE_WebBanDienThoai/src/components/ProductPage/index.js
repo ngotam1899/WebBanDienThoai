@@ -155,10 +155,6 @@ class ProductPage extends Component {
     this.handleUpdateFilter({ page: pageNumber-1 });
   }
 
-  componentWillUnmount(){
-
-  }
-
   render() {
     const {min_p, max_p, more} = this.state;
     const { listProducts, totalBrand, t, location, total, category } = this.props;

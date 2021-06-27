@@ -1,11 +1,11 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import NotificationActions, { NotificationActionTypes } from "../actions/notification";
-import { getAllNotifications, addNotification, updateNotification, deleteNotification, updateAllNotifications, deleteAllNotifications } from "../apis/notification";
+import { getAllNotifications, getNewestNotifications, addNotification, updateNotification, deleteNotification, updateAllNotifications, deleteAllNotifications } from "../apis/notification";
 
 function* handleGetNewest({ payload }) {
   try {
-    const result = yield call(getAllNotifications, payload);
+    const result = yield call(getNewestNotifications, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onGetNewestSuccess(data.notifications, data.total));

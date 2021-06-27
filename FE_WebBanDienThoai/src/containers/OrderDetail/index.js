@@ -57,7 +57,6 @@ class OrderDetail extends Component {
   render() {
     const {orderItem, t, review} = this.props;
     const {modal, product} = this.state;
-    console.log('review: ',review)
     return (
       <div show="true" className="modal fade" id="orderModal" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div className="modal-dialog modal-lg">

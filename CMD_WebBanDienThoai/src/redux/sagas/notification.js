@@ -1,11 +1,11 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import NotificationActions, { NotificationActionTypes } from "../actions/notification";
-import { getAllNotifications, addNotification, updateNotification, deleteNotification, updateAllNotifications, deleteAllNotifications } from "../apis/notification";
+import { getAllNotifications, getNewestNotifications, addNotification, updateNotification, deleteNotification, updateAllNotifications, deleteAllNotifications } from "../apis/notification";
 
 function* handleGetNewest({ payload }) {
   try {
-    const result = yield call(getAllNotifications, payload);
+    const result = yield call(getNewestNotifications, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onGetNewestSuccess(data.notifications, data.total));
@@ -53,6 +53,7 @@ function* handleUpdate({ payload }) {
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onUpdateSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
+    yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {
     yield put(NotificationActions.onUpdateError(error));
   }
@@ -65,6 +66,7 @@ function* handleUpdateAll({ payload }) {
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onUpdateAllSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
+    yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {
     yield put(NotificationActions.onUpdateAllError(error));
   }
@@ -81,6 +83,7 @@ function* handleDelete({ payload }) {
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onDeleteSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
+    yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {
     yield put(NotificationActions.onDeleteError(error));
   }
@@ -93,6 +96,7 @@ function* handleDeleteAll({ payload }) {
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onDeleteAllSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
+    yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {
     yield put(NotificationActions.onDeleteAllError(error));
   }

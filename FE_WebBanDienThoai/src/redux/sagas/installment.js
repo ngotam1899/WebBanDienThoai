@@ -65,7 +65,6 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    console.log(payload)
     const result = yield call(updateInstallment, payload.params, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;

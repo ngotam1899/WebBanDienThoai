@@ -15,7 +15,7 @@ class Footer extends Component {
                 <div className="col-md-3 col-sm-6">
                     <div className="footer-about-us">
                         <h2><img src={ assets('brand-footer.png') } className="w-100" alt="TellMe"/></h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis sunt id doloribus vero quam laborum quas alias dolores blanditiis iusto consequatur, modi aliquid eveniet eligendi iure eaque ipsam iste, pariatur omnis sint! Suscipit, debitis, quisquam. Laborum commodi veritatis magni at?</p>
+                        <p>3109 Phạm Thế Hiển, Phường 7, Quận 8, TPHCM</p>
                         <div className="footer-social">
                             <a href="/#" target="_blank"><FontAwesomeIcon icon={faFacebookF} /></a>
                             <a href="/#" target="_blank"><FontAwesomeIcon icon={faTwitter} /></a>

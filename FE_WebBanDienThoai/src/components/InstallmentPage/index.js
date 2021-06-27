@@ -352,7 +352,7 @@ class InstallmentPage extends Component {
                         {installmentData.installments.map((item, index) => {
                           return (
                             <option key={index} value={JSON.stringify(item)}>
-                              {item.month_sum} tháng
+                              {item.month_sum} months
                             </option>
                           );
                         })}
@@ -388,7 +388,7 @@ class InstallmentPage extends Component {
                             id="prepay"
                             value={prepay}
                           />
-                          <label for="text">Thanh toán trước:</label>
+                          <label for="text">Thanh toán trước</label>
                         </div>
                       </div>
                       <div className="col-6 form-inline">
@@ -466,8 +466,7 @@ class InstallmentPage extends Component {
                           className="btn btn-primary mb-2"
                           onClick={() => this.onCreateInstallment()}
                         >
-                          <i className="fa fa-question-circle mr-2"></i>Đăng ký
-                          chờ xét duyệt
+                          <i className="fa fa-question-circle mr-2"></i>Đăng ký chờ xét duyệt
                         </button>
                       </div>
                     </div>

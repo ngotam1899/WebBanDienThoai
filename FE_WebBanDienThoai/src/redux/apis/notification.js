@@ -4,16 +4,25 @@ import axiosService from '../../utils/AxiosService';
 import {API_ENDPOINT_AUTH} from '../../constants/index';
 import queryString from 'query-string';
 
-// http://localhost:3000/users/notification  METHOD = GET
+
 const url = '/users/notification';
 const url_all = '/users/notification-all';
-//cho params 1 default value là object
+// http://localhost:3000/users/notification  METHOD = GET
 export const getAllNotifications = (params = {}) =>{
   let queryParams = '';
   if(Object.keys(params).length>0){
     queryParams = `?${queryString.stringify(params)}`;
   }
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
+};
+
+// http://localhost:3000/users/notification-newest  METHOD = GET
+export const getNewestNotifications = (params = {}) =>{
+  let queryParams = '';
+  if(Object.keys(params).length>0){
+    queryParams = `?${queryString.stringify(params)}`;
+  }
+  return axiosService.get(`${API_ENDPOINT_AUTH}/users/notification-newest${queryParams}`);
 };
 
 // http://localhost:3000/users/notification  METHOD = POST

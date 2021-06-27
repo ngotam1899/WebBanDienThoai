@@ -22,6 +22,8 @@ router.route('/notification-all')
     .put(passport.authenticate('jwt', { session: false }), notificationController.updateAllNotification)
 router.route('/notification-all/:IDUser')
     .delete(passport.authenticate('jwt', { session: false }), notificationController.deleteAllNotification)
+router.route('/notification-newest')
+    .get(passport.authenticate('jwt', { session: false }), notificationController.getNewestNotification)
 /* Notification area */
 
 /* Authorization area */

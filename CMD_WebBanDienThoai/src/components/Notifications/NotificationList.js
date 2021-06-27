@@ -89,7 +89,7 @@ class NotificationList extends Component {
   onReadAllNoti = () =>{
     const {authInfo, onUpdateAll} = this.props;
     const {queryParams} = this.state;
-    const data = {user : authInfo._id}
+    const data = {admin : authInfo._id}
     onUpdateAll(data, queryParams)
   }
 
@@ -107,15 +107,13 @@ class NotificationList extends Component {
   }
 
   showModal = (item) => {
-    const { large } = this.state;
     const { onGetDetailInstallment, onGetDetailOrder } = this.props;
+    this.setState({ large: true })
     switch(item.type){
       case 0:
-        this.setState({ large: !large })
         if(item){onGetDetailOrder(item.link)}
         break;
       case 2:
-        this.setState({ large: !large })
         if(item){onGetDetailInstallment(item.link)}
         break;
       default:

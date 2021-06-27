@@ -110,6 +110,11 @@ class ProductList extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  handleRedirect = (id, pathname) =>{
+    const { history } = this.props;
+    history.push(`${pathname}?product=${id}`);
+  }
+
   // phân trang
   handlePageChange(pageNumber) {
     this.handleUpdateFilter({ page: pageNumber-1 });
@@ -281,7 +286,7 @@ class ProductList extends Component {
                     (item)=>(
                       <td>
                         <CButton
-                          onClick={() => this.onUpdate(!large, item._id)}
+                          onClick={() => this.handleRedirect(item._id, '/users/review-manage')}
                           className="mr-1 mb-1 mb-xl-0"
                           color="primary"
                         >

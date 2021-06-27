@@ -121,7 +121,7 @@ const updateInstallment = async (req, res, next) => {
     if(status) {
       if(status == 0 && installment.status == -1){  // Nếu từ chưa duyệt chuyển sang chưa hoàn tất -> giảm số lượng sp
         const productFound = await Product.findById(installment.product._id)
-        productFound.colors.find(i => i._id == installment.product.color).amount -= 1;
+        productFound.colors.find(i => i._id == installment.product.color.toString()).amount -= 1;
         await productFound.save();
       }
       installment.status = status;

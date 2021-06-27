@@ -32,11 +32,11 @@ class NotificationPage extends Component {
     this.state = {
       keyword: "",
       filter: {
-        limit: 8,
+        limit: 10,
         page: 0,
       },
       queryParams: {
-        limit: 8,
+        limit: 10,
         page: 0,
       },
       type: 2,
@@ -158,7 +158,6 @@ class NotificationPage extends Component {
 
   render() {
     const { listNotification, location, t, installmentItem, orderItem, history } = this.props;
-    const { type } = this.state;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">

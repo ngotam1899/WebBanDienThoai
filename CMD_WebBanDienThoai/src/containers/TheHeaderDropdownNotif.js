@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from "redux";
 // @Components
 import CIcon from '@coreui/icons-react'
-import { toastInfo } from '../utils/toastHelper';
-import { Link } from 'react-router-dom'
+import { toastInfo, toastError } from '../utils/toastHelper';
 import {
   CBadge,
   CDropdown,
@@ -32,17 +31,19 @@ class TheHeaderDropdownNotif extends Component {
       large: false,
       itemsCount : 0,
       email: "",
-      type: -1  // type: 0 (order), type: 2 (installment)
+      type: -1,  // type: 0 (order), type: 2 (installment)
+      queryParams: {},
     }
   }
 
   componentDidUpdate(prevProps, prevState){
     const { itemsCount, email, type } = this.state;
-    const { onGetAllNotifications, totalNotification, userInfo } = this.props
+    const { onGetNewestNotifications, totalNotification, userInfo } = this.props
     var admin = "";
     if (userInfo !== prevProps.userInfo && userInfo) {
       admin = userInfo._id;
-      onGetAllNotifications({admin, limit: 5, page: 0, active: 1})
+      this.setState({queryParams: {admin, limit: 5, page: 0}})
+      onGetNewestNotifications({admin, limit: 5, page: 0})
     }
     if (totalNotification !== prevProps.totalNotification && totalNotification) {
       this.setState({itemsCount: totalNotification})
@@ -57,31 +58,30 @@ class TheHeaderDropdownNotif extends Component {
       if(type === 0) toastInfo(`${email} vừa xác thực đơn hàng`)
       else toastInfo(`${email} vừa gửi yêu cầu trả góp`)
       admin = userInfo._id;
-      onGetAllNotifications({admin, limit: 5, page: 0, active: 1})
+      this.setState({queryParams: {admin, limit: 5, page: 0}})
+      onGetNewestNotifications({admin, limit: 5, page: 0})
     }
   }
 
   onReadAllNotification = () =>{
     const { onUpdateAllNotifications, userInfo } = this.props;
-    const {itemsCount} = this.state;
+    const { itemsCount, queryParams } = this.state;
+    const data = {admin : userInfo._id}
     if(itemsCount > 0){
-      onUpdateAllNotifications({admin: userInfo._id})
-      this.setState({itemsCount : 0})
+      onUpdateAllNotifications(data, queryParams)
+      this.setState({ itemsCount: 0 })
     }
   }
 
   showModal = (item) => {
-    console.log(item)
-    const { large } = this.state;
     const { onGetDetailInstallment, onGetDetailOrder } = this.props;
+    this.setState({ large: true })
     switch(item.type){
       case 0:
-        this.setState({ large: !large })
-        if(item){onGetDetailOrder(item.link)}
+        if(item) onGetDetailOrder(item.link)
         break;
       case 2:
-        this.setState({ large: !large })
-        if(item){onGetDetailInstallment(item.link)}
+        if(item) onGetDetailInstallment(item.link)
         break;
       default:
         break;
@@ -134,8 +134,8 @@ class TheHeaderDropdownNotif extends Component {
           </div>
         </CDropdownItem>}
         </CDropdownMenu>
-        {(installmentDetail && large) && <InstallmentDetail large={large} installment={installmentDetail} onClose={this.onClose}/>}
-        {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}/>}
+        {installmentDetail && large && <InstallmentDetail large={large} installment={installmentDetail} onClose={this.onClose}/>}
+        {orderDetail && large && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}/>}
       </CDropdown>
     )
   }
@@ -166,11 +166,11 @@ const mapDispatchToProps =(dispatch)=> {
     onClearDetailOrder: () =>{
       dispatch(OrderActions.onClearDetail())
     },
-		onGetAllNotifications : (data) =>{
-			dispatch(NotificationActions.onGetNewest(data))
+		onGetNewestNotifications : (params) =>{
+			dispatch(NotificationActions.onGetNewest(params))
     },
-    onUpdateAllNotifications : (data) =>{
-			dispatch(NotificationActions.onUpdateAll(data))
+    onUpdateAllNotifications : (data, params) =>{
+			dispatch(NotificationActions.onUpdateAll(data, params))
     },
 	}
 };

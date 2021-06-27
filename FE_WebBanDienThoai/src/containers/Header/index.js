@@ -67,7 +67,7 @@ class Header extends Component {
   componentDidUpdate(prevProps, prevState) {
     var total = 0;
     var totalPrice = 0;
-    const { cart, onGetAllNotifications, totalNotification, userInfo } = this.props;
+    const { cart, onGetNewestNotifications, totalNotification, userInfo } = this.props;
     const { itemsCount, order, installment, status, type } = this.state;
     if (cart !== prevProps.cart) {
       for (let i = 0; i < cart.length; i++) {
@@ -81,7 +81,7 @@ class Header extends Component {
     }
     if (userInfo !== prevProps.userInfo && userInfo) {
       var user = userInfo._id;
-      onGetAllNotifications({user, limit: 5, page: 0, active: 1})
+      onGetNewestNotifications({user, limit: 5, page: 0})
     }
     if (totalNotification !== prevProps.totalNotification) {
       this.setState({itemsCount: totalNotification})
@@ -97,20 +97,20 @@ class Header extends Component {
     if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
       if(type === 2){
         toastInfo(`Phiếu trả góp ${installment} đã được duyệt thành công`);
-        onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+        onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0})
       }
       else {
         switch (status) {
           case 0:
             toastInfo(`Đơn hàng ${order} đã xuất kho vận chuyển`);
-            onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+            onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0})
             break;
           case 1:
             toastInfo(`Đơn hàng ${order} đã vận chuyển thành công`);
-            onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+            onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0})
             break;
           default:
-            onGetAllNotifications({user: userInfo._id, limit: 5, page: 0})
+            onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0})
         }
       }
     }
@@ -367,7 +367,7 @@ class Header extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-md-3 align-self-center py-1">
+              <div className="col-12 col-xl-3 align-self-center py-1">
                 <div className="shopping-item rounded-pill shadow">
                   <Link to="/carts" className="text-decoration-none" data-tip data-for='cart'>
                     {t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> 
@@ -485,8 +485,8 @@ const mapDispatchToProps =(dispatch)=> {
     onChangeCurrency: (unit) => {
       dispatch(ProductsActions.onChangeCurrency(unit));
     },
-    onGetAllNotifications : (data) =>{
-			dispatch(NotificationActions.onGetNewest(data))
+    onGetNewestNotifications : (params) =>{
+			dispatch(NotificationActions.onGetNewest(params))
     },
     onUpdateAllNotifications : (data) =>{
 			dispatch(NotificationActions.onUpdateAll(data))
