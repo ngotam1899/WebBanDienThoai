@@ -250,7 +250,7 @@ class CheckoutPage extends Component {
         <div className="col-12 my-2">
           <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
           <i className="fa fa-chevron-right px-2 w-25-px"></i>
-          <a className="text-decoration-none" href="/#/carts/checkout">Checkout Page</a>
+          <a className="text-decoration-none" href="/#/carts/checkout">{t('checkout.page.title')}</a>
         </div>
         <div className="col-12">
           <form>
@@ -258,9 +258,9 @@ class CheckoutPage extends Component {
               <div className="col-12">
                 <div className="rounded shadow-sm my-2">
                   <div className="px-3 py-2">
-                    <h3 className="mb-1">Sản phẩm</h3>
+                    <h3 className="mb-1">{t('common.product')}</h3>
                     <div className="mb-2 border-bottom"></div>
-                    {cart && cart.map((item, index) => {
+                    {cart.length > 0 ? cart.map((item, index) => {
                       return (
                         <div className="row" key={index}>
                           <div className="col-6">
@@ -270,7 +270,7 @@ class CheckoutPage extends Component {
                               </div>
                               <div className="col-6 col-sm-8 col-md-9 col-lg-10 align-self-center">
                               <p className="font-weight-bold mb-0">{item.product.name}</p>
-                              <p className="mb-0 text-secondary">Màu {item.product.colors.find(i => i._id === item.color).name_en}</p>
+                              <p className="mb-0 text-secondary">{t('common.color')} {item.product.colors.find(i => i._id === item.color).name_en}</p>
                               </div>
                             </div>
                           </div>
@@ -287,7 +287,17 @@ class CheckoutPage extends Component {
                           </div>
                         </div>
                       )
-                    })}
+                    })
+                  : <div className="row my-1">
+                  <div className="col-12">
+                      <div className="text-center my-5">
+                        <div className="h-120">
+                          <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/cart/9bdd8040b334d31946f49e36beaf32db.png" alt="404 not found"></img>
+                        </div>
+                        <h4>{t('header.cart.empty')}</h4>
+                      </div>
+                    </div>
+                  </div>}
                     <div className="my-2 border-bottom"></div>
                     <div className="row mb-3">
                       <div className="col-12 col-md-6">
@@ -297,7 +307,7 @@ class CheckoutPage extends Component {
                         </div>
                       </div>
                       <div className="col-12 col-md-6">
-                        <h4>Đơn vị vận chuyển</h4>
+                        <h4>{t('checkout.express-unit.input')}</h4>
                         <div className="row">
                           <div className="col-5">
                             <div className="express float-start">
@@ -309,7 +319,7 @@ class CheckoutPage extends Component {
                             </div>
                           </div>
                           <div className="col-3 text-center">
-                            <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#expressModal">Thay đổi</button>
+                            <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#expressModal">{t('checkout.change.button')}</button>
                           </div>
                           {ship && <div className="col-4 text-right font-weight-bold">
                           {currency==="VND" 
@@ -326,7 +336,7 @@ class CheckoutPage extends Component {
               <div className="col-12 col-lg-6">
                 <div className="rounded shadow-sm mt-2 mb-3">
                   <div className="px-3 py-2">
-                    <h3>{t('checkout.billing.label')}</h3>
+                    <h3>{t('common.user-detail')}</h3>
                     { authInfo && <>
                       <div className="row">
                         <div className="col">
@@ -390,7 +400,7 @@ class CheckoutPage extends Component {
                       <div className="col-lg-4 col-md-6 col-12">
                         <div className="form-floating mb-3">
                           <select className="form-select"  id="floatingSelect" onChange={this.setDistrict} required>
-                            <option defaultValue>Chọn tỉnh/ thành</option>
+                            <option defaultValue>{t('checkout.city.select')}</option>
                             {listCity && listCity.map((item, index)=>{
                                 return(
                                   <option key={index} value={item.ProvinceID} name="shipping_city">{item.ProvinceName}</option>
@@ -398,13 +408,13 @@ class CheckoutPage extends Component {
                               })
                             }
                           </select>
-                          <label htmlFor="floatingSelect">Tỉnh thành</label>
+                          <label htmlFor="floatingSelect">{t('checkout.city.input')}</label>
                         </div>
                       </div>
                       <div className="col-lg-4 col-md-6 col-12">
                         <div className="form-floating mb-3">
                           <select className="form-select"  id="floatingSelect" onChange={this.setWard} required>
-                            <option defaultValue>Chọn quận huyện</option>
+                            <option defaultValue>{t('checkout.district.select')}</option>
                             {listDistrict && listDistrict.map((item, index)=>{
                                 return(
                                   <option key={index} value={item.DistrictID} name="shipping_district">{item.DistrictName}</option>
@@ -412,13 +422,13 @@ class CheckoutPage extends Component {
                               })
                             }
                           </select>
-                          <label htmlFor="floatingSelect">Quận huyện</label>
+                          <label htmlFor="floatingSelect">{t('checkout.district.input')}</label>
                         </div>
                       </div>
                       <div className="col-lg-4 col-md-6 col-12">
                         <div className="form-floating mb-3">
                           <select className="form-select"  id="floatingSelect" onChange={this.setAddress} required>
-                            <option defaultValue>Chọn phường xã</option>
+                            <option defaultValue>{t('checkout.ward.select')}</option>
                             {listWard && listWard.map((item, index)=>{
                               return(
                                 <option key={index} value={item.WardCode} name="shipping_ward">{item.WardName}</option>
@@ -426,7 +436,7 @@ class CheckoutPage extends Component {
                               })
                             }
                           </select>
-                          <label htmlFor="floatingSelect">Phường xã</label>
+                          <label htmlFor="floatingSelect">{t('checkout.ward.input')}</label>
                         </div>
                       </div>
                     </div>
@@ -446,7 +456,7 @@ class CheckoutPage extends Component {
                     <table className="shop_table mb-2">
                       <thead>
                         <tr>
-                          <th className="product-name">{t('cart.product.table')}</th>
+                          <th className="product-name">{t('common.product')}</th>
                           <th className="product-total">{t('cart.total.table')}</th>
                         </tr>
                       </thead>
@@ -475,7 +485,7 @@ class CheckoutPage extends Component {
               <div className="rounded shadow-sm my-2">
                 <div className="px-3 py-2">
                 {authInfo && ship && (authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
-                  <h3>Shipping methods</h3>
+                  <h3>{t('checkout.payment.title')}</h3>
                   <div className="row">
                     <div className="col">
                       <ul className="payment_methods methods">

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import {connect} from 'react-redux';
-import {compose} from 'redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 // @Actions
@@ -51,6 +51,11 @@ class SearchPage extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  // Sort price
+  handleChangeSortPrice = (event) =>{
+    this.handleUpdateFilter({ sort_p: event.target.value, page : 0 });
+  }
+
   // Sort with categories
   onSetCategory = (value) => {
     this.handleUpdateFilter({ category: value, page: 0 });
@@ -74,19 +79,19 @@ class SearchPage extends Component {
   }
 
   render() {
-    const {location, listProducts, total, listCategory, t} = this.props;
+    const { location, listProducts, total, listCategory, t } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <div className="single-product-area">
         <div className="container">
           {total > 0 && <div className="row">
             <div className="col-12">
-              <h3 className="border-bottom pb-2">Kết quả tìm kiếm: '{filter.keyword}'</h3> 
+              <h3 className="border-bottom pb-2">{t('search.result.title')} '{filter.keyword}'</h3> 
             </div>
             <div className="col-12">
               <button type="button" 
               className={(filter.category === null || filter.category === undefined) ? "rounded-pill shadow-sm bg-info text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-active text-dark my-2 mr-2 position-relative btn-padding"} 
-              onClick={()=>this.onSetCategory(null)}>Tất cả</button>
+              onClick={()=>this.onSetCategory(null)}>{t('common.all')}</button>
               {listCategory && 
               listCategory.map((category, index) =>{
               return(
@@ -100,6 +105,20 @@ class SearchPage extends Component {
             </div>
             <div className="col-12">
               <div className="row">
+                <div className="col-6">
+                <p>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
+                </div>
+                <div className="col-6">
+                <select value={filter.sort_p} className="form-select float-end w-fit-content" onChange={this.handleChangeSortPrice}>
+                  <option key={-1} value="0">{t('shop.sort.price')}</option>
+                  <option value="1">{t('shop.sort.inc')}</option>
+                  <option value="-1">{t('shop.sort.des')}</option>
+                </select>
+                </div>
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="row">
                 {listProducts && listProducts.map((product, index) => {
                   return (
                       <ProductItem product={product} key={index} />
@@ -107,65 +126,6 @@ class SearchPage extends Component {
                 })}
               </div>
             </div>
-              {/* <div className="col-md-9 col-12">
-                <div className="row">
-                  <div className="col-6 col-md-5">
-                    <div className="card border-info mb-3 w-100">
-                      <div className="row no-gutters">
-                        <div className="col-sm-5">
-                          <div className="card-header h-100 text-info mb-0"><h5 className="card-title mb-0">{t('shop.sort.label')}</h5></div>
-                        </div>
-                        <div className="col-sm-5">
-                          <div className="card-body py-md-3 py-2 px-3 px-md-2">
-                            <select value={filter.sort_p} className="" onChange={this.handleChangeSortPrice}>
-                              <option key={-1} value="0">{t('shop.sort.price')}</option>
-                              <option value="1">{t('shop.sort.inc')}</option>
-                              <option value="-1">{t('shop.sort.des')}</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-7 col-6">
-                    <div className="card border-info mb-3 w-100">
-                      <div className="row no-gutters">
-                        <div className="col-sm-4">
-                          <div className="card-header h-100 text-info mb-0"><h5 className="card-title mb-0">{t('shop.distance.label')}</h5></div>
-                        </div>
-                        <div className="col-sm-8 d-md-block d-none">
-                          <div className="card-body py-md-2 py-0">
-                            <div className="row input-group mx-auto">
-                              <input type="number" value={min_p} name="min_p" step={100000} min={0} onChange={this.onChange} placeholder={t('shop.distance.from')} className="form-control w-40"></input>
-                              <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} className="form-control w-40"></input>
-                              <div className="input-group-append">
-                                <button onClick={() => this.distancePrice()} className="btn btn-primary"><i className="fa fa-search-dollar"></i></button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-sm-8 d-md-none d-block">
-                          <div className="card-body py-1">
-                              <input type="number" value={min_p} name="min_p" step={100000} min={0}  onChange={this.onChange} placeholder={t('shop.distance.from')} style={{borderBottomLeftRadius: "unset", borderBottomRightRadius: "unset"}} className="form-control"></input>
-                              <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} style={{borderRadius: "unset"}} className="form-control"></input>
-                            <button onClick={() => this.distancePrice()} className="btn btn-primary w-100" style={{borderTopLeftRadius: "unset", borderTopRightRadius: "unset"}}><i className="fa fa-search-dollar"></i> {t('shop.distance.button')}</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <p style={{fontStyle: 'italic'}}>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
-                <div className="row">
-                  {listProducts.map((product, index) => {
-                    return (
-                        <ProductItem product={product} key={index} />
-                      )
-                  })}
-                </div>
-              </div>
-            </div>*/}
-            
           </div>}
           {total === 0 && <div className="row my-1">
             <div className="col-12">
@@ -173,8 +133,8 @@ class SearchPage extends Component {
                 <div className="h-120">
                   <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/a60759ad1dabe909c46a817ecbf71878.png" alt="404 not found"></img>
                 </div>
-                <h3>Không tìm thấy kết quả nào</h3>
-                <h4>Hãy thử sử dụng các từ khóa chung chung hơn</h4>
+                <h3>{t('search.not-yet.h3')}</h3>
+                <h4>{t('search.not-yet.h4')}</h4>
               </div>
             </div>
           </div>}

@@ -7,7 +7,7 @@ export default class Loader extends Component {
       <>
       {
         Array.from({ length: 4 }, (_, k) => (
-          <div className="col-md-3 col-6" key = {k}>
+          <div className="col-lg-3 col-6" key = {k}>
             <ContentLoader 
               speed={2}
               width="100%"

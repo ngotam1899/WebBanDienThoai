@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withTranslation } from 'react-i18next'
 import './styles.css';
 
 class NotFound extends Component {
     render() {
+		const { t } = this.props;
         return (
 	<div id="notfound">
 		<div className="notfound">
@@ -10,12 +14,14 @@ class NotFound extends Component {
 				<h1>Oops!</h1>
 			</div>
 			<h2>404 - Page not found</h2>
-			<p>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
-			<a href="/">Go To Homepage</a>
+			<p>{t('notfound.p')}</p>
+			<a href="/">{t('active.account.button')}</a>
 		</div>
 	</div>
         );
     }
 }
 
-export default NotFound;
+export default compose(
+  withTranslation()
+)(NotFound);

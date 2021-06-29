@@ -59,6 +59,7 @@ const routes = [
 		path: '/carts/checkout',
 		exact: true,
 		name: "Checkout Page",
+		redirect: '/',
 		main: () => <CheckoutPage />
 	},
 	{
@@ -77,24 +78,28 @@ const routes = [
 		path: '/account/detail',
 		exact: true,
 		name: "User Info",
+		redirect: '/',
 		main: () => <UserInfoPage/>
 	},
 	{
 		path: '/account/installment',
 		exact: true,
 		name: "User Installment Page",
+		redirect: '/',
 		main: ({history, location}) => <UserInstallmentPage history={history} location={location}/>
 	},
 	{
 		path: '/account/purchase',
 		exact: true,
 		name: "Purchase",
+		redirect: '/',
 		main: ({history, location}) => <PurchasePage history={history} location={location}/>
 	},
 	{
 		path: '/account/notification',
 		exact: true,
 		name: "Notification",
+		redirect: '/',
 		main: ({history, location}) => <NotificationPage history={history} location={location}/>
 	},
 	{

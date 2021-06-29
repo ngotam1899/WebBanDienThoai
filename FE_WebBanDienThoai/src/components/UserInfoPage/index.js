@@ -100,7 +100,7 @@ class UserInfoPage extends Component {
               </div>
               <div className="col-md-8">
                 <div className="profile-head">
-                  <h2>Hồ sơ của tôi</h2>
+                  <h2>{t('user.page.title')}</h2>
                 </div>
                 <UserDetail userInfo={authInfo} listCity={listCity} selectedFile={selectedFile}/>
               </div>

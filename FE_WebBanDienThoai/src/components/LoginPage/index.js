@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import './loginStyles.css'
 import { assets } from '../../constants/assetsImage';
 import { connect } from "react-redux";
-
+import { compose } from "redux";
+import { withTranslation } from "react-i18next";
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth'
 // @Components
@@ -27,7 +28,7 @@ class LoginPage extends Component {
 
 	onLogin = () =>{
 		const { email, password } = this.state;
-		const { onLogin } = this.props;
+		const { onLogin, t } = this.props;
 		const data = {
 			email, 
 			password
@@ -36,7 +37,7 @@ class LoginPage extends Component {
 			onLogin(data);
 		}
 		else{
-			toastError("Vui lòng nhập email và password")
+			toastError(`${t('login.toastify.error')}`)
 		}
 	}
 	onSubmit = (event) =>{
@@ -94,7 +95,8 @@ class LoginPage extends Component {
 	}
 
 	render() {
-		const {email, password} = this.state;
+		const { t } = this.props;
+		const { email, password } = this.state;
 		return (
 			<div>
 				<img className="wave" src={ assets("wave.png")} alt="" />
@@ -128,11 +130,11 @@ class LoginPage extends Component {
 							<div onClick={()=> this.onForgotPass} className="text-right" data-bs-toggle="modal" data-bs-target="#forgotPassword">Forgot Password?</div>
 							<div className="row">
 								<div className="col-12">
-									<button type="button" className="btn" onClick={()=> this.onLogin()}>Login</button>
+									<button type="button" className="btn" onClick={()=> this.onLogin()}>{t('header.login.button')}</button>
 								</div>
 								<div className="col-12">
 									<form action="/user/dang-ky">
-										<button type="submit" className="btn" value="Register">Register</button>
+										<button type="submit" className="btn" value="Register">{t('header.signup.button')}</button>
 									</form>
 								</div>
 								
@@ -193,4 +195,5 @@ const mapDispatchToProps =(dispatch)=> {
 	}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default compose(withConnect, withTranslation())(LoginPage);

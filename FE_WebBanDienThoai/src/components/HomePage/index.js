@@ -63,12 +63,12 @@ class HomePage extends Component {
         <div className="zigzag-bottom"></div>
         <div className="container">
           <div className="row">
-            <div className="col-md-3 col-sm-6 d-none d-md-block">
-              <div className="single-promo promo1">
+            <div className="col-md-3 col-sm-6 d-none d-md-block align-self-center">
+              <div className="single-promo promo1 my-1">
                 <i className="fa fa-sync-alt"></i>
                 <p>{t('home.feature.1')}</p>
               </div>
-              <div className="single-promo promo2">
+              <div className="single-promo promo2 my-1">
                 <i className="fa fa-truck"></i>
                 <p>{t('cart.free-ship')}</p>
               </div>
@@ -99,12 +99,12 @@ class HomePage extends Component {
                 <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
               </Carousel>
             </div>}
-            <div className="col-md-3 col-sm-6 d-none d-md-block">
-              <div className="single-promo promo3">
+            <div className="col-md-3 col-sm-6 d-none d-md-block align-self-center">
+              <div className="single-promo promo3 my-1">
                 <i className="fa fa-lock"></i>
                 <p>{t('home.feature.3')}</p>
               </div>
-              <div className="single-promo promo4">
+              <div className="single-promo promo4 my-1">
                 <i className="fa fa-gift"></i>
                 <p>{t('home.feature.4')}</p>
               </div>
@@ -118,7 +118,7 @@ class HomePage extends Component {
           <div className="row">
             <div className="col-12 my-2">
               <div className="latest-product">
-                <h2 className="section-title mb-0">Best seller Products</h2>
+                <h2 className="text-center">{t('home.list.best')}</h2>
                 <div className="shadow p-3 mb-5 bg-white rounded">
                   <div className="row">
                     {bestSeller && bestSeller.map((product, index) => {
@@ -132,7 +132,7 @@ class HomePage extends Component {
             </div>
             <div className="col-12 my-2">
               <div className="latest-product">
-                <h2 className="section-title mb-0">Newest Products</h2>
+                <h2 className="text-center">{t('home.list.new')}</h2>
                 <div className="shadow p-3 mb-5 bg-white rounded">
                   <div className="row">
                     {newest && newest.map((product, index) => {
@@ -146,7 +146,7 @@ class HomePage extends Component {
             </div>
             <div className="col-12 my-2">
               <div className="latest-product">
-                <h2 className="section-title mb-0">Favorite Products</h2>
+                <h2 className="text-center">{t('home.list.favorite')}</h2>
                 <div className="shadow p-3 mb-5 bg-white rounded">
                   <div className="row">
                     {favorite && favorite.map((product, index) => {

@@ -10,6 +10,7 @@ import ReviewActions from '../../redux/actions/review'
 // @Functions
 import numberWithCommas from '../../utils/formatPrice'
 import {INITIAL_IMAGE} from '../../constants';
+import tryConvert from '../../utils/changeMoney'
 
 class OrderDetail extends Component {
   constructor(props){
@@ -55,14 +56,14 @@ class OrderDetail extends Component {
   }
 
   render() {
-    const {orderItem, t, review} = this.props;
-    const {modal, product} = this.state;
+    const { orderItem, t, review, currency } = this.props;
+    const { modal, product } = this.state;
     return (
       <div show="true" className="modal fade" id="orderModal" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div className="modal-dialog modal-lg">
-          {orderItem && <div className="modal-content">
+          {orderItem ? <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">{t('user.info-bill.card')} {orderItem._id}</h5>
+              <h5 className="modal-title">{t('order.info-bill.card')} {orderItem._id}</h5>
               <button type="button" className="close" data-bs-dismiss="modal" onClick={() => this.onClose()}>&times;</button>
             </div>
             <div className="modal-body">
@@ -73,7 +74,7 @@ class OrderDetail extends Component {
                   </div>
                   <div className="form-floating">
                     <input type="date" className="form-control border-0" id="createdAt" name="createdAt" value={orderItem.createdAt.slice(0,10)}/>
-                    <label htmlFor="createdAt">{t('user.date.input')}</label>
+                    <label htmlFor="createdAt">{t('order.date.input')}</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
@@ -81,8 +82,11 @@ class OrderDetail extends Component {
                     <i className="fa fa-money-bill-wave text-xl"></i>
                   </div>
                   <div className="form-floating">
-                    <input type="number" className="form-control border-0" id="total_price" name="total_price" value={orderItem.total_price}/>
-                    <label htmlFor="total_price">{t('user.total.input')} (VND)</label>
+                    <input type="text" className="form-control border-0" id="total_price" name="total_price" 
+                    value={currency==="VND" 
+                    ? numberWithCommas(orderItem.total_price) 
+                    : numberWithCommas(parseFloat(tryConvert(orderItem.total_price, currency, false)).toFixed(2))}/>
+                    <label htmlFor="total_price">{t('order.total.input')} ({currency})</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
@@ -91,8 +95,8 @@ class OrderDetail extends Component {
                   </div>
                   <div className="form-floating">
                     <input type="text" className="form-control border-0 " id="status" name="status" 
-                    value={orderItem.status===true ? `${t('user.status.true')}` : `${t('user.status.false')}`}/>
-                    <label htmlFor="status">{t('user.status.label')}</label>
+                    value={orderItem.status===true ? `${t('order.status.true')}` : `${t('order.status.false')}`}/>
+                    <label htmlFor="status">{t('order.status.label')}</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
@@ -102,7 +106,7 @@ class OrderDetail extends Component {
                   <div className="form-floating">
                     <input type="text" className="form-control border-0" id="payment_method" name="payment_method" 
                     value={orderItem.payment_method === "local" ? `${t('checkout.cod.button')}` : 'Paypal'}/>
-                    <label htmlFor="payment_method">{t('user.payment.way')}</label>
+                    <label htmlFor="payment_method">{t('order.payment.way')}</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
@@ -110,8 +114,11 @@ class OrderDetail extends Component {
                     <i className="fa fa-shopping-basket text-xl"></i>
                   </div>
                   <div className="form-floating">
-                    <input type="number" className="form-control border-0" id="total_price" name="total_price" value={orderItem.total_price}/>
-                    <label htmlFor="total_price">{t('user.total.input')} (VND)</label>
+                    <input type="text" className="form-control border-0" id="total_price" name="total_price" 
+                    value={currency==="VND" 
+                    ? numberWithCommas(orderItem.total_price) 
+                    : numberWithCommas(parseFloat(tryConvert(orderItem.total_price, currency, false)).toFixed(2))}/>
+                    <label htmlFor="total_price">{t('order.total.input')} ({currency})</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
@@ -121,17 +128,17 @@ class OrderDetail extends Component {
                   {orderItem.payment_method==="local" 
                   ? <>
                   <div className="form-floating">
-                    <input type="text" className="form-control border-0" name="confirmed" id="confirmed" value={ orderItem.confirmed===true ? `${t('user.confirm.true')}` : `${t('user.confirm.false')}`}/>
-                    <label htmlFor="confirmed">{t('user.confirm.label')}</label>
+                    <input type="text" className="form-control border-0" name="confirmed" id="confirmed" value={ orderItem.confirmed===true ? `${t('order.confirm.true')}` : `${t('order.confirm.false')}`}/>
+                    <label htmlFor="confirmed">{t('order.confirm.label')}</label>
                     <span className={orderItem.confirmed===true && "d-none"}>
-                      <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>{t('user.confirm.button')}</button>
+                      <button className="btn btn-success" onClick={() => {this.confirmOrder(orderItem._id)}}>{t('order.confirm.button')}</button>
                     </span>
                   </div>
                   </>
                   : <>
                   <div className="form-floating">
-                    <input type="text" className="form-control border-0" id="paid" name="paid" value={ orderItem.paid===true ? `${t('user.payment.true')}` : `${t('user.payment.false')}`}/>
-                    <label htmlFor="paid">{t('user.payment.label')}</label>  
+                    <input type="text" className="form-control border-0" id="paid" name="paid" value={ orderItem.paid===true ? `${t('order.payment.true')}` : `${t('order.payment.false')}`}/>
+                    <label htmlFor="paid">{t('order.payment.label')}</label>  
                   </div>
                   </>}
                 </div>
@@ -146,13 +153,13 @@ class OrderDetail extends Component {
                       </div>
                       <div className="col-sm-3 align-self-center text-left">
                         <p className="text-dark m-0 font-weight-bold">{item.name}</p>
-                        <p className="text-dark m-0">Màu sắc: {item.color && item.color.name_vn}</p>
+                        <p className="text-dark m-0">{t('common.color')} {item.color && item.color.name_vn}</p>
                       </div>
                       <div className="col-sm-3 align-self-center">
                         <p className="m-0">{numberWithCommas(item.price)} VND x {item.quantity}</p>
                       </div>
                       {orderItem.status===1 && <div className="col-sm-3 align-self-center">
-                        <button className="btn btn-info" onClick={()=> this.onReview(item)}>Đánh giá</button>
+                        <button className="btn btn-info" onClick={()=> this.onReview(item)}>{t('detail.review.tab')}</button>
                       </div>}
                     </div>
                   </div>
@@ -167,7 +174,7 @@ class OrderDetail extends Component {
                   </div>
                   <div className="form-floating" style={{width: "90%"}}>
                     <input type="number" className="form-control border-0" id="shipping_phonenumber" name="shipping_phonenumber" value={orderItem.shipping_phonenumber}/>
-                    <label htmlFor="shipping_phonenumber">{t('user.phone.order')}</label>
+                    <label htmlFor="shipping_phonenumber">{t('order.phone.order')}</label>
                   </div>
                 </div>
                 <div className="col-6 form-inline">
@@ -176,7 +183,7 @@ class OrderDetail extends Component {
                   </div>
                   <div className="form-floating">
                     <input type="email" className="form-control border-0" name="email" id="email" value={orderItem.email}/>
-                    <label htmlFor="email">{t('user.email.order')}:</label>
+                    <label htmlFor="email">{t('order.email.order')}:</label>
                   </div>
                 </div>
                 <div className="col-12 form-inline">
@@ -185,7 +192,7 @@ class OrderDetail extends Component {
                   </div>
                   <div className="form-floating" style={{width: "90%"}}>
                     <input type="text" className="form-control border-0 w-100" name="shipping_address" id="shipping_address" value={orderItem.shipping_address}/>
-                    <label htmlFor="shipping_address">{t('user.address.order')}:</label>
+                    <label htmlFor="shipping_address">{t('order.address.order')}:</label>
                   </div>
                 </div>
               </div>
@@ -193,7 +200,27 @@ class OrderDetail extends Component {
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => this.onClose()} data-bs-dismiss="modal">{t('user.close.button')}</button>
             </div>
-          </div> }
+          </div> : <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">404 Not founded</h5>
+            <button type="button" className="close" data-bs-dismiss="modal" onClick={() => this.onClose()}>&times;</button>
+          </div>
+          <div className="modal-body">
+            <div className="row">
+              <div className="col-12">
+                <div className="text-center my-5">
+                  <div className="h-120">
+                    <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-mall-live/images/ic_no_expired.png?_version=2" alt="404 not found"></img>
+                  </div>
+                  <h4>{t('order.toastify.not-founded')}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={() => this.onClose()} data-bs-dismiss="modal">{t('user.close.button')}</button>
+          </div>
+          </div>}
         </div>
         {modal && product && <ReviewDetail modal={modal} onCloseModal={this.onCloseModal} product={product}/>}
         {modal && product && review && <ReviewDetail modal={modal} onCloseModal={this.onCloseModal} product={product} review={review}/>}
@@ -206,6 +233,7 @@ const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
     review: state.review.detail,
+    currency: state.currency,
   }
 }
 

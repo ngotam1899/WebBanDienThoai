@@ -179,7 +179,7 @@ class ProductPage extends Component {
                       <input type="radio" 
                       checked={(filter.max_p === null || filter.max_p === undefined) && (filter.min_p === null || filter.min_p === undefined) && "checked"} 
                       className="form-check-input" id="price" name="price" onChange={(e) => this.distancePrice(null, null, e)}/>
-                      <label htmlFor="price" className="form-check-label">{t('shop.all.radio-button')}</label>
+                      <label htmlFor="price" className="form-check-label">{t('common.all')}</label>
                     </li>
                     {category.price.map(price =>{
                       return (
@@ -212,7 +212,7 @@ class ProductPage extends Component {
                       <ul className="pl-0">
                         <li className="form-check">
                           <input type="radio" checked={(filter[`${item.query}`] === "" || filter[`${item.query}`] === undefined) && "checked"} className="form-check-input" value="" id={item.query} name={item.query} onChange={this.onSetFilter}/>
-                          <label htmlFor={item.query} className="form-check-label">{t('shop.all.radio-button')}</label>
+                          <label htmlFor={item.query} className="form-check-label">{t('common.all')}</label>
                         </li>
                         {item._id.selections.map(selector =>{
                           return (
@@ -235,7 +235,7 @@ class ProductPage extends Component {
             <div className="col-12">
             <button type="button" 
             className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-aqua text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark my-2 mr-2 position-relative btn-padding"} 
-            onClick={()=>this.onSetBrand(null)}>Độc quyền</button>
+            onClick={()=>this.onSetBrand(null)}>{t('common.all')}</button>
             {totalBrand && 
             totalBrand.map((brand, index) =>{
             return(
@@ -269,7 +269,7 @@ class ProductPage extends Component {
           </div>
         </div>
       </div>
-      <div className="row">
+      {total > 12 && <div className="row">
         <div className="col-md-12">
           <div className="product-pagination text-center">
           <nav className="float-end">
@@ -288,15 +288,24 @@ class ProductPage extends Component {
           </nav>
           </div>
         </div>
-      </div>
+      </div>}
       {category && <>
       <div className={ more ? "row rounded shadow-sm" : "row description rounded shadow-sm"}>
         <div className="px-3 py-2">
-          <h3 className="mb-1">Giới thiệu</h3>
+          <h3 className="mb-1">{t('shop.intro.title')}</h3>
           <div className="mb-2 border-bottom"></div>
-        {category.description ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : ""}
+        {category.description.length > 150 ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : <div className="row my-1">
+            <div className="col-12">
+              <div className="text-center my-4">
+                <div className="h-120">
+                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/eac95a8ac896158642c2761a9e9cd52e.png" alt="404 not found"></img>
+                </div>
+                <h4>{t('shop.intro.not-yet')}</h4>
+              </div>
+            </div>
+          </div>}
         {!more && <div className="view-more" onClick={() => this.setState({ more: true })}>
-          <p>Đọc thêm giới thiệu<span><i className="fa fa-angle-down ml-2"></i></span></p>
+          <p>{t('common.readmore.button')}<span><i className="fa fa-angle-down ml-2"></i></span></p>
         </div>}
         </div>
       </div>

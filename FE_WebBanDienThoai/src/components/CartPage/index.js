@@ -74,14 +74,14 @@ class CartPage extends Component {
         <div className="col-12 my-2">
           <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
           <i className="fa fa-chevron-right px-2 w-25-px"></i>
-          <a className="text-decoration-none" href="/#/carts">Cart Page</a>
+          <a className="text-decoration-none" href="/#/carts">{t('cart.page.title')}</a>
         </div>
         <div className="col-12 my-2">
           <div className="rounded shadow-sm my-2">
             <div className="px-3 py-2">
-              <h3 className="mb-1">Sản phẩm</h3>
+              <h3 className="mb-1">{t('common.product')}</h3>
               <div className="mb-2 border-bottom"></div>
-              {cart && cart.map((item, index) => {
+              {cart.length > 0 ? cart.map((item, index) => {
                 return (
                   <div className="row" key={index}>
                     <div className="col-md-1 col-2 text-center align-self-center">
@@ -96,7 +96,7 @@ class CartPage extends Component {
                         </div>
                         <div className="col-6 col-sm-8 col-md-9 align-self-center">
                         <p className="font-weight-bold mb-0">{item.product.name}</p>
-                        <p className="mb-0 text-secondary">Màu {item.product.colors.find(i => i._id === item.color).name_en}</p>
+                        <p className="mb-0 text-secondary">{t('common.color')} {item.product.colors.find(i => i._id === item.color).name_en}</p>
                         </div>
                       </div>
                     </div>
@@ -128,20 +128,29 @@ class CartPage extends Component {
                     </div>
                   </div>
                 )
-              })}
+              }) : <div className="row my-1">
+              <div className="col-12">
+                  <div className="text-center my-5 py-5">
+                    <div className="h-120">
+                      <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/cart/9bdd8040b334d31946f49e36beaf32db.png" alt="404 not found"></img>
+                    </div>
+                    <h4>{t('header.cart.empty')}</h4>
+                  </div>
+                </div>
+              </div>}
             </div>
           </div>
         </div>
         <div className="col-12 my-2">
           <div className="rounded shadow-sm my-2">
             <div className="px-3 py-2">
-              <h3 className="mb-1">Tổng thanh toán</h3>
+              <h3 className="mb-1">{t('cart.total.table')}</h3>
               <div className="mb-2 border-bottom"></div>
               <div className="row">
                 <div className="col-md-2 col-5 align-self-center">
                 <div className="form-check form-switch">
                   <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked disabled/>
-                  <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Chọn tất cả</label>
+                  <label className="form-check-label" htmlFor="flexSwitchCheckDefault">{t('cart.all.choose')}</label>
                 </div>
                 </div>
                 <div className="col-md-7 col-1">

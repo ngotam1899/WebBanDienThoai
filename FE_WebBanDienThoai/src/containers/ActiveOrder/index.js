@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withTranslation } from 'react-i18next'
 import OrdersActions from '../../redux/actions/order'
 
 class ActiveOrder extends Component {
@@ -9,15 +11,16 @@ class ActiveOrder extends Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <div id="notfound">
         <div className="notfound">
           <div className="notfound-404">
             <h1 style={{fontSize: '10vw'}}>Congratulations!</h1>
           </div>
-          <h2>Xác nhận đơn hàng thành công</h2>
-          <p>Bạn đã xác nhận đơn hàng thành công, hãy đợi bộ phận vận đơn liên lạc nhé.</p>
-          <a href="/">Tiếp tục mua hàng</a>
+          <h2>{t('active.order.h2')}</h2>
+          <p>{t('active.order.p')}</p>
+          <a href="/">{t('active.account.button')}</a>
         </div>
       </div>
     );
@@ -37,4 +40,9 @@ const mapDispatchToProps = (dispatch, props) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (ActiveOrder);
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
+
+export default compose(
+  withConnect,
+  withTranslation()
+)(ActiveOrder);

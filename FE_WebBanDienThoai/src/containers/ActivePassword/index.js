@@ -26,8 +26,8 @@ class ActivePassword extends Component {
   }
 
   onResetPassword = () =>{
-    const {match, onActivatePassword} = this.props;
-    const {newPassword, confirmPassword} = this.state;
+    const { match, onActivatePassword, t } = this.props;
+    const { newPassword, confirmPassword } = this.state;
     if(newPassword === confirmPassword && newPassword!== null) {
       onActivatePassword({
         token : match.params.token,
@@ -35,21 +35,22 @@ class ActivePassword extends Component {
       })
     }
     else{
-      toastError('Xác nhận mật khẩu không khớp! Vui lòng nhập lại')
+      toastError(`${t('active.toastify.error')}`)
     }
   }
 
   render() {
-    const {newPassword, confirmPassword} = this.state;
+    const { t } = this.props;
+    const { newPassword, confirmPassword } = this.state;
     return (
       <div  id="activate">
         <div className="activate shadow p-3 mb-5 bg-white rounded">
           <div className="">
-            <h3>Đặt lại mật khẩu</h3>
+            <h3>{t('active.password.h2')}</h3>
           </div>
-          <input className="form-control my-4" type="password" name="newPassword" value={newPassword} onChange={this.onChange} placeholder="Nhập mật khẩu mới"></input>
-          <input className="form-control my-4" type="password" name="confirmPassword" value={confirmPassword} onChange={this.onChange} placeholder="Xác nhận lại mật khẩu mới"></input>
-          <button className="btn btn-primary" onClick={()=> this.onResetPassword()}>Xác nhận</button>
+          <input className="form-control my-4" type="password" name="newPassword" value={newPassword} onChange={this.onChange} placeholder={t('user.new.input')}></input>
+          <input className="form-control my-4" type="password" name="confirmPassword" value={confirmPassword} onChange={this.onChange} placeholder={t('user.confirm.input')}></input>
+          <button className="btn btn-primary" onClick={()=> this.onResetPassword()}>{t('user.save-password.button')}</button>
         </div>
       </div>
     );

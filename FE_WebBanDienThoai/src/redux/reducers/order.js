@@ -55,6 +55,9 @@ export default function(state = init, action) {
     case OrdersActionsTypes.GET_DETAIL:
       return {...state};
     case OrdersActionsTypes.GET_DETAIL_SUCCESS:
+      if(action.payload === null){
+        toastError("Không tìm thấy đơn hàng này. Đơn hàng có thể đã bị hủy")
+      }
       return {
         ...state,
         loadingDetail: false,
@@ -78,7 +81,11 @@ export default function(state = init, action) {
         ...state,
       };
     case OrdersActionsTypes.GET_DETAIL_ERROR:
-      return {...state};
+      toastError("Không tìm thấy đơn hàng này. Đơn hàng có thể đã bị hủy")
+      return {
+        ...state,
+        loadingDetail: false,
+        detail: null,};
     default:
       return state;
   }

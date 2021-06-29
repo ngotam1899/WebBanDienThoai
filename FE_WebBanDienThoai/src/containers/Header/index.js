@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom'
 import MessengerCustomerChat from 'react-messenger-customer-chat';
-import {connect} from 'react-redux';
-import {compose} from 'redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import qs from "query-string";
 import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -67,7 +67,7 @@ class Header extends Component {
   componentDidUpdate(prevProps, prevState) {
     var total = 0;
     var totalPrice = 0;
-    const { cart, onGetNewestNotifications, totalNotification, userInfo } = this.props;
+    const { cart, onGetNewestNotifications, totalNotification, userInfo, t } = this.props;
     const { itemsCount, order, installment, status, type } = this.state;
     if (cart !== prevProps.cart) {
       for (let i = 0; i < cart.length; i++) {
@@ -96,17 +96,17 @@ class Header extends Component {
     }
     if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
       if(type === 2){
-        toastInfo(`Phiếu trả góp ${installment} đã được duyệt thành công`);
+        toastInfo(`${t('header.toastify.installment.first')} ${installment} ${t('header.toastify.installment.accept')}`);
         onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0})
       }
       else {
         switch (status) {
           case 0:
-            toastInfo(`Đơn hàng ${order} đã xuất kho vận chuyển`);
+            toastInfo(`${t('header.toastify.cart.first')} ${order} ${t('header.toastify.cart.export')}`);
             onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0})
             break;
           case 1:
-            toastInfo(`Đơn hàng ${order} đã vận chuyển thành công`);
+            toastInfo(`${t('header.toastify.cart.first')} ${order} ${t('header.toastify.cart.done')}`);
             onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0})
             break;
           default:
@@ -117,8 +117,9 @@ class Header extends Component {
   }
 
   setLogout= () => {
-    const {onLogout} = this.props;
+    const {onLogout, history} = this.props;
     localStorage.removeItem('AUTH_USER')
+    history.push("/")
     onLogout()
   }
 
@@ -163,6 +164,7 @@ class Header extends Component {
   }
 
   sortNotification = (listNotification) => {
+    const { t } = this.props;
     var order = [];
     var ad = [];
     var installment = [];
@@ -179,7 +181,7 @@ class Header extends Component {
     })
     return (<>
       {order.length > 0 && <>
-        <h4>Đơn hàng</h4>
+        <h4>{t('header.toastify.cart.first')}</h4>
         {order.map((notification, index)=>{
           return(
           <div className="row" key={index}>
@@ -195,7 +197,7 @@ class Header extends Component {
         <div className="my-2 border-bottom"></div>
       </>}
       {ad.length > 0 && <>
-        <h4>Sự kiện</h4>
+        <h4>{t('header.promotion.menu')}</h4>
         {ad.map((notification, index)=>{
           return(
           <div className="row" key={index}>
@@ -211,7 +213,7 @@ class Header extends Component {
         <div div className="my-2 border-bottom"></div>
       </>}
       {installment.length > 0 && <>
-        <h4>Trả góp</h4>
+        <h4>{t('header.installment.menu')}</h4>
         {installment.map((notification, index)=>{
           return(
           <div className="row" key={index}>
@@ -266,20 +268,20 @@ class Header extends Component {
                       </li>
                       <li>
                         <a href="/#/account/notification" className="text-decoration-none" data-tip data-for='notification'>
-                          <i className="fa fa-bell"></i> Thông báo
+                          <i className="fa fa-bell"></i> {t('header.notification.menu')}
                           {itemsCount > 0 && <span className="notification-count ml-1 pl-1">{itemsCount}</span>}
                         </a>
                         <ReactTooltip id='notification' place="bottom" type="light" class="shadow-sm bg-white" effect="solid" getContent={(dataTip) => 
                           <div>
-                            <h3 className="mb-1">Thông báo</h3>
+                            <h3 className="mb-1">{t('header.notification.menu')}</h3>
                             <div className="mb-2 border-bottom"></div>
                             {listNotification && listNotification.length > 0 ? <>{this.sortNotification(listNotification)}</>
                             : <div className="row">
                               <div className="col-12 text-center">
                                 <div className="h-120">
-                                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/d3eb7b91baeb280516583f958b10f601.png" alt="404 not found"></img>
+                                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/fa4e2b534c2928596a6deded9c730a21.png" alt="404 not found"></img>
                                 </div>
-                                <p className="my-3">Chưa có thông báo mới</p>
+                                <p className="my-3">{t('header.notification.empty')}</p>
                               </div>  
                             </div>}
                           </div> 
@@ -376,7 +378,7 @@ class Header extends Component {
                   </Link>
                   <ReactTooltip id='cart' place="bottom" type="light" class="shadow-sm bg-white" effect="solid" getContent={(dataTip) => 
                     <div>
-                      <h3 className="mb-1">Giỏ hàng</h3>
+                      <h3 className="mb-1">{t('header.cart.button')}</h3>
                       <div className="mb-2 border-bottom"></div>
                       {cart && cart.length > 0 ? cart.map((item, index)=>{
                         return(
@@ -386,7 +388,7 @@ class Header extends Component {
                           </div>
                           <div className="col-9">
                       <p className="font-weight-bold mb-0">{item.product.name}</p>
-                      <p className="mb-0">Màu {item.product.colors.find(i => i._id === item.color).name_en}</p>
+                      <p className="mb-0">{t('common.color')} {item.product.colors.find(i => i._id === item.color).name_en}</p>
                           </div>
                         </div>
                         )
@@ -396,7 +398,7 @@ class Header extends Component {
                         <div className="h-120">
                           <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/cart/9bdd8040b334d31946f49e36beaf32db.png" alt="404 not found"></img>
                         </div>
-                        <p className="my-3">Giỏ hàng trống</p>
+                        <p className="my-3">{t('header.cart.empty')}</p>
                       </div>  
                     </div>}
                     </div> 
@@ -424,14 +426,14 @@ class Header extends Component {
                           <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}.${category._id}`} activeOnlyWhenExact={true} />
                         )
                       })}
-                      <MenuLink label="Phụ kiện" to={"/products/accessories"} activeOnlyWhenExact={true} />
-                      <MenuLink label="Khuyến mãi" to={"/promotion"} activeOnlyWhenExact={true} />
+                      <MenuLink label={t('header.accessories.menu')} to={"/products/accessories"} activeOnlyWhenExact={true} />
+                      <MenuLink label={t('header.promotion.menu')} to={"/promotion"} activeOnlyWhenExact={true} />
                     </>}
                     {location.hash.indexOf("account") !== -1 &&<>
-                    <MenuLink label="Tài khoản của tôi" to={"/account/detail"} activeOnlyWhenExact={true} />
-                    <MenuLink label="Đơn mua" to={"/account/purchase"} activeOnlyWhenExact={true} />
-                    <MenuLink label="Trả góp" to={"/account/installment"} activeOnlyWhenExact={true} />
-                    <MenuLink label="Thông báo" to={"/account/notification"} activeOnlyWhenExact={true} /></>}
+                    <MenuLink label={t('header.account.menu')} to={"/account/detail"} activeOnlyWhenExact={true} />
+                    <MenuLink label={t('header.order.menu')} to={"/account/purchase"} activeOnlyWhenExact={true} />
+                    <MenuLink label={t('header.installment.menu')} to={"/account/installment"} activeOnlyWhenExact={true} />
+                    <MenuLink label={t('header.notification.menu')} to={"/account/notification"} activeOnlyWhenExact={true} /></>}
                   </ul>
                 </div>
               </nav>

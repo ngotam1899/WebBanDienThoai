@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {connect} from 'react-redux';
-import {compose} from 'redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 import { toastError } from '../../utils/toastHelper';
 // @Actions
@@ -24,29 +24,30 @@ class ForgotPassword extends Component {
   }
 
   sendEmail() {
-    const {email} = this.state;
-    const {onForgotPassword} = this.props
+    const { email } = this.state;
+    const { onForgotPassword, t } = this.props
     if(email) {
       onForgotPassword({email});
     }
     else{
-      toastError('Vui lòng nhập email để đặt lại mật khẩu')
+      toastError(`${t('login.toastify.error.1')}`)
     }
   }
 
   render() {
-    const {email} = this.state;
+    const { t } = this.props;
+    const { email } = this.state;
     return (  
       <div show="true" className="modal fade" id="forgotPassword" role="dialog" >
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Quên mật khẩu</h5>
+              <h5 className="modal-title">{t('login.forgot-password')}</h5>
               <button type="button" className="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div className="modal-body">
               <div className="form-group">
-                <label>Nhập email để xác thực</label>
+                <label>{t('login.forgot.label')}</label>
                 <input type="email" className="form-control" name="email" value={email} onChange={this.onChange}/>
               </div>
             </div>

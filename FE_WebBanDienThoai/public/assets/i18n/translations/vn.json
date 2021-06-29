@@ -8,7 +8,9 @@
   "common.total": "Tổng cộng",
   "common.all": "Tất cả",
   "common.detail.button": "Xem chi tiết",
+  "common.login-continue": "Đăng nhập để tiếp tục",
   "common.destroy.button": "Hủy",
+  "common.toastify.not-login": "Bạn chưa đăng nhập",
 
   "accessory.page.title":"Trang phụ kiện",
   "accessory.category.title":"Danh mục phụ kiện",
@@ -29,7 +31,7 @@
   "cart.cal-ship.label": "Tính phí vận chuyển",
   "cart.country.select": "Chọn quốc gia",
   "cart.total.button": "Cập nhật",
-  "cart.free-ship": "Miễn phí vận chuyển",
+  "cart.free-ship": "Dễ dàng trả góp",
   
   "checkout.page.title": "Trang thanh toán",
   "checkout.billing.label": "Chi tiết thanh toán",
@@ -71,6 +73,10 @@
   "detail.relate.tab": "Sản phẩm liên quan",
   "detail.specification.tab": "Các thuộc tính",
   "detail.base.on": "Dựa trên",
+  "detail.toastify.error": "Chưa chọn màu sản phẩm",
+  "detail.installment.button": "Mua trả góp",
+  "detail.review.useful": "Hữu ích",
+  "detail.review.not-yet": "Chưa có đánh giá sản phẩm",
 
   "home.feature.1":"30 ngày đổi trả",
   "home.feature.3":"Thanh toán bảo mật",
@@ -84,6 +90,7 @@
   "installment.toastify.error": "Bạn chưa chọn thời gian vay",
   "installment.info.title": "Thông tin đăng ký trả góp",
   "installment.plan.title": "Kế hoạch trả góp",
+  "installment.question.title": "Câu hỏi thường gặp",
   "installment.percent.select": "Chọn phần trăm",
   "installment.percent.label": "Trả trước",
   "installment.time.select": "Chọn khoảng thời gian",
@@ -148,6 +155,7 @@
   "shop.search.last": "kết quả tìm kiếm",
   "shop.apply.button": "Áp dụng",
   "shop.intro.title": "Giới thiệu",
+  "shop.intro.not-yet": "Loại sản phẩm này chưa có giới thiệu",
 
   "promotion.page.title": "Trang quảng cáo",
   "promotion.not-yet": "Chưa diễn ra",
@@ -205,6 +213,10 @@
   "order.confirm.button": "Xác nhận",
   "order.popup.label": "Thông báo",
   "order.delete.question": "Bạn có muốn hủy đơn hàng?",
+  "order.toastify.not-founded": "Không tìm thấy đơn hàng này. Đơn hàng có thể đã bị hủy",
+
+  "notification.read-all.button": "Đọc tất cả",
+  "notification.delete-all.button": "Xóa tất cả",
 
   "installment.status.1": "Đã hủy",
   "installment.status.2": "Chờ duyệt",
@@ -212,11 +224,15 @@
   "installment.status.4": "Đã hoàn tất",
   "installment.status.5": "Qúa hạn",
   "installment.status.6": "Chờ duyệt",
+  "installment.status.7": "Chưa tới hạn",
+  "installment.status.8": "Hoàn tất",
   "installment.card.header": "Mã phiếu trả góp",
   "installment.debt.1.label": "Dư nợ",
   "installment.paid.label": "Đã thanh toán",
   "installment.from": "Từ",
   "installment.to": "đến",
+  "installment.not-yet": "Chưa có phiếu trả góp",
+  "installment.toastify.not-founded": "Không tìm thấy phiếu trả góp này. Phiếu trả góp có thể đã bị hủy",
 
   "active.account.h2": "Đăng ký tài khoản thành công",
   "active.account.p": "Chào mừng bạn đã đến với TellMe - Trang web bán điện thoại uy tín, chính hãng.",

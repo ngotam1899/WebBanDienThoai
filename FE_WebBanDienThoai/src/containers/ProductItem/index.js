@@ -8,6 +8,7 @@ import Rating from 'react-rating'
 // @Functions
 import tryConvert from "../../utils/changeMoney";
 import numberWithCommas from "../../utils/formatPrice";
+import {INITIAL_IMAGE} from '../../constants';
 
 class ProductItem extends Component {
   onReload = (path) => {
@@ -17,9 +18,9 @@ class ProductItem extends Component {
   }
 
   render() {
-    const { product, currency } = this.props;
+    const { product, currency, t } = this.props;
     return (
-      <div className="col-md-3 col-6 my-2">
+      <div className="col-lg-3 col-6 my-2">
         {product && <Link to={`/product/${product.pathseo}.${product._id}`} onClick={()=> this.onReload(`/product/${product.pathseo}.${product._id}`)} style={{textDecoration: 'none'}}>
         <div className="single-shop-product">
           <div className="product-upper text-center">
@@ -27,7 +28,7 @@ class ProductItem extends Component {
                 src={
                   product.bigimage
                     ? product.bigimage.public_url
-                    : "http://www.pha.gov.pk/img/img-02.jpg"
+                    : INITIAL_IMAGE
                 }
                 className="h-100 w-auto"
                 alt={`${product.name}`}
@@ -44,7 +45,7 @@ class ProductItem extends Component {
                 <svg className="_2DRZW" viewBox="-0.5 -0.5 4 16">
                   <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="" stroke="currentColor" fill="#f69113"></path>
                 </svg>
-            <div className="discount-content">Giảm {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
+            <div className="discount-content">{t('common.discount')} {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
                 <svg className="h-discount" viewBox="-0.5 -0.5 4 16">
                   <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="rotate(180) translate(-3 -15)" stroke="currentColor" fill="#f69113">
                   </path>
@@ -77,7 +78,7 @@ class ProductItem extends Component {
               emptySymbol="fa fa-star text-secondary"
               fullSymbol="fa fa-star text-warning"
               readonly
-            /><span className="ml-2 text-secondary font-size-12">{product.reviewCount} đánh giá</span></>}
+            /><span className="ml-2 text-secondary font-size-12">{product.reviewCount} {t('common.review')}</span></>}
           </div>
         </div>
         </Link>}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import {compose} from 'redux';
+import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 // Components
@@ -165,8 +165,8 @@ class PurchasePage extends Component {
   }
 
   render() {
-    const {orderList, orderItem, location, history, t} = this.props;
-    const {keyword} = this.state;
+    const { orderList, orderItem, location, history, t } = this.props;
+    const { keyword } = this.state;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
@@ -174,7 +174,7 @@ class PurchasePage extends Component {
           <div className="row mx-3">
             <div className={filter.type==="0" || filter.type===undefined ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
             onClick={() => this.onList(0, null)}>
-              Tất cả
+              {t('common.all')}
             </div>
             {statusList.map((status, index)=>{
               return (
@@ -205,7 +205,7 @@ class PurchasePage extends Component {
                 <div className="col-12 my-1" key={index}>
                   <div className="card shadow-sm">
                     <div className="card-header bg-primary text-white">
-                      <p className="float-start mb-0">Mã đơn hàng {order._id}</p>
+                      <p className="float-start mb-0">{t('order.card.header')} {order._id}</p>
                       <p className="float-end mb-0">| {this.setStatus(order.confirmed, order.status, order.active)}</p>
                     </div>
                     <div className="card-body">
@@ -217,8 +217,8 @@ class PurchasePage extends Component {
                           </div>
                           <div className="col-6 align-self-center ">
                             <p className="font-weight-bold mb-0">{product.name}</p>
-                            <p className="font-italic mb-0">Màu sắc: {product.color && product.color.name_vn}</p>
-                            <p className="mb-0">Số lượng {product.quantity}</p>
+                            <p className="font-italic mb-0">{t('common.color')} {product.color && product.color.name_vn}</p>
+                            <p className="mb-0">{t('order.amount.label')} {product.quantity}</p>
                           </div>
                           <div className="col-3 text-right">
                             <p>{numberWithCommas(product.quantity*product.price)} VND</p>
@@ -229,8 +229,8 @@ class PurchasePage extends Component {
                     </div>
                     <div className="card-footer">
                       <div className="float-start">
-                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#orderModal" onClick={()=> this.getInfoOrder(order._id)}>Xem chi tiết đơn hàng</button>
-                        {this.setStatus(order.confirmed, order.status, order.active)==="Chờ xác nhận" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(order._id)}>Hủy đơn hàng</button>}
+                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#orderModal" onClick={()=> this.getInfoOrder(order._id)}>{t('common.detail.button')}</button>
+                        {this.setStatus(order.confirmed, order.status, order.active)==="Chờ xác nhận" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(order._id)}>{t('common.destroy.button')}</button>}
                       </div>
                       <div className="float-end font-weight-bold">
                         {numberWithCommas(order.total_price)} VND
@@ -245,7 +245,7 @@ class PurchasePage extends Component {
                 <div className="h-120">
                   <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/5fafbb923393b712b96488590b8f781f.png" alt="404 not found"></img>
                 </div>
-                <p>Chưa có đơn hàng</p>
+                <p>{t('order.not-yet')}</p>
               </div>
             </div>}
           </div>

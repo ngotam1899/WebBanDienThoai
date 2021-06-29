@@ -49,6 +49,7 @@ export default function(state = INITIAL_STATE, action) {
       var { message } = action.payload;
       toastError(message);
       /* eslint-disable */
+      localStorage.removeItem('AUTH_USER')
       return {
         ...state,
         loggedIn: false,
@@ -65,6 +66,8 @@ export default function(state = INITIAL_STATE, action) {
         loggedIn: true,
       };
     case AuthorizationActionTypes.LOGIN_FACEBOOK_ERROR:
+    case AuthorizationActionTypes.LOGIN_GOOGLE_ERROR:
+      localStorage.removeItem('AUTH_USER')
       return {
         ...state,
         loggedIn: false,
@@ -80,12 +83,8 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         loggedIn: true,
       };
-    case AuthorizationActionTypes.LOGIN_GOOGLE_ERROR:
-      return {
-        ...state,
-        loggedIn: false,
-      };
     case AuthorizationActionTypes.LOGOUT:
+      localStorage.removeItem('AUTH_USER')
       return {
         ...state,
         loggedIn: false,
@@ -104,6 +103,7 @@ export default function(state = INITIAL_STATE, action) {
         detail: action.payload,
       };
     case AuthorizationActionTypes.GET_PROFILE_ERROR:
+      localStorage.removeItem('AUTH_USER')
       return {
         ...state,
         detail: null,

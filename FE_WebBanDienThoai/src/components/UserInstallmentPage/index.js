@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import {compose} from 'redux';
+import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 // Components
@@ -166,7 +166,7 @@ class UserInstallmentPage extends Component {
           <div className="row mx-3">
             <div className={filter.type==="0" || filter.type===undefined ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
             onClick={() => this.onList(0, null)}>
-              Tất cả
+              {t('common.all')}
             </div>
             {statusList.map((status, index)=>{
               return (
@@ -185,7 +185,7 @@ class UserInstallmentPage extends Component {
                 <div className="col-12 my-1" key={index}>
                   <div className="card shadow-sm">
                     <div className="card-header bg-primary text-white">
-                      <p className="float-start mb-0">Mã phiếu trả góp {installment._id}</p>
+                      <p className="float-start mb-0">{t('installment.card.header')} {installment._id}</p>
                       <p className="float-end mb-0">| {this.setStatus(installment.status, installment.active)}</p>
                     </div>
                     <div className="card-body">
@@ -195,8 +195,8 @@ class UserInstallmentPage extends Component {
                         </div>
                         <div className="col-6 col-md-3 align-self-center">
                           <p className="font-weight-bold mb-0">{installment.product._id.name}</p>
-                          <p className="font-italic mb-0">Màu sắc: {installment.product.color && installment.product.color.name_vn}</p>
-                          <p className="mb-0">Giá {numberWithCommas(installment.product.product_price)} VND</p>
+                          <p className="font-italic mb-0">{t('common.color')} {installment.product.color && installment.product.color.name_vn}</p>
+                          <p className="mb-0">{t('cart.price.table')} {numberWithCommas(installment.product.product_price)} VND</p>
                         </div>
                         <div className="col-6 col-md-3 align-self-center">
                           <div className="rounded bg-danger py-3 px-2 form-inline">
@@ -204,7 +204,7 @@ class UserInstallmentPage extends Component {
                               <i className="fa fa-coins text-lg text-danger"></i>
                             </div>
                             <div className="ml-3">
-                              <h4 className="mb-0 font-weight-bold text-white ">Dư nợ</h4>
+                              <h4 className="mb-0 font-weight-bold text-white ">{t('installment.debt.1.label')}</h4>
                               <p className="text-white mb-0">{installment.debt ? numberWithCommas(installment.debt) : 0} VND</p>
                             </div>
                           </div>
@@ -215,7 +215,7 @@ class UserInstallmentPage extends Component {
                               <i className="fa fa-hand-holding-usd text-lg text-success"></i>
                             </div>
                             <div className="ml-3">
-                              <h4 className="mb-0 font-weight-bold text-white ">Đã thanh toán</h4>
+                              <h4 className="mb-0 font-weight-bold text-white ">{t('installment.paid.label')}</h4>
                               <p className="text-white mb-0">{installment.paid ? numberWithCommas(installment.paid): 0} VND</p>
                             </div>
                           </div>
@@ -224,13 +224,13 @@ class UserInstallmentPage extends Component {
                     </div>
                     <div className="card-footer">
                       <div className="float-start">
-                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#myModal" onClick={()=> this.getInfoOrder(installment._id)}>Xem chi tiết phiếu trả góp</button>
-                        {this.setStatus(installment.status, installment.active)==="Chờ duyệt" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(installment._id)}>Hủy trả góp</button>}
+                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#myModal" onClick={()=> this.getInfoOrder(installment._id)}>{t('common.detail.button')}</button>
+                        {this.setStatus(installment.status, installment.active)===`${t('installment.status.2')}` && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(installment._id)}>{t('common.destroy.button')}</button>}
                       </div>
                       <div className="float-end font-weight-bold">
                         {installment.startedAt && installment.endedAt 
-                        ? <p>Từ {new Date(installment.startedAt).toLocaleDateString("vn-VN")} đến {new Date(installment.endedAt).toLocaleDateString("vn-VN")}</p>
-                        : <p>Chưa duyệt</p>}
+                        ? <p>{t('installment.from')} {new Date(installment.startedAt).toLocaleDateString("vn-VN")} {t('installment.to')} {new Date(installment.endedAt).toLocaleDateString("vn-VN")}</p>
+                        : <p>{t('installment.status.2')}</p>}
                       </div>
                     </div>
                   </div>
@@ -242,7 +242,7 @@ class UserInstallmentPage extends Component {
                 <div className="h-120">
                   <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/0e8c07c8449d8d509f72f5576f79a983.png" alt="404 not found"></img>
                 </div>
-                <p>Chưa có phiếu trả góp</p>
+                <p>{t('installment.not-yet')}</p>
               </div>
             </div>}
           </div>

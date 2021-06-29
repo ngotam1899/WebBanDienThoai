@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import {compose} from 'redux';
+import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 // @Components
@@ -165,7 +165,7 @@ class NotificationPage extends Component {
           <div className="row mx-3">
             <div className={filter.type===undefined ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"}
             onClick={() => this.handleUpdateFilter()}>
-              Tất cả
+              {t('common.all')}
             </div>
             {statusList.map((status, index)=>{
               return (
@@ -176,8 +176,8 @@ class NotificationPage extends Component {
               )
             })}
             <div className="col-4 text-right align-self-center">
-              <button className="btn btn-primary mr-2" onClick={()=> this.onReadAllNoti()}>Đọc tất cả</button>
-              <button className="btn btn-danger" onClick={()=> this.onDeleteAllNoti()}>Xóa tất cả</button>
+              <button className="btn btn-primary mr-2" onClick={()=> this.onReadAllNoti()}>{t('notification.read-all.button')}</button>
+              <button className="btn btn-danger" onClick={()=> this.onDeleteAllNoti()}>{t('notification.delete-all.button')}</button>
             </div>
           </div>
         </div>
@@ -212,14 +212,14 @@ class NotificationPage extends Component {
           <div className="col-12">
               <div className="text-center my-5 py-5">
                 <div className="h-120">
-                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/d3eb7b91baeb280516583f958b10f601.png" alt="404 not found"></img>
+                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/fa4e2b534c2928596a6deded9c730a21.png" alt="404 not found"></img>
                 </div>
-                <p>Chưa có thông báo</p>
+                <p>{t('header.notification.empty')}</p>
               </div>
             </div>
           </div>}
         </div>
-        <InstallmentDetail installmentItem={installmentItem} history={history}/>}
+        <InstallmentDetail installmentItem={installmentItem} history={history}/>
         <OrderDetail orderItem={orderItem} history={history}/>
       </div>
     )

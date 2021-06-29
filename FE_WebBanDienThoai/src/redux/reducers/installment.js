@@ -38,6 +38,9 @@ export default function(state = init, action) {
         detail: null,
       };
     case InstallmentActionTypes.GET_DETAIL_SUCCESS:
+      if(action.payload === null){
+        toastError("Không tìm thấy phiếu trả góp này. Phiếu trả góp có thể đã bị hủy")
+      }
       return {
         ...state,
         loadingDetail: false,
@@ -45,6 +48,7 @@ export default function(state = init, action) {
       };
 
     case InstallmentActionTypes.GET_DETAIL_ERROR:
+      toastError("Không tìm thấy phiếu trả góp này. Phiếu trả góp có thể đã bị hủy")
       return {
         ...state,
         loadingDetail: false,

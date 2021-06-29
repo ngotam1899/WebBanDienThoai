@@ -34,7 +34,7 @@ class ChangePassword extends Component {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h3 className="modal-title">Chọn đơn vị vận chuyển</h3>
+              <h3 className="modal-title">{t('checkout.modal.choose.express')}</h3>
               <button type="button" className="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div className="modal-body">
@@ -44,7 +44,7 @@ class ChangePassword extends Component {
                   <img className="express rounded border py-2 float-start" src="https://static.ybox.vn/2020/6/1/1592759417126-ghn.png" alt=""></img>
                   <div className="float-start ml-2">
                     <p className="mb-0">Giao hàng nhanh</p>
-                    <p className="mb-0 text-secondary smaller">Cho phép thanh toán khi nhận hàng</p>
+                    <p className="mb-0 text-secondary smaller">{t('checkout.modal.express.label')}</p>
                   </div>
                 </label>
               </div>
@@ -53,14 +53,14 @@ class ChangePassword extends Component {
                   <input className="form-check-input" type="radio" name="service_type_id" id="2" value="2" onChange={this.onChange}/>
                   <label className="form-check-label" htmlFor="2">
                     <p className="mb-0">{SHIPPING_EXPRESS}</p>
-                    <p className="mb-0 text-secondary smaller">Phù hợp với địa chỉ nhà riêng, luôn có người nhận hàng</p>
+                    <p className="mb-0 text-secondary smaller">{t('checkout.modal.select.1')}</p>
                   </label>
                 </div>
                 <div className="form-check">
                   <input className="form-check-input" type="radio" name="service_type_id" id="1" value="1" defaultChecked onChange={this.onChange}/>
                   <label className="form-check-label" htmlFor="1">
                     <p className="mb-0">{SHIPPING_STANDARD}</p>
-                    <p className="mb-0 text-secondary smaller">Phù hợp với địa chỉ văn phòng/cơ quan</p>
+                    <p className="mb-0 text-secondary smaller">{t('checkout.modal.select.2')}</p>
                   </label>
                 </div>
               </div>

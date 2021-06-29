@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import {connect} from 'react-redux';
-import {compose} from 'redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 // @Actions
 import AdActions from "../../redux/actions/ad";
 import { Link } from 'react-router-dom';
 // @Functions
-import {LOCAL} from '../../constants/index';
+import { LOCAL } from '../../constants/index';
 
 class PromotionPage extends Component {
 
@@ -47,13 +47,13 @@ class PromotionPage extends Component {
   }
   
   setStatus = (startedAt, endedAt) => {
+    const { t } = this.props;
     var today = new Date();
-    if(new Date(startedAt) > today) return "Chưa diễn ra"
+    if(new Date(startedAt) > today) return t('promotion.not-yet')
     else {
-      if(new Date(endedAt) > today) return "Đang diễn ra"
-      else return "Đã kết thúc"
+      if(new Date(endedAt) > today) return t('promotion.now')
+      else return t('promotion.done')
     }
-    return ""
   }
 
   render() {
@@ -65,12 +65,12 @@ class PromotionPage extends Component {
           <div className="col-12 my-2">
             <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
             <i className="fa fa-chevron-right px-2 w-25-px"></i>
-            <a className="text-decoration-none" href="/#/promotion">Promotion Page</a>
+            <a className="text-decoration-none" href="/#/promotion">{t('promotion.page.title')}</a>
           </div>
           {listAd && listAd.map((ad, index) => {
             return(
-              <div className="col-4 my-2" key={index}>
-                <Link to={ad.link.replace("https://localhost:5000/#", "")}>
+              <div className="col-12 col-md-6 col-xl-4 my-2" key={index}>
+                <Link to={this.setStatus(ad.startedAt, ad.endedAt) !== t('promotion.done') && ad.link.replace("https://localhost:5000/#", "")}>
                 <div className="rounded shadow-sm my-2">
                   <img className="rounded" src={ad.image.public_url}></img>
                   <div className="row px-3 py-2">
@@ -83,7 +83,7 @@ class PromotionPage extends Component {
                       <p className="float-end mb-0 font-italic text-danger">({new Date(ad.startedAt).toLocaleDateString("vn-VN")} - {new Date(ad.endedAt).toLocaleDateString("vn-VN")})</p>
                     </div>
                     <div className="col-12 text-right">
-                      <button type="button" className="btn btn-primary" onClick={()=> history.push(ad.link.replace("https://localhost:5000/#", ""))}>Xem thông tin</button>
+                      {this.setStatus(ad.startedAt, ad.endedAt) !== t('promotion.done') && <button type="button" className="btn btn-primary" onClick={()=> history.push(ad.link.replace("https://localhost:5000/#", ""))}>{t('Xem thông tin')}</button>}
                     </div>
                   </div>
                 </div>

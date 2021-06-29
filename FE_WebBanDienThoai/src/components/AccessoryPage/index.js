@@ -101,6 +101,11 @@ class AccessoryPage extends Component {
     this.handleUpdateFilter({ brand: value, page: 0 });
   }
 
+  // Sort price
+  handleChangeSortPrice = (event) =>{
+    this.handleUpdateFilter({ sort_p: event.target.value, page : 0 });
+  }
+
   // phân trang
   handlePageChange(pageNumber) {
     this.handleUpdateFilter({ page: pageNumber-1 });
@@ -128,12 +133,12 @@ class AccessoryPage extends Component {
           <div className="col-12 my-2">
             <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
             <i className="fa fa-chevron-right px-2 w-25-px"></i>
-            <a className="text-decoration-none" href="/#/carts">Accessory Page</a>
+            <a className="text-decoration-none" href="/#/carts">{t('accessory.page.title')}</a>
           </div>
           <div className="col-12 my-2">
             <div className="rounded shadow-sm my-2">
               <div className="px-3 py-2">
-                <h3 className="mb-1">Danh mục phụ kiện</h3>
+                <h3 className="mb-1">{t('accessory.category.title')}</h3>
                 <div className="mb-2 border-bottom"></div>
                 <div className="row">
                   {listAccessory && listAccessory.map(item => {
@@ -157,7 +162,7 @@ class AccessoryPage extends Component {
           <div className="col-12">
             <button type="button" 
             className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-aqua text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark my-2 mr-2 position-relative btn-padding"} 
-            onClick={()=>this.onSetBrand(null)}>Độc quyền</button>
+            onClick={()=>this.onSetBrand(null)}>{t('common.all')}</button>
             {totalBrand && 
             totalBrand.map((brand, index) =>{
             return(
@@ -168,6 +173,18 @@ class AccessoryPage extends Component {
                 <span className="product-count">{brand.count}</span>
               </button>
             )})}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6">
+          <p>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
+          </div>
+          <div className="col-6">
+          <select value={filter.sort_p} className="form-select float-end w-fit-content" onChange={this.handleChangeSortPrice}>
+            <option key={-1} value="0">{t('shop.sort.price')}</option>
+            <option value="1">{t('shop.sort.inc')}</option>
+            <option value="-1">{t('shop.sort.des')}</option>
+          </select>
           </div>
         </div>
         <div className="row">
@@ -217,7 +234,7 @@ class AccessoryPage extends Component {
           })}
           </div>
           {!more && <div className="view-more" onClick={() => this.setState({ more: true })}>
-            <p>Đọc thêm giới thiệu<span><i className="fa fa-angle-down ml-2"></i></span></p>
+            <p>{t('common.readmore.button')}<span><i className="fa fa-angle-down ml-2"></i></span></p>
           </div>}
         </div>
         <div className="row">

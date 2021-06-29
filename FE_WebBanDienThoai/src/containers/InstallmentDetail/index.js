@@ -39,17 +39,18 @@ class InstallmentDetail extends Component {
   }
 
   setStatus = (status) => {
+    const { t } = this.props;
     switch(status){
       case -1:
-        return 'Chưa duyệt'
+        return t('installment.status.2')
       case 0:
-        return 'Chưa hoàn tất'
+        return t('installment.status.3')
       case 1:
-        return 'Đã hoàn tất'
+        return t('installment.status.4')
       case 2:
-        return 'Qúa hạn'
+        return t('installment.status.5')
       default:
-        return 'Chưa duyệt'
+        return t('installment.status.2')
     }
   }
 
@@ -63,15 +64,16 @@ class InstallmentDetail extends Component {
   }
 
   setStatusItem = (status) => {
+    const { t } = this.props;
     switch(status){
       case -1:
-        return <span className="badge bg-danger">Qúa hạn</span>
+        return <span className="badge bg-danger">{t('installment.status.5')}</span>
       case 0:
-        return <span className="badge bg-warning text-dark">Chưa tới hạn</span>
+        return <span className="badge bg-warning text-dark">{t('installment.status.7')}</span>
       case 1:
-        return <span className="badge bg-success">Hoàn tất</span>
+        return <span className="badge bg-success">{t('installment.status.8')}</span>
       default:
-        return <span className="badge bg-warning text-dark">Chưa tới hạn</span>
+        return <span className="badge bg-warning text-dark">{t('installment.status.7')}</span>
     }
   }
 
@@ -81,14 +83,14 @@ class InstallmentDetail extends Component {
   }
 
   render() {
-    const { installmentItem, t, onUpdate } = this.props;
+    const { installmentItem, t, onUpdate, currency } = this.props;
     const { money, paypal } = this.state;
     return (
       <div show="true" className="modal fade" id="myModal" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
         <div className="modal-dialog modal-lg">
-          {installmentItem && <div className="modal-content">
+          {installmentItem ? <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Installment information {installmentItem._id}</h5>
+              <h5 className="modal-title">{t('installment.info.card.header')} {installmentItem._id}</h5>
               <button type="button" className="close" data-bs-dismiss="modal" onClick={() => this.onClose()}>&times;</button>
             </div>
             <div className="modal-body">
@@ -100,7 +102,7 @@ class InstallmentDetail extends Component {
                         <i className="fa fa-luggage-cart text-xl "></i>
                       </div>
                       <div className="ml-3 my-1" style={{width: "75%"}}>
-                        <p className="text-secondary smaller mb-0">Sản phẩm trả góp</p>
+                        <p className="text-secondary smaller mb-0">{t('installment.product.label')}</p>
                         <div className="rounded border">
                           <div className="row">
                             <div className="col-4">
@@ -108,8 +110,10 @@ class InstallmentDetail extends Component {
                             </div>
                             <div className="col-8 align-self-center">
                               <p className="font-weight-bold mb-0">{installmentItem.product._id.name}</p>
-                              <p className="font-italic mb-0">Màu {installmentItem.product.color.name_vn}</p>
-                              <p className="mb-0">{installmentItem.product.product_price} VND</p>
+                              <p className="font-italic mb-0">{t('common.color')} {installmentItem.product.color.name_vn}</p>
+                              <p className="mb-0">{currency==="VND" 
+                              ? numberWithCommas(installmentItem.product.product_price) 
+                              : numberWithCommas(parseFloat(tryConvert(installmentItem.product.product_price, currency, false)).toFixed(2))} {currency}</p>
                             </div>
                           </div>
                         </div>
@@ -121,8 +125,8 @@ class InstallmentDetail extends Component {
                       </div>
                       <div className="form-floating w-90">
                         <input type="text" className="form-control border-0 w-100" id="startedAt" name="startedAt" 
-                        defaultValue={`Từ ${new Date(installmentItem.startedAt).toLocaleDateString("vn-VN")} đến ${new Date(installmentItem.endedAt).toLocaleDateString("vn-VN")} (${installmentItem.period} tháng)`}/>
-                        <label htmlFor="startedAt">Thời gian trả góp</label>
+                        defaultValue={`${t('shop.distance.from')} ${new Date(installmentItem.startedAt).toLocaleDateString("vn-VN")} ${t('shop.distance.to')} ${new Date(installmentItem.endedAt).toLocaleDateString("vn-VN")} (${installmentItem.period} ${t('installment.month.table')})`}/>
+                        <label htmlFor="startedAt">{t('installment.time.label.1')}</label>
                       </div>
                     </div>
                     <div className="col-12 form-inline">
@@ -132,7 +136,7 @@ class InstallmentDetail extends Component {
                       <div className="form-floating">
                         <input type="text" className="form-control border-0 " id="status" name="status" 
                         value={this.setStatus(installmentItem.status)}/>
-                        <label htmlFor="status">Tình trạng trả góp</label>
+                        <label htmlFor="status">{t('installment.status.label')}</label>
                       </div>
                     </div>
                     <div className="col-12 form-inline">
@@ -142,7 +146,7 @@ class InstallmentDetail extends Component {
                       <div className="form-floating">
                         <input type="text" className="form-control border-0 " id="status" name="status" 
                         value={installmentItem.interest_rate}/>
-                        <label htmlFor="status">Lãi xuất (% / năm)</label>
+                        <label htmlFor="status">{t('installment.rate.label')}</label>
                       </div>
                     </div>
                     <div className="col-12 form-inline">
@@ -150,7 +154,7 @@ class InstallmentDetail extends Component {
                         <i className="fa fa-address-card text-xl "></i>
                       </div>
                       <div className="ml-3 my-1" style={{width: "75%"}}>
-                        <p className="text-secondary smaller mb-0">Nhân viên phụ trách</p>
+                        <p className="text-secondary smaller mb-0">{t('installment.staff.label')}</p>
                         {installmentItem.staff 
                         ? <div className="form-inline rounded border">
                             <div className="c-avatar">
@@ -162,23 +166,23 @@ class InstallmentDetail extends Component {
                             </div>
                         <p className="mb-0 ml-3">{installmentItem.staff.firstname} {installmentItem.staff.lastname} ({installmentItem.staff.phonenumber})</p>
                           </div>
-                        : <p className="mb-0">Phiếu trả góp chưa được duyệt</p>}
+                        : <p className="mb-0">{t('installment.error')}</p>}
                       </div>
                     </div>
                     <div className="col-12 my-2">
                       <div className="mb-2 border-bottom"></div>
-                      <h4>Thanh toán trả góp online</h4>
+                      <h4>{t('installment.payment.h4')}</h4>
                       <div className="row">
                         <div className="col-9">
                           <div className="form-floating mb-3">
                             <input type="text" className="form-control" name="money" value={money} onChange={this.onChange} disabled={paypal}/>
-                            <label>Số tiền muốn trả (VND)</label>
+                            <label>{t('installment.payment.label')} (VND)</label>
                           </div>
                         </div>
                         <div className="col-3 my-2">
                           <button className="btn btn-primary w-100" onClick={()=> {
                             if(money !== 0) this.setState({paypal: !paypal})
-                            else toastError("Hãy nhập số tiền muốn thanh toán")
+                            else toastError(`${t('installment.payment.placeholder')}`)
                           }}>{paypal ? "Edit" : "Submit"}</button>
                         </div>
                       </div>
@@ -193,8 +197,11 @@ class InstallmentDetail extends Component {
                         <i className="fa fa-money-check-alt text-xl"></i>
                       </div>
                       <div className="form-floating">
-                        <input type="number" className="form-control border-0" id="prepay" name="prepay" value={installmentItem.prepay}/>
-                        <label htmlFor="total_price">Trả trước (VND)</label>
+                        <input type="text" className="form-control border-0" id="prepay" name="prepay" 
+                        value={currency==="VND" 
+                        ? numberWithCommas(installmentItem.prepay) 
+                        : numberWithCommas(parseFloat(tryConvert(installmentItem.prepay, currency, false)).toFixed(2))}/>
+                        <label htmlFor="total_price">{t('installment.percent.label')} ({currency})</label>
                       </div>
                     </div>
                     <div className="col-12 form-inline">
@@ -202,8 +209,11 @@ class InstallmentDetail extends Component {
                         <i className="fa fa-coins text-xl"></i>
                       </div>
                       <div className="form-floating">
-                        <input type="number" className="form-control border-0" id="debt" name="debt" value={installmentItem.debt}/>
-                        <label htmlFor="total_price">Số tiền còn nợ (VND)</label>
+                        <input type="text" className="form-control border-0" id="debt" name="debt" 
+                        value={currency==="VND" 
+                        ? numberWithCommas(installmentItem.debt) 
+                        : numberWithCommas(parseFloat(tryConvert(installmentItem.debt, currency, false)).toFixed(2))}/>
+                        <label htmlFor="total_price">{t('installment.debt.1.label')} ({currency})</label>
                       </div>
                     </div>
                     <div className="col-12 form-inline">
@@ -211,20 +221,23 @@ class InstallmentDetail extends Component {
                         <i className="fa fa-hand-holding-usd text-xl"></i>
                       </div>
                       <div className="form-floating w-90">
-                        <input type="number" className="form-control border-0" id="paid" name="paid" value={installmentItem.paid}/>
-                        <label htmlFor="total_price">Số tiền đã thanh toán (VND)</label>
+                        <input type="text" className="form-control border-0" id="paid" name="paid" 
+                        value={currency==="VND" 
+                        ? numberWithCommas(installmentItem.paid) 
+                        : numberWithCommas(parseFloat(tryConvert(installmentItem.paid, currency, false)).toFixed(2))}/>
+                        <label htmlFor="total_price">{t('installment.paid.label')} ({currency})</label>
                       </div>
                     </div>
                     <div className="col-12 my-2">
                       <div className="mb-2 border-bottom"></div>
-                      <h4>Lịch sử trả góp</h4>
+                      <h4>{t('installment.history.h4')}</h4>
                       {installmentItem.detail.length>0 ? <table className="table table-striped table-hover">
                         <thead>
                           <tr>
-                            <th scope="col">Tháng</th>
-                            <th scope="col">Ngày tới hạn</th>
-                            <th scope="col">Tiền cần trả</th>
-                            <th scope="col">Tình trạng</th>
+                            <th scope="col">{t('installment.month.table')}</th>
+                            <th scope="col">{t('installment.due-date.table')}</th>
+                            <th scope="col">{t('installment.money.table')}</th>
+                            <th scope="col">Status</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -233,7 +246,9 @@ class InstallmentDetail extends Component {
                               <tr key={index}>
                                 <th scope="row">{item.month}</th>
                             <td>{new Date(item.due_date).toLocaleDateString("vn-VN")}</td>
-                            <td>{item.payable}</td>
+                            <td>{currency==="VND" 
+                            ? numberWithCommas(item.payable) 
+                            : numberWithCommas(parseFloat(tryConvert(item.payable, currency, false)).toFixed(2))}</td>
                             <td>{this.setStatusItem(item.status)}</td>
                               </tr>
                             )
@@ -242,7 +257,7 @@ class InstallmentDetail extends Component {
                         </tbody>
                       </table>: 
                       <div className="text-center">
-                        <p>Phiếu trả góp chưa được xét duyệt</p>
+                        <p>{t('installment.error')}</p>
                       </div>}
                     </div>
                   </div>
@@ -253,7 +268,28 @@ class InstallmentDetail extends Component {
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => this.onClose()} data-bs-dismiss="modal">{t('user.close.button')}</button>
             </div>
-          </div> }
+          </div> 
+          : <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">404 Not founded</h5>
+            <button type="button" className="close" data-bs-dismiss="modal" onClick={() => this.onClose()}>&times;</button>
+          </div>
+          <div className="modal-body">
+            <div className="row">
+              <div className="col-12">
+                <div className="text-center my-5">
+                  <div className="h-120">
+                    <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-mall-live/images/ic_no_expired.png?_version=2" alt="404 not found"></img>
+                  </div>
+                  <h4>{t('installment.toastify.not-founded')}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={() => this.onClose()} data-bs-dismiss="modal">{t('user.close.button')}</button>
+          </div>
+          </div>}
         </div>
       </div>
     );
@@ -262,8 +298,7 @@ class InstallmentDetail extends Component {
 
 const mapStateToProps = (state) =>{
   return {
-    
-    
+    currency: state.currency,
   }
 }
 

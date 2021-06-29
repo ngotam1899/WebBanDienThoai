@@ -13,6 +13,8 @@ import installmentData from "../../utils/installment.json";
 import installmentQuestion from "./installmentQuestion.json";
 // @Functions
 import { toastError } from "../../utils/toastHelper";
+import tryConvert from '../../utils/changeMoney'
+import numberWithCommas from "../../utils/formatPrice";
 
 class InstallmentPage extends Component {
   constructor(props) {
@@ -133,7 +135,7 @@ class InstallmentPage extends Component {
   };
 
   render() {
-    const { t, product, authInfo } = this.props;
+    const { t, product, authInfo, currency } = this.props;
     const {
       color,
       percent,
@@ -154,13 +156,13 @@ class InstallmentPage extends Component {
             </a>
             <i className="fa fa-chevron-right px-2 w-25-px"></i>
             <a className="text-decoration-none" href="/#/promotion">
-              Installment Page
+            {t('installment.page.title')}
             </a>
           </div>
           <div className="col-md-6 col-12">
             <div className="rounded shadow-sm my-3">
               <div className="px-3 py-2">
-                <h3 className="mb-1">Sản phẩm</h3>
+                <h3 className="mb-1">{t('common.product')}</h3>
                 <div className="mb-2 border-bottom"></div>
                 {product ? (
                   <div className="row">
@@ -174,11 +176,13 @@ class InstallmentPage extends Component {
                     <div className="col-9 align-self-center">
                       <p className="font-weight-bold mb-0">{product.name}</p>
                       <p className="font-italic mb-0">
-                        Màu{" "}
+                        {t('common.color')}{" "}
                         {product.colors.find((i) => i._id === color).name_vn}
                       </p>
                       <p className="mb-0">
-                        {product.colors.find((i) => i._id === color).price} VND
+                      {currency==="VND" 
+                      ? numberWithCommas(product.colors.find((i) => i._id === color).price) 
+                      : numberWithCommas(parseFloat(tryConvert(product.colors.find((i) => i._id === color).price, currency, false)).toFixed(2))} {currency}
                       </p>
                     </div>
                   </div>
@@ -228,11 +232,9 @@ class InstallmentPage extends Component {
             </div>
             <div className="rounded shadow-sm my-3">
               <div className="px-3 py-2">
-                <h3 className="mb-1">Installment details</h3>
+                <h3 className="mb-1">{t('common.user-detail')}</h3>
                 <div className="mb-2 border-bottom"></div>
-                {authInfo && (
-                  <>
-                    <div className="row">
+                {authInfo ? <><div className="row">
                       <div className="col">
                         <div className="form-floating validate-required mb-3">
                           <input
@@ -289,12 +291,22 @@ class InstallmentPage extends Component {
                       <label>{t("checkout.phone.input")}*</label>
                     </div>
                   </>
-                )}
+                  : <div className="row my-1">
+                  <div className="col-12">
+                      <div className="text-center my-5">
+                        <div className="h-120">
+                          <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/99e561e3944805a023e87a81d4869600.png" alt="404 not found"></img>
+                        </div>
+                        <h4>{t('common.login-continue')}</h4>
+                          <a className="btn btn-success" href="/user/dang-nhap">{t('header.login.button')}</a>
+                      </div>
+                    </div>
+                  </div>}
               </div>
             </div>
             <div className="rounded shadow-sm my-3">
               <div className="px-3 py-2">
-                <h3 className="mb-1">Thông tin đăng ký trả góp</h3>
+                <h3 className="mb-1">{t('installment.info.title')}</h3>
                 <div className="mb-2 border-bottom"></div>
                 <table className="table table-striped border">
                   <tbody>
@@ -315,7 +327,7 @@ class InstallmentPage extends Component {
           <div className="col-md-6 col-12">
             <div className="rounded shadow-sm my-3">
               <div className="px-3 py-2">
-                <h3 className="mb-1">Kế hoạch trả góp</h3>
+                <h3 className="mb-1">{t('installment.plan.title')}</h3>
                 <div className="mb-2 border-bottom"></div>
                 <div className="row">
                   <div className="col-4">
@@ -328,14 +340,14 @@ class InstallmentPage extends Component {
                         onChange={this.onChange}
                         required
                       >
-                        <option defaultValue>Chọn phần trăm</option>
+                        <option defaultValue>{t('installment.percent.select')}</option>
                         <option value={30}>30 %</option>
                         <option value={40}>40 %</option>
                         <option value={50}>50 %</option>
                         <option value={60}>60 %</option>
                         <option value={70}>70 %</option>
                       </select>
-                      <label htmlFor="floatingSelect">Trả trước</label>
+                      <label htmlFor="floatingSelect">{t('installment.percent.label')}</label>
                     </div>
                   </div>
                   <div className="col-5">
@@ -348,33 +360,33 @@ class InstallmentPage extends Component {
                         onChange={this.onChange}
                         required
                       >
-                        <option defaultValue>Chọn khoảng thời gian</option>
+                        <option defaultValue>{t('installment.time.select')}</option>
                         {installmentData.installments.map((item, index) => {
                           return (
                             <option key={index} value={JSON.stringify(item)}>
-                              {item.month_sum} months
+                              {item.month_sum} {t('installment.month.table')}
                             </option>
                           );
                         })}
                       </select>
-                      <label htmlFor="floatingSelect">Thời gian vay</label>
+                      <label htmlFor="floatingSelect">{t('installment.time.label')}</label>
                     </div>
                   </div>
                   <div className="col-3 align-self-center text-right">
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary w-100"
                       type="button"
                       onClick={() => this.onGetInstallment()}
                     >
                       <i className="fa fa-funnel-dollar mr-1"></i>
-                      Lọc kết quả
+                      {t('installment.filter.button')}
                     </button>
                   </div>
                 </div>
                 {detail.length > 0 && (
                   <>
                     <div className="mb-2 border-bottom"></div>
-                    <h4>Chi tiết</h4>
+                    <h4>{t('order.detail.label')}</h4>
                     <div className="row">
                       <div className="col-6 form-inline">
                         <div className="bill-icon">
@@ -386,34 +398,38 @@ class InstallmentPage extends Component {
                             className="form-control border-0"
                             name="prepay"
                             id="prepay"
-                            value={prepay}
+                            value={currency==="VND" 
+                            ? numberWithCommas(prepay) 
+                            : numberWithCommas(parseFloat(tryConvert(prepay, currency, false)).toFixed(2))}
                           />
-                          <label for="text">Thanh toán trước</label>
+                          <label for="text">{t('installment.prepay.label')} ({currency})</label>
                         </div>
                       </div>
                       <div className="col-6 form-inline">
                         <div className="bill-icon">
                           <i className="fa fa-file-invoice-dollar text-xl"></i>
                         </div>
-                        <div className="form-floating">
+                        <div className="form-floating" style={{width: "85%"}}>
                           <input
                             type="text"
                             className="form-control border-0"
                             name="loan"
                             id="loan"
-                            value={loan}
+                            value={currency==="VND" 
+                            ? numberWithCommas(loan) 
+                            : numberWithCommas(parseFloat(tryConvert(loan, currency, false)).toFixed(2))}
                           />
-                          <label for="text">Tổng số tiền cần vay</label>
+                          <label for="text">{t('installment.total.label')} ({currency})</label>
                         </div>
                       </div>
                       <div className="col-12">
                         <table className="table table-striped border mb-0">
                           <thead>
                             <tr>
-                              <th scope="col">Tháng</th>
-                              <th scope="col">Tiền gốc</th>
-                              <th scope="col">Tiền lãi</th>
-                              <th scope="col">Tổng</th>
+                              <th scope="col">{t('installment.month.table')}</th>
+                              <th scope="col">{t('installment.origin.table')}</th>
+                              <th scope="col">{t('installment.interest.table')}</th>
+                              <th scope="col">{t('common.total')}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -421,9 +437,15 @@ class InstallmentPage extends Component {
                               return (
                                 <tr key={index}>
                                   <th scope="row">{item.month}</th>
-                                  <td>{item.origin}</td>
-                                  <td>{item.interest}</td>
-                                  <td>{item.total}</td>
+                                  <td>{currency==="VND" 
+                                  ? numberWithCommas(item.origin) 
+                                  : numberWithCommas(parseFloat(tryConvert(item.origin, currency, false)).toFixed(2))}</td>
+                                  <td>{currency==="VND" 
+                                  ? numberWithCommas(item.interest) 
+                                  : numberWithCommas(parseFloat(tryConvert(item.interest, currency, false)).toFixed(2))}</td>
+                                  <td>{currency==="VND" 
+                                  ? numberWithCommas(item.total) 
+                                  : numberWithCommas(parseFloat(tryConvert(item.total, currency, false)).toFixed(2))}</td>
                                 </tr>
                               );
                             })}
@@ -434,15 +456,17 @@ class InstallmentPage extends Component {
                         <div className="bill-icon">
                           <i className="fa fa-balance-scale text-xl"></i>
                         </div>
-                        <div className="form-floating">
+                        <div className="form-floating" style={{width: "85%"}}>
                           <input
                             type="text"
                             className="form-control border-0"
                             name="total_interest"
                             id="total_interest"
-                            value={total_interest}
+                            value={currency==="VND" 
+                            ? numberWithCommas(total_interest) 
+                            : numberWithCommas(parseFloat(tryConvert(total_interest, currency, false)).toFixed(2))}
                           />
-                          <label for="text">Tổng lãi chênh lệch</label>
+                          <label for="text">{t('installment.different.label')} ({currency})</label>
                         </div>
                       </div>
                       <div className="col-6 form-inline">
@@ -455,9 +479,11 @@ class InstallmentPage extends Component {
                             className="form-control border-0"
                             name="total"
                             id="total"
-                            value={total}
+                            value={currency==="VND" 
+                            ? numberWithCommas(total) 
+                            : numberWithCommas(parseFloat(tryConvert(total, currency, false)).toFixed(2))}
                           />
-                          <label for="text">Tổng tiền phải trả</label>
+                          <label for="text">{t('installment.debt.label')} ({currency})</label>
                         </div>
                       </div>
                       <div className="col-12 text-center">
@@ -466,22 +492,19 @@ class InstallmentPage extends Component {
                           className="btn btn-primary mb-2"
                           onClick={() => this.onCreateInstallment()}
                         >
-                          <i className="fa fa-question-circle mr-2"></i>Đăng ký chờ xét duyệt
+                          <i className="fa fa-question-circle mr-2"></i>{t('installment.sign.button')}
                         </button>
                       </div>
                     </div>
                   </>
                 )}
                 <div className="mb-2 border-bottom"></div>
-                <p className="mb-0 font-italic text-secondary">
-                  Số tiền chênh lệch thực tế từ 10.000đ -> 100.000đ một tháng,
-                  bạn vui lòng qua trực tiếp cửa hàng để được tư vấn chính xác
-                </p>
+                <p className="mb-0 font-italic text-secondary">{t('installment.remind')}</p>
               </div>
             </div>
             <div className="rounded shadow-sm my-3">
               <div className="px-3 py-2">
-                <h3 className="mb-1">Câu hỏi thường gặp</h3>
+                <h3 className="mb-1">{t('installment.question.title')}</h3>
                 <div className="mb-2 border-bottom"></div>
                 <div className="accordion pb-3" id="accordionExample">
                   {installmentQuestion.questions.map((question, index) => {
@@ -532,6 +555,7 @@ const mapStateToProps = (state) => {
   return {
     authInfo: state.auth.detail,
     product: state.products.detail,
+    currency: state.currency,
   };
 };
 

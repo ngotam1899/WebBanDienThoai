@@ -121,10 +121,10 @@ class DetailPage extends Component {
   }
 
   onAddToCart = (product, quantity) =>{
-    var { onAddProductToCart } = this.props;
+    var { onAddProductToCart, t } = this.props;
     const { check } = this.state;
     if(check === 0){
-      toastError("Chưa chọn màu sản phẩm")
+      toastError(`${t('detail.toastify.error')}`)
     }
     else{
       onAddProductToCart(product, check, quantity);
@@ -132,10 +132,10 @@ class DetailPage extends Component {
   }
 
   onInstallment = (product) => {
-    const { history } = this.props;
+    const { history, t } = this.props;
     const { check } = this.state;
     if(check === 0){
-      toastError("Chưa chọn màu sản phẩm")
+      toastError(`${t('detail.toastify.error')}`)
     }
     else{
       history.push(`/installment/${product.pathseo}.${product._id}.${check}`)
@@ -195,8 +195,8 @@ class DetailPage extends Component {
   }
 
   onLiked = (id, like) => {
-    const {onUpdateReview, authInfo} = this.props;
-    const {queryParams} = this.state;
+    const { onUpdateReview, authInfo, t } = this.props;
+    const { queryParams } = this.state;
     if(authInfo){
       if(like.indexOf(authInfo._id) === -1){
         like.push(authInfo._id)
@@ -207,7 +207,7 @@ class DetailPage extends Component {
       onUpdateReview(id, {like}, queryParams)
     }
     else{
-      toastError("Bạn chưa đăng nhập")
+      toastError(`${t('common.toastify.not-login')}`)
     }
   }
 
@@ -264,7 +264,7 @@ class DetailPage extends Component {
                 <svg className="_2DRZW" viewBox="-0.5 -0.5 4 16">
                   <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="" stroke="currentColor" fill="#f69113"></path>
                 </svg>
-            <div className="discount-content">Giảm {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
+            <div className="discount-content">{t('common.discount')} {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
                 <svg className="h-discount" viewBox="-0.5 -0.5 4 16">
                   <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="rotate(180) translate(-3 -15)" stroke="currentColor" fill="#f69113">
                   </path>
@@ -279,7 +279,7 @@ class DetailPage extends Component {
                             emptySymbol="fa fa-star text-secondary"
                             fullSymbol="fa fa-star text-warning"
                             readonly
-                        /><span className="ml-2">{total} đánh giá</span>
+                        /><span className="ml-2">{total} {t('common.review')}</span>
                         </div>
                       </div>
                       {group && <div className="row">
@@ -295,7 +295,7 @@ class DetailPage extends Component {
                           })}
                         </div>
                       </div>}
-                      <p className="mb-0 font-weight-bold">Vui lòng chọn màu</p>
+                      <p className="mb-0 font-weight-bold">{t('detail.color.label')}</p>
                       <div className="row">
                         <div className="col-12 form-inline">
                           {product.colors.map((item, index)=>{
@@ -312,7 +312,7 @@ class DetailPage extends Component {
                         </div>
                       </div>
                       <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
-                      <button className="ml-2 installment_button" type="button" onClick={() => this.onInstallment(product)}>Mua trả góp</button>
+                      <button className="ml-2 installment_button" type="button" onClick={() => this.onInstallment(product)}>{t('detail.installment.button')}</button>
                     </div>
                   </div>
                 </div>
@@ -326,15 +326,15 @@ class DetailPage extends Component {
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
                       <a className="nav-link" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent"
-                      aria-selected="false">Recent viewed</a>
+                      aria-selected="false">{t('detail.recent.tab')}</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
-                      aria-selected="false">You may also like</a>
+                      aria-selected="false">{t('detail.like.tab')}</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link active" id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
-                      >Related products</a>
+                      >{t('detail.relate.tab')}</a>
                     </li>
                   </ul>
                   <div className="tab-content" id="myTabContent">
@@ -373,19 +373,19 @@ class DetailPage extends Component {
                 <div className="container">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
-                      <a className="nav-link" id="home-tab" data-bs-toggle="tab" href="#description" role="tab" aria-controls="home" aria-selected="true">Description</a>
+                      <a className="nav-link" id="home-tab" data-bs-toggle="tab" href="#description" role="tab" aria-controls="home" aria-selected="true">{t('detail.description.tab')}</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" id="profile-tab" data-bs-toggle="tab" href="#specification" role="tab" aria-controls="profile"
-                      aria-selected="false">Specification</a>
+                      aria-selected="false">{t('detail.specification.tab')}</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" id="contact-tab" data-bs-toggle="tab" href="#comment" role="tab" aria-controls="contact"
-                      aria-selected="false">Comments</a>
+                      aria-selected="false">{t('detail.comment.tab')}</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link active" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review"
-                      aria-selected="false">Reviews</a>
+                      aria-selected="false">{t('detail.review.tab')}</a>
                     </li>
                   </ul>
                   <div className="tab-content" id="myTabContent">
@@ -426,13 +426,13 @@ class DetailPage extends Component {
                 
                               <div className="box_total">
                                 <h5>Overall</h5>
-                                <h4>{product.stars ? product.stars : ""}</h4>
-                                <h6>({total} Reviews)</h6>
+                                <h1>{product.stars ? product.stars : ""}</h1>
+                                <h6>({total} {t('common.review')})</h6>
                               </div>
                             </div>
                             <div className="col-6">
                               <div className="rating_list">
-                                <h3>Based on {total} Reviews</h3>
+                                <h3>{t('detail.base.on')} {total} {t('common.review')}</h3>
                                 {count && <ul className="list-unstyled">
                                   <li>5 Star <span className="mx-2"><Rating
                                     initialRating={5}
@@ -472,7 +472,7 @@ class DetailPage extends Component {
                         </div>
                         <div className="col-lg-6">
                           <div className="review_list">
-                            {review && review.map((item, index)=>{
+                            {review.length > 0 ? review.map((item, index)=>{
                               return (
                                 <div className="row" key={index}>
                                   <div className="col-12">
@@ -489,12 +489,21 @@ class DetailPage extends Component {
                                     /> | <span className="font-italic">{item.createdAt}</span></p>
                                     <p className="text-secondary mb-0">Màu sắc: {item.color.name_vn}</p>
                                     <p className="mb-0">{item.content}</p>
-                                    <p><i onClick={()=>{this.onLiked(item._id, item.like)}} className="fa fa-thumbs-up text-secondary"></i><span className="ml-2 text-secondary">{item.like.length > 0 ? item.like.length : "Hữu ích?"}</span></p>
+                                    <p><i onClick={()=>{this.onLiked(item._id, item.like)}} className="fa fa-thumbs-up text-secondary"></i><span className="ml-2 text-secondary">{item.like.length > 0 ? item.like.length :  `${t('detail.review.useful')}?`}</span></p>
                                   </div>
                                   </div>
                                 </div>
                               )
-                            })}
+                            }) : <div className="row my-1">
+                            <div className="col-12">
+                                <div className="text-center my-5">
+                                  <div className="h-120">
+                                    <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/d3eb7b91baeb280516583f958b10f601.png" alt="404 not found"></img>
+                                  </div>
+                                  <h4>{t('detail.review.not-yet')}</h4>
+                                </div>
+                              </div>
+                            </div>}
                           </div>
                           {review && review.length > 0 && <div className="product-pagination text-center">
                             <nav className="float-end">
@@ -547,15 +556,15 @@ class DetailPage extends Component {
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
                       <a className="nav-link" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent"
-                      aria-selected="false">Recent viewed</a>
+                      aria-selected="false">{t('detail.recent.tab')}</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
-                      aria-selected="false">You may also like</a>
+                      aria-selected="false">{t('detail.like.tab')}</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link active" id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
-                      >Related products</a>
+                      >{t('detail.relate.tab')}</a>
                     </li>
                   </ul>
                   <div className="tab-content" id="myTabContent">
