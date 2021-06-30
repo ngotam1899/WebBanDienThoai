@@ -157,7 +157,7 @@ class ProductPage extends Component {
 
   render() {
     const {min_p, max_p, more} = this.state;
-    const { listProducts, totalBrand, t, location, total, category } = this.props;
+    const { listProducts, listBrand, t, location, total, category } = this.props;
     const filter = getFilterParams(location.search);
     return (
     <div className="container mb-3">
@@ -236,8 +236,8 @@ class ProductPage extends Component {
             <button type="button" 
             className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-aqua text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark my-2 mr-2 position-relative btn-padding"} 
             onClick={()=>this.onSetBrand(null)}>{t('common.all')}</button>
-            {totalBrand && 
-            totalBrand.map((brand, index) =>{
+            {listBrand && 
+            listBrand.map((brand, index) =>{
             return(
               <button type="button" 
               className={filter.brand === brand._id._id ? "rounded-pill shadow-sm bg-aqua text-dark mr-2 my-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark mr-2 my-2 position-relative btn-padding"} 
@@ -323,8 +323,7 @@ const mapStateToProps = (state) => {
   return {
     listProducts: ProductsSelectors.getList(state),
     listColor: state.color.list,
-    listBrand: state.brands.list,
-    totalBrand: state.brands.total,
+    listBrand: state.brands.total,
     total: state.products.total,
     category : state.categories.detail
   }

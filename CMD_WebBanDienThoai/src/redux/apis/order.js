@@ -13,14 +13,6 @@ export const getAllOrders  = (params = {}) =>{
     }
     return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
 }
-//cho params 1 default value là object
-export const findOrders = (params = {}) =>{
-    let queryParams = '';
-    if(Object.keys(params).length>0){
-        queryParams = `?${queryString.stringify(params)}`;
-    }
-    return axiosService.get(`${API_ENDPOINT_AUTH}${url}/find${queryParams}`);
-};
 
 // http://localhost:3000/orders/:orderID  METHOD = GET
 export const getDetailOrder  = (orderID) =>{

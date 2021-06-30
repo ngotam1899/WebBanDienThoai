@@ -105,11 +105,12 @@ function* handleConfirmOrder({ payload}) {
  */
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateOrder, payload.id, payload.params);
+    const result = yield call(updateOrder, payload.id, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     const detailResult = yield call(getDetailOrder, payload.id);
     yield put(OrdersActions.onUpdateSuccess(get(detailResult, "data")));
+    yield put(OrdersActions.onGetList(payload.params))
   } catch (error) {
     yield put(OrdersActions.onUpdateError(error));
   }

@@ -19,9 +19,9 @@ const onGetList = (payload) => ({
   payload,
 });
 
-const onGetListSuccess = (brands, count) => ({
+const onGetListSuccess = (payload) => ({
   type: BrandActionTypes.GET_LIST_SUCCESS,
-  payload: {brands, count},
+  payload,
 });
 
 const onGetListError = (error) => ({

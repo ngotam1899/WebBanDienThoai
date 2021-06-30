@@ -43,6 +43,13 @@ const getAllCategory = async(req, res, next) => {
     if (req.query.accessories != undefined && req.query.accessories != '0') {
 			condition.accessories = req.query.accessories=='1' ? true : false;
     }
+    if (req.query.keyword != undefined && req.query.keyword != '') {
+			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+			condition = {$or:[
+				{name:{$regex: '.*' + keyword.trim() + '.*', $options: 'i'}},
+				{name_en:{$regex: '.*' + keyword.trim() + '.*', $options: 'i'}}
+			]};
+		}
     let limit = 10;
 		let page = 0;
 		if (req.query.limit != undefined && req.query.limit != '') {

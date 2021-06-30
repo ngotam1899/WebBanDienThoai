@@ -104,9 +104,9 @@ const onDeleteError = (error) => ({
 
 //-----------------  Update  ---------------------
 
-const onUpdate = ({ id, params }) => ({
+const onUpdate = ({ id, data, params }) => ({
   type: InstallmentActionTypes.UPDATE,
-  payload: { id, params },
+  payload: { id, data, params },
 });
 
 const onUpdateSuccess = (detail) => ({

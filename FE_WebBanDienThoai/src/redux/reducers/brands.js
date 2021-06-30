@@ -25,8 +25,7 @@ export default function(state = init, action) {
       return {
         ...state,
         loading: false,
-        total: action.payload.count,
-        list: action.payload.brands,
+        list: action.payload,
       };
     case BrandActionTypes.GET_ACCESSORY_SUCCESS:
       return {

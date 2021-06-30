@@ -26,7 +26,7 @@ class AccessoryPage extends Component {
       min_p: filter.min_p ===null ? "" : filter.min_p,
       max_p: filter.max_p ===null ? "" : filter.max_p,
       filter: {
-        limit: 12,
+        limit: 20,
         page: 0,
       },
     }
@@ -64,6 +64,7 @@ class AccessoryPage extends Component {
       ...filters
     };
     onGetAccessory({
+      ...params,
       accessories : 1
     })
     onGetListBrand();

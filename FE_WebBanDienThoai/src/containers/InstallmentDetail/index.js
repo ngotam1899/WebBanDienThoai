@@ -83,7 +83,7 @@ class InstallmentDetail extends Component {
   }
 
   render() {
-    const { installmentItem, t, onUpdate, currency } = this.props;
+    const { installmentItem, t, onUpdate, currency, queryParams } = this.props;
     const { money, paypal } = this.state;
     return (
       <div show="true" className="modal fade" id="myModal" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
@@ -191,7 +191,7 @@ class InstallmentDetail extends Component {
                         </div>
                       </div>
                     </div>
-                    {money !== 0 && paypal && <Paypal money={money} moneyUSD={parseFloat(tryConvert(money, "USD", false)).toFixed(2)} onUpdate={onUpdate} id={installmentItem._id}/>}
+                    {money !== 0 && paypal && <Paypal money={money} moneyUSD={parseFloat(tryConvert(money, "USD", false)).toFixed(2)} onUpdate={onUpdate} id={installmentItem._id} queryParams={queryParams}/>}
                   </div>
                 </div>
                 <div className="col-12 col-md-6">
@@ -308,8 +308,8 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps =(dispatch)=> {
   return {
-    onUpdate: (id, params) =>{
-      dispatch(InstallmentActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(InstallmentActions.onUpdate({id, data, params}))
     },
     onClearDetail: () =>{
       dispatch(InstallmentActions.onClearDetail())

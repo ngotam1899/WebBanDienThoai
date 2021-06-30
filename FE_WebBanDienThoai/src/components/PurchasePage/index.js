@@ -38,6 +38,7 @@ class PurchasePage extends Component {
   constructor(props){
     super(props);
     this.state = {
+      queryParams: {},
       keyword: "",
       filter: {
         limit: 8,
@@ -73,7 +74,7 @@ class PurchasePage extends Component {
         ...filters,
         user: props.authInfo && props.authInfo._id
       };
-
+      this.setState({queryParams: params})
       if(props.authInfo)onGetList(params);
     }
   }
@@ -115,14 +116,15 @@ class PurchasePage extends Component {
   }
 
   onDeactivate = (id) => {
+    const {queryParams} = this.state;
     const {t} = this.props;
     confirmAlert({
-      title: t('user.popup.label'),
-      message: t('user.delete.question'),
+      title: t('order.popup.label'),
+      message: t('order.delete.question'),
       buttons: [
         {
           label: 'Yes',
-          onClick: () => this.onUpdateOrder(id, {active: false})
+          onClick: () => this.onUpdateOrder(id, {active: false}, queryParams)
         },
         {
           label: 'No'
@@ -273,8 +275,8 @@ const mapDispatchToProps =(dispatch)=> {
     onGetDetail: (id) => {
       dispatch(OrdersActions.onGetDetail(id))
     },
-    onUpdate : (id, params) =>{
-			dispatch(OrdersActions.onUpdate(id, params))
+    onUpdate : (id, data, params) =>{
+			dispatch(OrdersActions.onUpdate(id, data, params))
     },
     onPurchaseAgain: (order_list) => {
       dispatch(ProductsActions.onPurchaseAgain(order_list))

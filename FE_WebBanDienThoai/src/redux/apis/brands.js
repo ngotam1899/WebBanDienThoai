@@ -12,7 +12,7 @@ export const getAllBrands = (params = {}) =>{
   if(Object.keys(params).length>0){
     queryParams = `?${queryString.stringify(params)}`;
   }
-  return axiosService.get(`${API_ENDPOINT_AUTH}${url}${queryParams}`);
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}-search${queryParams}`);
 };
 
 // http://localhost:3000/products/brands/accessory

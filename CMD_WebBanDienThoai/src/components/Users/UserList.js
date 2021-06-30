@@ -21,8 +21,11 @@ const fields = ['first name', 'last name', 'email', 'role',{ key: 'actions', _st
 
 class UserList extends Component {
   constructor(props) {
+    const {location} = props;
+    const filter = getFilterParams(location.search);
     super(props);
     this.state = {
+      phone: filter.phone ===null ? "" : filter.phone,
       large: false,
       filter: {
         limit: 10,
@@ -112,6 +115,12 @@ class UserList extends Component {
     this.handleUpdateFilter({ page: pageNumber-1 });
   }
 
+  // Button search
+  searchPhone = (e) => {
+    const {phone} = this.state;
+    this.handleUpdateFilter({ phone });
+  }
+
   // Chuyển router (thêm vào params)
   handleUpdateFilter = (data) => {
     const {location, history} = this.props;
@@ -124,7 +133,17 @@ class UserList extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  onChange = (event) =>{
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
+  }
+
   render () {
+    const { phone } = this.state;
     const { listUser, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -133,6 +152,17 @@ class UserList extends Component {
             <CCard>
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách người dùng</h5>
+                <div className="input-group mb-3">
+                  <input type="text" className="form-control" value={phone} name="phone" placeholder="Nhập số điện thoại người nhận" onChange={this.onChange}/>
+                  <div className="input-group-append">
+                    <button type="button" className="btn btn-primary" onClick={() => this.searchPhone()} type="submit">Tìm kiếm</button>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col">
+                    <p className="float-left" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>
+                  </div>
+                </div>
               </CCardHeader>
 
               <CCardBody>

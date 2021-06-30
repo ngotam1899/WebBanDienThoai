@@ -1,8 +1,6 @@
 import React, { useRef, useEffect } from "react";
-// @Functions
-import tryConvert from '../../utils/changeMoney'
 
-export default function Paypal({ id, moneyUSD, money, onUpdate }) {
+export default function Paypal({ id, moneyUSD, money, onUpdate, queryParams }) {
   const paypal = useRef();
   /* eslint-disable */
   useEffect(() => {
@@ -25,7 +23,7 @@ export default function Paypal({ id, moneyUSD, money, onUpdate }) {
           data = {
             money
           }
-          onUpdate(id, data);
+          onUpdate(id, data, queryParams);
           await actions.order.capture();
         },
         onError: (err) => {

@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import OrderActions, { OrderActionTypes } from "../actions/order";
-import { getAllOrders, getDetailOrder, updateOrder, deleteOrder, findOrders, getRevenue, getRevenueList, getSessionOrder } from "../apis/order";
+import { getAllOrders, getDetailOrder, updateOrder, deleteOrder, getRevenue, getRevenueList, getSessionOrder } from "../apis/order";
 /* Notification */
 import io from 'socket.io-client';
 import NotificationActions from "../actions/notification";
@@ -10,18 +10,11 @@ const socket = io('http://localhost:3000');
 
 function* handleGetList({ payload }) {
   try {
-    if(payload.phone){
-      const result = yield call(findOrders, payload);
-      const data = get(result, "data");
-      if (data.code !== 200) throw data;
-      yield put(OrderActions.onGetListSuccess(data.order, data.total));
-    }
-    else {
-      const result = yield call(getAllOrders, payload);
-      const data = get(result, "data");
-      if (data.code !== 200) throw data;
-      yield put(OrderActions.onGetListSuccess(data.orders, data.total));
-    }
+    const result = yield call(getAllOrders, payload);
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(OrderActions.onGetListSuccess(data.orders, data.total));
+
   } catch (error) {
     yield put(OrderActions.onGetListError(error));
   }

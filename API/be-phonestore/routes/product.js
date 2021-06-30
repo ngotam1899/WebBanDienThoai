@@ -16,6 +16,8 @@ require('../middlewares/passport');
 router.route('/brands')
 	.get(brandController.getAllBrand)
 	.post(passport.authenticate('jwt', { session: false }), brandController.addBrand);
+router.route('/brands-search')
+	.get(brandController.getAllBrandByKeyword)
 router.route('/brands/accessory')
 	.get(brandController.accessoryBrand)
 router.route('/brands/:IDBrand')

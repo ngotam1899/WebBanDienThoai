@@ -65,12 +65,13 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateInstallment, payload.params, payload.id);
+    const result = yield call(updateInstallment, payload.data, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     const detailResult = yield call(getDetailInstallment, payload.id);
     yield put(InstallmentActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(InstallmentActions.onGetList());
+    if(payload.data.money) yield put(InstallmentActions.onGetDetail(payload.id));
   } catch (error) {
     yield put(InstallmentActions.onUpdateError(error));
   }

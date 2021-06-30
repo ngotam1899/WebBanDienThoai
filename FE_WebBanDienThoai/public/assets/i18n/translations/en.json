@@ -255,6 +255,7 @@
   "installment.history.h4": "Installment history",
   "installment.due-date.table": "Due date",
   "installment.money.table": "Money to pay",
+  "installment.delete.question": "Do you want to cancel this installment?", 
 
   "notfound.p": "The page you are looking for might have been removed had its name changed or is temporarily unavailable.",
 

@@ -37,6 +37,7 @@ class UserInstallmentPage extends Component {
   constructor(props){
     super(props);
     this.state = {
+      queryParams: {},
       filter: {
         limit: 8,
         page: 0,
@@ -71,7 +72,7 @@ class UserInstallmentPage extends Component {
         ...filters,
         user: props.authInfo && props.authInfo._id
       };
-
+      this.setState({queryParams: params})
       if(props.authInfo)onGetList(params);
     }
   }
@@ -113,20 +114,21 @@ class UserInstallmentPage extends Component {
     this.handleUpdateFilter({ type, ...state });
   }
 
-  onUpdateOrder = (id, params) => {
-    const {onUpdate} = this.props;
-    onUpdate(id, params);
+  onUpdateInstallment = (id, data) => {
+    const { queryParams } = this.props;
+    const { onUpdate } = this.props;
+    onUpdate(id, data, queryParams);
   }
 
   onDeactivate = (id) => {
-    const {t} = this.props;
+    const { t } = this.props;
     confirmAlert({
-      title: t('user.popup.label'),
-      message: t('user.delete.question'),
+      title: t('order.popup.label'),
+      message: t('installment.delete.question'),
       buttons: [
         {
           label: 'Yes',
-          onClick: () => this.onUpdateOrder(id, {active: 'false'})
+          onClick: () => this.onUpdateInstallment(id, {active: false})
         },
         {
           label: 'No'
@@ -143,7 +145,7 @@ class UserInstallmentPage extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
-  getInfoOrder = (id) => {
+  getInfoInstallment = (id) => {
     const {onGetDetail} = this.props;
     onGetDetail(id);
   }
@@ -158,6 +160,7 @@ class UserInstallmentPage extends Component {
   }
 
   render() {
+    const {queryParams} = this.state;
     const {installmentList, installmentItem, location, history, t} = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -224,8 +227,8 @@ class UserInstallmentPage extends Component {
                     </div>
                     <div className="card-footer">
                       <div className="float-start">
-                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#myModal" onClick={()=> this.getInfoOrder(installment._id)}>{t('common.detail.button')}</button>
-                        {this.setStatus(installment.status, installment.active)===`${t('installment.status.2')}` && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(installment._id)}>{t('common.destroy.button')}</button>}
+                        <button type="button" className="btn btn-success mr-2" data-bs-toggle="modal" data-bs-target="#myModal" onClick={()=> this.getInfoInstallment(installment._id)}>{t('common.detail.button')}</button>
+                        {this.setStatus(installment.status, installment.active)==="Chờ duyệt" && <button type="button" className="btn btn-danger" onClick={()=> this.onDeactivate(installment._id)}>{t('common.destroy.button')}</button>}
                       </div>
                       <div className="float-end font-weight-bold">
                         {installment.startedAt && installment.endedAt 
@@ -247,7 +250,7 @@ class UserInstallmentPage extends Component {
             </div>}
           </div>
         </div>
-        <InstallmentDetail installmentItem={installmentItem} history={history}/>
+        <InstallmentDetail installmentItem={installmentItem} history={history} queryParams={queryParams}/>
       </div>
     )
   }
@@ -269,8 +272,8 @@ const mapDispatchToProps =(dispatch)=> {
     onGetDetail: (id) => {
       dispatch(InstallmentActions.onGetDetail(id))
     },
-    onUpdate: (id, params) =>{
-      dispatch(InstallmentActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(InstallmentActions.onUpdate({id, data, params}))
     }
 	}
 };

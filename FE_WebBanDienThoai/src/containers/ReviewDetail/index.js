@@ -10,7 +10,6 @@ import {
   CModalBody,
   CModalFooter,
   CModalHeader,
-  CModalTitle,
 } from "@coreui/react";
 // @Actions
 import ReviewActions from '../../redux/actions/review'

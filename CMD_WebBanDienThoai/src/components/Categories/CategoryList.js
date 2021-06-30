@@ -151,7 +151,7 @@ class CategoryList extends Component {
                     'image':
                     (item) => (
                       <td>
-                        <img src={ item.image ? item.image.public_url : INITIAL_IMAGE } style={{width:'10vw'}} alt={item.name} />
+                        <img src={ item.image ? item.image.public_url : INITIAL_IMAGE } style={{width:'6vh'}} alt={item.name} />
                       </td>
                     ),
                     'slug': (item) => (
@@ -190,7 +190,7 @@ class CategoryList extends Component {
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
               <div className="row justify-content-center">
-              {total && <Pagination
+              {total > 10 && <Pagination
                   activePage={filter.page ? parseInt(filter.page)+1 : 1}
                   itemsCountPerPage={this.state.filter.limit}
                   totalItemsCount={total}
@@ -214,7 +214,7 @@ const mapStateToProps = (state) => {
   return {
     listCategories: state.categories.list,
     categoryDetail: state.categories.detail,
-    total: state.installment.total,
+    total: state.categories.total,
   }
 }
 

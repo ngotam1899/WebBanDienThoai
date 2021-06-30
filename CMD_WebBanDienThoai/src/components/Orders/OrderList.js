@@ -171,14 +171,12 @@ class OrderList extends Component {
             <CCard>
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách đơn hàng</h5>
-                <form>
-                  <div className="input-group mb-3">
-                    <input type="text" className="form-control" value={phone} name="phone" placeholder="Nhập số điện thoại người nhận" onChange={this.onChange}/>
-                    <div className="input-group-append">
-                      <button className="btn btn-primary" onClick={() => this.searchPhone()} type="submit">Tìm kiếm</button>
-                    </div>
+                <div className="input-group mb-3">
+                  <input type="text" className="form-control" value={phone} name="phone" placeholder="Nhập số điện thoại người nhận" onChange={this.onChange}/>
+                  <div className="input-group-append">
+                    <button type="button" className="btn btn-primary" onClick={() => this.searchPhone()} type="submit">Tìm kiếm</button>
                   </div>
-                </form>
+                </div>
                 <div className="row">
                   <div className="col">
                     <p className="float-left" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>

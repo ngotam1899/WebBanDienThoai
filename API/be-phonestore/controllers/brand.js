@@ -10,12 +10,42 @@ const Validator = require('../validators/validator');
 
 const getAllBrand = async (req, res, next) => {
 	try {
+		let limit = 10;
+		let page = 0;
+		if (req.query.limit != undefined && req.query.limit != '') {
+			const number_limit = parseInt(req.query.limit);
+			if (number_limit && number_limit > 0) {
+				limit = number_limit;
+			}
+		}
+		if (req.query.page != undefined && req.query.page != '') {
+			const number_page = parseInt(req.query.page);
+			if (number_page && number_page > 0) {
+				page = number_page;
+			}
+		}
+		const total = await Brand.countDocuments();
+		const brands = await Brand.find()
+		.populate({path: 'image', select: 'public_url'})
+		.limit(limit)
+		.skip(limit * page);
+		return res.status(200).json({ success: true, code: 200, message: '', total, brands });
+	} catch (error) {
+		return next(error);
+	}
+};
+
+const getAllBrandByKeyword = async (req, res, next) => {
+	try {
 		var condition = {
 			'active': true
 		}
 		if (req.query.keyword != undefined && req.query.keyword != '') {
 			let keyword = req.query.keyword.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
-			condition['name'] = { $regex: '.*' + keyword.trim() + '.*', $options: 'i' };
+			condition['$or'] = [
+				{name: { $regex: '.*' + keyword.trim() + '.*', $options: 'i' }},
+				{desc_text: { $regex: '.*' + keyword.trim() + '.*', $options: 'i' }}
+			];
 		}
 		if (req.query.category != undefined && req.query.category != '') {
 			if (Validator.isValidObjId(req.query.category)) {
@@ -63,33 +93,13 @@ const getAllBrand = async (req, res, next) => {
 				'$sort': { 'count': -1, '_id': -1 }
 			}
 		];
-		const count = await Product.aggregate(pipeline);
-		await Brand.populate(count, {path: "_id", select: ['name', 'image'], populate: {path: 'image', select: 'public_url'}});
-
-		let limit = 10;
-		let page = 0;
-		if (req.query.limit != undefined && req.query.limit != '') {
-			const number_limit = parseInt(req.query.limit);
-			if (number_limit && number_limit > 0) {
-				limit = number_limit;
-			}
-		}
-		if (req.query.page != undefined && req.query.page != '') {
-			const number_page = parseInt(req.query.page);
-			if (number_page && number_page > 0) {
-				page = number_page;
-			}
-		}
-		const total = await Brand.countDocuments();
-		const brands = await Brand.find()
-		.populate({path: 'image', select: 'public_url'})
-		.limit(limit)
-		.skip(limit * page);
-		return res.status(200).json({ success: true, code: 200, message: '', count, total, brands });
+		const brands = await Product.aggregate(pipeline);
+		await Brand.populate(brands, {path: "_id", select: ['name', 'image'], populate: {path: 'image', select: 'public_url'}});
+		return res.status(200).json({ success: true, code: 200, message: '', total: brands.length, brands });
 	} catch (error) {
 		return next(error);
 	}
-};
+}
 
 const accessoryBrand = async (req, res, next) => {
 	try {
@@ -183,6 +193,7 @@ const getDetailBrand = async (req, res, next) => {
 
 module.exports = {
 	getAllBrand,
+	getAllBrandByKeyword,
 	addBrand,
 	updateBrand,
 	deleteBrand,

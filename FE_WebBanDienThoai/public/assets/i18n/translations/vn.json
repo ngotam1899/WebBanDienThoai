@@ -255,6 +255,7 @@
   "installment.history.h4": "Lịch sử trả góp",
   "installment.due-date.table": "Ngày tới hạn",
   "installment.money.table": "Tiền cần trả",
+  "installment.delete.question": "Bạn có muốn hủy phiếu trả góp này?",
 
   "notfound.p": "Trang bạn đang tìm kiếm có thể đã bị xóa do đổi tên hoặc tạm thời không có sẵn." ,
 
