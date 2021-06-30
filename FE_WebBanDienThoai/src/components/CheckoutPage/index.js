@@ -279,7 +279,9 @@ class CheckoutPage extends Component {
                           ? numberWithCommas(item.product.colors.find(i => i._id === item.color).price) 
                           : numberWithCommas(parseFloat(tryConvert(item.product.colors.find(i => i._id === item.color).price, currency, false)).toFixed(2))} {currency}
                             </div>
-                          <div className="col-2 align-self-center text-center">x {item.quantity}</div>
+                          <div className="col-2 align-self-center text-center">
+                            <p className="font-weight-bold rounded-circle bg-primary py-1 px-2 w-fit-content text-white m-auto">x{item.quantity}</p>
+                          </div>
                           <div className="col-2 align-self-center text-right font-weight-bold">
                           {currency==="VND" 
                           ? numberWithCommas(item.quantity * item.product.colors.find(i => i._id === item.color).price) 

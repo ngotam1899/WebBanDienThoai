@@ -198,7 +198,7 @@ class Header extends Component {
       </>}
       {ad.length > 0 && <>
         <h4>{t('header.promotion.menu')}</h4>
-        {ad.map((notification, index)=>{
+        <>{ad.map((notification, index)=>{
           return(
           <div className="row" key={index}>
             <div className="col-3">
@@ -209,7 +209,7 @@ class Header extends Component {
             </div>
           </div>
           )
-        })}
+        })}</>
         <div div className="my-2 border-bottom"></div>
       </>}
       {installment.length > 0 && <>
@@ -238,7 +238,7 @@ class Header extends Component {
           var active = match ? ' active' : 'nav-item';
           return (
             <li className={`nav-item ${active}`}>
-              <Link onClick={onClick} exact={`${activeOnlyWhenExact}`} className="nav-link px-3" to={to}>{label}</Link>
+              <Link onClick={onClick} exact={`${activeOnlyWhenExact}`} className="nav-link rounded px-3" to={to}>{label}</Link>
             </li>
           )
         }} />
@@ -272,19 +272,23 @@ class Header extends Component {
                           {itemsCount > 0 && <span className="notification-count ml-1 pl-1">{itemsCount}</span>}
                         </a>
                         <ReactTooltip id='notification' place="bottom" type="light" class="shadow-sm bg-white" effect="solid" getContent={(dataTip) => 
-                          <div>
-                            <h3 className="mb-1">{t('header.notification.menu')}</h3>
-                            <div className="mb-2 border-bottom"></div>
-                            {listNotification && listNotification.length > 0 ? <>{this.sortNotification(listNotification)}</>
-                            : <div className="row">
-                              <div className="col-12 text-center">
-                                <div className="h-120">
-                                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/fa4e2b534c2928596a6deded9c730a21.png" alt="404 not found"></img>
-                                </div>
-                                <p className="my-3">{t('header.notification.empty')}</p>
-                              </div>  
-                            </div>}
-                          </div> 
+                          {
+                            return (
+                              <div>
+                                <h3 className="mb-1">{t('header.notification.menu')}</h3>
+                                <div className="mb-2 border-bottom"></div>
+                                {listNotification && listNotification.length > 0 ? <>{this.sortNotification(listNotification)}</>
+                                : <div className="row">
+                                  <div className="col-12 text-center">
+                                    <div className="h-120">
+                                      <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/fa4e2b534c2928596a6deded9c730a21.png" alt="404 not found"></img>
+                                    </div>
+                                    <p className="my-3">{t('header.notification.empty')}</p>
+                                  </div>  
+                                </div>}
+                              </div> 
+                            )
+                          }
                         }/>
                       </li>
                     </>}

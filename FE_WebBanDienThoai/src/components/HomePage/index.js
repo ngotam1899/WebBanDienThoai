@@ -64,11 +64,11 @@ class HomePage extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-3 col-sm-6 d-none d-md-block align-self-center">
-              <div className="single-promo promo1 my-1">
+              <div className="single-promo promo1 my-1 rounded">
                 <i className="fa fa-sync-alt"></i>
                 <p>{t('home.feature.1')}</p>
               </div>
-              <div className="single-promo promo2 my-1">
+              <div className="single-promo promo2 my-1 rounded">
                 <i className="fa fa-truck"></i>
                 <p>{t('cart.free-ship')}</p>
               </div>
@@ -100,11 +100,11 @@ class HomePage extends Component {
               </Carousel>
             </div>}
             <div className="col-md-3 col-sm-6 d-none d-md-block align-self-center">
-              <div className="single-promo promo3 my-1">
+              <div className="single-promo promo3 my-1 rounded">
                 <i className="fa fa-lock"></i>
                 <p>{t('home.feature.3')}</p>
               </div>
-              <div className="single-promo promo4 my-1">
+              <div className="single-promo promo4 my-1 rounded">
                 <i className="fa fa-gift"></i>
                 <p>{t('home.feature.4')}</p>
               </div>

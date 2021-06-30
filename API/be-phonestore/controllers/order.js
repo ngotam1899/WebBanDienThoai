@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const Installment = require('../models/installment');
 const Product = require('../models/Product');
 const User = require('../models/User');
 const Image = require('../models/Image');
@@ -67,6 +68,7 @@ const getAllOrder = async (req, res, next) => {
 		}
 		const orders = await Order.find(condition)
 		.populate({ path: 'order_list.color', select: 'name_vn' })
+		.populate({ path: 'user', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
 		.sort({ createdAt: -1 })
 		.limit(limit)
 		.skip(limit * page);
@@ -370,8 +372,28 @@ const revenue = async (req, res, next) => {
 			condition.browse
 		];
 		const order = await Order.aggregate(pipeline);
-		const total_price = order.reduce((accumulator, currentValue) => accumulator + currentValue.total_price, 0);
-		const total_quantity = order.reduce((accumulator, currentValue) => accumulator + currentValue.total_quantity, 0);
+		const _pipeline = [
+			{
+				'$group':
+				{
+					'_id':  {
+						month: {'$month': '$updatedAt'}, 
+						year: {'$year': '$updatedAt'}
+					},
+					'total_price': { 
+						'$sum': { '$add' : [ '$prepay', '$paid' ] }
+					},
+					'total_quantity': { 
+						'$sum': 1 
+					}
+				}
+			},
+			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} },
+			condition.browse
+		]
+		const installment = await Installment.aggregate(_pipeline);
+		const total_price = order.reduce((accumulator, currentValue) => accumulator + currentValue.total_price, 0) + installment.reduce((accumulator, currentValue) => accumulator + currentValue.total_price, 0);
+		const total_quantity = order.reduce((accumulator, currentValue) => accumulator + currentValue.total_quantity, 0) + installment.reduce((accumulator, currentValue) => accumulator + currentValue.total_quantity, 0);
 		return res
 			.status(200)
 			.json({ success: true, code: 200, message: '',total_price,total_quantity});
@@ -489,9 +511,56 @@ const revenueList = async (req, res, next) => {
 			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} }
 		];
 		const order = await Order.aggregate(pipeline);
+		const _pipeline = [
+			{
+				'$match': {
+					'updatedAt': {
+						'$lte': new Date(condition.browse_to),
+						'$gte': new Date(condition.browse_from)
+					}
+				}
+			},
+			{
+				'$group':
+				{
+					'_id':  {
+						month: {'$month': '$updatedAt'}, 
+						year: {'$year': '$updatedAt'}
+					},
+					'total_price': { 
+						'$sum': { '$add' : [ '$prepay', '$paid' ] }
+					},
+					'total_quantity': { 
+						'$sum': 1 
+					}
+				}
+			},
+			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} }
+		]
+		const installment = await Installment.aggregate(_pipeline);
+		const data = [...order, ...installment]
+		const result = [...
+			// iterate over the list
+			data.reduce((map, item) => {
+				// construct key from _id
+				const key = `${item._id.month}-${item._id.year}`;
+				// get prev map value of key if exists
+				const prev = map.get(key);
+				// update map, if prev not found, set value as item, or update it with the added values
+				map.set(
+					key, 
+					!prev 
+						? item 
+						: { ...item, total_price: prev.total_price + item.total_price, total_quantity: prev.total_quantity + item.total_quantity }
+				);
+				return map;
+			}, new Map)
+			// return map values
+			.values()
+		];
 		return res
 			.status(200)
-			.json({ success: true, code: 200, message: '', order});
+			.json({ success: true, code: 200, message: '', result});
 	} catch (error) {
 		return next(error);
 	}

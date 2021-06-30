@@ -294,7 +294,7 @@ class ProductPage extends Component {
         <div className="px-3 py-2">
           <h3 className="mb-1">{t('shop.intro.title')}</h3>
           <div className="mb-2 border-bottom"></div>
-        {category.description.length > 150 ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : <div className="row my-1">
+        {category.description && category.description.length > 150 ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : <div className="row my-1">
             <div className="col-12">
               <div className="text-center my-4">
                 <div className="h-120">

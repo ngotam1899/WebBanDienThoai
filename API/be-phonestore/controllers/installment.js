@@ -34,7 +34,7 @@ const getAllInstallment = async (req, res, next) => {
     }
     const total = await Installment.countDocuments(condition);
     const installments = await Installment.find(condition, {user: 1, product: 1, startedAt: 1, endedAt: 1, status: 1, debt: 1, paid: 1, prepay: 1, active: 1})
-    .populate({ path: 'user', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
+    .populate({ path: 'user', select: ["image", "firstname", "lastname", "phonenumber"], populate : {path : 'image', select: "public_url"} })
     .populate({ path: 'staff', select: ["image", "firstname", "lastname"], populate : {path : 'image', select: "public_url"} })
     .populate({ path: 'product.color', select: "name_vn"})
     .populate({ path: 'product._id', select: ["bigimage", "name"], populate : {path : 'bigimage', select: "public_url"}})

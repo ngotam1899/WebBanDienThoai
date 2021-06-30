@@ -259,5 +259,6 @@
   "notfound.p": "Trang bạn đang tìm kiếm có thể đã bị xóa do đổi tên hoặc tạm thời không có sẵn." ,
 
   "review.card.header": "Đánh giá sản phẩm",
-  "review.card.h4": "Đánh giá của bạn:"
+  "review.card.h4": "Đánh giá của bạn:",
+  "review.submit.button": "Gửi"
 }

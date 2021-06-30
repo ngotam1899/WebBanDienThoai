@@ -59,14 +59,14 @@ class ReviewDetail extends Component {
   }
 
   render() {
-    const {modal, product} = this.props
-    const {rating, message} = this.state;
+    const { modal, product, t } = this.props
+    const { rating, message } = this.state;
     return (
       <CModal show={modal} onClose={() => this.onExit()} closeOnBackdrop={false}>
         <CModalHeader closeButton>
-          <CModalTitle>
-            Đánh giá sản phẩm
-          </CModalTitle>
+          <div className="text-center w-100">
+            <h3 className="modal-title m-0">{t('review.card.header')}</h3>
+          </div>
         </CModalHeader>
         <CModalBody>
           <div className="row mb-2">
@@ -75,11 +75,11 @@ class ReviewDetail extends Component {
             </div>
             <div className="col-9  align-self-center">
               <p className="font-weight-bold mb-0">{product.name}</p>
-              <p className="text-secondary mb-0">Màu sắc: {product.color.name_vn}</p>
+              <p className="text-secondary mb-0">{t('common.color')}: {product.color.name_vn}</p>
             </div>
           </div>
           <div className="review_box">
-            <p>Your Rating: <span className="ml-3"><Rating
+            <p>{t('review.card.h4')} <span className="ml-3"><Rating
               initialRating={rating}
               emptySymbol="fa fa-star text-secondary"
               fullSymbol="fa fa-star text-warning"
@@ -92,10 +92,10 @@ class ReviewDetail extends Component {
         </CModalBody>
         <CModalFooter>
           <CButton color="primary" onClick={this.onReview}>
-          Submit Now
+            {t('review.submit.button')}
           </CButton>
           <CButton color="secondary" onClick={() => this.onExit()}>
-            Cancel
+            {t('user.close.button')}
           </CButton>
         </CModalFooter>
       </CModal>

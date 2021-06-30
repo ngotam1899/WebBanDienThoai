@@ -90,8 +90,12 @@ class InstallmentDetail extends Component {
         <div className="modal-dialog modal-lg">
           {installmentItem ? <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">{t('installment.info.card.header')} {installmentItem._id}</h5>
-              <button type="button" className="close" data-bs-dismiss="modal" onClick={() => this.onClose()}>&times;</button>
+              <div className="text-center w-100">
+                <h3 className="modal-title m-0">{t('installment.info.card.header')} {installmentItem._id}</h3>
+              </div>
+              <div className="form-check form-switch">
+                <button type="button" className="btn-close rounded-circle bg-light p-2" onClick={() => this.onClose()} data-bs-dismiss="modal"></button>
+              </div>
             </div>
             <div className="modal-body">
               <div className="row">
@@ -104,7 +108,7 @@ class InstallmentDetail extends Component {
                       <div className="ml-3 my-1" style={{width: "75%"}}>
                         <p className="text-secondary smaller mb-0">{t('installment.product.label')}</p>
                         <div className="rounded border">
-                          <div className="row">
+                          {installmentItem.product &&<div className="row">
                             <div className="col-4">
                               <img className="w-100" src={installmentItem.product._id.bigimage ? installmentItem.product._id.bigimage.public_url : INITIAL_IMAGE} alt={installmentItem.product._id.name}></img>
                             </div>
@@ -115,7 +119,7 @@ class InstallmentDetail extends Component {
                               ? numberWithCommas(installmentItem.product.product_price) 
                               : numberWithCommas(parseFloat(tryConvert(installmentItem.product.product_price, currency, false)).toFixed(2))} {currency}</p>
                             </div>
-                          </div>
+                          </div>}
                         </div>
                       </div>
                     </div>
@@ -135,7 +139,7 @@ class InstallmentDetail extends Component {
                       </div>
                       <div className="form-floating">
                         <input type="text" className="form-control border-0 " id="status" name="status" 
-                        value={this.setStatus(installmentItem.status)}/>
+                        defaultValue={this.setStatus(installmentItem.status)}/>
                         <label htmlFor="status">{t('installment.status.label')}</label>
                       </div>
                     </div>
@@ -144,9 +148,9 @@ class InstallmentDetail extends Component {
                         <i className="fa fa-percent text-xl"></i>
                       </div>
                       <div className="form-floating">
-                        <input type="text" className="form-control border-0 " id="status" name="status" 
-                        value={installmentItem.interest_rate}/>
-                        <label htmlFor="status">{t('installment.rate.label')}</label>
+                        <input type="text" className="form-control border-0 " id="interest_rate" name="interest_rate" 
+                        defaultValue={installmentItem.interest_rate}/>
+                        <label htmlFor="interest_rate">{t('installment.rate.label')}</label>
                       </div>
                     </div>
                     <div className="col-12 form-inline">
@@ -198,7 +202,7 @@ class InstallmentDetail extends Component {
                       </div>
                       <div className="form-floating">
                         <input type="text" className="form-control border-0" id="prepay" name="prepay" 
-                        value={currency==="VND" 
+                        defaultValue={currency==="VND" 
                         ? numberWithCommas(installmentItem.prepay) 
                         : numberWithCommas(parseFloat(tryConvert(installmentItem.prepay, currency, false)).toFixed(2))}/>
                         <label htmlFor="total_price">{t('installment.percent.label')} ({currency})</label>
@@ -210,7 +214,7 @@ class InstallmentDetail extends Component {
                       </div>
                       <div className="form-floating">
                         <input type="text" className="form-control border-0" id="debt" name="debt" 
-                        value={currency==="VND" 
+                        defaultValue={currency==="VND" 
                         ? numberWithCommas(installmentItem.debt) 
                         : numberWithCommas(parseFloat(tryConvert(installmentItem.debt, currency, false)).toFixed(2))}/>
                         <label htmlFor="total_price">{t('installment.debt.1.label')} ({currency})</label>
@@ -222,7 +226,7 @@ class InstallmentDetail extends Component {
                       </div>
                       <div className="form-floating w-90">
                         <input type="text" className="form-control border-0" id="paid" name="paid" 
-                        value={currency==="VND" 
+                        defaultValue={currency==="VND" 
                         ? numberWithCommas(installmentItem.paid) 
                         : numberWithCommas(parseFloat(tryConvert(installmentItem.paid, currency, false)).toFixed(2))}/>
                         <label htmlFor="total_price">{t('installment.paid.label')} ({currency})</label>

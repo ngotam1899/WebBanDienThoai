@@ -12,7 +12,8 @@ import {
   CDataTable,
   CButton,
   CRow,
-  CImg
+  CImg,
+  CBadge
 } from '@coreui/react'
 import InstallmentDetail from './InstallmentDetail'
 import Pagination from "react-js-pagination";
@@ -105,15 +106,15 @@ class InstallmentList extends Component {
   setStatus = (status) => {
     switch(status){
       case -1:
-        return 'Chưa duyệt'
+        return <CBadge color="warning" className="float-right">Chưa duyệt</CBadge>
       case 0:
-        return 'Chưa hoàn tất'
+        return <CBadge color="info" className="float-right">Chưa hoàn tất</CBadge>
       case 1:
-        return 'Đã hoàn tất'
+        return <CBadge color="success" className="float-right">Đã hoàn tất</CBadge>
       case 2:
-        return 'Qúa hạn'
+        return <CBadge color="danger" className="float-right">Qúa hạn</CBadge>
       default:
-        return 'Chưa duyệt'
+        return <CBadge color="warning" className="float-right">Chưa duyệt</CBadge>
     }
   }
 
@@ -178,6 +179,7 @@ class InstallmentList extends Component {
                           />
                         </div>
                         <p className="mb-0">{item.user.firstname} {item.user.lastname}</p>
+                    <p className="mb-0">({item.user.phonenumber})</p>
                       </td>
                     ),
                     'product': (item) => (
@@ -198,7 +200,7 @@ class InstallmentList extends Component {
                     <td>{item.prepay ? item.prepay : 0} VND</td>
                     ),
                     'status': (item) => (
-                    <td>{this.setStatus(item.status)}</td>
+                    <td className="text-center">{this.setStatus(item.status)}</td>
                     ),
                     'actions':
                     (item)=>(

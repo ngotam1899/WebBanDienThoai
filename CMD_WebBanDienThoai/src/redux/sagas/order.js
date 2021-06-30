@@ -107,7 +107,7 @@ function* handleGetRevenueList({ payload }) {
     const result = yield call(getRevenueList, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(OrderActions.onGetRevenueListSuccess(data.order));
+    yield put(OrderActions.onGetRevenueListSuccess(data.result));
   } catch (error) {
     yield put(OrderActions.onGetRevenueListError(error));
   }

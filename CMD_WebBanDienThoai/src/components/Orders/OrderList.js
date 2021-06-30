@@ -13,6 +13,8 @@ import {
   CDataTable,
   CButton,
   CRow,
+  CImg,
+  CBadge
 } from '@coreui/react'
 import OrderDetail from './OrderDetail'
 import Pagination from "react-js-pagination";
@@ -20,8 +22,8 @@ import Pagination from "react-js-pagination";
 import OrderActions from "../../redux/actions/order";
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
-
-const fields = ['Date of create', 'Phone','Payment Status','Bill Status','Payment Method','Total','actions']
+import {INITIAL_IMAGE} from '../../constants';
+const fields = ['Date of create', 'user','Payment Status','Bill Status','Payment Method','Total','actions']
 
 
 class OrderList extends Component {
@@ -146,6 +148,19 @@ class OrderList extends Component {
     onClearDetail();
   }
 
+  setStatus = (status) => {
+    switch(status){
+      case -1:
+        return <CBadge color="danger" className="float-right">Chưa giao</CBadge>
+      case 0:
+        return <CBadge color="warning" className="float-right">Đang giao</CBadge>
+      case 1:
+        return <CBadge color="success" className="float-right">Đã giao</CBadge>
+      default:
+        return <CBadge color="warning" className="float-right">Đang giao</CBadge>
+    }
+  }
+
   render () {
     const {large, phone} = this.state;
     const {listOrder, orderDetail, total, location,} = this.props;
@@ -220,20 +235,32 @@ class OrderList extends Component {
                     'Date of create': (item) => (
                       <td>{new Date(item.createdAt).toLocaleDateString("vn-VN")}</td>
                     ),
-                    'Phone': (item) => (
-                      <td>{item.shipping_phonenumber}</td>
+                    'user': (item) => (
+                      <td className="text-center">
+                        {item.user && <><div className="c-avatar">
+                          <CImg
+                            src={item.user.image ? item.user.image.public_url : INITIAL_IMAGE}
+                            className="c-avatar-img"
+                            alt={item.user._id}
+                          />
+                        </div>
+                        <p className="mb-0">{item.user.firstname} {item.user.lastname}</p>
+                        <p className="mb-0">({item.shipping_phonenumber})</p></>}
+                      </td>
                     ),
                     'Payment Method': (item) => (
                       <td>{item.payment_method=== "local" ? '(COD) Tiền mặt' : 'Paypal'}</td>
                     ),
                     'Payment Status': (item) => (
-                      <td>{item.paid=== true ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
+                      <td className="text-center">{item.paid=== true
+                        ? <CBadge color="success" className="float-right">Đã thanh toán</CBadge>
+                        : <CBadge color="warning" className="float-right">Chưa thanh toán</CBadge>}</td>
                     ),
                     'Bill Status': (item) => (
-                      <td>{item.status=== 1 ? 'Đã giao hàng' : 'Chưa giao hàng'}</td>
+                      <td className="text-center">{this.setStatus(item.status)}</td>
                     ),
                     'Total': (item) => (
-                      <td>{item.total_price}</td>
+                      <td>{item.total_price} VND</td>
                     ),
                     'actions':
                     (item)=>(

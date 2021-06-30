@@ -259,5 +259,6 @@
   "notfound.p": "The page you are looking for might have been removed had its name changed or is temporarily unavailable.",
 
   "review.card.header": "Product Review",
-  "review.card.h4": "Your review:"
+  "review.card.h4": "Your review:",
+  "review.submit.button": "Submit"
 }
