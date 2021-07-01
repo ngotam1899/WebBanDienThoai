@@ -11,6 +11,7 @@
   "common.login-continue": "Login to continue", 
   "common.destroy.button": "Cancel",
   "common.toastify.not-login": "You are not logged in", 
+  "common.clear-filter.button": "Clear all filters",
 
   "accessory.category.title":"Accessories catalog",
   "accessory.page.title":"Accessory Page",

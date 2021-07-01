@@ -124,6 +124,12 @@ class AccessoryPage extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  destroyFilter = () => {
+    const {location, history} = this.props;
+    const {pathname} = location;
+    history.push(pathname)
+  }
+
   render() {
     const { more } = this.state;
     const { t, listAccessory, totalBrand, listProducts, total, location } = this.props;
@@ -178,14 +184,18 @@ class AccessoryPage extends Component {
         </div>
         <div className="row">
           <div className="col-6">
-          <p>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
+            <p>{t('shop.search.first')} {total} {t('shop.search.last')}</p>
           </div>
           <div className="col-6">
-          <select value={filter.sort_p} className="form-select float-end w-fit-content" onChange={this.handleChangeSortPrice}>
-            <option key={-1} value="0">{t('shop.sort.price')}</option>
-            <option value="1">{t('shop.sort.inc')}</option>
-            <option value="-1">{t('shop.sort.des')}</option>
-          </select>
+            <select value={filter.sort_p} className="form-select float-end w-fit-content" onChange={this.handleChangeSortPrice}>
+              <option key={-1} value="0">{t('shop.sort.price')}</option>
+              <option value="1">{t('shop.sort.inc')}</option>
+              <option value="-1">{t('shop.sort.des')}</option>
+            </select>
+            {location.search.length > 0 && <button type="button" className="btn btn-light float-end shadow-sm mr-2" onClick={()=> this.destroyFilter()}>
+              <i className="fa fa-eraser mr-1"></i>
+              {t('common.clear-filter.button')}
+            </button>}
           </div>
         </div>
         <div className="row">

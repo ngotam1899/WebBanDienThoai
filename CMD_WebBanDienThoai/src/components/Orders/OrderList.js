@@ -83,12 +83,32 @@ class OrderList extends Component {
   }
 
   // Button search
-  searchPhone = (e) => {
+  searchPhone = () => {
     const {phone} = this.state;
     this.handleUpdateFilter({ phone });
   }
 
+  pressKeyWord = (event) => {
+    if(event.key === 'Enter') this.searchPhone();
+  }
 
+  destroyFilter = () => {
+    const {location, history} = this.props;
+    const {pathname} = location;
+    var queryParams = {
+      active: '',
+      keyword: '',
+      page: 0,
+      confirmed: '',
+      paid: '',
+      status: '',
+      payment_method: ''
+    }
+    history.push(`${pathname}?${qs.stringify(queryParams)}`)
+    this.setState({
+      keyword: "",
+    })
+  }
 
   submit = (id) => {
     confirmAlert({
@@ -172,52 +192,73 @@ class OrderList extends Component {
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách đơn hàng</h5>
                 <div className="input-group mb-3">
-                  <input type="text" className="form-control" value={phone} name="phone" placeholder="Nhập số điện thoại người nhận" onChange={this.onChange}/>
+                  <input type="text" className="form-control" value={phone} name="phone" placeholder="Nhập số điện thoại người nhận"
+                  onChange={this.onChange} onKeyPress={this.pressKeyWord}/>
                   <div className="input-group-append">
                     <button type="button" className="btn btn-primary" onClick={() => this.searchPhone()} type="submit">Tìm kiếm</button>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col">
-                    <p className="float-left" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 col-md-4">
+                  <div className="col-6 col-md-3">
                     <div className="card bg-danger">
                       <div className="p-2">
                         <b className="text-white">Tình trạng đơn hàng</b>
                         <select className="form-control mt-2" value={filter.confirmed} name="confirmed" onChange={this.handleChangeFilter}>
-                          <option key={-1} value="0">Chọn tình trạng đơn</option>
+                          <option key={-1} value="">Chọn tình trạng đơn</option>
                           <option value="1">Đã xác nhận đơn hàng</option>
                           <option value="-1">Chưa xác nhận đơn hàng</option>
                         </select>
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-4">
+                  <div className="col-6 col-md-3">
                     <div className="card bg-warning">
                       <div className="p-2">
                         <b className="text-white">Tình trạng thanh toán</b>
-                        <select className="form-control mt-2" value={filter.is_paid} name="is_paid" onChange={this.handleChangeFilter}>
-                          <option key={-1} value="0">Chọn tình trạng thanh toán</option>
+                        <select className="form-control mt-2" value={filter.paid} name="paid" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="">Chọn tình trạng thanh toán</option>
                           <option value="1">Đã thanh toán</option>
                           <option value="-1">Chưa thanh toán</option>
                         </select>
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-4">
+                  <div className="col-6 col-md-3">
                     <div className="card bg-success">
                       <div className="p-2">
                         <b className="text-white">Tình trạng hàng</b>
                         <select className="form-control mt-2" value={filter.status} name="status" onChange={this.handleChangeFilter}>
-                          <option key={-1} value="0">Chọn tình trạng hàng</option>
-                          <option value="1">Đã nhận hàng</option>
-                          <option value="-1">Chưa nhận hàng</option>
+                          <option key={-1} value="">Chọn tình trạng hàng</option>
+                          <option value="1">Đã giao hàng</option>
+                          <option value="0">Đang giao hàng</option>
+                          <option value="-1">Chưa giao hàng</option>
                         </select>
                       </div>
                     </div>
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <div className="card bg-primary">
+                      <div className="p-2">
+                        <b className="text-white">Phương thức thanh toán</b>
+                        <select className="form-control mt-2" value={filter.payment_method} name="payment_method" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="">Chọn phương thức thanh toán</option>
+                          <option value="local">Thanh toán sau nhận hàng</option>
+                          <option value="paypal">Thanh toán qua Paypal</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col">
+                    <p className="float-left font-italic my-2">Có tất cả {total} kết quả tìm kiếm</p>
+                    <CButton
+                      className="ml-2 float-left"
+                      onClick={()=> this.destroyFilter()}
+                      color="info"
+                    > <i className="fa fa-eraser mr-1"></i>
+                      Xóa tất cả bộ lọc
+                    </CButton>
                   </div>
                 </div>
               </CCardHeader>

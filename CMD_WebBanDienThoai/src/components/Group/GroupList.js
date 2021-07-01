@@ -25,6 +25,7 @@ class GroupList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      keyword: '',
       large: false,
       filter: {
         limit: 10,
@@ -102,6 +103,29 @@ class GroupList extends Component {
     this.handleUpdateFilter({ page: pageNumber-1 });
   }
 
+  // Button search
+  searchKeyWorld = () => {
+    const {keyword} = this.state;
+    this.handleUpdateFilter({ keyword, page: 0});
+  }
+
+  pressKeyWord = (event) => {
+    if(event.key === 'Enter') this.searchKeyWorld();
+  }
+
+  destroyFilter = () => {
+    const {location, history} = this.props;
+    const {pathname} = location;
+    var queryParams = {
+      keyword: "",
+      page: 0,
+    }
+    history.push(`${pathname}?${qs.stringify(queryParams)}`)
+    this.setState({
+      keyword: "",
+    })
+  }
+
   // Chuyển router (thêm vào params)
   handleUpdateFilter = (data) => {
     const {location, history} = this.props;
@@ -114,8 +138,17 @@ class GroupList extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  onChange = (event) =>{
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.setState({
+      [name]:  value
+    })
+  }
+
   render () {
-    const { large } = this.state;
+    const { large, keyword } = this.state;
     const { listGroup, groupDetail, onClearDetail, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -124,12 +157,31 @@ class GroupList extends Component {
             <CCard>
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách nhóm sản phẩm</h5>
-                <CButton
-                  onClick={() => this.setLarge(!large)}
-                  className="mb-1 float-right"
-                  color="success"
-                > Thêm nhóm sản phẩm
-                </CButton>
+                <div className="input-group mb-3">
+                  <input type="text" className="form-control" value={keyword} name="keyword" placeholder="Nhập nhóm sản phẩm"
+                  onChange={this.onChange} onKeyPress={this.pressKeyWord}/>
+                  <div className="input-group-append">
+                    <button className="btn btn-primary" onClick={() => this.searchKeyWorld()} type="submit">Tìm kiếm</button>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col">
+                    <p className="float-left font-italic my-2">Có tất cả {total} kết quả tìm kiếm</p>
+                    <CButton
+                      className="ml-2 float-left"
+                      onClick={()=> this.destroyFilter()}
+                      color="info"
+                    > <i className="fa fa-eraser mr-1"></i>
+                      Xóa tất cả bộ lọc
+                    </CButton>
+                    <CButton
+                      onClick={() => this.setLarge(!large)}
+                      className="mb-1 float-right"
+                      color="success"
+                    > Thêm nhóm sản phẩm
+                    </CButton>
+                  </div>
+                </div>
               </CCardHeader>
 
               <CCardBody>

@@ -138,6 +138,7 @@ class ColorList extends Component {
               color="success"
             > Thêm màu
             </CButton>
+            <p className="float-right font-italic my-2 mr-2">Có tất cả {total} kết quả tìm kiếm</p>
           </CCardHeader>
 
           <CCardBody>

@@ -116,9 +116,26 @@ class UserList extends Component {
   }
 
   // Button search
-  searchPhone = (e) => {
+  searchPhone = () => {
     const {phone} = this.state;
     this.handleUpdateFilter({ phone });
+  }
+
+  pressKeyWord = (event) => {
+    if(event.key === 'Enter') this.searchPhone();
+  }
+
+  destroyFilter = () => {
+    const {location, history} = this.props;
+    const {pathname} = location;
+    var queryParams = {
+      keyword: "",
+      page: 0,
+    }
+    history.push(`${pathname}?${qs.stringify(queryParams)}`)
+    this.setState({
+      keyword: "",
+    })
   }
 
   // Chuyển router (thêm vào params)
@@ -153,14 +170,22 @@ class UserList extends Component {
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách người dùng</h5>
                 <div className="input-group mb-3">
-                  <input type="text" className="form-control" value={phone} name="phone" placeholder="Nhập số điện thoại người nhận" onChange={this.onChange}/>
+                  <input type="text" className="form-control" value={phone} name="phone" placeholder="Nhập số điện thoại người nhận"
+                  onChange={this.onChange} onKeyPress={this.pressKeyWord}/>
                   <div className="input-group-append">
                     <button type="button" className="btn btn-primary" onClick={() => this.searchPhone()} type="submit">Tìm kiếm</button>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col">
-                    <p className="float-left" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>
+                    <p className="float-left font-italic my-2">Có tất cả {total} kết quả tìm kiếm</p>
+                    <CButton
+                      className="ml-2 float-left"
+                      onClick={()=> this.destroyFilter()}
+                      color="info"
+                    > <i className="fa fa-eraser mr-1"></i>
+                      Xóa tất cả bộ lọc
+                    </CButton>
                   </div>
                 </div>
               </CCardHeader>

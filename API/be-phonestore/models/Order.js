@@ -69,7 +69,7 @@ const OrderSchema = new Schema(
 		status: {
 			// Đã nhận hàng chưa ? "DateTime" : "" && status:-1 (Chưa giao), status:0 (Đang giao), status:1 (Đã giao)
 			type: Number,
-			default: 0
+			default: -1
 		},
 		confirmed: {
 			// Đã xác nhận chưa ? "DateTime" : ""

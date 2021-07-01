@@ -151,14 +151,21 @@ class ProductPage extends Component {
   };
 
   // phân trang
-  handlePageChange(pageNumber) {
+  handlePageChange = (pageNumber) => {
     this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
+  destroyFilter = () => {
+    const {location, history} = this.props;
+    const {pathname} = location;
+    history.push(pathname)
   }
 
   render() {
     const {min_p, max_p, more} = this.state;
     const { listProducts, listBrand, t, location, total, category } = this.props;
     const filter = getFilterParams(location.search);
+    console.log(location.search)
     return (
     <div className="container mb-3">
       <div className="row">
@@ -169,6 +176,12 @@ class ProductPage extends Component {
         </div>}
         <div className="col-12 col-md-3">
           <div className="row">
+            {location.search.length > 0 && <div className="col-6 col-md-12 mb-3">
+              <button type="button" className="btn btn-light w-100 shadow-sm" onClick={()=> this.destroyFilter()}>
+                <i className="fa fa-eraser mr-1"></i>
+                {t('common.clear-filter.button')}
+              </button>
+            </div>}
             <div className="col-6 col-md-12 mb-3">
               <div className="shadow-sm rounded">
                 <div className="px-3 py-2">
@@ -323,7 +336,7 @@ const mapStateToProps = (state) => {
   return {
     listProducts: ProductsSelectors.getList(state),
     listColor: state.color.list,
-    listBrand: state.brands.total,
+    listBrand: state.brands.list,
     total: state.products.total,
     category : state.categories.detail
   }
