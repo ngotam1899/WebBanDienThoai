@@ -207,25 +207,10 @@ class PageView extends Component {
         </View>
         {orderList && orderList.length != 0 ? (
           <View style={{justifyContent: 'center', paddingBottom: 70}}>
-            <Modal visible={this.state.showModal}>
-              <View style={styles.containerModal}>
-                <View style={styles.backgroundModal}>
-                  <View style={styles.modalBox}>
-                    <View style={{alignItems: 'flex-end'}}>
-                      <TouchableOpacity
-                        style={styles.btnClose}
-                        onPress={this.onCloseModal}>
-                        <FontAwesome name="close" size={24} color="#969696" />
-                      </TouchableOpacity>
-                    </View>
-                    <OrderDetailView
-                      orderItem={orderItem ? orderItem : null}
-                      onCloseModal={this.onCloseModal}
-                      params={params}></OrderDetailView>
-                  </View>
-                </View>
-              </View>
-            </Modal>
+            <OrderDetailView
+              orderItem={orderItem ? orderItem : null}
+              onCloseModal={this.onCloseModal}
+              showModal={this.state.showModal}></OrderDetailView>
 
             <FlatList
               data={orderList ? orderList : null}
@@ -237,7 +222,6 @@ class PageView extends Component {
                 return (
                   <OrderItem
                     item={item}
-                    index={index}
                     key={index}
                     onUpdateOrder={onUpdateOrder}
                     params={params}
@@ -422,10 +406,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 30,
   },
-  containerModal: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   backgroundModal: {
     width: width,
     height: height,

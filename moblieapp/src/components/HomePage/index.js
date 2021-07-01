@@ -31,12 +31,12 @@ class SecondRoute extends Component {
 }
 class ThirdRoute extends Component {
   render() {
-    const {navigation, listProducts, category, totalBrand} = this.props;
+    const {navigation, listProducts, category, listBrand} = this.props;
     return (
       <ProductPage
         navigation={navigation}
         listProducts={listProducts}
-        totalBrand={totalBrand}
+        listBrand={listBrand}
         category={category}
       />
     );
@@ -45,12 +45,12 @@ class ThirdRoute extends Component {
 
 class FourRoute extends Component {
   render() {
-    const {navigation, listProducts, category, totalBrand} = this.props;
+    const {navigation, listProducts, category, listBrand} = this.props;
     return (
       <ProductPage
         navigation={navigation}
         listProducts={listProducts}
-        totalBrand={totalBrand}
+        listBrand={listBrand}
         category={category}
       />
     );
@@ -152,7 +152,7 @@ class HomePage extends Component {
           <ThirdRoute
             navigation={this.props.navigation}
             listProducts={this.props.listProducts}
-            totalBrand={this.props.totalBrand}
+            listBrand={this.props.listBrand}
             category={this.state.category}
           />
         );
@@ -161,7 +161,7 @@ class HomePage extends Component {
           <FourRoute
             navigation={this.props.navigation}
             listProducts={this.props.listProducts}
-            totalBrand={this.props.totalBrand}
+            listBrand={this.props.listBrand}
             category={this.state.category}
           />
         );
@@ -239,7 +239,6 @@ const mapStateToProps = state => {
     listCategories: state.categories.list,
     listProducts: state.products.list,
     listBrand: state.brands.list,
-    totalBrand: state.brands.total,
     category: state.categories.detail,
     params: state.products.params,
   };

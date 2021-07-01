@@ -8,17 +8,20 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import {AsyncStorage} from 'react-native';
+import {connect} from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Moment from 'react-moment';
+
 import NotificationActions from '../redux/actions/notification';
 import InstallmentActions from '../redux/actions/installment';
 import OrdersActions from '../redux/actions/order';
 import AuthorizationActions from '../redux/actions/auth';
-import {AsyncStorage} from 'react-native';
-import {connect} from 'react-redux';
+
 import Header from '../components/HeaderComponent';
 import DetailModal from '../components/UserInstallmentPage/DetailModal';
+import OrderDetailView from '../components/OrdersPage/OrderDetailView';
 class NotificationScreen extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +32,7 @@ class NotificationScreen extends Component {
         page: 0,
         user: userInfo ? userInfo._id : '',
       },
+      showModal: false,
       statusModal: false,
     };
   }
@@ -37,7 +41,16 @@ class NotificationScreen extends Component {
       statusModal: value,
     });
   };
-
+  openModalOrder = () => {
+    this.setState({
+      showModal: true,
+    });
+  };
+  onCloseModal = () => {
+    this.setState({
+      showModal: false,
+    });
+  };
   selectButton(val, id, type, link) {
     const {
       onUpdate,
@@ -51,9 +64,10 @@ class NotificationScreen extends Component {
         active: false,
       };
       switch (type) {
-        // case 0:
-        // onGetDetailOrder(link);
-        // break;
+        case 0:
+          onGetDetailOrder(link);
+          this.openModalOrder();
+          break;
         case 2:
           onGetDetailInstallment(link);
           this.setModal(true);
@@ -82,12 +96,7 @@ class NotificationScreen extends Component {
     }
   };
   componentDidUpdate(prevProps) {
-    const {
-      onGetAllNotifications,
-      totalNotification,
-      userInfo,
-      onGetList,
-    } = this.props;
+    const {totalNotification, userInfo, onGetList} = this.props;
 
     if (userInfo !== prevProps.userInfo && userInfo) {
       var user = userInfo._id;
@@ -119,11 +128,13 @@ class NotificationScreen extends Component {
     onDeleteAll(id, params);
   }
   render() {
-    const {navigation, listNotification, installmentItem} = this.props;
-    const {statusModal, params} = this.state;
-    const listNotification1 = listNotification
-      ? listNotification.reverse()
-      : null;
+    const {
+      navigation,
+      listNotification,
+      installmentItem,
+      orderItem,
+    } = this.props;
+    const {statusModal, params, showModal} = this.state;
     return (
       <View style={styles.screenContainer}>
         <DetailModal
@@ -131,14 +142,18 @@ class NotificationScreen extends Component {
           params={params}
           status={statusModal}
           installmentItem={installmentItem}></DetailModal>
+        <OrderDetailView
+          orderItem={orderItem ? orderItem : null}
+          onCloseModal={this.onCloseModal}
+          showModal={showModal}></OrderDetailView>
         <StatusBar barStyle="light-content" />
         <Header value="1" title="Thông báo" navigation={navigation} />
         <View style={styles.bodyContainer}>
           <View style={styles.listContainer}>
-            {listNotification1 && listNotification1.length > 0 ? (
+            {listNotification && listNotification.length > 0 ? (
               <ScrollView>
                 <FlatList
-                  data={listNotification1}
+                  data={listNotification}
                   keyExtractor={item => item._id}
                   renderItem={({item}) => (
                     <View

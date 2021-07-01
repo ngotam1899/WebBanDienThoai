@@ -128,10 +128,10 @@ class ProductPage extends Component {
     onGetList(params);
   };
   onSetBrand = value => {
-    const {totalBrand, category, onGetList, onAddParams} = this.props;
+    const {listBrand, category, onGetList, onAddParams} = this.props;
     var brandId =
       value !== 'Tất cả'
-        ? totalBrand.find(item => item._id.name === value)._id._id
+        ? listBrand.find(item => item._id.name === value)._id._id
         : '';
     var params = {
       category: category,
@@ -159,7 +159,7 @@ class ProductPage extends Component {
     }
   }
   render() {
-    const {listProducts, navigation, totalBrand, params, category} = this.props;
+    const {listProducts, navigation, listBrand, params, category} = this.props;
     const {brandName, sortValue} = this.state;
     return (
       <View style={{paddingHorizontal: 12, paddingBottom: 130}}>
@@ -184,8 +184,8 @@ class ProductPage extends Component {
                 Tất cả
               </Text>
             </TouchableOpacity>
-            {totalBrand ? (
-              totalBrand.map((brand, index) => {
+            {listBrand ? (
+              listBrand.map((brand, index) => {
                 return (
                   <View key={brand._id._id} style={{flexDirection: 'row'}}>
                     <TouchableOpacity

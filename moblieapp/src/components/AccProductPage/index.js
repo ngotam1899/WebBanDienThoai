@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
@@ -41,9 +41,9 @@ class AccProductPage extends Component {
   };
 
   render() {
-    const {navigation, totalBrand, listProducts, route} = this.props;
+    const {navigation, listBrand, listProducts, route} = this.props;
     return (
-      <ScrollView style={{backgroundColor: '#fff',flex:1}}>
+      <ScrollView style={{backgroundColor: '#fff', flex: 1}}>
         <View style={styles.headerContainer}>
           <View style={styles.inputContainer}>
             <TouchableOpacity onPress={() => this.onSearchProduct()}>
@@ -63,7 +63,7 @@ class AccProductPage extends Component {
         <ProductPage
           navigation={navigation}
           listProducts={listProducts}
-          totalBrand={totalBrand}
+          listBrand={listBrand}
           category={route.params.id}
         />
       </ScrollView>
@@ -74,7 +74,7 @@ const mapStateToProps = state => {
   return {
     listProducts: state.products.list,
     listBrand: state.brands.list,
-    totalBrand: state.brands.total,
+    listBrand: state.brands.list,
   };
 };
 
