@@ -6,38 +6,61 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Moment from 'react-moment';
 import NotificationActions from '../redux/actions/notification';
+import InstallmentActions from '../redux/actions/installment';
+import OrdersActions from '../redux/actions/order';
 import AuthorizationActions from '../redux/actions/auth';
 import {AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
 import Header from '../components/HeaderComponent';
-
+import DetailModal from '../components/UserInstallmentPage/DetailModal';
 class NotificationScreen extends Component {
   constructor(props) {
     super(props);
+    const {userInfo} = props;
     this.state = {
-      queryParams: {
-        limit: 8,
+      params: {
+        limit: 20,
         page: 0,
+        user: userInfo ? userInfo._id : '',
       },
+      statusModal: false,
     };
   }
+  setModal = (value, id) => {
+    this.setState({
+      statusModal: value,
+    });
+  };
 
-  selectButton(val, id) {
-    const {onUpdate, onDelete, userInfo} = this.props;
-    var params = {
-      limit: 8,
-      page: 0,
-      user: userInfo._id,
-    };
+  selectButton(val, id, type, link) {
+    const {
+      onUpdate,
+      onDelete,
+      onGetDetailInstallment,
+      onGetDetailOrder,
+    } = this.props;
+    const {params} = this.state;
     if (val === 0) {
       const data = {
         active: false,
       };
+      switch (type) {
+        // case 0:
+        // onGetDetailOrder(link);
+        // break;
+        case 2:
+          onGetDetailInstallment(link);
+          this.setModal(true);
+          break;
+        default:
+          return null;
+      }
       onUpdate(id, data, params);
     } else {
       onDelete(id, params);
@@ -45,10 +68,18 @@ class NotificationScreen extends Component {
   }
 
   componentDidMount = async () => {
-    const {onGetProfile} = this.props;
+    const {onGetProfile, userInfo} = this.props;
     await AsyncStorage.getItem('AUTH_USER').then(data => {
       onGetProfile(null, data);
     });
+    if (userInfo) {
+      var params = {
+        limit: 20,
+        page: 0,
+        user: userInfo._id,
+      };
+      onGetList(params);
+    }
   };
   componentDidUpdate(prevProps) {
     const {
@@ -60,12 +91,11 @@ class NotificationScreen extends Component {
 
     if (userInfo !== prevProps.userInfo && userInfo) {
       var user = userInfo._id;
-      onGetList({user, limit: 5, page: 0, active: 1});
+      onGetList({user, limit: 20, page: 0, active: 1});
     }
     if (totalNotification !== prevProps.totalNotification && userInfo) {
       var user = userInfo._id;
-      onGetAllNotifications({user, limit: 5, page: 0, active: 1});
-      onGetList({user, limit: 5, page: 0, active: 1});
+      onGetList({user, limit: 20, page: 0, active: 1});
     }
   }
   onReadAllNoti() {
@@ -89,18 +119,24 @@ class NotificationScreen extends Component {
     onDeleteAll(id, params);
   }
   render() {
-    const {navigation, listNotification, userInfo} = this.props;
+    const {navigation, listNotification, installmentItem} = this.props;
+    const {statusModal, params} = this.state;
     const listNotification1 = listNotification
       ? listNotification.reverse()
       : null;
     return (
       <View style={styles.screenContainer}>
+        <DetailModal
+          openModal={this.setModal}
+          params={params}
+          status={statusModal}
+          installmentItem={installmentItem}></DetailModal>
         <StatusBar barStyle="light-content" />
         <Header value="1" title="Thông báo" navigation={navigation} />
         <View style={styles.bodyContainer}>
           <View style={styles.listContainer}>
             {listNotification1 && listNotification1.length > 0 ? (
-              <View>
+              <ScrollView>
                 <FlatList
                   data={listNotification1}
                   keyExtractor={item => item._id}
@@ -135,7 +171,14 @@ class NotificationScreen extends Component {
                             showsVerticalScrollIndicator={false}
                             dropdownStyle={{width: 150, height: 86}}
                             dropdownTextStyle={{fontSize: 16, color: '#333'}}
-                            onSelect={val => this.selectButton(val, item._id)}
+                            onSelect={val =>
+                              this.selectButton(
+                                val,
+                                item._id,
+                                item.type,
+                                item.link,
+                              )
+                            }
                             options={['Đã xem', 'Xóa']}>
                             <MaterialCommunityIcons
                               name="dots-vertical"
@@ -163,7 +206,7 @@ class NotificationScreen extends Component {
                     <Text style={{color: '#fff'}}>Xóa tất cả</Text>
                   </TouchableOpacity>
                 </View>
-              </View>
+              </ScrollView>
             ) : (
               <View style={styles.boxZeroNotifi}>
                 <Text styles={styles.textZeroNotifi}>
@@ -183,19 +226,24 @@ const mapStateToProps = state => {
     userInfo: state.auth.detail,
     listNotification: state.notification.list,
     totalNotification: state.notification._total,
+    installmentItem: state.installment.detail,
+    orderItem: state.order.detail,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onGetAllNotifications: data => {
-      dispatch(NotificationActions.onGetNewest(data));
+    onGetList: payload => {
+      dispatch(NotificationActions.onGetList(payload));
+    },
+    onGetDetailInstallment: id => {
+      dispatch(InstallmentActions.onGetDetail(id));
+    },
+    onGetDetailOrder: id => {
+      dispatch(OrdersActions.onGetDetail(id));
     },
     onGetProfile: (data, headers) => {
       dispatch(AuthorizationActions.onGetProfile(data, headers));
-    },
-    onGetList: payload => {
-      dispatch(NotificationActions.onGetList(payload));
     },
     onUpdate: (id, data, params) => {
       dispatch(NotificationActions.onUpdate(id, data, params));
@@ -297,6 +345,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 30,
+    paddingBottom: 40,
+    marginBottom: 60,
   },
   btnReadAll: {
     paddingHorizontal: 20,

@@ -56,8 +56,8 @@ class InstallmentPage extends Component {
       <View style={styles.headQuestion}>
         <Text style={{fontWeight: 'bold', flex: 0.9}}>{item.title}</Text>
         <FontAwesome
-          name="chevron-down"
-          size={14}
+          name="angle-down"
+          size={20}
           color="#000"
           style={[
             styles.fontAwesome,
@@ -122,7 +122,6 @@ class InstallmentPage extends Component {
     if (period === 0) return this.showAlert();
     const interest_rate = JSON.parse(period).percent;
     period = JSON.parse(period).month_sum;
-    //var debt = Math.ceil(((product.product_price-prepay )*(1 + interest_rate*0.01))/1000)* 1000
     var detail = [];
     for (let i = 0; i < period; i++) {
       detail[i] = {
@@ -385,8 +384,8 @@ class InstallmentPage extends Component {
             )}
             <View>
               <Text style={styles.textSuggestion}>
-                Số tiền chênh lệch thực tế từ 10.000đ -> 100.000đ một tháng, bạn
-                vui lòng qua trực tiếp cửa hàng để được tư vấn chính xác
+                Số tiền chênh lệch thực tế từ 10.000đ đến 100.000đ một tháng,
+                bạn vui lòng qua trực tiếp cửa hàng để được tư vấn chính xác
               </Text>
             </View>
           </View>

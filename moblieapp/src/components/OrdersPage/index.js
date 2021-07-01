@@ -19,41 +19,53 @@ const {width} = Dimensions.get('window');
 class FirstRoute extends Component {
   render() {
     const {orderList, authInfoID, params} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
+    return (
+      <PageView orderList={orderList} authInfoID={authInfoID} params={params} />
+    );
   }
 }
 class SecondRoute extends Component {
   render() {
     const {orderList, authInfoID, params} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
+    return (
+      <PageView orderList={orderList} authInfoID={authInfoID} params={params} />
+    );
   }
 }
 
 class ThirdRoute extends Component {
   render() {
     const {orderList, authInfoID, params} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
+    return (
+      <PageView orderList={orderList} authInfoID={authInfoID} params={params} />
+    );
   }
 }
 
 class FourRoute extends Component {
   render() {
     const {orderList, authInfoID, params} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
+    return (
+      <PageView orderList={orderList} authInfoID={authInfoID} params={params} />
+    );
   }
 }
 
 class FiveRoute extends Component {
   render() {
     const {orderList, authInfoID, params} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
+    return (
+      <PageView orderList={orderList} authInfoID={authInfoID} params={params} />
+    );
   }
 }
 
 class SixRoute extends Component {
   render() {
     const {orderList, authInfoID, params} = this.props;
-    return <PageView orderList={orderList} authInfoID={authInfoID} params={params}/>;
+    return (
+      <PageView orderList={orderList} authInfoID={authInfoID} params={params} />
+    );
   }
 }
 
@@ -87,7 +99,7 @@ class Orders extends Component {
     });
     const {onGetList} = this.props;
     var filters = '';
-    const {filter} = this.state;
+    const {filter, params} = this.state;
     const {authInfo} = this.props;
     if (val === 0) {
       filters = '';
@@ -100,9 +112,9 @@ class Orders extends Component {
         params: {
           ...params,
           user: authInfo._id,
-          active: "",
-          confirmed: "",
-          status: ""
+          active: '',
+          confirmed: '',
+          status: '',
         },
       });
       onGetList(params1);
@@ -121,8 +133,8 @@ class Orders extends Component {
           ...params,
           user: authInfo._id,
           confirmed: -1,
-          status: 1,
-          active: ""
+          status: '',
+          active: 1,
         },
       });
       onGetList(params1);
@@ -131,7 +143,7 @@ class Orders extends Component {
         confirmed: 1,
         status: -1,
       };
-      var params = {
+      var params1 = {
         ...filter,
         ...filters,
         user: authInfo._id,
@@ -142,10 +154,10 @@ class Orders extends Component {
           user: authInfo._id,
           confirmed: 1,
           status: -1,
-          active: ""
+          active: '',
         },
       });
-      onGetList(params);
+      onGetList(params1);
     } else if (val === 3) {
       filters = {
         confirmed: 1,
@@ -157,15 +169,15 @@ class Orders extends Component {
           user: authInfo._id,
           confirmed: 1,
           status: 0,
-          active: ""
+          active: '',
         },
       });
-      var params = {
+      var params1 = {
         ...filter,
         ...filters,
         user: authInfo._id,
       };
-      onGetList(params);
+      onGetList(params1);
     } else if (val === 4) {
       filters = {
         confirmed: 1,
@@ -177,15 +189,15 @@ class Orders extends Component {
           user: authInfo._id,
           confirmed: 1,
           status: 1,
-          active: ""
+          active: '',
         },
       });
-      var params = {
+      var params1 = {
         ...filter,
         ...filters,
         user: authInfo._id,
       };
-      onGetList(params);
+      onGetList(params1);
     } else if (val === 5) {
       filters = {
         active: -1,
@@ -194,21 +206,21 @@ class Orders extends Component {
         params: {
           ...params,
           user: authInfo._id,
-          confirmed: "",
-          status: "",
-          active: -1
+          confirmed: '',
+          status: '',
+          active: -1,
         },
       });
-      var params = {
+      var params1 = {
         ...filter,
         ...filters,
         user: authInfo._id,
       };
-      onGetList(params);
+      onGetList(params1);
     }
   };
 
-  componentWillMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     const token = await AsyncStorage.getItem('AUTH_USER').then(data => {});
     const {onGetProfile} = this.props;
     onGetProfile(null, token);
@@ -218,19 +230,19 @@ class Orders extends Component {
       const {onGetList} = this.props;
       const {filter} = this.state;
       const filters = '';
-      var params = {
+      var params1 = {
         ...filter,
         ...filters,
         user: authInfo._id,
       };
 
-      onGetList(params);
+      onGetList(params1);
     }
   };
 
   renderScene = ({route}) => {
     var authInfo = this.props.authInfo;
-    const params = this.state;
+    const {params} = this.state;
     if (authInfo) {
       var authInfoID = authInfo._id;
     }
@@ -270,11 +282,19 @@ class Orders extends Component {
         );
       case 'five':
         return (
-          <FiveRoute orderList={this.props.orderList} authInfoID={authInfoID} params={params}/>
+          <FiveRoute
+            orderList={this.props.orderList}
+            authInfoID={authInfoID}
+            params={params}
+          />
         );
       case 'six':
         return (
-          <SixRoute orderList={this.props.orderList} authInfoID={authInfoID} params={params}/>
+          <SixRoute
+            orderList={this.props.orderList}
+            authInfoID={authInfoID}
+            params={params}
+          />
         );
       default:
         return null;
@@ -315,8 +335,8 @@ const mapDispatchToProps = dispatch => {
     onGetDetail: id => {
       dispatch(OrdersActions.onGetDetail(id));
     },
-    onUpdate: (id, params) => {
-      dispatch(OrdersActions.onUpdate(id, params));
+    onUpdate: (id, data, params) => {
+      dispatch(OrdersActions.onUpdate(id, data, params));
     },
     onPurchaseAgain: order_list => {
       dispatch(ProductsActions.onPurchaseAgain(order_list));

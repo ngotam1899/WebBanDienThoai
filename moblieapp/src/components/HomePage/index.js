@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
 import {TabView, TabBar} from 'react-native-tab-view';
-import {
-  View,
-  TextInput,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import {View, TextInput, Dimensions, TouchableOpacity} from 'react-native';
 
 import styles from './style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -19,10 +14,8 @@ import Header from '../HeaderComponent';
 import HomeContainer from './HomeContainer';
 import ProductPage from './ProductPage';
 import AccessoriesPage from '../AccessoriesPage';
-const HOST = 'http://192.168.1.5:5000';
-
+import PromotionPage from '../PromotionPage';
 const {width} = Dimensions.get('window');
-
 
 class FirstRoute extends Component {
   render() {
@@ -33,10 +26,7 @@ class FirstRoute extends Component {
 class SecondRoute extends Component {
   render() {
     const {navigation} = this.props;
-    return (
-      <AccessoriesPage
-        navigation={navigation}/>
-    );
+    return <AccessoriesPage navigation={navigation} />;
   }
 }
 class ThirdRoute extends Component {
@@ -71,7 +61,11 @@ class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      routes: [{key: 'HomePage', title: 'Trang Chủ'}, {key: 'Accessories', title: 'Phụ Kiện'}],
+      routes: [
+        {key: 'HomePage', title: 'Trang Chủ'},
+        {key: 'Promotion', title: 'Khuyến mãi'},
+        {key: 'Accessories', title: 'Phụ Kiện'},
+      ],
       index: 0,
       filter: {
         limit: 100,
@@ -94,7 +88,7 @@ class HomePage extends Component {
     const {onGetList, onGetListBrand, onAddParams} = this.props;
     var filters = '';
     const {filter} = this.state;
-    if (val === 1) {
+    if (val === 2) {
       filters = {
         category: '608c195b99e77e244c7db4b5',
       };
@@ -108,7 +102,7 @@ class HomePage extends Component {
       onGetList(params);
       onGetListBrand(filters);
       onAddParams(params);
-    } else if (val === 2) {
+    } else if (val === 3) {
       filters = {
         category: '608c197a99e77e244c7db4b6',
       };
@@ -122,8 +116,7 @@ class HomePage extends Component {
       onGetList(params);
       onGetListBrand(filters);
       onAddParams(params);
-    }
-    else if (val === 3) {
+    } else if (val === 4) {
       filters = {
         category: '60cf08806a958c26284fa8ad',
       };
@@ -152,6 +145,8 @@ class HomePage extends Component {
             category={this.state.category}
           />
         );
+      case 'Promotion':
+        return <PromotionPage></PromotionPage>;
       case 'Phone':
         return (
           <ThirdRoute
@@ -196,7 +191,7 @@ class HomePage extends Component {
   }
   componentDidMount = async () => {
     const {onGetListCategory} = this.props;
-    onGetListCategory({ accessories: -1 });
+    onGetListCategory({accessories: -1});
   };
 
   renderTabBar = props => (
@@ -252,7 +247,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onGetListCategory: (params) => {
+    onGetListCategory: params => {
       dispatch(CategoryActions.onGetList(params));
     },
     onGetList: params => {

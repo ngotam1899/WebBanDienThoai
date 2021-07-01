@@ -56,8 +56,8 @@ class OrderItem extends Component {
     this.props.onShowModal(val);
   };
   onDeleteOrder = id => {
-    const {onUpdateOrder} = this.props;
-    onUpdateOrder(id, {active: false});
+    const {onUpdateOrder, params} = this.props;
+    onUpdateOrder(id, {active: false}, params);
   };
 
   setStatus = (confirmed, status, active) => {
@@ -189,7 +189,6 @@ class PageView extends Component {
       onUpdateOrder,
       params,
     } = this.props;
-
     return (
       <View style={styles.container}>
         <View style={styles.inputContainer}>
@@ -207,7 +206,7 @@ class PageView extends Component {
           </TouchableOpacity>
         </View>
         {orderList && orderList.length != 0 ? (
-          <>
+          <View style={{justifyContent: 'center', paddingBottom: 70}}>
             <Modal visible={this.state.showModal}>
               <View style={styles.containerModal}>
                 <View style={styles.backgroundModal}>
@@ -241,11 +240,12 @@ class PageView extends Component {
                     index={index}
                     key={index}
                     onUpdateOrder={onUpdateOrder}
+                    params={params}
                     onAddProductToCart={onAddProductToCart}
                     onShowModal={this.onShowModal}></OrderItem>
                 );
               }}></FlatList>
-          </>
+          </View>
         ) : (
           <Text style={styles.title}>Không có đơn hàng tại trạng thái này</Text>
         )}
@@ -270,8 +270,8 @@ const mapDispatchToProps = dispatch => {
     onGetDetail: id => {
       dispatch(OrdersActions.onGetDetail(id));
     },
-    onUpdateOrder: (id, params) => {
-      dispatch(OrdersActions.onUpdate(id, params));
+    onUpdateOrder: (id, data, params) => {
+      dispatch(OrdersActions.onUpdate(id, data, params));
     },
     onPurchaseAgain: order_list => {
       dispatch(ProductsActions.onPurchaseAgain(order_list));
@@ -326,11 +326,19 @@ const styles = StyleSheet.create({
     flex: 8,
   },
   cartOrder: {
-    borderWidth: 2,
-    borderColor: '#aaa',
+    marginLeft: 3,
+    width: width - 26,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 5,
     borderRadius: 5,
-    width: width - 20,
-    marginTop: 20,
+    marginBottom: 25,
   },
   topCart: {
     backgroundColor: '#1e88e5',
@@ -353,9 +361,16 @@ const styles = StyleSheet.create({
   imgProduct: {
     width: 60,
     height: 75,
+    flex: 0.2,
   },
   infoProduct: {
     paddingHorizontal: 18,
+    flex: 0.4,
+  },
+  totalPriceProduct: {
+    fontWeight: 'bold',
+    flex: 0.4,
+    textAlign: 'right',
   },
   nameProduct: {
     fontSize: 14,
@@ -368,9 +383,7 @@ const styles = StyleSheet.create({
   quantityProduct: {
     marginBottom: 2,
   },
-  totalPriceProduct: {
-    fontWeight: 'bold',
-  },
+
   bottomCart: {
     flexDirection: 'row',
     justifyContent: 'space-between',

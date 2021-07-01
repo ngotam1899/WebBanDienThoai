@@ -1,12 +1,20 @@
-import { takeEvery, fork, all, call, put } from "redux-saga/effects";
-import { get } from "lodash";
-import InstallmentActions, { InstallmentActionTypes } from "../actions/installment";
-import { getAllInstallments, getDetailInstallment, addInstallment, updateInstallment, deleteInstallment } from "../apis/installment";
+import {takeEvery, fork, all, call, put} from 'redux-saga/effects';
+import {get} from 'lodash';
+import InstallmentActions, {
+  InstallmentActionTypes,
+} from '../actions/installment';
+import {
+  getAllInstallments,
+  getDetailInstallment,
+  addInstallment,
+  updateInstallment,
+  deleteInstallment,
+} from '../apis/installment';
 
-function* handleGetList({ payload }) {
+function* handleGetList({payload}) {
   try {
     const result = yield call(getAllInstallments, payload);
-    const data = get(result, "data");
+    const data = get(result, 'data');
     if (data.code !== 200) throw data;
     yield put(InstallmentActions.onGetListSuccess(data.installments));
   } catch (error) {
@@ -14,10 +22,10 @@ function* handleGetList({ payload }) {
   }
 }
 
-function* handleGetDetail({ filters, id }) {
+function* handleGetDetail({filters, id}) {
   try {
     const result = yield call(getDetailInstallment, id);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(InstallmentActions.onGetDetailSuccess(data.installment));
   } catch (error) {
@@ -29,10 +37,10 @@ function* handleGetDetail({ filters, id }) {
  *
  * create
  */
-function* handleCreate({ payload }) {
+function* handleCreate({payload}) {
   try {
     const result = yield call(addInstallment, payload.params);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 201) throw data;
     yield put(InstallmentActions.onCreateSuccess(data.installment));
     yield put(InstallmentActions.onGetList());
@@ -45,15 +53,16 @@ function* handleCreate({ payload }) {
  *
  * update
  */
-function* handleUpdate({ payload }) {
+function* handleUpdate({payload}) {
   try {
-    console.log(payload)
-    const result = yield call(updateInstallment, payload.params, payload.id);
-    const data = get(result, "data", {});
+    console.log(payload);
+    const result = yield call(updateInstallment, payload.data, payload.id);
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
-    const detailResult = yield call(getDetailInstallment, payload.id);
-    yield put(InstallmentActions.onUpdateSuccess(get(detailResult, "data")));
-    yield put(InstallmentActions.onGetList());
+    yield put(InstallmentActions.onUpdateSuccess(get('data')));
+    yield put(InstallmentActions.onGetList(payload.params));
+    if (payload.data.money)
+      yield put(InstallmentActions.onGetDetail(payload.id));
   } catch (error) {
     yield put(InstallmentActions.onUpdateError(error));
   }
@@ -63,10 +72,10 @@ function* handleUpdate({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({id}) {
   try {
     const result = yield call(deleteInstallment, id);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(InstallmentActions.onDeleteSuccess(data));
     yield put(InstallmentActions.onGetList());

@@ -12,9 +12,10 @@ import products from './products';
 import review from './review';
 import user from './user';
 import installment from './installment';
-
+import ad from './ad';
 export default function* rootSaga(getState) {
   yield all([
+    ad(),
     address(),
     auth(),
     brands(),

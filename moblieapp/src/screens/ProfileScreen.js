@@ -34,9 +34,11 @@ const ProfileItem = ({icon, name}) => (
 class ProfileScreen extends Component {
   componentDidMount = async () => {
     const {onGetProfile} = this.props;
-    await AsyncStorage.getItem('AUTH_USER').then(data => {onGetProfile(null, data);});
+    await AsyncStorage.getItem('AUTH_USER').then(data => {
+      onGetProfile(null, data);
+    });
   };
-  
+
   setLogout = () => {
     const {onLogout, navigation} = this.props;
     localStorage.removeItem('AUTH_USER');
@@ -91,8 +93,21 @@ class ProfileScreen extends Component {
             </>
           )}
           <View style={styles.divider} />
-          <TouchableOpacity onPress={userInfo?() => navigation.navigate('Orders'):() => navigation.navigate('SignIn')}>
+          <TouchableOpacity
+            onPress={
+              userInfo
+                ? () => navigation.navigate('Orders')
+                : () => navigation.navigate('SignIn')
+            }>
             <ProfileItem icon="format-list-bulleted" name="Quản lý đơn hàng" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={
+              userInfo
+                ? () => navigation.navigate('UserInstallment')
+                : () => navigation.navigate('SignIn')
+            }>
+            <ProfileItem icon="file" name="Phiếu trả góp" />
           </TouchableOpacity>
           <ProfileItem icon="headphones" name="Hỗ trợ" />
         </View>

@@ -14,6 +14,10 @@ import {Picker} from '@react-native-community/picker';
 import CheckBox from '@react-native-community/checkbox';
 import {Table, Row, Rows} from 'react-native-table-component';
 import {WebView} from 'react-native-webview';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {AsyncStorage} from 'react-native';
+import Modal from 'react-native-modal';
 
 import UsersActions from '../../redux/actions/user';
 import AddressActions from '../../redux/actions/address';
@@ -30,11 +34,6 @@ import {
 } from '../../constants';
 
 import styles from './style';
-
-import {connect} from 'react-redux';
-import {compose} from 'redux';
-import {AsyncStorage} from 'react-native';
-import Modal from 'react-native-modal';
 
 class CheckoutPage extends Component {
   constructor(props) {
@@ -211,7 +210,6 @@ class CheckoutPage extends Component {
         paid: true,
       };
     }
-    console.log('data', data);
     onCreateAnOrder(data);
   }
   placeOrder() {

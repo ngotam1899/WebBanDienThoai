@@ -1,25 +1,39 @@
-import { takeEvery, fork, all, call, put } from "redux-saga/effects";
-import { get } from "lodash";
-import NotificationActions, { NotificationActionTypes } from "../actions/notification";
-import { getAllNotifications, addNotification, updateNotification, deleteNotification, updateAllNotifications, deleteAllNotifications } from "../apis/notification";
+import {takeEvery, fork, all, call, put} from 'redux-saga/effects';
+import {get} from 'lodash';
+import NotificationActions, {
+  NotificationActionTypes,
+} from '../actions/notification';
+import {
+  getAllNotifications,
+  getNewestNotifications,
+  addNotification,
+  updateNotification,
+  deleteNotification,
+  updateAllNotifications,
+  deleteAllNotifications,
+} from '../apis/notification';
 
-function* handleGetNewest({ payload }) {
+function* handleGetNewest({payload}) {
   try {
-    const result = yield call(getAllNotifications, payload);
-    const data = get(result, "data");
+    const result = yield call(getNewestNotifications, payload);
+    const data = get(result, 'data');
     if (data.code !== 200) throw data;
-    yield put(NotificationActions.onGetNewestSuccess(data.notifications, data.total));
+    yield put(
+      NotificationActions.onGetNewestSuccess(data.notifications, data.total),
+    );
   } catch (error) {
     yield put(NotificationActions.onGetNewestError(error));
   }
 }
 
-function* handleGetList({ payload }) {
+function* handleGetList({payload}) {
   try {
     const result = yield call(getAllNotifications, payload);
-    const data = get(result, "data");
+    const data = get(result, 'data');
     if (data.code !== 200) throw data;
-    yield put(NotificationActions.onGetListSuccess(data.notifications, data.total));
+    yield put(
+      NotificationActions.onGetListSuccess(data.notifications, data.total),
+    );
   } catch (error) {
     yield put(NotificationActions.onGetListError(error));
   }
@@ -29,11 +43,11 @@ function* handleGetList({ payload }) {
  *
  * create
  */
-function* handleCreate({ payload }) {
+function* handleCreate({payload}) {
   try {
-    if(payload){
+    if (payload) {
       const result = yield call(addNotification, payload);
-      const data = get(result, "data", {});
+      const data = get(result, 'data', {});
       if (data.code !== 201) throw data;
       yield put(NotificationActions.onCreateSuccess(data.notification));
     }
@@ -46,10 +60,10 @@ function* handleCreate({ payload }) {
  *
  * update
  */
-function* handleUpdate({ payload }) {
+function* handleUpdate({payload}) {
   try {
     const result = yield call(updateNotification, payload.id, payload.data);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onUpdateSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
@@ -59,10 +73,10 @@ function* handleUpdate({ payload }) {
   }
 }
 
-function* handleUpdateAll({ payload }) {
+function* handleUpdateAll({payload}) {
   try {
     const result = yield call(updateAllNotifications, payload.data);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onUpdateAllSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
@@ -76,10 +90,10 @@ function* handleUpdateAll({ payload }) {
  *
  * delete
  */
-function* handleDelete({ payload }) {
+function* handleDelete({payload}) {
   try {
     const result = yield call(deleteNotification, payload.id);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onDeleteSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
@@ -89,13 +103,12 @@ function* handleDelete({ payload }) {
   }
 }
 
-function* handleDeleteAll({ payload }) {
+function* handleDeleteAll({payload}) {
   try {
     const result = yield call(deleteAllNotifications, payload.id);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onDeleteAllSuccess(data));
-    console.log('payload: ',payload.params)
     yield put(NotificationActions.onGetList(payload.params));
     yield put(NotificationActions.onGetNewest(payload.params));
   } catch (error) {

@@ -1,112 +1,110 @@
 export const OrdersActionsTypes = {
-  CREATE: "CREATE",
-  CREATE_SUCCESS: "CREATE_SUCCESS",
-  CREATE_ERROR: "CREATE_ERROR",
+  CREATE: 'CREATE',
+  CREATE_SUCCESS: 'CREATE_SUCCESS',
+  CREATE_ERROR: 'CREATE_ERROR',
 
-  UPDATE: "UPDATE",
-  UPDATE_SUCCESS: "UPDATE_SUCCESS",
-  UPDATE_ERROR: "UPDATE_ERROR",
+  UPDATE: 'UPDATE',
+  UPDATE_SUCCESS: 'UPDATE_SUCCESS',
+  UPDATE_ERROR: 'UPDATE_ERROR',
 
-  SEND_CONFIRM_EMAIL: "SEND_CONFIRM_EMAIL",
-  SEND_CONFIRM_EMAIL_SUCCESS: "SEND_CONFIRM_EMAIL_SUCCESS",
-  SEND_CONFIRM_EMAIL_ERROR: "SEND_CONFIRM_EMAIL_ERROR",
+  SEND_CONFIRM_EMAIL: 'SEND_CONFIRM_EMAIL',
+  SEND_CONFIRM_EMAIL_SUCCESS: 'SEND_CONFIRM_EMAIL_SUCCESS',
+  SEND_CONFIRM_EMAIL_ERROR: 'SEND_CONFIRM_EMAIL_ERROR',
 
-  CONFIRM_ORDER: "CONFIRM_ORDER",
-  CONFIRM_ORDER_SUCCESS: "CONFIRM_ORDER_SUCCESS",
-  CONFIRM_ORDER_ERROR: "CONFIRM_ORDER_ERROR",
+  CONFIRM_ORDER: 'CONFIRM_ORDER',
+  CONFIRM_ORDER_SUCCESS: 'CONFIRM_ORDER_SUCCESS',
+  CONFIRM_ORDER_ERROR: 'CONFIRM_ORDER_ERROR',
 
-  GET_LIST: "GET_LIST",
-  GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
-  GET_LIST_ERROR: "GET_LIST_ERROR",
+  GET_LIST: 'GET_LIST',
+  GET_LIST_SUCCESS: 'GET_LIST_SUCCESS',
+  GET_LIST_ERROR: 'GET_LIST_ERROR',
 
-  GET_DETAIL: "GET_DETAIL",
-  GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
-  GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
+  GET_DETAIL: 'GET_DETAIL',
+  GET_DETAIL_SUCCESS: 'GET_DETAIL_SUCCESS',
+  GET_DETAIL_ERROR: 'GET_DETAIL_ERROR',
 };
 
-Object.keys(OrdersActionsTypes).forEach((key) => {
-  OrdersActionsTypes[
-    key
-  ] = `ORDER_${OrdersActionsTypes[key]}`;
+Object.keys(OrdersActionsTypes).forEach(key => {
+  OrdersActionsTypes[key] = `ORDER_${OrdersActionsTypes[key]}`;
 });
 
-const onGetDetail = (id) => ({
+const onGetDetail = id => ({
   type: OrdersActionsTypes.GET_DETAIL,
   id,
 });
 
-const onGetDetailSuccess = (detail) => ({
+const onGetDetailSuccess = detail => ({
   type: OrdersActionsTypes.GET_DETAIL_SUCCESS,
   payload: detail,
 });
 
-const onGetDetailError = (error) => ({
+const onGetDetailError = error => ({
   type: OrdersActionsTypes.GET_DETAIL_ERROR,
   payload: error,
 });
 
-const onCreate = (payload) => ({
-  type: OrdersActionsTypes.CREATE, 
-  payload
+const onCreate = payload => ({
+  type: OrdersActionsTypes.CREATE,
+  payload,
 });
-const onCreateSuccess = (data) => ({
+const onCreateSuccess = data => ({
   type: OrdersActionsTypes.CREATE_SUCCESS,
-  payload: data
+  payload: data,
 });
-const onCreateError = (error) => ({
+const onCreateError = error => ({
   type: OrdersActionsTypes.CREATE_ERROR,
-  payload: error
+  payload: error,
 });
-const onSendConfirmEmail = (payload) => ({
-  type: OrdersActionsTypes.SEND_CONFIRM_EMAIL, 
-  payload
+const onSendConfirmEmail = payload => ({
+  type: OrdersActionsTypes.SEND_CONFIRM_EMAIL,
+  payload,
 });
-const onSendConfirmEmailSuccess = (data) => ({
+const onSendConfirmEmailSuccess = data => ({
   type: OrdersActionsTypes.SEND_CONFIRM_EMAIL_SUCCESS,
-  payload: data
+  payload: data,
 });
-const onSendConfirmEmailError = (error) => ({
+const onSendConfirmEmailError = error => ({
   type: OrdersActionsTypes.SEND_CONFIRM_EMAIL_ERROR,
-  payload: error
+  payload: error,
 });
 
-const onConfirmOrder = (token) => ({
+const onConfirmOrder = token => ({
   type: OrdersActionsTypes.CONFIRM_ORDER,
-  payload: token
+  payload: token,
 });
-const onConfirmOrderSuccess = (data) => ({
+const onConfirmOrderSuccess = data => ({
   type: OrdersActionsTypes.CONFIRM_ORDER_SUCCESS,
-  payload: data
+  payload: data,
 });
-const onConfirmOrderError = (error) => ({
+const onConfirmOrderError = error => ({
   type: OrdersActionsTypes.CONFIRM_ORDER_ERROR,
-  payload: error
+  payload: error,
 });
 
-const onGetList = (payload) => ({
+const onGetList = payload => ({
   type: OrdersActionsTypes.GET_LIST,
-  payload
+  payload,
 });
-const onGetListSuccess = (data) => ({
+const onGetListSuccess = data => ({
   type: OrdersActionsTypes.GET_LIST_SUCCESS,
-  payload: data
+  payload: data,
 });
-const onGetListError = (error) => ({
+const onGetListError = error => ({
   type: OrdersActionsTypes.GET_LIST_ERROR,
-  payload: error
+  payload: error,
 });
 
-const onUpdate = (id, params) => ({
+const onUpdate = (id, data, params) => ({
   type: OrdersActionsTypes.UPDATE,
-  payload: { id, params },
+  payload: {id, data, params},
 });
 
-const onUpdateSuccess = (detail) => ({
+const onUpdateSuccess = detail => ({
   type: OrdersActionsTypes.UPDATE_SUCCESS,
   payload: detail,
 });
 
-const onUpdateError = (error) => ({
+const onUpdateError = error => ({
   type: OrdersActionsTypes.UPDATE_ERROR,
   payload: error,
 });
@@ -131,7 +129,7 @@ const OrdersActions = {
   onGetDetail,
   onGetDetailSuccess,
   onGetDetailError,
-  
+
   onUpdate,
   onUpdateSuccess,
   onUpdateError,

@@ -43,6 +43,13 @@ export default function (state = init, action) {
         detail: null,
       };
     case InstallmentActionTypes.GET_DETAIL_SUCCESS:
+      if (action.payload === null) {
+        ToastAndroid.showWithGravity(
+          'Không tìm thấy phiếu trả góp này. Phiếu trả góp có thể đã bị hủy',
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+        );
+      }
       return {
         ...state,
         loadingDetail: false,
@@ -50,6 +57,11 @@ export default function (state = init, action) {
       };
 
     case InstallmentActionTypes.GET_DETAIL_ERROR:
+      ToastAndroid.showWithGravity(
+        'Không tìm thấy phiếu trả góp này. Phiếu trả góp có thể đã bị hủy',
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+      );
       return {
         ...state,
         loadingDetail: false,

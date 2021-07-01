@@ -14,8 +14,9 @@ import products from './products';
 import review from './review';
 import user from './user';
 import installment from './installment';
-
+import ad from './ad';
 export default combineReducers({
+  ad,
   address,
   auth,
   brands,

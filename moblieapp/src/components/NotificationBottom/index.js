@@ -22,15 +22,17 @@ class NotificationBottom extends Component {
 
   componentDidMount = async () => {
     const {onGetProfile} = this.props;
-    await AsyncStorage.getItem('AUTH_USER').then(data => {onGetProfile(null, data);});
+    await AsyncStorage.getItem('AUTH_USER').then(data => {
+      onGetProfile(null, data);
+    });
   };
 
   componentDidUpdate(prevProps, prevState) {
     const {itemsCount, order, status} = this.state;
-    const {onGetAllNotifications, userInfo, totalNotification} = this.props;
+    const {onGetNewestNotifications, userInfo, totalNotification} = this.props;
     if (userInfo !== prevProps.userInfo && userInfo) {
       var user = userInfo._id;
-      onGetAllNotifications({user, limit: 5, page: 0, active: 1});
+      onGetNewestNotifications({user, limit: 5, page: 0});
     }
     if (totalNotification !== prevProps.totalNotification) {
       this.setState({itemsCount: totalNotification});
@@ -52,7 +54,7 @@ class NotificationBottom extends Component {
             ToastAndroid.SHORT,
             ToastAndroid.TOP,
           );
-          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0});
+          onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
           break;
         case 1:
           ToastAndroid.showWithGravity(
@@ -60,10 +62,10 @@ class NotificationBottom extends Component {
             ToastAndroid.SHORT,
             ToastAndroid.TOP,
           );
-          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0});
+          onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
           break;
         default:
-          onGetAllNotifications({user: userInfo._id, limit: 5, page: 0});
+          onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
       }
     }
   }
@@ -96,8 +98,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onGetAllNotifications: data => {
-      dispatch(NotificationActions.onGetNewest(data));
+    onGetNewestNotifications: params => {
+      dispatch(NotificationActions.onGetNewest(params));
+    },
+    onUpdateAllNotifications: data => {
+      dispatch(NotificationActions.onUpdateAll(data));
     },
     onGetProfile: (data, headers) => {
       dispatch(AuthorizationActions.onGetProfile(data, headers));

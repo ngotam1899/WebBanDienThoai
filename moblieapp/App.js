@@ -24,6 +24,7 @@ import RasaChat from './src/components/RasaChatPage/RasaChat';
 import AccessoriesPage from './src/components/AccessoriesPage';
 import AccProductPage from './src/components/AccProductPage';
 import InstallmentPage from './src/components/InstallmentPage';
+import UserInstallmentPage from './src/components/UserInstallmentPage';
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -157,6 +158,22 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
+          },
+        }}
+      />
+      <HomeStack.Screen
+        name="UserInstallment"
+        component={UserInstallmentPage}
+        options={{
+          headerShown: true,
+          title: 'TRANG QUẢN LÝ TRẢ GÓP',
+          headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 16,
+            marginLeft: 50,
           },
         }}
       />
