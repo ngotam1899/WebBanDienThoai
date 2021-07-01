@@ -22,7 +22,7 @@ ratings_utility_matrix = orders.pivot_table(values='rating', index='user', colum
 X = ratings_utility_matrix.T
 X1 = X
 
-SVD = TruncatedSVD(n_components=4)
+SVD = TruncatedSVD(n_components=3)
 decomposed_matrix = SVD.fit_transform(X)
 correlation_matrix = np.corrcoef(decomposed_matrix)
 i = sys.argv[1]

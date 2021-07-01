@@ -345,7 +345,15 @@ class DetailPage extends Component {
                               <ProductItem product={product} key={index} />
                             )
                         })
-                      : <Loader/>}
+                      : <div className="col-12 my-1">
+                          <div className="text-center my-5">
+                            <div className="h-120">
+                              <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/99e561e3944805a023e87a81d4869600.png" alt="404 not found"></img>
+                            </div>
+                            <h4>{t('common.login-continue')}</h4>
+                              <a className="btn btn-success" href="/user/dang-nhap">{t('header.login.button')}</a>
+                          </div>
+                        </div>}
                       </div>
                     </div>
                     <div className="tab-pane fade" id="like" role="tab" aria-labelledby="like-tab">

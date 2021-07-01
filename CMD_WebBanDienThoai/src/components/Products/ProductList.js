@@ -110,6 +110,26 @@ class ProductList extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  destroyFilter = () => {
+    const {location, history} = this.props;
+    const {pathname} = location;
+    var queryParams = {
+      active: 1,
+      keyword: "",
+      max_p: '',
+      min_p: '',
+      page: 0,
+      sort_n: '',
+      sort_p: ''
+    }
+    history.push(`${pathname}?${qs.stringify(queryParams)}`)
+    this.setState({
+      keyword: "",
+      min_p: "",
+      max_p: "",
+    })
+  }
+
   handleRedirect = (id, pathname) =>{
     const { history } = this.props;
     history.push(`${pathname}?product=${id}`);
@@ -121,9 +141,13 @@ class ProductList extends Component {
   }
 
   // Button search
-  searchKeyWorld = (e) => {
+  searchKeyWorld = () => {
     const {keyword} = this.state;
     this.handleUpdateFilter({ keyword, page: 0});
+  }
+
+  pressKeyWord = (event) => {
+    if(event.key === 'Enter') this.searchKeyWorld();
   }
 
   setLarge = (large) => {
@@ -182,7 +206,7 @@ class ProductList extends Component {
   render () {
     const { large, keyword, min_p, max_p, queryParams } = this.state;
     const { listProducts, listSpecification, productDetail, listCategories, listBrands, onClearDetail, total, location } = this.props;
-    const filter = getFilterParams(location.search);
+    var filter = getFilterParams(location.search);
     return (
       <>
         <CRow>
@@ -190,16 +214,15 @@ class ProductList extends Component {
             <CCard>
               <CCardHeader>
                 <h5 className="float-left my-2">Danh sách sản phẩm</h5>
-                <form>
-                  <div className="input-group mb-3">
-                    <input type="text" className="form-control" value={keyword} name="keyword" placeholder="Nhập tên sản phẩm" onChange={this.onChange}/>
-                    <div className="input-group-append">
-                      <button className="btn btn-primary" onClick={() => this.searchKeyWorld()} type="submit">Tìm kiếm</button>
-                    </div>
+                <div className="input-group mb-3">
+                  <input type="text" className="form-control" value={keyword} name="keyword" placeholder="Nhập tên sản phẩm"
+                  onChange={this.onChange} onKeyPress={this.pressKeyWord}/>
+                  <div className="input-group-append">
+                    <button className="btn btn-primary" onClick={() => this.searchKeyWorld()} type="submit">Tìm kiếm</button>
                   </div>
-                </form>
+                </div>
                 <div className="row">
-                  <div className="col-12 col-md-3">
+                  <div className="col-6 col-md-3">
                     <div className="card bg-danger">
                       <div className="p-2">
                         <b className="text-white">Sắp xếp theo tên</b>
@@ -211,7 +234,7 @@ class ProductList extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-3">
+                  <div className="col-6 col-md-3">
                     <div className="card bg-warning">
                       <div className="p-2">
                         <b className="text-white">Sắp xếp theo giá</b>
@@ -223,7 +246,7 @@ class ProductList extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-3">
+                  <div className="col-6 col-md-3">
                     <div className="card bg-success">
                       <div className="p-2">
                         <b className="text-white">Duyệt theo khoảng giá</b>
@@ -237,7 +260,7 @@ class ProductList extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="col-12 col-md-3">
+                  <div className="col-6 col-md-3">
                     <div className="card bg-primary">
                       <div className="p-2">
                         <b className="text-white">Duyệt trạng thái kích hoạt</b>
@@ -252,11 +275,17 @@ class ProductList extends Component {
                 </div>
                 <div className="row">
                   <div className="col">
-                  <p className="float-left" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>
-
+                    <p className="float-left py-1 font-italic">Có tất cả {total} kết quả tìm kiếm</p>
+                    <CButton
+                      className="ml-2 float-left"
+                      onClick={()=> this.destroyFilter()}
+                      color="info"
+                    > <i className="fa fa-eraser mr-1"></i>
+                      Xóa tất cả bộ lọc
+                    </CButton>
                     <CButton
                       onClick={() => this.setLarge(!large)}
-                      className="mb-1 float-right"
+                      className="float-right"
                       color="success"
                     > Thêm sản phẩm
                     </CButton>

@@ -123,6 +123,18 @@ class InstallmentList extends Component {
     this.handleUpdateFilter({ page: pageNumber-1 });
   }
 
+  destroyFilter = () => {
+    const {location, history} = this.props;
+    const {pathname} = location;
+    var queryParams = {
+      active: '',
+      page: 0,
+      period: '',
+      status: ''
+    }
+    history.push(`${pathname}?${qs.stringify(queryParams)}`)
+  }
+
   // Chuyển router (thêm vào params)
   handleUpdateFilter = (data) => {
     const {location, history} = this.props;
@@ -135,6 +147,13 @@ class InstallmentList extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  handleChangeFilter = (event) => {
+    var target=event.target;
+    var name=target.name;
+    var value=target.value;
+    this.handleUpdateFilter({ [name]:  value});
+  }
+
   render () {
     const { large } = this.state;
     const { listInstallment, installmentDetail, total, location } = this.props;
@@ -144,13 +163,54 @@ class InstallmentList extends Component {
           <CCol>
             <CCard>
               <CCardHeader>
-                <h5 className="float-left my-2">Danh sách trả góp</h5>
-                <CButton
-                  onClick={() => this.setLarge(!large)}
-                  className="mb-1 float-right"
-                  color="success"
-                > Tạo phiếu trả góp
-                </CButton>
+                <div className="row">
+                  <div className="col-6">
+                    <h5 className="my-2">Danh sách trả góp</h5>
+                    <p className="float-left my-2 mr-3 font-italic">Có tất cả {total} kết quả tìm kiếm</p>
+                    <CButton
+                      className="ml-2 float-left"
+                      onClick={()=> this.destroyFilter()}
+                      color="info"
+                    > <i className="fa fa-eraser mr-1"></i>
+                      Xóa tất cả bộ lọc
+                    </CButton>
+                    <CButton
+                      onClick={() => this.setLarge(!large)}
+                      className="float-right mb-1"
+                      color="success"
+                    > Tạo phiếu trả góp
+                    </CButton>
+
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <div className="card bg-danger">
+                      <div className="p-2">
+                        <b className="text-white">Tình trạng phiếu trả góp</b>
+                        <select className="form-control mt-2" value={filter.status} name="status" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="">Chọn tình trạng phiếu</option>
+                          <option value="-1">Chưa duyệt</option>
+                          <option value="0">Chưa hoàn tất</option>
+                          <option value="1">Đã hoàn tất</option>
+                          <option value="2">Qúa hạn</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-6 col-md-3">
+                    <div className="card bg-warning">
+                      <div className="p-2">
+                        <b className="text-white">Thời lượng trả góp</b>
+                        <select className="form-control mt-2" value={filter.period} name="period" onChange={this.handleChangeFilter}>
+                          <option key={-1} value="">Chọn thời lượng</option>
+                          <option value="3">3 tháng</option>
+                          <option value="6">6 tháng</option>
+                          <option value="9">9 tháng</option>
+                          <option value="12">12 tháng</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </CCardHeader>
 
               <CCardBody>

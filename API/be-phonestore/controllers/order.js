@@ -34,18 +34,21 @@ const getAllOrder = async (req, res, next) => {
 			condition.order_list = { $elemMatch: {name: { $regex: '.*' + keyword.trim() + '.*', $options: 'i' }} }
 			//elemMatch: duyệt vào mảng chứa object
 		}
-		if (req.query.paid != undefined && req.query.paid != '0') {
+		if (req.query.paid != undefined && req.query.paid != '') {
 			condition.paid = req.query.paid == '1' ? true : false;
 		}
-		if (req.query.confirmed != undefined && req.query.confirmed != '0') {
+		if (req.query.confirmed != undefined && req.query.confirmed != '') {
 			condition.confirmed = req.query.confirmed == '1' ? true : false;
 		}
-		if (req.query.active != undefined && req.query.active != '0') {
+		if (req.query.active != undefined && req.query.active != '') {
 			condition.active = req.query.active == '1' ? true : false;
 		}
-		if (req.query.status != undefined) {
+		if (req.query.status != undefined && req.query.status != '') {
 			condition.status = req.query.status;
 		}
+		if (req.query.payment_method != undefined && req.query.payment_method != '') {
+			condition.payment_method = req.query.payment_method;
+    }
 		if (req.query.user != undefined) {
 			condition.user = req.query.user;
     }

@@ -103,7 +103,8 @@ class ReviewList extends Component {
           <CCol>
             <CCard>
               <CCardHeader>
-                <h5 className="float-left my-2">Danh sách đánh giá</h5>
+                <h5 className="float-left my-0">Danh sách đánh giá</h5>
+                <p className="float-right my-0" style={{fontStyle: 'italic'}}>Có tất cả {total} kết quả tìm kiếm</p>
               </CCardHeader>
 
               <CCardBody>

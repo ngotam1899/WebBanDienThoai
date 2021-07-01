@@ -11,6 +11,7 @@
   "common.login-continue": "Đăng nhập để tiếp tục",
   "common.destroy.button": "Hủy",
   "common.toastify.not-login": "Bạn chưa đăng nhập",
+  "common.clear-filter.button": "Xóa tất cả bộ lọc",
 
   "accessory.page.title":"Trang phụ kiện",
   "accessory.category.title":"Danh mục phụ kiện",

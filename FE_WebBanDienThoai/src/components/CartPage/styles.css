@@ -2,6 +2,10 @@ img {
     max-width: 100%;
     height: auto;
 }
+.btn {
+    font-family: inherit;
+    font-weight: 600;
+}
 table.shop_table td.product-remove a {
     display: inline-block;
     padding: 0 5px 2px;

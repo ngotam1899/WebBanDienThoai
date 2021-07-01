@@ -6,11 +6,14 @@ const CronJob = require('cron').CronJob;
 const getAllInstallment = async (req, res, next) => {
 	try {
     let condition = {};
-    if (req.query.active != undefined && req.query.active != '0') {
+    if (req.query.active != undefined && req.query.active != '') {
 			condition.active = req.query.active == '1' ? true : false;
     }
     if (req.query.status != undefined && req.query.status != '') {
 			condition.status = req.query.status;
+    }
+    if (req.query.period != undefined && req.query.period != '') {
+			condition.period = req.query.period;
     }
     if (req.query.user != undefined && req.query.user != '') {
 			condition.user = req.query.user;
