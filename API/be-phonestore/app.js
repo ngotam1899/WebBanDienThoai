@@ -115,6 +115,14 @@ io.on('connection', (socket) => {
 			status, installment
 		});
 	})
+	socket.on('installmentMoney', ({ email, installment }) => {
+		var installments = [];
+    installments.push(installment);
+		io.sockets.emit("newInstallmentMoney", {
+			newInstallments: installments.length,
+			email
+		})
+	});
   socket.on('order', ({ email, order }) => {
 		var orders = [];
     orders.push(order);

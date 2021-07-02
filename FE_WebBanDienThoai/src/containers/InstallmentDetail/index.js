@@ -173,7 +173,7 @@ class InstallmentDetail extends Component {
                         : <p className="mb-0">{t('installment.error')}</p>}
                       </div>
                     </div>
-                    <div className="col-12 my-2">
+                    {installmentItem.debt && installmentItem.debt > 0 && <div className="col-12 my-2">
                       <div className="mb-2 border-bottom"></div>
                       <h4>{t('installment.payment.h4')}</h4>
                       <div className="row">
@@ -190,7 +190,7 @@ class InstallmentDetail extends Component {
                           }}>{paypal ? "Edit" : "Submit"}</button>
                         </div>
                       </div>
-                    </div>
+                    </div>}
                     {money !== 0 && paypal && <Paypal money={money} moneyUSD={parseFloat(tryConvert(money, "USD", false)).toFixed(2)} onUpdate={onUpdate} id={installmentItem._id} queryParams={queryParams}/>}
                   </div>
                 </div>
@@ -214,9 +214,9 @@ class InstallmentDetail extends Component {
                       </div>
                       <div className="form-floating">
                         <input type="text" className="form-control border-0" id="debt" name="debt" 
-                        defaultValue={currency==="VND" 
+                        defaultValue={installmentItem.debt ? (currency==="VND" 
                         ? numberWithCommas(installmentItem.debt) 
-                        : numberWithCommas(parseFloat(tryConvert(installmentItem.debt, currency, false)).toFixed(2))}/>
+                        : numberWithCommas(parseFloat(tryConvert(installmentItem.debt, currency, false)).toFixed(2))) : 0}/>
                         <label htmlFor="total_price">{t('installment.debt.1.label')} ({currency})</label>
                       </div>
                     </div>
@@ -226,9 +226,9 @@ class InstallmentDetail extends Component {
                       </div>
                       <div className="form-floating w-90">
                         <input type="text" className="form-control border-0" id="paid" name="paid" 
-                        defaultValue={currency==="VND" 
+                        defaultValue={installmentItem.paid ? (currency==="VND" 
                         ? numberWithCommas(installmentItem.paid) 
-                        : numberWithCommas(parseFloat(tryConvert(installmentItem.paid, currency, false)).toFixed(2))}/>
+                        : numberWithCommas(parseFloat(tryConvert(installmentItem.paid, currency, false)).toFixed(2))): 0}/>
                         <label htmlFor="total_price">{t('installment.paid.label')} ({currency})</label>
                       </div>
                     </div>

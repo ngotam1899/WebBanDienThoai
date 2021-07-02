@@ -26,6 +26,7 @@ class ProductList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      queryParams: {},
       keyword: '',
       large: false,
       filter: {
@@ -42,6 +43,7 @@ class ProductList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onClearState();
     onGetList(params);
   }
@@ -54,6 +56,7 @@ class ProductList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -118,8 +121,9 @@ class ProductList extends Component {
     });
   };
   onDelete = (_id)=>{
+    const {queryParams} = this.state;
     const {onDelete} = this.props;
-    onDelete(_id);
+    onDelete(_id, queryParams);
   }
 
   // phân trang
@@ -172,7 +176,7 @@ class ProductList extends Component {
   }
 
   render () {
-    const { large, keyword } = this.state;
+    const { large, keyword, queryParams } = this.state;
     const { listSpecification, specificationDetail, onClearDetail, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -240,8 +244,8 @@ class ProductList extends Component {
                   }}
                 />
                 {(specificationDetail && large) && <SpecificationDetail large={large} specification={specificationDetail} onClose={this.onClose}
-                onClearDetail={onClearDetail}/>}
-                {(!specificationDetail && large) && <SpecificationDetail large={large} onClose={this.onClose}
+                onClearDetail={onClearDetail} queryParams={queryParams}/>}
+                {(!specificationDetail && large) && <SpecificationDetail large={large} onClose={this.onClose} queryParams={queryParams}
                 onClearDetail={onClearDetail}/>}
               </CCardBody>
               <div className="row justify-content-center">
@@ -287,11 +291,8 @@ const mapDispatchToProps = (dispatch) => {
     onClearDetail: () =>{
       dispatch(SpecificationActions.onClearDetail())
     },
-    onUpdate: (id, params) =>{
-      dispatch(SpecificationActions.onUpdate({id, params}))
-    },
-    onDelete: (id) =>{
-      dispatch(SpecificationActions.onDelete({id}))
+    onDelete: (id, params) =>{
+      dispatch(SpecificationActions.onDelete(id, params))
     },
   }
 }

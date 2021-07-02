@@ -32,6 +32,7 @@ class OrderList extends Component {
     const {location} = props;
     const filter = getFilterParams(location.search);
     this.state = {
+      queryParams: {},
       large: false,
       phone: filter.phone ===null ? "" : filter.phone,
       filter: {
@@ -49,6 +50,7 @@ class OrderList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onClearState();
     onGetList(params);
   }
@@ -61,6 +63,7 @@ class OrderList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -97,7 +100,7 @@ class OrderList extends Component {
     const {pathname} = location;
     var queryParams = {
       active: '',
-      keyword: '',
+      phone: '',
       page: 0,
       confirmed: '',
       paid: '',
@@ -106,7 +109,7 @@ class OrderList extends Component {
     }
     history.push(`${pathname}?${qs.stringify(queryParams)}`)
     this.setState({
-      keyword: "",
+      phone: "",
     })
   }
 
@@ -182,7 +185,7 @@ class OrderList extends Component {
   }
 
   render () {
-    const {large, phone} = this.state;
+    const {large, phone, queryParams} = this.state;
     const {listOrder, orderDetail, total, location,} = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -329,8 +332,8 @@ class OrderList extends Component {
                       </td>)
                   }}
                 />
-                {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose}/>}
-                {(!orderDetail && large) && <OrderDetail large={large} onClose={this.onClose}/>}
+                {(orderDetail && large) && <OrderDetail large={large} order={orderDetail} onClose={this.onClose} queryParams={queryParams}/>}
+                {(!orderDetail && large) && <OrderDetail large={large} onClose={this.onClose} queryParams={queryParams}/>}
               </CCardBody>
               <div className="row justify-content-center">
               {total && <Pagination
@@ -375,8 +378,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetDetail: (id) => {
       dispatch(OrderActions.onGetDetail(id))
     },
-    onDelete: (id) =>{
-      dispatch(OrderActions.onDelete({id}))
+    onDelete: (id, params) =>{
+      dispatch(OrderActions.onDelete(id, params))
     },
   }
 }

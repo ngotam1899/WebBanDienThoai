@@ -40,9 +40,9 @@ const onGetListError = (error) => ({
 
 //----------------  Delete ----------------------
 
-const onDelete = ({ id }) => ({
+const onDelete = (id, params) => ({
   type: ReviewActionTypes.DELETE,
-  id,
+  id, params
 });
 
 const onDeleteSuccess = (detail) => ({

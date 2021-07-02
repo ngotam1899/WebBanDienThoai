@@ -205,3 +205,36 @@ class act_filter(Action):
         gc.collect() 
 
         return []
+
+class act_promotion(Action):
+    def name(self) -> Text:
+        return "act_promotion"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        print('[%s] <- %s' % (self.name(), tracker.latest_message['text']))
+
+        url = 'http://localhost:3000/ad?status=0&active=1&limit=3&page=0'
+        page = requests.get(url, verify=False)
+        json = page.json()
+
+        product_arr = []
+        for j in json['ads']:
+            product_arr.append({"_id": j['_id'], "name": j['name'], "content" : j['content'], "image": j['image']['public_url'], "link": j['link'],"startedAt": j['startedAt'],"endedAt": j['endedAt']})
+
+        if len(json['ads']) == 0 :
+            dispatcher.utter_message(text="Xin lỗi hiện tại không có khuyến mãi nào")
+        else:
+            dispatcher.utter_message(text="Hiện tại shop đang có những khuyễn mãi sau.")
+
+        for idx in range(len(product_arr)):
+            text = "** Chương trình: **" + product_arr[idx]["name"] + "\n" + "** Khoảng thời gian: **" + "Từ " + str(product_arr[idx]["startedAt"])[0:10] + " đến " + str(product_arr[idx]["endedAt"])[0:10] + "\n" + "** Link: **" + product_arr[idx]["link"] + "\n\n"
+            dispatcher.utter_message(text=text)
+            image = product_arr[idx]["image"] + "\n\n"
+            dispatcher.utter_message(image=image)
+
+        del product_arr, url, page, json
+        gc.collect() 
+
+        return []

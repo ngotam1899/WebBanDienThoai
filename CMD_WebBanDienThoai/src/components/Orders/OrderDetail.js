@@ -33,11 +33,11 @@ class OrderDetail extends Component {
     })
   }
 
-  onSubmit = (e) =>{
+  onSubmit = () =>{
     const {id, confirmed, status} = this.state;
-    const {onUpdate} = this.props;
+    const {onUpdate, queryParams} = this.props;
     var data={confirmed, status};
-    onUpdate(id, data);
+    onUpdate(id, data, queryParams);
   }
 
 	render() {
@@ -175,8 +175,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onUpdate: (id, params) =>{
-      dispatch(OrderActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(OrderActions.onUpdate(id, data, params))
     }
   }
 }

@@ -46,11 +46,11 @@ function* handleGetDetail({ filters, id }) {
 
 function* handleUpdate( {payload} ) {
   try {
-    var result = yield call(updateUser, payload.params, payload.id);
+    var result = yield call(updateUser, payload.data, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(UsersActions.onUpdateSuccess(data.user));
-    yield put(UsersActions.onGetList());
+    yield put(UsersActions.onGetList(payload.params));
   } catch (error) {
     yield put(UsersActions.onUpdateError(error));
   }
@@ -60,13 +60,13 @@ function* handleUpdate( {payload} ) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteUser, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(UsersActions.onDeleteSuccess(data));
-    yield put(UsersActions.onGetList());
+    yield put(UsersActions.onGetList(params));
   } catch (error) {
     yield put(UsersActions.onDeleteError(error));
   }

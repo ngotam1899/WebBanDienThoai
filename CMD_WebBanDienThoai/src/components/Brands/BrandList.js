@@ -26,6 +26,7 @@ class BrandList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      queryParams: {},
       keyword: '',
       large: false,
       filter: {
@@ -42,6 +43,7 @@ class BrandList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onClearState();
     onGetList(params);
   }
@@ -54,6 +56,7 @@ class BrandList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -86,8 +89,9 @@ class BrandList extends Component {
   };
 
   onDelete = (_id)=>{
+    const {queryParams} = this.state;
     const {onDelete} = this.props;
-    onDelete(_id);
+    onDelete(_id, queryParams);
   }
 
   onUpdate = (large, item) =>{
@@ -156,7 +160,7 @@ class BrandList extends Component {
   }
 
   render () {
-    const { large, keyword } = this.state;
+    const { large, keyword, queryParams } = this.state;
     const { listBrands, brandDetail, onClearDetail, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -232,10 +236,8 @@ class BrandList extends Component {
                       </td>)
                   }}
                 />
-                {(brandDetail && large) && <BrandDetail large={large} brand={brandDetail} onClose={this.onClose}
-                onClearDetail={onClearDetail}/>}
-                {(!brandDetail && large) && <BrandDetail large={large} onClose={this.onClose}
-                onClearDetail={onClearDetail}/>}
+                {(brandDetail && large) && <BrandDetail large={large} brand={brandDetail} onClose={this.onClose} onClearDetail={onClearDetail} queryParams={queryParams}/>}
+                {(!brandDetail && large) && <BrandDetail large={large} onClose={this.onClose} onClearDetail={onClearDetail} queryParams={queryParams}/>}
               </CCardBody>
               <div className="row justify-content-center">
               {total && <Pagination
@@ -280,8 +282,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetDetail: (id) => {
       dispatch(BrandActions.onGetDetail(id))
     },
-    onDelete: (id) =>{
-      dispatch(BrandActions.onDelete({id}))
+    onDelete: (id, params) =>{
+      dispatch(BrandActions.onDelete(id, params))
     },
   }
 }

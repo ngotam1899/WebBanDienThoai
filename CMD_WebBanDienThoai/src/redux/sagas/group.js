@@ -47,10 +47,11 @@ function* handleGetDetail({ id }) {
  */
 function* handleCreate({ payload }) {
   try {
-    const result = yield call(addGroup, payload.params);
+    const result = yield call(addGroup, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(GroupActions.onCreateSuccess(data.group));
+    yield put(GroupActionTypes.onGetList(payload.params))
   } catch (error) {
     yield put(GroupActions.onCreateError(error));
   }
@@ -62,13 +63,14 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateGroup, payload.params, payload.id);
+    const result = yield call(updateGroup, payload.data, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     const detailResult = yield call(getDetailGroup, payload.id);
     yield put(GroupActions.onUpdateSuccess(get(detailResult, "data")));
     let product = yield select(state => state.products.detail);
     if(product) yield put(ProductsActions.onGetDetail(product._id));
+    else yield put(GroupActionTypes.onGetList(payload.params))
   } catch (error) {
     yield put(GroupActions.onUpdateError(error));
   }
@@ -78,13 +80,13 @@ function* handleUpdate({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteGroup, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(GroupActions.onDeleteSuccess(data));
-    yield put(GroupActions.onGetList());
+    yield put(GroupActions.onGetList(params));
   } catch (error) {
     yield put(GroupActions.onDeleteError(error));
   }

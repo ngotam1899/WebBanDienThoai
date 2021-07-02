@@ -27,6 +27,7 @@ class ReviewList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      queryParams: {},
       filter: {
         limit: 10,
         page: 0,
@@ -42,6 +43,7 @@ class ReviewList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onClearState();
     onGetList(params);
   }
@@ -54,6 +56,7 @@ class ReviewList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -74,8 +77,9 @@ class ReviewList extends Component {
     });
   };
   onDelete = (_id)=>{
+    const {queryParams} = this.state;
     const {onDelete} = this.props;
-    onDelete(_id);
+    onDelete(_id, queryParams);
   }
 
   // phân trang
@@ -189,8 +193,8 @@ const mapDispatchToProps = (dispatch) => {
     onClearState: () =>{
       dispatch(ReviewActions.onClearState())
     },
-    onDelete: (id) =>{
-      dispatch(ReviewActions.onDelete({id}))
+    onDelete: (id, params) =>{
+      dispatch(ReviewActions.onDelete(id, params))
     },
   }
 }

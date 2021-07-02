@@ -26,6 +26,7 @@ class ColorList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      queryParams: {},
       large: false,
       filter: {
         limit: 10,
@@ -41,6 +42,7 @@ class ColorList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onClearState();
     onGetList(params);
   }
@@ -53,6 +55,7 @@ class ColorList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -85,8 +88,9 @@ class ColorList extends Component {
   }
 
   onDelete = (_id)=>{
+    const {queryParams} = this.state;
     const {onDelete} = this.props;
-    onDelete(_id);
+    onDelete(_id, queryParams);
   }
 
   onUpdate = (large, item) =>{
@@ -123,7 +127,7 @@ class ColorList extends Component {
   };
 
   render () {
-    const { large } = this.state;
+    const { large, queryParams } = this.state;
     const { listColor, colorDetail, onClearDetail, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -186,10 +190,8 @@ class ColorList extends Component {
                   </td>)
               }}
             />
-            {(colorDetail && large) && <ColorDetail large={large} color={colorDetail} onClose={this.onClose}
-            onClearDetail={onClearDetail}/>}
-            {(!colorDetail && large) && <ColorDetail large={large} onClose={this.onClose}
-            onClearDetail={onClearDetail}/>}
+            {(colorDetail && large) && <ColorDetail large={large} color={colorDetail} onClose={this.onClose} onClearDetail={onClearDetail} queryParams={queryParams}/>}
+            {(!colorDetail && large) && <ColorDetail large={large} onClose={this.onClose} onClearDetail={onClearDetail} queryParams={queryParams}/>}
           </CCardBody>
           <div className="row justify-content-center">
           {total && <Pagination

@@ -46,11 +46,11 @@ function* handleGetDetail({ filters, id }) {
  */
 function* handleCreate({ payload }) {
   try {
-    const result = yield call(addSpecification, payload.params);
+    const result = yield call(addSpecification, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(SpecificationActions.onCreateSuccess(data.specification));
-    yield put(SpecificationActions.onGetList());
+    yield put(SpecificationActions.onGetList(payload.params));
   } catch (error) {
     yield put(SpecificationActions.onCreateError(error));
   }
@@ -62,12 +62,12 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateSpecification, payload.params, payload.id);
+    const result = yield call(updateSpecification, payload.data, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     const detailResult = yield call(getDetailSpecification, payload.id);
     yield put(SpecificationActions.onUpdateSuccess(get(detailResult, "data")));
-    yield put(SpecificationActions.onGetList());
+    yield put(SpecificationActions.onGetList(payload.params));
   } catch (error) {
     yield put(SpecificationActions.onUpdateError(error));
   }
@@ -77,13 +77,13 @@ function* handleUpdate({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteSpecification, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(SpecificationActions.onDeleteSuccess(data));
-    yield put(SpecificationActions.onGetList());
+    yield put(SpecificationActions.onGetList(params));
   } catch (error) {
     yield put(SpecificationActions.onDeleteError(error));
   }

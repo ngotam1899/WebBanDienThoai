@@ -7,6 +7,7 @@ intents:
   - ask_category
   - ask_brand
   - ask_price
+  - ask_promotion
 
 entities:
  - product_name
@@ -39,3 +40,4 @@ actions:
   - act_brand
   - act_price
   - act_filter
+  - act_promotion

@@ -28,6 +28,7 @@ class InstallmentList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      queryParams: {},
       large: false,
       filter: {
         limit: 10,
@@ -44,6 +45,7 @@ class InstallmentList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onClearState();
     onGetList(params);
   }
@@ -56,6 +58,7 @@ class InstallmentList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -83,8 +86,9 @@ class InstallmentList extends Component {
   };
 
   onDelete = (_id)=>{
+    const {queryParams} = this.state;
     const {onDelete} = this.props;
-    onDelete(_id);
+    onDelete(_id, queryParams);
   }
 
   onUpdate = (large, item) =>{
@@ -155,7 +159,7 @@ class InstallmentList extends Component {
   }
 
   render () {
-    const { large } = this.state;
+    const { large, queryParams } = this.state;
     const { listInstallment, installmentDetail, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -282,8 +286,8 @@ class InstallmentList extends Component {
                       </td>)
                   }}
                 />
-                {(installmentDetail && large) && <InstallmentDetail large={large} installment={installmentDetail} onClose={this.onClose}/>}
-                {(!installmentDetail && large) && <InstallmentDetail large={large} onClose={this.onClose}/>}
+                {(installmentDetail && large) && <InstallmentDetail large={large} installment={installmentDetail} onClose={this.onClose} queryParams={queryParams}/>}
+                {(!installmentDetail && large) && <InstallmentDetail large={large} onClose={this.onClose} queryParams={queryParams}/>}
               </CCardBody>
               <div className="row justify-content-center">
               {total && <Pagination
@@ -328,8 +332,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetDetail: (id) => {
       dispatch(InstallmentActions.onGetDetail(id))
     },
-    onDelete: (id) =>{
-      dispatch(InstallmentActions.onDelete({id}))
+    onDelete: (id, params) =>{
+      dispatch(InstallmentActions.onDelete(id, params))
     },
   }
 }

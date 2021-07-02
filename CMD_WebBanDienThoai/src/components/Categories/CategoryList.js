@@ -26,6 +26,7 @@ class CategoryList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      queryParams: {},
       keyword: '',
       large: false,
       filter: {
@@ -42,6 +43,7 @@ class CategoryList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onClearState();
     onGetList(params);
   }
@@ -54,6 +56,7 @@ class CategoryList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -86,8 +89,9 @@ class CategoryList extends Component {
   };
 
   onDelete = (_id)=>{
+    const {queryParams} = this.state;
     const {onDelete} = this.props;
-    onDelete(_id);
+    onDelete(_id, queryParams);
   }
 
   onUpdate = (large, item) =>{
@@ -156,7 +160,7 @@ class CategoryList extends Component {
   }
 
   render () {
-    const { large, keyword } = this.state;
+    const { large, keyword, queryParams } = this.state;
     const { listCategories, categoryDetail, onClearDetail, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
@@ -236,10 +240,8 @@ class CategoryList extends Component {
                       </td>)
                   }}
                 />
-                {(categoryDetail && large) && <CategoryDetail large={large} category={categoryDetail} onClose={this.onClose}
-                onClearDetail={onClearDetail}/>}
-                {(!categoryDetail && large) && <CategoryDetail large={large} onClose={this.onClose}
-                onClearDetail={onClearDetail}/>}
+                {(categoryDetail && large) && <CategoryDetail large={large} category={categoryDetail} onClose={this.onClose} onClearDetail={onClearDetail} queryParams={queryParams}/>}
+                {(!categoryDetail && large) && <CategoryDetail large={large} onClose={this.onClose} onClearDetail={onClearDetail} queryParams={queryParams}/>}
               </CCardBody>
               <div className="row justify-content-center">
               {total > 10 && <Pagination
@@ -284,8 +286,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetDetail: (id) => {
       dispatch(CategoryActions.onGetDetail(id))
     },
-    onDelete: (id) =>{
-      dispatch(CategoryActions.onDelete({id}))
+    onDelete: (id, params) =>{
+      dispatch(CategoryActions.onDelete(id, params))
     },
   }
 }

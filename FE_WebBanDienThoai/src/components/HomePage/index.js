@@ -27,7 +27,7 @@ class HomePage extends Component {
   componentDidMount(){
     const {onGetBestSeller, onGetFavorite, onGetNewest, onGetListAd} = this.props;
     document.title = "[TellMe] Trang bán hàng"
-    onGetListAd();
+    onGetListAd({active: 1});
     onGetBestSeller();
     onGetFavorite();
     onGetNewest();
@@ -188,8 +188,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetNewest: () => {
       dispatch(ProductsActions.onGetNewest());
     },
-    onGetListAd: () => {
-      dispatch(AdActions.onGetList());
+    onGetListAd: (params) => {
+      dispatch(AdActions.onGetList(params));
     },
   }
 }

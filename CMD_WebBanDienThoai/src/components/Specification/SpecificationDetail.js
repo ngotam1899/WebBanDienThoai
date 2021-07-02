@@ -28,12 +28,12 @@ class SpecificationDetail extends Component {
 
   onSubmit = () =>{
     const {id, name, selections} = this.state;
-    const {onUpdate, onCreate} = this.props;
+    const {onUpdate, onCreate, queryParams} = this.props;
     if (id) {
-      onUpdate(id, {name, selections});
+      onUpdate(id, {name, selections}, queryParams);
     }
     else {
-      onCreate({name, selections});
+      onCreate({name, selections}, queryParams);
     }
   }
 
@@ -127,11 +127,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params) =>{
-      dispatch(SpecificationActions.onCreate({params}))
+    onCreate: (data, params) =>{
+      dispatch(SpecificationActions.onCreate(data, params))
     },
-    onUpdate: (id, params) =>{
-      dispatch(SpecificationActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(SpecificationActions.onUpdate(id, data, params))
     }
   }
 }

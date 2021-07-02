@@ -65,3 +65,12 @@
 - min [20000000](min) max [None](max) brand [608c1a4399e77e244c7db4c3](brand) category [608c197a99e77e244c7db4b6](category)
 - min [5000000](min) max [15000000](max) brand [60af612965d2c066f08c217b](brand) category [608c195b99e77e244c7db4b5](category)
 - min [10000000](min) max [30000000](max) brand [608c1a1c99e77e244c7db4bd](brand) category [608c197a99e77e244c7db4b6](category)
+
+## intent:ask_promotion
+- khuyễn mãi
+- đang có những khuyễn mãi nào?
+- sự kiện giảm giá
+- sale
+- khuyến mại
+- quảng cáo
+- mã khuyến mãi

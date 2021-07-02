@@ -67,3 +67,7 @@
   - act_greeting
 * bot_challenge
   - utter_iamabot
+
+## ask promotion
+* ask_promotion
+  - act_promotion

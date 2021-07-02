@@ -29,7 +29,7 @@ class BrandDetail extends Component {
 
   onSubmit = () =>{
     const {id, name} = this.state;
-    const {onUpdate, onCreate} = this.props;
+    const {onUpdate, onCreate, queryParams} = this.props;
     /* Xử lý ảnh */
     // e.preventDefault();
     const {selectedFile} = this.state;
@@ -38,11 +38,11 @@ class BrandDetail extends Component {
     formData.append("image",selectedFile);
     /* Xử lý ảnh */
     if (id) {
-      onUpdate(id, formData);
+      onUpdate(id, formData, queryParams);
     }
     else {
       // 4. Create data
-      onCreate(formData);
+      onCreate(formData, queryParams);
     }
   }
 
@@ -137,11 +137,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params) =>{
-      dispatch(BrandActions.onCreate({params}))
+    onCreate: (data, params) =>{
+      dispatch(BrandActions.onCreate(data, params))
     },
-    onUpdate: (id, params) =>{
-      dispatch(BrandActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(BrandActions.onUpdate(id, data, params))
     }
   }
 }

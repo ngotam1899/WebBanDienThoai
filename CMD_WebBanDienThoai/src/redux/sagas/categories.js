@@ -31,20 +31,20 @@ function* handleGetDetail({ filters, id }) {
 function* handleCreate({ payload }) {
   try {
     var result;
-    if(typeof payload.params.image !== "string"){
-      const image = yield call(addImage, payload.params.image);
+    if(typeof payload.data.image !== "string"){
+      const image = yield call(addImage, payload.data.image);
       result = yield call(addCategory,
-      { ...payload.params,
+      { ...payload.data,
         "image": image.data.images[0]._id
       });
     }
     else {
-      result = yield call(addCategory, payload.params);
+      result = yield call(addCategory, payload.data);
     }
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(CategoryActions.onCreateSuccess(data.category));
-    yield put(CategoryActions.onGetList());
+    yield put(CategoryActions.onGetList(payload.params));
   } catch (error) {
     yield put(CategoryActions.onCreateError(error));
   }
@@ -57,22 +57,21 @@ function* handleCreate({ payload }) {
 function* handleUpdate({ payload }) {
   try {
     var result;
-    if(typeof payload.params.image !== "string"){
-      const image = yield call(addImage, payload.params.image);
+    if(typeof payload.data.image !== "string"){
+      const image = yield call(addImage, payload.data.image);
       result = yield call(updateCategory,
-      { ...payload.params,
+      { ...payload.data,
         "image": image.data.images[0]._id
       }, payload.id);
     }
     else {
-      result = yield call(updateCategory, payload.params, payload.id);
+      result = yield call(updateCategory, payload.data, payload.id);
     }
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     const detailResult = yield call(getDetailCategory, payload.id);
     yield put(CategoryActions.onUpdateSuccess(detailResult.data.category));
-
-    yield put(CategoryActions.onGetList());
+    yield put(CategoryActions.onGetList(payload.params));
   } catch (error) {
     yield put(CategoryActions.onUpdateError(error));
   }
@@ -82,13 +81,13 @@ function* handleUpdate({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteCategory, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(CategoryActions.onDeleteSuccess(data));
-    yield put(CategoryActions.onGetList());
+    yield put(CategoryActions.onGetList(params));
   } catch (error) {
     yield put(CategoryActions.onDeleteError(error));
   }

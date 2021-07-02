@@ -21,20 +21,20 @@ class ColorDetail extends Component {
     var name=target.name;
     var value=target.value;
     this.setState({
-        [name]: value
+      [name]: value
     })
   }
 
   onSubmit = () =>{
     const {id, name_vn, name_en, code} = this.state;
-    const {onUpdate, onCreate} = this.props;
+    const {onUpdate, onCreate, queryParams} = this.props;
     var data = {name_vn, name_en, code}
     if (id) {
-      onUpdate(id, data);
+      onUpdate(id, data, queryParams);
     }
     else {
       // 4. Create data
-      onCreate(data);
+      onCreate(data, queryParams);
     }
   }
 
@@ -96,11 +96,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params) =>{
-      dispatch(ColorActions.onCreate({params}))
+    onCreate: (data, params) =>{
+      dispatch(ColorActions.onCreate(data, params))
     },
-    onUpdate: (id, params) =>{
-      dispatch(ColorActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(ColorActions.onUpdate(id, data, params))
     }
   }
 }

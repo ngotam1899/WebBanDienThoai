@@ -101,22 +101,22 @@ class CategoryDetail extends Component {
 
   onCallback = (id) => {
     const {name, image, pathseo, name_en, specifications, filter, price, accessories, description} = this.state;
-    const {onUpdate, onCreate} = this.props;
+    const {onUpdate, onCreate, queryParams} = this.props;
     /* eslint-disable */
     filter.map(item =>{
       item._id = item._id._id
     })
     /* eslint-disable */
     var data = {
-      name, image, pathseo, name_en, specifications, filter, price, accessories, 
+      name, image, pathseo, name_en, specifications, filter, price, accessories,
       description: JSON.stringify(convertToRaw(description.getCurrentContent()))
     }
     if (id) {
-      onUpdate(id, data);
+      onUpdate(id, data, queryParams);
     }
     else {
       // 4. Create data
-      onCreate(data);
+      onCreate(data, queryParams);
     }
   }
 
@@ -646,11 +646,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params) =>{
-      dispatch(CategoryActions.onCreate({params}))
+    onCreate: (data, params) =>{
+      dispatch(CategoryActions.onCreate(data, params))
     },
-    onUpdate: (id, params) =>{
-      dispatch(CategoryActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(CategoryActions.onUpdate(id, data, params))
     },
     onGetListSpecification : (params) => {
       dispatch(SpecificationActions.onGetList(params))

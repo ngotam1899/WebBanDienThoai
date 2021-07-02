@@ -1,5 +1,7 @@
 const Installment = require('../models/installment');
+const Notification = require('../models/notification');
 const Product = require('../models/Product');
+const User = require('../models/User');
 const Validator = require('../validators/validator');
 const CronJob = require('cron').CronJob;
 
@@ -98,9 +100,29 @@ const addInstallment = async (req, res, next) => {
           if(expire >= thisTime){
             await job.stop();
           }
-          
         },async () => {
-          // Kết thúc trả góp không làm gì cả
+          // Sau khi dừng Job (hết hạn)
+          const productInstallment = await Product.findById(installment.product._id)
+          const staffInstallment = await User.findById(installment.staff)
+          const userInstallment = await User.findById(installment.user)
+          // 1. Thông báo cho người dùng
+          await Notification.insert({
+            name: `Phiếu trả góp ${installment._id} đã quá hạn`,
+            link: installment._id,
+            user: installment.user,
+            image: productInstallment.bigimage,
+            type: 2,
+            content: `Hãy liên hệ với nhân viên phụ trách ${staffInstallment.firstname} ${staffInstallment.lastname} qua số điện thoại ${staffInstallment.phonenumber} hoặc email ${staffInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
+          })
+          // 2. Thông báo cho admin
+          await Notification.insert({
+            name: `Phiếu trả góp ${installment._id} đã quá hạn`,
+            link: installment._id,
+            user: null,
+            image: productInstallment.bigimage,
+            type: 2,
+            content: `Hãy liên hệ với khách hàng ${userInstallment.firstname} ${userInstallment.lastname} qua số điện thoại ${userInstallment.phonenumber} hoặc email ${userInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
+          })
         },
         true, /* Start the job right now */
         'Asia/Ho_Chi_Minh' /* Time zone of this job. */

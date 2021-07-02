@@ -71,7 +71,19 @@ function* handleUpdate({ payload }) {
     const detailResult = yield call(getDetailInstallment, payload.id);
     yield put(InstallmentActions.onUpdateSuccess(get(detailResult, "data")));
     yield put(InstallmentActions.onGetList());
-    if(payload.data.money) yield put(InstallmentActions.onGetDetail(payload.id));
+    const userRes = yield call(getUser, data.installment.user);
+    // Thanh toán thành công thì báo về cho admin
+    if(payload.data.money) {
+      socket.emit('installmentMoney', { email: userRes.data.user.email, installment: data.installment._id });
+      yield put(NotificationActions.onCreate({
+        type: 2,
+        user: null,
+        link: data.installment._id,
+        name : `Phiếu trả góp ${data.installment._id} vừa được thanh toán`,
+        image : detailResult.data.installment.product._id.bigimage._id,
+        content :  `${data.installment._id} đã được thanh toán tại cửa hàng với số tiền là ${payload.data.money} VND`
+      }))
+    }
   } catch (error) {
     yield put(InstallmentActions.onUpdateError(error));
   }

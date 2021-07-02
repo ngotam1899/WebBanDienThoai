@@ -25,6 +25,7 @@ class UserList extends Component {
     const filter = getFilterParams(location.search);
     super(props);
     this.state = {
+      queryParams: {},
       phone: filter.phone ===null ? "" : filter.phone,
       large: false,
       filter: {
@@ -41,6 +42,7 @@ class UserList extends Component {
       ...filter,
       ...filters
     };
+    this.setState({queryParams: params})
     onClearState();
     onGetList(params);
   }
@@ -53,6 +55,7 @@ class UserList extends Component {
         ...filter,
         ...filters
       };
+      this.setState({queryParams: params})
       this.props.onGetList(params);
     }
   }
@@ -129,12 +132,12 @@ class UserList extends Component {
     const {location, history} = this.props;
     const {pathname} = location;
     var queryParams = {
-      keyword: "",
+      phone: "",
       page: 0,
     }
     history.push(`${pathname}?${qs.stringify(queryParams)}`)
     this.setState({
-      keyword: "",
+      phone: "",
     })
   }
 
@@ -277,8 +280,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetList: (params) => {
       dispatch(UsersActions.onGetList(params))
     },
-    onUpdate: (id, params) => {
-      dispatch(UsersActions.onUpdate(id, params))
+    onUpdate: (id, data, params) => {
+      dispatch(UsersActions.onUpdate(id, data, params))
     },
     onClearState: () =>{
       dispatch(UsersActions.onClearState())

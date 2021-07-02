@@ -31,11 +31,11 @@ function* handleGetDetail({ filters, id }) {
  */
 function* handleCreate({ payload }) {
   try {
-    const result = yield call(addColor, payload.params);
+    const result = yield call(addColor, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(ColorActions.onCreateSuccess(data.color));
-    yield put(ColorActions.onGetList());
+    yield put(ColorActions.onGetList(payload.params));
   } catch (error) {
     yield put(ColorActions.onCreateError(error));
   }
@@ -47,12 +47,12 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateColor, payload.params, payload.id);
+    const result = yield call(updateColor, payload.data, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     const detailResult = yield call(getDetailColor, payload.id);
     yield put(ColorActions.onUpdateSuccess(get(detailResult, "data")));
-    yield put(ColorActions.onGetList());
+    yield put(ColorActions.onGetList(payload.params));
   } catch (error) {
     yield put(ColorActions.onUpdateError(error));
   }
@@ -62,13 +62,13 @@ function* handleUpdate({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteColor, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(ColorActions.onDeleteSuccess(data));
-    yield put(ColorActions.onGetList());
+    yield put(ColorActions.onGetList(params));
   } catch (error) {
     yield put(ColorActions.onDeleteError(error));
   }

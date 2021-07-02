@@ -31,11 +31,11 @@ function* handleGetDetail({ filters, id }) {
  */
 function* handleCreate({ payload }) {
   try {
-    const result = yield call(addBrand, payload.params);
+    const result = yield call(addBrand, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(BrandActions.onCreateSuccess(data.brand));
-    yield put(BrandActions.onGetList());
+    yield put(BrandActions.onGetList(payload.params));
   } catch (error) {
     yield put(BrandActions.onCreateError(error));
   }
@@ -47,12 +47,12 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateBrand, payload.params, payload.id);
+    const result = yield call(updateBrand, payload.data, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     var detailResult = yield call(getDetailBrand, payload.id);
     yield put(BrandActions.onUpdateSuccess(get(detailResult, "data.brand")));
-    yield put(BrandActions.onGetList());
+    yield put(BrandActions.onGetList(payload.params));
   } catch (error) {
     yield put(BrandActions.onUpdateError(error));
   }
@@ -62,13 +62,13 @@ function* handleUpdate({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteBrand, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(BrandActions.onDeleteSuccess(data));
-    yield put(BrandActions.onGetList());
+    yield put(BrandActions.onGetList(params));
   } catch (error) {
     yield put(BrandActions.onDeleteError(error));
   }

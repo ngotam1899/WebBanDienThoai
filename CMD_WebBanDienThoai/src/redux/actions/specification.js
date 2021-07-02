@@ -75,9 +75,9 @@ const onGetDetailError = (error) => ({
 
 //----------------  Create  ----------------------
 
-const onCreate = (params) => ({
+const onCreate = (data, params) => ({
   type: SpecificationActionTypes.CREATE,
-  payload: params,
+  payload: {data, params},
 });
 
 const onCreateSuccess = (detail) => ({
@@ -92,9 +92,9 @@ const onCreateError = (error) => ({
 
 //----------------  Delete ----------------------
 
-const onDelete = ({ id }) => ({
+const onDelete = (id, params) => ({
   type: SpecificationActionTypes.DELETE,
-  id,
+  id, params
 });
 
 const onDeleteSuccess = (detail) => ({
@@ -109,9 +109,9 @@ const onDeleteError = (error) => ({
 
 //-----------------  Update  ---------------------
 
-const onUpdate = ({ id, params }) => ({
+const onUpdate = (id, data, params) => ({
   type: SpecificationActionTypes.UPDATE,
-  payload: { id, params },
+  payload: { id, data, params },
 });
 
 const onUpdateSuccess = (detail) => ({

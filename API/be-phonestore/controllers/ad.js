@@ -7,6 +7,7 @@ const imageController = require('./image');
 
 const getAllAd = async (req, res, next) => {
 	try {
+    var condition = {};
     let limit = 10;
 		let page = 0;
 		if (req.query.limit != undefined && req.query.limit != '') {
@@ -21,8 +22,31 @@ const getAllAd = async (req, res, next) => {
 				page = number_page;
 			}
     }
-    const total = await Ad.countDocuments();
-    const ads = await Ad.find()
+    if (req.query.active != undefined && req.query.active != '0') {
+			condition.active = req.query.active=='1' ? true : false;
+		}
+    if (req.query.status != undefined && req.query.status != '') {
+      var today = new Date();
+			switch(req.query.status){
+        case '-1': // Chưa tới
+          condition.startedAt = { $gte: today }
+          condition.endedAt = { $gte: today }
+          break;
+        case '0':   // Đang diễn ra
+          condition.startedAt = { $lte: today }
+          condition.endedAt = { $gte: today }
+          break;
+        case '1':  // Đã qua
+          condition.startedAt = { $lte: today }
+          condition.endedAt = { $lte: today }
+          break;
+        default: 
+          condition.startedAt = { $lte: today }
+          condition.endedAt = { $gte: today }
+      }
+    }
+    const total = await Ad.countDocuments(condition);
+    const ads = await Ad.find(condition)
     .populate({path: 'image', select: 'public_url'})
     .limit(limit)
 		.skip(limit * page);
@@ -73,10 +97,11 @@ const updateAd = async (req, res, next) => {
   try {
     const { IDAd } = req.params;
     const {
-      name, content, link, startedAt, endedAt
+      name, content, link, startedAt, endedAt, active
     } = req.body;
     const ad = await Ad.findById(IDAd);
     if (name) ad.name = name;
+    if (active != undefined || active != '') ad.active = active;
     if (content) ad.content = content;
     if (link) ad.link = link;
     if (startedAt) ad.startedAt = startedAt;

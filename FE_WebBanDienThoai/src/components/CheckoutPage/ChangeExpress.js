@@ -34,8 +34,12 @@ class ChangePassword extends Component {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h3 className="modal-title">{t('checkout.modal.choose.express')}</h3>
-              <button type="button" className="close" data-bs-dismiss="modal">&times;</button>
+              <div className="text-center w-100">
+                <h3 className="modal-title m-0">{t('checkout.modal.choose.express')}</h3>
+              </div>
+              <div className="form-check form-switch">
+                <button type="button" className="btn-close rounded-circle bg-light p-2" data-bs-dismiss="modal"></button>
+              </div>
             </div>
             <div className="modal-body">
               <div className="form-check">

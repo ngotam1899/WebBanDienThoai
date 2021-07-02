@@ -31,7 +31,7 @@ class TheHeaderDropdownNotif extends Component {
       large: false,
       itemsCount : 0,
       email: "",
-      type: -1,  // type: 0 (order), type: 2 (installment)
+      type: -1,  // type: 0 (order), type: 2 (installment) type: 3 (money)
       queryParams: {},
     }
   }
@@ -54,9 +54,22 @@ class TheHeaderDropdownNotif extends Component {
     socket.on('newInstallment', res => {
       this.setState({itemsCount: itemsCount + res.newInstallments, email: res.email, type: 2});
     });
+    socket.on('newInstallmentMoney', res => {
+      this.setState({itemsCount: itemsCount + res.newInstallments, email: res.email, type: 3});
+    });
     if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification && type !== -1) {
-      if(type === 0) toastInfo(`${email} vừa xác thực đơn hàng`)
-      else toastInfo(`${email} vừa gửi yêu cầu trả góp`)
+      switch (type){
+        case 0:
+          toastInfo(`${email} vừa xác thực đơn hàng`)
+          break;
+        case 2:
+          toastInfo(`${email} vừa gửi yêu cầu trả góp`)
+          break;
+        case 3:
+          toastInfo(`${email} vừa thanh toán trả góp`)
+        default:
+          return null;
+      }
       admin = userInfo._id;
       this.setState({queryParams: {admin, limit: 5, page: 0}})
       onGetNewestNotifications({admin, limit: 5, page: 0})

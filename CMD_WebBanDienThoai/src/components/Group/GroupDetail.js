@@ -43,17 +43,17 @@ class GroupDetail extends Component {
 
   onSubmit = () =>{
     const {id, nameGroup, listProduct} = this.state;
-    const {onUpdate, onCreate} = this.props;
+    const {onUpdate, onCreate, queryParams} = this.props;
     var data = {
       name: nameGroup,
       products: listProduct
     }
     if (id) {
-      onUpdate(id, data);
+      onUpdate(id, data, queryParams);
     }
     else {
       // 4. Create data
-      onCreate(data);
+      onCreate(data, queryParams);
     }
   }
 
@@ -243,11 +243,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreate: (params) =>{
-      dispatch(GroupActions.onCreate({params}))
+    onCreate: (data, params) =>{
+      dispatch(GroupActions.onCreate(data, params))
     },
-    onUpdate: (id, params) =>{
-      dispatch(GroupActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(GroupActions.onUpdate(id, data, params))
     },
     onFilter : (keyword) =>{
       dispatch(ProductsActions.onFilter(keyword))

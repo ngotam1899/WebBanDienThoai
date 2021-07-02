@@ -30,11 +30,11 @@ function* handleGetDetail({ filters, id }) {
 function* handleCreate({ payload }) {
   try {
 
-    const result = yield call(addAd, payload.params);
+    const result = yield call(addAd, payload.data);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(AdActions.onCreateSuccess(data.ad));
-    yield put(AdActions.onGetList());
+    yield put(AdActions.onGetList(payload.params));
   } catch (error) {
     yield put(AdActions.onCreateError(error));
   }
@@ -46,13 +46,12 @@ function* handleCreate({ payload }) {
  */
 function* handleUpdate({ payload }) {
   try {
-    console.log(payload.params)
-    const result = yield call(updateAd, payload.params, payload.id);
+    const result = yield call(updateAd, payload.data, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     var detailResult = yield call(getAllAds, payload.id);
     yield put(AdActions.onUpdateSuccess(get(detailResult, "data.ad")));
-    yield put(AdActions.onGetList());
+    yield put(AdActions.onGetList(payload.params));
   } catch (error) {
     yield put(AdActions.onUpdateError(error));
   }
@@ -62,13 +61,13 @@ function* handleUpdate({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteAd, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(AdActions.onDeleteSuccess(data));
-    yield put(AdActions.onGetList());
+    yield put(AdActions.onGetList(params));
   } catch (error) {
     yield put(AdActions.onDeleteError(error));
   }

@@ -18,13 +18,13 @@ function* handleGetList({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteReview, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(ReviewActions.onDeleteSuccess(data));
-    yield put(ReviewActions.onGetList());
+    yield put(ReviewActions.onGetList(params));
   } catch (error) {
     yield put(ReviewActions.onDeleteError(error));
   }

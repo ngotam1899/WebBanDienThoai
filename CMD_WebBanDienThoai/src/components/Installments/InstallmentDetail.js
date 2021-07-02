@@ -95,7 +95,7 @@ class InstallmentDetail extends Component {
 
   onSubmit = () =>{
     const { id, startedAt, period, interest_rate, prepay, product, status, staff, user, money } = this.state;
-    const {onUpdate, onCreate} = this.props;
+    const {onUpdate, onCreate, queryParams} = this.props;
     var data = {
       startedAt,
       period,
@@ -112,11 +112,11 @@ class InstallmentDetail extends Component {
       money
     }
     if (id) {
-      onUpdate(id, data);
+      onUpdate(id, data, queryParams);
     }
     else {
       // 4. Create data
-      onCreate(data);
+      onCreate(data, queryParams);
     }
   }
 
@@ -379,11 +379,11 @@ const mapDispatchToProps = (dispatch) => {
     onFilterProduct : (keyword) =>{
       dispatch(ProductsActions.onFilter(keyword))
     },
-    onCreate: (params) =>{
-      dispatch(InstallmentActions.onCreate({params}))
+    onCreate: (data, params) =>{
+      dispatch(InstallmentActions.onCreate(data, params))
     },
-    onUpdate: (id, params) =>{
-      dispatch(InstallmentActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(InstallmentActions.onUpdate(id, data, params))
     }
   }
 }

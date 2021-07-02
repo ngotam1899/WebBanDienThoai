@@ -33,13 +33,13 @@ function* handleGetDetail({ filters, id }) {
 
 function* handleUpdate({ payload }) {
   try {
-    const result = yield call(updateOrder, payload.params, payload.id);
+    const result = yield call(updateOrder, payload.data, payload.id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(OrderActions.onUpdateSuccess(data.order));
-    yield put(OrderActions.onGetList());
+    yield put(OrderActions.onGetList(payload.params));
     /* Notification */
-    if(payload.params.status === "0"){
+    if(payload.data.status === "0"){
       socket.emit('orderChangeStatus', { status: 0, user: data.order.user.toString(), order: data.order._id });
       yield put(NotificationActions.onCreate({
         user: data.order.user,
@@ -50,7 +50,7 @@ function* handleUpdate({ payload }) {
         content :  `${data.order._id} vừa nhập kho vận chuyển`
       }))
     }
-    else if(payload.params.status === "1"){
+    else if(payload.data.status === "1"){
       socket.emit('orderChangeStatus', { status: 1, user: data.order.user.toString(), order: data.order._id });
       yield put(NotificationActions.onCreate({
         user: data.order.user,
@@ -72,13 +72,13 @@ function* handleUpdate({ payload }) {
  *
  * delete
  */
-function* handleDelete({ id }) {
+function* handleDelete({ id, params }) {
   try {
     const result = yield call(deleteOrder, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
     yield put(OrderActions.onDeleteSuccess(data));
-    yield put(OrderActions.onGetList());
+    yield put(OrderActions.onGetList(params));
   } catch (error) {
     yield put(OrderActions.onDeleteError(error));
   }

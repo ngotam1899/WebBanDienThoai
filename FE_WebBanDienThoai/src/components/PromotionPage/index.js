@@ -12,7 +12,7 @@ class PromotionPage extends Component {
 
   componentDidMount(){
     const { onGetList } = this.props;
-    onGetList();
+    onGetList({active: 1});
     /* FB comment plugin */
     window.fbAsyncInit = () => {
       /* eslint-disable */

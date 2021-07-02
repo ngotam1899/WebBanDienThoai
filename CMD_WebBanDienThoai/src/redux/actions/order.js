@@ -96,9 +96,9 @@ const onCreateError = (error) => ({
  *
  * update
  */
-const onUpdate = ({ id, params }) => ({
+const onUpdate = (id, data, params) => ({
   type: OrderActionTypes.UPDATE,
-  payload: { id, params },
+  payload: { id, data, params },
 });
 
 const onUpdateSuccess = (detail) => ({
@@ -115,9 +115,9 @@ const onUpdateError = (error) => ({
  *
  * delete
  */
-const onDelete = ({ id }) => ({
+const onDelete = (id, params) => ({
   type: OrderActionTypes.DELETE,
-  id,
+  id, params
 });
 
 const onDeleteSuccess = (detail) => ({

@@ -65,9 +65,9 @@ const onGetDetailError = (error) => ({
   payload: error
 });
 
-const onCreate = (params) => ({
+const onCreate = (data, params) => ({
   type: CategoryActionTypes.CREATE,
-  payload: params,
+  payload: {data, params},
 });
 
 const onCreateSuccess = (detail) => ({
@@ -84,9 +84,9 @@ const onCreateError = (error) => ({
  *
  * update
  */
-const onUpdate = ({ id, params }) => ({
+const onUpdate = (id, data, params) => ({
   type: CategoryActionTypes.UPDATE,
-  payload: { id, params },
+  payload: { id, data, params },
 });
 
 const onUpdateSuccess = (detail) => ({
@@ -103,9 +103,9 @@ const onUpdateError = (error) => ({
  *
  * delete
  */
-const onDelete = ({ id }) => ({
+const onDelete = (id, params) => ({
   type: CategoryActionTypes.DELETE,
-  id,
+  id, params
 });
 
 const onDeleteSuccess = (detail) => ({

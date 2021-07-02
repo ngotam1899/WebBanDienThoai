@@ -137,6 +137,7 @@ const ProductSchema = new Schema(
 );
 
 ProductSchema.pre('findOneAndDelete', function(next) {
+	/* Group */
 	mongoose
 	.model('Group')
 	.updateMany(
@@ -145,7 +146,13 @@ ProductSchema.pre('findOneAndDelete', function(next) {
 		{ multi:true },
 		next
 	);
-	mongoose.model('Review').deleteOne({ product: this._conditions._id }, next);
+	/* Review */
+	mongoose
+	.model('Review')
+	.deleteOne(
+		{ product: this._conditions._id }, 
+		next
+	);
 });
 
 const Product = mongoose.model('Product', ProductSchema);
