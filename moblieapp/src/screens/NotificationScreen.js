@@ -82,22 +82,22 @@ class NotificationScreen extends Component {
   }
 
   componentDidMount = async () => {
-    const {onGetProfile, userInfo} = this.props;
+    const {onGetProfile, userInfo, onGetList} = this.props;
     await AsyncStorage.getItem('AUTH_USER').then(data => {
       onGetProfile(null, data);
     });
     if (userInfo) {
-      var params = {
+      var params1 = {
         limit: 20,
         page: 0,
         user: userInfo._id,
       };
-      onGetList(params);
+      onGetList(params1);
     }
   };
   componentDidUpdate(prevProps) {
     const {totalNotification, userInfo, onGetList} = this.props;
-
+    const {params} = this.state;
     if (userInfo !== prevProps.userInfo && userInfo) {
       var user = userInfo._id;
       onGetList({user, limit: 20, page: 0, active: 1});
@@ -111,7 +111,7 @@ class NotificationScreen extends Component {
     const {userInfo, onUpdateAll} = this.props;
     var id = userInfo._id;
     var params = {
-      limit: 8,
+      limit: 20,
       page: 0,
       user: id,
     };
@@ -121,7 +121,7 @@ class NotificationScreen extends Component {
     const {userInfo, onDeleteAll} = this.props;
     var id = userInfo._id;
     var params = {
-      limit: 8,
+      limit: 20,
       page: 0,
       user: id,
     };
@@ -151,7 +151,7 @@ class NotificationScreen extends Component {
         <View style={styles.bodyContainer}>
           <View style={styles.listContainer}>
             {listNotification && listNotification.length > 0 ? (
-              <ScrollView>
+              <View>
                 <FlatList
                   data={listNotification}
                   keyExtractor={item => item._id}
@@ -164,13 +164,41 @@ class NotificationScreen extends Component {
                       }>
                       <View style={styles.itemTopContainer}>
                         <View style={{flex: 1}}>
-                          <View style={styles.itemTypeContainer}>
-                            <MaterialCommunityIcons
-                              name="file-document"
-                              color="#fff"
-                              size={22}
-                            />
-                          </View>
+                          {item.type === 0 && (
+                            <View
+                              style={[
+                                styles.itemTypeContainer,
+                                {backgroundColor: '#42b8fc'},
+                              ]}>
+                              <MaterialCommunityIcons
+                                name="cart-arrow-right"
+                                color="#fff"
+                                size={22}
+                              />
+                            </View>
+                          )}
+                          {item.type === 1 && (
+                            <View
+                              style={[
+                                styles.itemTypeContainer,
+                                {backgroundColor: 'red'},
+                              ]}>
+                              <MaterialCommunityIcons
+                                name="file-document"
+                                color="#fff"
+                                size={22}
+                              />
+                            </View>
+                          )}
+                          {item.type === 2 && (
+                            <View style={styles.itemTypeContainer}>
+                              <MaterialCommunityIcons
+                                name="cash-multiple"
+                                color="#fff"
+                                size={22}
+                              />
+                            </View>
+                          )}
                         </View>
                         <View style={styles.itemTopTextContainer}>
                           <Text style={styles.itemName}>{item.name}</Text>
@@ -221,7 +249,7 @@ class NotificationScreen extends Component {
                     <Text style={{color: '#fff'}}>Xóa tất cả</Text>
                   </TouchableOpacity>
                 </View>
-              </ScrollView>
+              </View>
             ) : (
               <View style={styles.boxZeroNotifi}>
                 <Text styles={styles.textZeroNotifi}>

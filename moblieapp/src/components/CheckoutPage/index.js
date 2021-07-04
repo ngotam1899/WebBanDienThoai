@@ -435,7 +435,6 @@ class CheckoutPage extends Component {
   onMessage(e) {
     let data = e.nativeEvent.data;
     setShowGateway(false);
-    console.log(data);
     let payment = JSON.parse(data);
     if (payment.status === 'COMPLETED') {
       alert('PAYMENT MADE SUCCESSFULLY!');

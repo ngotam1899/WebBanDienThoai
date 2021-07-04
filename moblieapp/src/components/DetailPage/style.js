@@ -5,16 +5,14 @@ const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 5,
     backgroundColor: '#fff',
     paddingHorizontal: 20,
   },
   productImg: {
     flex: 1,
-    width: width - 40,
-    height: 460,
-    padding: 0,
-    margin: 0,
+    width: width - 66,
+    height: 340,
   },
   flatListItemName: {
     color: 'black',
@@ -146,7 +144,6 @@ const styles = StyleSheet.create({
   },
   viewMore: {
     height: 130,
-    flex: 1,
   },
   lessMore: {
     flex: 1,
@@ -158,7 +155,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnViewMoreReview: {
-    marginTop: 0,
+    marginTop: 10,
     marginBottom: 15,
     justifyContent: 'center',
     alignItems: 'center',
@@ -215,11 +212,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   containerDetailReview: {
-    marginVertical: 20,
-    height: 290,
+    marginTop: 20,
+    height: 310,
+    overflow: 'hidden',
   },
   containerDetailReviewMore: {
-    marginVertical: 20,
+    marginTop: 20,
   },
   containerBoxReview: {
     marginBottom: 20,
@@ -272,6 +270,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 14,
+    fontWeight: 'bold',
     color: '#484848',
     marginVertical: 4,
   },
@@ -304,6 +303,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  realPrice: {
+    textDecorationLine: 'line-through',
+    fontSize: 18,
   },
 });
 export default styles;

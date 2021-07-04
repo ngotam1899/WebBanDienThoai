@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   sectionContainer: {
     backgroundColor: '#fff',
     paddingHorizontal: 12,
-    marginBottom: 20
+    marginBottom: 20,
   },
   number: {
     fontSize: 12,
@@ -22,13 +22,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 20,
     color: '#2f2f2f',
-    marginTop: 30,
-    marginBottom:10
+    marginTop: 20,
+    marginBottom: 10,
   },
   sectionImage: {
     width: width - 24,
-    height: 130,
+    height: 180,
     borderRadius: 4,
+    marginBottom: 0,
+    marginTop: 10,
   },
   //
   filterContainer: {
@@ -73,33 +75,33 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 13,
     color: '#222',
-    fontWeight:'bold',
+    fontWeight: 'bold',
     marginVertical: 4,
   },
-  itemPriceReal:{
+  itemPriceReal: {
     fontSize: 12,
     color: '#444',
-    textDecorationLine:'line-through',
-    marginRight: 0
+    textDecorationLine: 'line-through',
+    marginRight: 0,
   },
-  reducePrice:{
+  reducePrice: {
     fontSize: 12,
     color: '#444',
-    fontWeight:'bold'
+    fontWeight: 'bold',
   },
   itemPrice: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#d70018',
   },
-  rating:{
+  rating: {
     marginTop: 5,
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     marginRight: 0,
   },
-  countRating:{
-    fontSize: 11
+  countRating: {
+    fontSize: 11,
   },
   //
   seeMoreContainer: {

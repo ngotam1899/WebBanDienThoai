@@ -55,14 +55,27 @@ function* handleCreate({payload}) {
  */
 function* handleUpdate({payload}) {
   try {
-    console.log(payload);
     const result = yield call(updateInstallment, payload.data, payload.id);
     const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(InstallmentActions.onUpdateSuccess(get('data')));
     yield put(InstallmentActions.onGetList(payload.params));
-    if (payload.data.money)
-      yield put(InstallmentActions.onGetDetail(payload.id));
+    const userRes = yield call(getUser, payload.params.user);
+    const instRes = yield call(getDetailInstallment, data.installment._id);
+    /* Notification */
+    socket.emit('installment', {
+      email: userRes.data.user.email,
+      installment: data.installment._id,
+    });
+    yield put(
+      NotificationActions.onCreate({
+        name: 'Yêu cầu trả góp mới cần duyệt',
+        image: instRes.data.installment.product._id.bigimage._id,
+        link: data.installment._id,
+        type: 2,
+        content: `${userRes.data.user.email} vừa gửi yêu cầu trả góp cho sản phẩm`,
+      }),
+    );
   } catch (error) {
     yield put(InstallmentActions.onUpdateError(error));
   }

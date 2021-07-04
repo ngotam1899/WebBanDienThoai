@@ -64,19 +64,6 @@ function* handleCreate({payload}) {
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
     AsyncStorage.removeItem('cart');
-    /* Notification */
-    // if(payload.payment_method ==="paypal"){
-    //   console.log('data: ',data.order)
-    //   socket.emit('order', { email: data.order.email, order: data.order._id });
-    //   console.log('11111111111')
-    //   yield put(NotificationActions.onCreate({
-    //     name : "Đơn hàng mới được xác nhận",
-    //     image : data.order.order_list[0].image,
-    //     type: 0,
-    //     content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
-    //   }))
-    // }
-    /* Notification */
     yield put(ProductsActions.onClearCart());
   } catch (error) {
     yield put(OrdersActions.onCreateError(error));

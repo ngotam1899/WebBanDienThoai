@@ -5,6 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {createStackNavigator} from '@react-navigation/stack';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 
 import HomePage from './src/components/HomePage';
 import DetailPage from './src/components/DetailPage';
@@ -198,10 +199,7 @@ function HomeStackScreen({route, navigation}) {
 
 class App extends Component {
   getTabBarVisibility = route => {
-    const routeName = route.state
-      ? route.state.routes[route.state.index].name
-      : '';
-
+    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
     if (routeName === 'SignIn' || routeName === 'SignUp') {
       return false;
     }

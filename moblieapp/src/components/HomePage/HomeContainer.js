@@ -1,41 +1,70 @@
 import React, {Component} from 'react';
 import 'react-native-gesture-handler';
-import {Image, View, Text, ScrollView, StatusBar, FlatList, TouchableOpacity} from 'react-native';
-import styles from './style';
+import {
+  Image,
+  View,
+  Text,
+  ScrollView,
+  StatusBar,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {connect} from 'react-redux';
+import {SliderBox} from 'react-native-image-slider-box';
+import {AsyncStorage} from 'react-native';
 
 // @Components
 import ProductItem from '../ProductItem';
 // @Actions
 import ProductsActions from '../../redux/actions/products';
 import AuthorizationActions from '../../redux/actions/auth';
-import {AsyncStorage} from 'react-native';
-
+import AdActions from '../../redux/actions/ad';
 const section_banner = require('../../assets/section_banner.png');
+import styles from './style';
 
 class HomeContainer extends Component {
   constructor(props) {
     super(props);
   }
   componentDidMount = async () => {
-    this.props.onGetList();
-    this.props.onGetBestSeller();
-    this.props.onGetFavorite();
-    this.props.onGetNewest();
+    const {
+      onGetFavorite,
+      onGetBestSeller,
+      onGetNewest,
+      onGetList,
+      onGetListAd,
+      onGetProfile,
+    } = this.props;
     const token = await AsyncStorage.getItem('AUTH_USER').then(data => {});
-    const {onGetProfile} = this.props;
     onGetProfile(null, token);
+    onGetList();
+    onGetBestSeller();
+    onGetFavorite();
+    onGetNewest();
+    onGetListAd({active: 1});
   };
   render() {
-    const {bestSeller, newest, favorite, navigation} = this.props;
-
+    const {bestSeller, newest, favorite, navigation, listAd} = this.props;
+    const images =
+      listAd &&
+      listAd.map(item => {
+        return item.image.public_url;
+      });
     return (
       <View style={styles.screenContainer}>
         <StatusBar backgroundColor="#1e88e5" barStyle="light-content" />
         <View style={styles.bodyContainer}>
           <ScrollView>
             <View style={styles.sectionContainer}>
-              <Image source={section_banner} style={styles.sectionImage} />
+              {listAd ? (
+                <SliderBox
+                  style={styles.sectionImage}
+                  images={images}
+                  keyExtractor={(item, index) => index}
+                />
+              ) : (
+                <Image source={section_banner} style={styles.sectionImage} />
+              )}
               <Text style={styles.sectionTitle}>Sản phẩm bán chạy nhất</Text>
               <View style={styles.listItemContainer}>
                 <FlatList
@@ -140,6 +169,7 @@ const mapStateToProps = state => {
     bestSeller: state.products.best,
     favorite: state.products.favorite,
     newest: state.products.new,
+    listAd: state.ad.list,
   };
 };
 
@@ -159,6 +189,9 @@ const mapDispatchToProps = dispatch => {
     },
     onGetProfile: (data, headers) => {
       dispatch(AuthorizationActions.onGetProfile(data, headers));
+    },
+    onGetListAd: params => {
+      dispatch(AdActions.onGetList(params));
     },
   };
 };

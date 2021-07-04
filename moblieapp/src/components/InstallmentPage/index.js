@@ -81,7 +81,6 @@ class InstallmentPage extends Component {
     });
   };
   setPeriod = (itemValue, index) => {
-    console.log(itemValue);
     this.setState({
       period: itemValue,
     });
@@ -450,6 +449,7 @@ class InstallmentPage extends Component {
                 list={installmentQuestion.questions}
                 header={this._head}
                 body={this._body}
+                keyExtractor={(item, index) => index}
               />
             )}
           </View>

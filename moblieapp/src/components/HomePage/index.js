@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {TabView, TabBar} from 'react-native-tab-view';
 import {View, TextInput, Dimensions, TouchableOpacity} from 'react-native';
 
-import styles from './style';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 
@@ -10,12 +9,13 @@ import CategoryActions from '../../redux/actions/categories';
 import ProductsActions from '../../redux/actions/products';
 import BrandActions from '../../redux/actions/brands';
 
+import styles from './style';
 import Header from '../HeaderComponent';
 import HomeContainer from './HomeContainer';
 import ProductPage from './ProductPage';
 import AccessoriesPage from '../AccessoriesPage';
 import PromotionPage from '../PromotionPage';
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 class FirstRoute extends Component {
   render() {

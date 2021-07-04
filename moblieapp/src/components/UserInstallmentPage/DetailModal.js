@@ -116,6 +116,7 @@ class DetailModal extends Component {
                       </Text>
                     </View>
                   </View>
+                  <View style={styles.breakLine}></View>
                   <Text style={styles.title}>Thông tin trả góp</Text>
                   <View style={{flexDirection: 'row'}}>
                     <View style={[styles.containerItem, {flex: 0.5}]}>
@@ -173,7 +174,6 @@ class DetailModal extends Component {
                       </View>
                     </View>
                   </View>
-                  <View style={styles.lineBreak}></View>
                   <View style={styles.containerItem}>
                     <View style={[styles.iconItem, {marginRight: -15}]}>
                       <FontAwesome5
@@ -225,8 +225,8 @@ class DetailModal extends Component {
                       </Text>
                     </View>
                   </View>
-                  <Text
-                    style={[styles.title, {marginTop: 25, marginBottom: 20}]}>
+                  <View style={styles.breakLine}></View>
+                  <Text style={[styles.title, {marginBottom: 20}]}>
                     Lịch sử trả góp
                   </Text>
                   <View>
@@ -248,7 +248,8 @@ class DetailModal extends Component {
                       <Rows data={tableData} textStyle={{margin: 6}} />
                     </Table>
                   </View>
-                  <Text style={[styles.title, {marginTop: 20}]}>
+                  <View style={styles.breakLine}></View>
+                  <Text style={[styles.title, {marginTop: 10}]}>
                     Thanh toán trả góp online
                   </Text>
                   <Modal
@@ -378,8 +379,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     paddingBottom: 7,
+    // borderBottomColor: '#ddd',
+    // borderBottomWidth: 1,
+  },
+  breakLine: {
     borderBottomColor: '#ddd',
     borderBottomWidth: 1,
+    height: 1,
+    marginBottom: 15,
+    marginTop: 8,
   },
   containerInfoProduct: {
     flexDirection: 'row',

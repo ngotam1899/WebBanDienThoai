@@ -36,29 +36,29 @@ class AccessoriesPage extends Component {
     const {listAccessory} = this.props;
     return (
       <View style={styles.container}>
-        <Text style={styles.titleName}>Danh mục phụ kiện</Text>
-        <ScrollView horizontal={true} style={styles.containerItem}>
-          {listAccessory &&
-            listAccessory.map(item => {
-              return (
-                <TouchableOpacity
-                  key={item._id}
-                  style={styles.boxItem}
-                  onPress={() => this.onSelect(item._id)}>
-                  <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                    }}
-                    source={{
-                      uri: item.image.public_url,
-                    }}></Image>
-                  <Text>{item.name}</Text>
-                </TouchableOpacity>
-              );
-            })}
-        </ScrollView>
         <ScrollView style={styles.containerContent}>
+          <Text style={styles.titleName}>Danh mục phụ kiện</Text>
+          <View style={styles.containerItem}>
+            {listAccessory &&
+              listAccessory.map(item => {
+                return (
+                  <TouchableOpacity
+                    key={item._id}
+                    style={styles.boxItem}
+                    onPress={() => this.onSelect(item._id)}>
+                    <Image
+                      style={{
+                        width: 50,
+                        height: 50,
+                      }}
+                      source={{
+                        uri: item.image.public_url,
+                      }}></Image>
+                    <Text>{item.name}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+          </View>
           {accessoryData.accessoryAd.map((item, index) => {
             return (
               <View key={index} style={styles.boxContent}>
@@ -115,15 +115,17 @@ const styles = StyleSheet.create({
   containerItem: {
     marginTop: 10,
     marginBottom: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
   },
   boxItem: {
-    marginRight: 20,
-    marginBottom: 20,
+    margin: 8,
     alignItems: 'center',
   },
   containerContent: {
     paddingVertical: 10,
-    marginBottom: 150,
+    marginBottom: 5,
   },
   boxContent: {
     marginBottom: 20,

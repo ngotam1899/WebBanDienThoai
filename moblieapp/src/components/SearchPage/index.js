@@ -87,7 +87,6 @@ class SearchPage extends Component {
   render() {
     const {listProducts, listCategory, navigation, route} = this.props;
     const {categoryName} = this.state;
-    console.log(route.params.keyword);
     return (
       <View style={{backgroundColor: '#fff', flex: 1}}>
         <View style={styles.headerContainer}>

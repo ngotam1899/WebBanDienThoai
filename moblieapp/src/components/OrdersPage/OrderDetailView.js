@@ -51,7 +51,6 @@ class OrderDetailView extends Component {
   onReview = product => {
     const {onGetReview, authInfo} = this.props;
     const {params} = this.props;
-    console.log('params: ', params);
     this.setState({
       product: product,
     });

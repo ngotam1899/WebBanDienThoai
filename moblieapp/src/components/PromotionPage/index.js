@@ -18,7 +18,7 @@ const {width} = Dimensions.get('window');
 class PromotionPage extends Component {
   componentDidMount() {
     const {onGetList} = this.props;
-    onGetList();
+    onGetList({active: 1});
   }
   setStatus = (startedAt, endedAt) => {
     var today = new Date();
@@ -37,7 +37,7 @@ class PromotionPage extends Component {
           {listAd &&
             listAd.map((ad, index) => {
               return (
-                <View style={styles.containerPromotion}>
+                <View key={index} style={styles.containerPromotion}>
                   <Image
                     style={styles.imgPromotion}
                     source={{uri: ad.image.public_url}}></Image>
