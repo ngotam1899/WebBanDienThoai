@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 // @Components
+import Pagination from "react-js-pagination";
 import OrderDetail from '../../containers/OrderDetail'
 import InstallmentDetail from '../../containers/InstallmentDetail'
 // @Functions
@@ -136,6 +137,11 @@ class NotificationPage extends Component {
     }
     onUpdate(id, data, queryParams)
   }
+  
+  // phân trang
+  handlePageChange = (pageNumber) => {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
 
   onDeleteNoti = (id) =>{
     const {onDelete} = this.props;
@@ -157,7 +163,7 @@ class NotificationPage extends Component {
   }
 
   render() {
-    const { listNotification, location, t, installmentItem, orderItem, history } = this.props;
+    const { listNotification, location, t, installmentItem, orderItem, history, total } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
@@ -221,6 +227,20 @@ class NotificationPage extends Component {
         </div>
         <InstallmentDetail installmentItem={installmentItem} history={history}/>
         <OrderDetail orderItem={orderItem} history={history}/>
+        <div className="content-center">
+          {total && total > 8 && <Pagination
+            activePage={filter.page ? parseInt(filter.page)+1 : 1}
+            itemsCountPerPage={8}
+            totalItemsCount={total ? total : 8}
+            pageRangeDisplayed={3}
+            linkClass="page-link"
+            itemClass="page-item"
+            prevPageText={t('shop.pagination.prev')}
+            nextPageText={t('shop.pagination.next')}
+            hideFirstLastPages={true}
+            onChange={this.handlePageChange.bind(this)}
+          />}
+        </div>
       </div>
     )
   }

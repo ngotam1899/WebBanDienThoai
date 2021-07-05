@@ -232,13 +232,14 @@ class Header extends Component {
   }
 
   render() {
-    const MenuLink = ({ label, to, activeOnlyWhenExact, onClick }) => {
+    const MenuLink = ({ label, image, to, activeOnlyWhenExact, onClick, last }) => {
       return (
         <Route path={to} exact={activeOnlyWhenExact} children={({ match }) => {
-          var active = match ? ' active' : 'nav-item';
+          var active = match ? 'active' : '';
+          var border = last ? '' : 'border-right'
           return (
-            <li className={`nav-item ${active}`}>
-              <Link onClick={onClick} exact={`${activeOnlyWhenExact}`} className="nav-link rounded px-3" to={to}>{label}</Link>
+            <li className={`nav-item ${border} ${active}`}>
+              <Link onClick={onClick} exact={`${activeOnlyWhenExact}`} className="nav-link rounded p-1" to={to}><img src={image} alt="" style={{height: '40px'}}></img><p className="mb-0 float-end ml-2 mr-1 py-2">{label}</p></Link>
             </li>
           )
         }} />
@@ -356,7 +357,7 @@ class Header extends Component {
                   <div className="card" style={{ zIndex: 1}}>
                   {listProducts && keyword && listProducts.map((product, index) =>{
                     return (
-                      <Link to={`/product/${product.pathseo}/${product._id}`} className="text-decoration-none">
+                      <Link to={`/product/${product.pathseo}.${product._id}`} className="text-decoration-none">
                       <div className="row text-dark text-decoration-none " style={{height: "80px"}} key={index}>
                         <div className="col-3 my-auto">
                           <><img style={{height: "80px"}} src={product.bigimage.public_url} alt={product.name}></img></>
@@ -376,7 +377,7 @@ class Header extends Component {
               <div className="col-12 col-xl-3 align-self-center py-1">
                 <div className="shopping-item rounded-pill shadow">
                   <Link to="/carts" className="text-decoration-none" data-tip data-for='cart'>
-                    {t('header.cart.button')} - <span className="cart-amunt">{notVND} {currencyCode}</span> 
+                    {t('header.cart.button')} · <span className="cart-amunt">{notVND} {currencyCode}</span> 
                     <i className="fa fa-shopping-cart"></i>
                     <span className="product-count">{total}</span>
                   </Link>
@@ -413,31 +414,31 @@ class Header extends Component {
           </div>
         </div>
 
-        <div className="mainmenu-area">
+        <div className="mainmenu-area bg-light">
           <div className="container">
             <div className="row">
-              <nav className="navbar navbar-expand-sm navbar-light bg-light">
+              <nav className="navbar navbar-expand-sm navbar-light">
                 <button className="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId"
                   aria-expanded="false" aria-label="Toggle navigation">
                   <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="collapsibleNavId">
+                <div className="collapse navbar-collapse py-2" id="collapsibleNavId">
                   <ul className="navbar-nav mr-auto mt-lg-0">
-                    <MenuLink label={t('header.home.menu')} to="/" activeOnlyWhenExact={true}/>
+                    <MenuLink image={assets("online-shop.png")} label={t('header.home.menu')} to="/" activeOnlyWhenExact={true}/>
                     {location.hash.indexOf("account") === -1 && listCategories && <>
                       {listCategories.map((category, index)=>{
                         return (
-                          <MenuLink key={index} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}.${category._id}`} activeOnlyWhenExact={true} />
+                          <MenuLink key={index} image={category.image.public_url} label={language ==="vn" ? category.name : category.name_en} to={`/products/${category.pathseo}.${category._id}`} activeOnlyWhenExact={true} />
                         )
                       })}
-                      <MenuLink label={t('header.accessories.menu')} to={"/products/accessories"} activeOnlyWhenExact={true} />
-                      <MenuLink label={t('header.promotion.menu')} to={"/promotion"} activeOnlyWhenExact={true} />
+                      <MenuLink image={assets("module.png")} label={t('header.accessories.menu')} to={"/products/accessories"} activeOnlyWhenExact={true} />
+                      <MenuLink image={assets("web-advertising.png")} last={true} label={t('header.promotion.menu')} to={"/promotion"} activeOnlyWhenExact={true} />
                     </>}
                     {location.hash.indexOf("account") !== -1 &&<>
-                    <MenuLink label={t('header.account.menu')} to={"/account/detail"} activeOnlyWhenExact={true} />
-                    <MenuLink label={t('header.order.menu')} to={"/account/purchase"} activeOnlyWhenExact={true} />
-                    <MenuLink label={t('header.installment.menu')} to={"/account/installment"} activeOnlyWhenExact={true} />
-                    <MenuLink label={t('header.notification.menu')} to={"/account/notification"} activeOnlyWhenExact={true} /></>}
+                    <MenuLink image={assets("user-menu.png")} label={t('header.account.menu')} to={"/account/detail"} activeOnlyWhenExact={true} />
+                    <MenuLink image={assets("paid-search.png")} label={t('header.order.menu')} to={"/account/purchase"} activeOnlyWhenExact={true} />
+                    <MenuLink image={assets("credit-card-interest.png")} label={t('header.installment.menu')} to={"/account/installment"} activeOnlyWhenExact={true} />
+                    <MenuLink image={assets("push-notifications.png")} last={true} label={t('header.notification.menu')} to={"/account/notification"} activeOnlyWhenExact={true} /></>}
                   </ul>
                 </div>
               </nav>
@@ -447,14 +448,14 @@ class Header extends Component {
             pageId="104334418256109"
             appId="804609327113718"
             htmlRef="https://localhost:5000"
-          /> */}
+          />
           <Widget
             socketUrl={"http://localhost:5005"}
             socketPath={"/socket.io/"}
             customData={{"language": "en"}} // arbitrary custom data. Stay minimal as this will be added to the socket
             title={"TellMe - Mobile Shopping Online"}
             profileAvatar={assets("logo_fe.png")}
-          /> 
+          />  */}
         </div>
       </>
     );

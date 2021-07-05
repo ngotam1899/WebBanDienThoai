@@ -167,13 +167,8 @@ class ProductPage extends Component {
     const filter = getFilterParams(location.search);
     console.log(location.search)
     return (
-    <div className="container mb-3">
+    <div className="container my-3">
       <div className="row">
-        {category && <div className="my-2">
-          <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
-          <i className="fa fa-chevron-right px-2 w-25-px "></i>
-          <a className="text-decoration-none" href={`/#/products/${category.pathseo}.${category._id}`}>{category.name}</a>
-        </div>}
         <div className="col-12 col-md-3">
           <div className="row">
             {location.search.length > 0 && <div className="col-6 col-md-12 mb-3">
@@ -245,6 +240,12 @@ class ProductPage extends Component {
         </div>
         <div className="col-md-9 col-12">
           <div className="row">
+            {category && <><div className="my-2">
+                <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
+                <i className="fa fa-chevron-right px-2 w-25-px "></i>
+              </div>
+              <h1 className="mb-0 font-weight-bold">{category.name}</h1>
+            </>}
             <div className="col-12">
             <button type="button" 
             className={(filter.brand === null || filter.brand === undefined) ? "rounded-pill shadow-sm bg-aqua text-dark my-2 mr-2 position-relative btn-padding" : "rounded-pill shadow-sm bg-light text-dark my-2 mr-2 position-relative btn-padding"} 

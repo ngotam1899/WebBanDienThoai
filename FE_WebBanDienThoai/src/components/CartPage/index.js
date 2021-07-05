@@ -72,9 +72,11 @@ class CartPage extends Component {
     <div className="container mb-3">
       <div className="row">
         <div className="col-12 my-2">
-          <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
+          <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
           <i className="fa fa-chevron-right px-2 w-25-px"></i>
-          <a className="text-decoration-none" href="/#/carts">{t('cart.page.title')}</a>
+        </div>
+        <div className="col-12">
+          <h1 className="font-weight-bold">{t('cart.page.title')}</h1>
         </div>
         <div className="col-12 my-2">
           <div className="rounded shadow-sm my-2">

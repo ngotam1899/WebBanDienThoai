@@ -32,7 +32,13 @@ const ProductSchema = new Schema(
 			unique: true
 		},
 		warrently: {
-			type: Number
+			type: String
+		},
+		circumstance: {
+			type: String
+		},
+		included: {
+			type: String
 		},
 		bigimage: {
 			//Thumbnail

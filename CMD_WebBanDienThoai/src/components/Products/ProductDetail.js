@@ -1107,17 +1107,7 @@ class ProductDetail extends Component {
                         <label key={index + 1} className="my-0">
                           {this.setSpecification(item._id)}
                         </label>
-                        {item.selections.length > 0 ? <>
-                        {/* <select className="form-control" name={item._id} value={item.value} onChange={this.onChangeDetail}>
-                          <option value="">Chọn {this.setSpecification(item._id)}</option>
-                          {item.selections.map((selector, index) =>{
-                            return(
-                              <option key={index} value={selector._id}>
-                                {selector.name}
-                              </option>
-                            )
-                          })}
-                        </select> */}
+                        {item.selections.length > 0 ?
                         <Select
                           options={this.setSelections(item.selections)}
                           value = {item.value ? this.setSelector(item.selections, item.value) : []}
@@ -1126,7 +1116,6 @@ class ProductDetail extends Component {
                           isMulti
                           components={animatedComponents}
                         />
-                      </>
                         : <input
                           key={item._id}
                           type="text"

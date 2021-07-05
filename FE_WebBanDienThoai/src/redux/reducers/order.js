@@ -48,7 +48,8 @@ export default function(state = init, action) {
     case OrdersActionsTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        list: action.payload,
+        list: action.payload.list,
+        total: action.payload.total,
       };
     case OrdersActionsTypes.GET_LIST_ERROR:
       return {...state};

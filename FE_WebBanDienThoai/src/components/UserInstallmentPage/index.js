@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 // Components
+import Pagination from "react-js-pagination";
 import InstallmentDetail from '../../containers/InstallmentDetail'
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
@@ -92,6 +93,11 @@ class UserInstallmentPage extends Component {
     }
   }
 
+  // phân trang
+  handlePageChange = (pageNumber) => {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
   setStatus = (status, active) => {
     if(active===false) return "Đã hủy"
     else{
@@ -161,7 +167,7 @@ class UserInstallmentPage extends Component {
 
   render() {
     const {queryParams} = this.state;
-    const {installmentList, installmentItem, location, history, t} = this.props;
+    const {installmentList, installmentItem, location, history, total, t} = this.props;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
@@ -251,6 +257,20 @@ class UserInstallmentPage extends Component {
           </div>
         </div>
         <InstallmentDetail installmentItem={installmentItem} history={history} queryParams={queryParams}/>
+        <div className="content-center">
+          {total && total > 8 && <Pagination
+            activePage={filter.page ? parseInt(filter.page)+1 : 1}
+            itemsCountPerPage={8}
+            totalItemsCount={total ? total : 8}
+            pageRangeDisplayed={3}
+            linkClass="page-link"
+            itemClass="page-item"
+            prevPageText={t('shop.pagination.prev')}
+            nextPageText={t('shop.pagination.next')}
+            hideFirstLastPages={true}
+            onChange={this.handlePageChange.bind(this)}
+          />}
+        </div>
       </div>
     )
   }
@@ -260,7 +280,8 @@ const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
     installmentList: state.installment.list,
-    installmentItem: state.installment.detail
+    installmentItem: state.installment.detail,
+    total: state.installment.total
   }
 }
 

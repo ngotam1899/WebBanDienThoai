@@ -14,7 +14,7 @@ function* handleGetList({payload}) {
     const result = yield call(getAllOrder, payload);
     const data = get(result, "data")
     if (data.code !== 200) throw data;
-    yield put(OrdersActions.onGetListSuccess(data.orders));
+    yield put(OrdersActions.onGetListSuccess(data.orders, data.total));
   } catch (error) {
     yield put(OrdersActions.onGetListError(error));
   }

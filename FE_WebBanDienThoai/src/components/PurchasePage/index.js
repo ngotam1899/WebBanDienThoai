@@ -5,6 +5,7 @@ import { withTranslation } from 'react-i18next'
 import qs from "query-string";
 // Components
 import OrderDetail from '../../containers/OrderDetail'
+import Pagination from "react-js-pagination";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 // @Functions
@@ -110,13 +111,13 @@ class PurchasePage extends Component {
     this.handleUpdateFilter({ type, ...state });
   }
 
-  onUpdateOrder = (id, params) => {
-    const {onUpdate} = this.props;
-    onUpdate(id, params);
+  onUpdateOrder = (id, data) => {
+    const { onUpdate } = this.props;
+    const { queryParams } = this.state;
+    onUpdate(id, data, queryParams);
   }
 
   onDeactivate = (id) => {
-    const {queryParams} = this.state;
     const {t} = this.props;
     confirmAlert({
       title: t('order.popup.label'),
@@ -124,7 +125,7 @@ class PurchasePage extends Component {
       buttons: [
         {
           label: 'Yes',
-          onClick: () => this.onUpdateOrder(id, {active: false}, queryParams)
+          onClick: () => this.onUpdateOrder(id, {active: false})
         },
         {
           label: 'No'
@@ -147,6 +148,11 @@ class PurchasePage extends Component {
     this.handleUpdateFilter({ keyword, page : 0});
   }
 
+  // phân trang
+  handlePageChange = (pageNumber) => {
+    this.handleUpdateFilter({ page: pageNumber-1 });
+  }
+
   getInfoOrder = (id) => {
     const {onGetDetail} = this.props;
     onGetDetail(id);
@@ -167,7 +173,7 @@ class PurchasePage extends Component {
   }
 
   render() {
-    const { orderList, orderItem, location, history, t } = this.props;
+    const { orderList, orderItem, location, history, t, total } = this.props;
     const { keyword } = this.state;
     const filter = getFilterParams(location.search);
     return (
@@ -253,8 +259,24 @@ class PurchasePage extends Component {
           </div>
           
         </div>
+        
         <OrderDetail orderItem={orderItem} history={history}/>
+        <div className="content-center">
+          {total && total > 8 && <Pagination
+            activePage={filter.page ? parseInt(filter.page)+1 : 1}
+            itemsCountPerPage={8}
+            totalItemsCount={total ? total : 8}
+            pageRangeDisplayed={3}
+            linkClass="page-link"
+            itemClass="page-item"
+            prevPageText={t('shop.pagination.prev')}
+            nextPageText={t('shop.pagination.next')}
+            hideFirstLastPages={true}
+            onChange={this.handlePageChange.bind(this)}
+          />}
+        </div>
       </div>
+      
     )
   }
 }
@@ -263,7 +285,8 @@ const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
     orderList: state.order.list,
-    orderItem: state.order.detail
+    orderItem: state.order.detail,
+    total: state.order.total
   }
 }
 

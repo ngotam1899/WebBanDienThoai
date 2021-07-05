@@ -93,9 +93,9 @@ const onGetList = (payload) => ({
   type: OrdersActionsTypes.GET_LIST,
   payload
 });
-const onGetListSuccess = (data) => ({
+const onGetListSuccess = (list, total) => ({
   type: OrdersActionsTypes.GET_LIST_SUCCESS,
-  payload: data
+  payload: {list, total}
 });
 const onGetListError = (error) => ({
   type: OrdersActionsTypes.GET_LIST_ERROR,

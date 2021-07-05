@@ -69,3 +69,14 @@ select {border: none;}
 .w-fit-content {
   width: fit-content;
 }
+.directory:hover {
+  background-color: #DBE7F2;
+  color: #222;
+}
+.directory{
+  color: #222;
+}
+.content-center{
+  width: fit-content;
+  margin: 0 auto;
+}

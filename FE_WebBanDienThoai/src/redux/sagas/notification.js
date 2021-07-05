@@ -53,7 +53,7 @@ function* handleUpdate({ payload }) {
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onUpdateSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
-    yield put(NotificationActions.onGetNewest(payload.params));
+    yield put(NotificationActions.onGetNewest({...payload.params, limit: 5}));
   } catch (error) {
     yield put(NotificationActions.onUpdateError(error));
   }
@@ -66,7 +66,7 @@ function* handleUpdateAll({ payload }) {
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onUpdateAllSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
-    yield put(NotificationActions.onGetNewest(payload.params));
+    yield put(NotificationActions.onGetNewest({...payload.params, limit: 5}));
   } catch (error) {
     yield put(NotificationActions.onUpdateAllError(error));
   }
@@ -83,7 +83,7 @@ function* handleDelete({ payload }) {
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onDeleteSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
-    yield put(NotificationActions.onGetNewest(payload.params));
+    yield put(NotificationActions.onGetNewest({...payload.params, limit: 5}));
   } catch (error) {
     yield put(NotificationActions.onDeleteError(error));
   }
@@ -96,7 +96,7 @@ function* handleDeleteAll({ payload }) {
     if (data.code !== 200) throw data;
     yield put(NotificationActions.onDeleteAllSuccess(data));
     yield put(NotificationActions.onGetList(payload.params));
-    yield put(NotificationActions.onGetNewest(payload.params));
+    yield put(NotificationActions.onGetNewest({...payload.params, limit: 5}));
   } catch (error) {
     yield put(NotificationActions.onDeleteAllError(error));
   }

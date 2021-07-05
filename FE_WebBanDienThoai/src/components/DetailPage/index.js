@@ -231,7 +231,7 @@ class DetailPage extends Component {
         <Helmet>
           <meta charSet="utf-8" />
           <title>{product && product.name}</title>
-          <link rel="" href={product && `${LOCAL}/#/product/${product.pathseo}/${product._id}`} />
+          <link rel="" href={product && `${LOCAL}/#/product/${product.pathseo}.${product._id}`} />
         </Helmet>
       </div>
       
@@ -241,12 +241,12 @@ class DetailPage extends Component {
             <div className="col-md-12">
               <div className="">
                 <div className="my-2">
-                  <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
+                  <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
                   <i className="fa fa-chevron-right px-2 w-25-px "></i>
-                  <a className="text-decoration-none" href={`/#/products/${product.category.pathseo}/${product.category._id}`}>{product.category.name}</a>
+                  <a className="text-decoration-none directory rounded p-2" href={`/#/products/${product.category.pathseo}.${product.category._id}`}>{product.category.name}</a>
                   <i className="fa fa-chevron-right px-2 w-25-px "></i>
-                  <a className="text-decoration-none" href={`/#/product/${product.pathseo}/${product._id}`}>{product.name}</a>
                 </div>
+                
                 <div className="row">
                   <div className="col-sm-5">
                     {product.image && <ImageGalleries imageDetail={product.image} imageColor={imageColor}/> }
@@ -259,18 +259,18 @@ class DetailPage extends Component {
                         <ins>{product.price_min && this.setPrice(currency, product.price_min, product.price_max)} {currency}</ins>
                         {product.real_price_min && <del>{this.setPrice(currency, product.real_price_min, product.real_price_max)} {currency}</del>}
                         {product.real_price_min && product.real_price_min > product.price_min && 
-            <div className="discount ml-2">
-              <div className="d-flex h-discount text-orange">
-                <svg className="_2DRZW" viewBox="-0.5 -0.5 4 16">
-                  <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="" stroke="currentColor" fill="#f69113"></path>
-                </svg>
-            <div className="discount-content">{t('common.discount')} {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
-                <svg className="h-discount" viewBox="-0.5 -0.5 4 16">
-                  <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="rotate(180) translate(-3 -15)" stroke="currentColor" fill="#f69113">
-                  </path>
-                </svg>
-              </div>
-            </div>}
+                        <div className="discount ml-2">
+                          <div className="d-flex h-discount text-orange">
+                            <svg className="_2DRZW" viewBox="-0.5 -0.5 4 16">
+                              <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="" stroke="currentColor" fill="#f69113"></path>
+                            </svg>
+                        <div className="discount-content">{t('common.discount')} {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
+                            <svg className="h-discount" viewBox="-0.5 -0.5 4 16">
+                              <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="rotate(180) translate(-3 -15)" stroke="currentColor" fill="#f69113">
+                              </path>
+                            </svg>
+                          </div>
+                        </div>}
                       </div>
                       <div className="row">
                         <div className="col-12">
@@ -287,7 +287,7 @@ class DetailPage extends Component {
                           {group.products.map((item, index)=>{
                             return(<button type="button" key={item._id} 
                               className="card text-dark py-2 px-3 my-2 mr-3 w-auto"
-                              onClick={()=> this.onReload(`/product/${item.product.pathseo}/${item.product._id}`)}>
+                              onClick={()=> this.onReload(`/product/${item.product.pathseo}.${item.product._id}`)}>
                               <p className="mb-0 h6">{item.name} <span className={_check===item.product._id ? "d-inline-block" : "d-none"}>
                                 <i className="fa fa-check"></i></span></p>
                               <p className="mb-0 h7">{item.product.price_min ? this.setPrice(currency, item.product.price_min, item.product.price_min) : 'NaN'} {currency}</p>

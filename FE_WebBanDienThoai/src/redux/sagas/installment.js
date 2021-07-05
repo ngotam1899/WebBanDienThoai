@@ -14,7 +14,7 @@ function* handleGetList({ payload }) {
     const result = yield call(getAllInstallments, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(InstallmentActions.onGetListSuccess(data.installments));
+    yield put(InstallmentActions.onGetListSuccess(data.installments, data.total));
   } catch (error) {
     yield put(InstallmentActions.onGetListError(error));
   }
