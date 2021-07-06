@@ -6,12 +6,18 @@ export const BrandActionTypes = {
   GET_ACCESSORY: "GET_ACCESSORY",
   GET_ACCESSORY_SUCCESS: "GET_ACCESSORY_SUCCESS",
   GET_ACCESSORY_ERROR: "GET_ACCESSORY_ERROR",
+
+  CLEAR_STATE: "CLEAR_STATE",
 };
 
 Object.keys(BrandActionTypes).forEach((key) => {
   BrandActionTypes[
     key
   ] = `BRAND_${BrandActionTypes[key]}`;
+});
+
+const onClearState = () => ({
+  type: BrandActionTypes.CLEAR_STATE,
 });
 
 const onGetList = (payload) => ({
@@ -45,6 +51,8 @@ const onGetAccessoryError = (error) => ({
 });
 
 const BrandActions = {
+  onClearState,
+
   onGetList,
   onGetListSuccess,
   onGetListError,

@@ -234,93 +234,111 @@ class DetailPage extends Component {
           <link rel="" href={product && `${LOCAL}/#/product/${product.pathseo}.${product._id}`} />
         </Helmet>
       </div>
-      
-      <div className="">
-        {product ? <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="">
-                <div className="my-2">
-                  <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
-                  <i className="fa fa-chevron-right px-2 w-25-px "></i>
-                  <a className="text-decoration-none directory rounded p-2" href={`/#/products/${product.category.pathseo}.${product.category._id}`}>{product.category.name}</a>
-                  <i className="fa fa-chevron-right px-2 w-25-px "></i>
-                </div>
-                
-                <div className="row">
-                  <div className="col-sm-5">
-                    {product.image && <ImageGalleries imageDetail={product.image} imageColor={imageColor}/> }
-                  </div>
-
-                  <div className="col-sm-7">
-                    <div className="">
-                      <h2 className="">{product.name}</h2>
-                      <div className="product-inner-price form-inline">
-                        <ins>{product.price_min && this.setPrice(currency, product.price_min, product.price_max)} {currency}</ins>
-                        {product.real_price_min && <del>{this.setPrice(currency, product.real_price_min, product.real_price_max)} {currency}</del>}
-                        {product.real_price_min && product.real_price_min > product.price_min && 
-                        <div className="discount ml-2">
-                          <div className="d-flex h-discount text-orange">
-                            <svg className="_2DRZW" viewBox="-0.5 -0.5 4 16">
-                              <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="" stroke="currentColor" fill="#f69113"></path>
-                            </svg>
-                        <div className="discount-content">{t('common.discount')} {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
-                            <svg className="h-discount" viewBox="-0.5 -0.5 4 16">
-                              <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="rotate(180) translate(-3 -15)" stroke="currentColor" fill="#f69113">
-                              </path>
-                            </svg>
-                          </div>
-                        </div>}
-                      </div>
-                      <div className="row">
-                        <div className="col-12">
-                          <Rating
-                            initialRating={product.stars}
-                            emptySymbol="fa fa-star text-secondary"
-                            fullSymbol="fa fa-star text-warning"
-                            readonly
-                        /><span className="ml-2">{total} {t('common.review')}</span>
-                        </div>
-                      </div>
-                      {group && <div className="row">
-                        <div className="col-12 form-inline">
-                          {group.products.map((item, index)=>{
-                            return(<button type="button" key={item._id} 
-                              className="card text-dark py-2 px-3 my-2 mr-3 w-auto"
-                              onClick={()=> this.onReload(`/product/${item.product.pathseo}.${item.product._id}`)}>
-                              <p className="mb-0 h6">{item.name} <span className={_check===item.product._id ? "d-inline-block" : "d-none"}>
-                                <i className="fa fa-check"></i></span></p>
-                              <p className="mb-0 h7">{item.product.price_min ? this.setPrice(currency, item.product.price_min, item.product.price_min) : 'NaN'} {currency}</p>
-                            </button>)
-                          })}
-                        </div>
-                      </div>}
-                      <p className="mb-0 font-weight-bold">{t('detail.color.label')}</p>
-                      <div className="row">
-                        <div className="col-12 form-inline">
-                          {product.colors.map((item, index)=>{
-                            return(
-                            <button type="button" key={item._id} 
-                              className={item.amount===0 ? "card text-dark py-2 px-3 my-2 mr-3 bg-active" :"card text-dark py-2 px-3 my-2 mr-3"} 
-                              onClick={() => this.setColor(item)} 
-                              disabled={item.amount===0 ? true : false}>
-                              <p className="mb-0 h6">{item.name_vn} <span className={check===item._id ? "d-inline-block" : "d-none"}>
-                                <i className="fa fa-check"></i></span></p>
-                              <p className="mb-0 h7">{this.setPrice(currency, item.price, item.price)} {currency}</p>
-                            </button>)
-                          })}
-                        </div>
-                      </div>
-                      <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
-                      <button className="ml-2 installment_button" type="button" onClick={() => this.onInstallment(product)}>{t('detail.installment.button')}</button>
+      {product ? <div className="container my-3">
+        <div className="row justify-content-center">
+          <div className="col-md-5 col-12">
+            {product.image && <ImageGalleries imageDetail={product.image} imageColor={imageColor}/> }
+          </div>
+          <div className="col-md-5 col-12">
+            <div className="row">
+              <div className="col-12 my-2">
+                <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
+                <i className="fa fa-chevron-right px-2 w-25-px "></i>
+                <a className="text-decoration-none directory rounded p-2" href={`/#/products/${product.category.pathseo}.${product.category._id}`}>{product.category.name}</a>
+                <i className="fa fa-chevron-right px-2 w-25-px "></i>
+              </div>
+              <div className="col-12">
+                <h1 className="my-0 font-weight-bold">{product.name}</h1>
+                <div className="product-inner-price form-inline">
+                  <ins>{product.price_min && this.setPrice(currency, product.price_min, product.price_max)} {currency}</ins>
+                  {product.real_price_min && <del>{this.setPrice(currency, product.real_price_min, product.real_price_max)} {currency}</del>}
+                  {product.real_price_min && product.real_price_min > product.price_min && 
+                  <div className="discount ml-2">
+                    <div className="d-flex h-discount text-orange">
+                      <svg className="_2DRZW" viewBox="-0.5 -0.5 4 16">
+                        <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="" stroke="currentColor" fill="#f69113"></path>
+                      </svg>
+                  <div className="discount-content">{t('common.discount')} {parseInt((1 - product.price_min/product.real_price_min)*100)}%</div>
+                      <svg className="h-discount" viewBox="-0.5 -0.5 4 16">
+                        <path d="M4 0h-3q-1 0 -1 1a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3v0.333a1.2 1.5 0 0 1 0 3q0 1 1 1h3" strokeWidth="1" transform="rotate(180) translate(-3 -15)" stroke="currentColor" fill="#f69113">
+                        </path>
+                      </svg>
                     </div>
-                  </div>
+                  </div>}
                 </div>
+              </div>
+              <div className="col-12">
+                <Rating
+                  initialRating={product.stars}
+                  emptySymbol="fa fa-star text-secondary"
+                  fullSymbol="fa fa-star text-warning"
+                  readonly
+                /><span className="ml-2">{total} {t('common.review')}</span>
+              </div>
+              {group && <div className="col-12 form-inline">
+                {group.products.map(item =>{
+                  return(<button type="button" key={item._id} 
+                    className="card text-dark py-2 px-3 my-2 mr-3 w-auto"
+                    onClick={()=> this.onReload(`/product/${item.product.pathseo}.${item.product._id}`)}>
+                    <p className="mb-0 h6">{item.name} <span className={_check===item.product._id ? "d-inline-block" : "d-none"}>
+                      <i className="fa fa-check"></i></span></p>
+                    <p className="mb-0 h7">{item.product.price_min ? this.setPrice(currency, item.product.price_min, item.product.price_min) : 'NaN'} {currency}</p>
+                  </button>)
+                })}
+              </div>}
+              <div className="mb-2 border-bottom"></div>
+              <h4 className="mb-0">{t('detail.color.label')}</h4>
+              <div className="col-12 form-inline">
+                {product.colors.map((item, index)=>{
+                  return(
+                  <button type="button" key={item._id} 
+                    className={item.amount===0 ? "card text-dark py-2 px-3 my-2 mr-3 bg-active" :"card text-dark py-2 px-3 my-2 mr-3"} 
+                    onClick={() => this.setColor(item)} 
+                    disabled={item.amount===0 ? true : false}>
+                    <p className="mb-0 h6">{item.name_vn} <span className={check===item._id ? "d-inline-block" : "d-none"}>
+                      <i className="fa fa-check"></i></span></p>
+                    <p className="mb-0 h7">{this.setPrice(currency, item.price, item.price)} {currency}</p>
+                  </button>)
+                })}
+              </div>
+              <div className="mb-2 border-bottom"></div>
+              <div className="col-12 form-inline">
+                <div className="bill-icon">
+                  <i className="fa fa-fan text-xl "></i>
+                </div>
+                <div className="ml-3 my-1" style={{width: "85%"}}>
+                  <p className="text-secondary smaller mb-0">Tình trạng</p>
+                  <p className="mb-1">{product.circumstance || "Đang cập nhật"}</p>
+                </div>
+              </div>
+              {product.included && product.included.length > 0 && <div className="col-12 form-inline">
+                <div className="bill-icon">
+                  <i className="fa fa-eye text-xl "></i>
+                </div>
+                <div className="ml-3 my-1" style={{width: "85%"}}>
+                  <p className="text-secondary smaller mb-0">Hộp bao gồm</p>
+                  <p className="mb-1">{product.included}</p>
+                </div>
+              </div>}
+              <div className="col-12 form-inline">
+                <div className="bill-icon">
+                  <i className="fa fa-shield-alt text-xl "></i>
+                </div>
+                <div className="ml-3 my-1" style={{width: "85%"}}>
+                  <p className="text-secondary smaller mb-0">Bảo hành</p>
+                  <p className="mb-1">{product.warrently || "Đang cập nhật"}</p>
+                </div>
+              </div>
+              <div className="col-12">
+                <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
+                <button className="ml-2 installment_button" type="button" onClick={() => this.onInstallment(product)}>{t('detail.installment.button')}</button>
+                <button className="ml-2 installment_button" type="button" /* onClick={() => this.onInstallment(product)} */>So sánh chi tiết</button>
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col-12">
+        </div>
+        <div className="row">
+          <div className="col-12">
             <section className="product_description_area pb-0">
                 <div className="container">
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -377,229 +395,226 @@ class DetailPage extends Component {
                   </div>
                 </div>
               </section>
-              <section className="product_description_area mt-1">
-                <div className="container">
-                  <ul className="nav nav-tabs" id="myTab" role="tablist">
-                    <li className="nav-item">
-                      <a className="nav-link" id="home-tab" data-bs-toggle="tab" href="#description" role="tab" aria-controls="home" aria-selected="true">{t('detail.description.tab')}</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" id="profile-tab" data-bs-toggle="tab" href="#specification" role="tab" aria-controls="profile"
-                      aria-selected="false">{t('detail.specification.tab')}</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" id="contact-tab" data-bs-toggle="tab" href="#comment" role="tab" aria-controls="contact"
-                      aria-selected="false">{t('detail.comment.tab')}</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link active" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review"
-                      aria-selected="false">{t('detail.review.tab')}</a>
-                    </li>
-                  </ul>
-                  <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane fade" id="description" role="tabpanel" aria-labelledby="home-tab">
-                      {product.description ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(product.description))}}></div> : ""}
-                    </div>
-                    <div className="tab-pane fade" id="specification" role="tabpanel" aria-labelledby="profile-tab">
-                      <div className="table-responsive">
-                        <table className="table">
-                          <tbody>
-                            {product && product.specifications.map((item,index)=>{
-                              /* eslint-disable */
-                                return (
-                                <tr key={index}>
-                                  <td className="font-weight-bold" scope="row">{item.name}</td>
-                                  <td>{item.selection.length > 0 ? this.setSelector(item.selection) : item.value}</td>
-                                </tr>
-                                )
-                              /* eslint-disable */
-                              })}
-                              
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div className="tab-pane fade" id="comment" role="tabpanel" aria-labelledby="contact-tab">
-                      <div className="row">
-                        <div className="col-12">
-                          <div className="fb-comments" data-href={`${LOCAL}/#/product/${product.pathseo}/${product._id}`} data-width="100%" data-numposts="5"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
-                      <div className="row">
-                        <div className="col-lg-6">
-                          <div className="row total_rate">
-                            <div className="col-6">
-                
-                              <div className="box_total">
-                                <h5>Overall</h5>
-                                <h1>{product.stars ? product.stars : ""}</h1>
-                                <h6>({total} {t('common.review')})</h6>
-                              </div>
-                            </div>
-                            <div className="col-6">
-                              <div className="rating_list">
-                                <h3>{t('detail.base.on')} {total} {t('common.review')}</h3>
-                                {count && <ul className="list-unstyled">
-                                  <li>5 Star <span className="mx-2"><Rating
-                                    initialRating={5}
-                                    emptySymbol="fa fa-star text-secondary"
-                                    fullSymbol="fa fa-star text-warning"
-                                    readonly
-                                    /></span>{count.find(i => i._id===5) ? count.find(i => i._id===5).count  : 0}</li>
-                                  <li>4 Star <span className="mx-2"><Rating
-                                    initialRating={4}
-                                    emptySymbol="fa fa-star text-secondary"
-                                    fullSymbol="fa fa-star text-warning"
-                                    readonly
-                                    /></span>{count.find(i => i._id===4) ? count.find(i => i._id===4).count  : 0}</li>
-                                  <li>3 Star <span className="mx-2"><Rating
-                                    initialRating={3}
-                                    emptySymbol="fa fa-star text-secondary"
-                                    fullSymbol="fa fa-star text-warning"
-                                    readonly
-                                    /></span>{count.find(i => i._id===3) ? count.find(i => i._id===3).count  : 0}</li>
-                                  <li>2 Star <span className="mx-2"><Rating
-                                    initialRating={2}
-                                    emptySymbol="fa fa-star text-secondary"
-                                    fullSymbol="fa fa-star text-warning"
-                                    readonly
-                                  /></span>{count.find(i => i._id===2) ? count.find(i => i._id===2).count  : 0}</li>
-                                  <li>1 Star <span className="mx-2"><Rating
-                                    initialRating={1}
-                                    emptySymbol="fa fa-star text-secondary"
-                                    fullSymbol="fa fa-star text-warning"
-                                    readonly
-                                  /></span>{count.find(i => i._id===1) ? count.find(i => i._id===1).count  : 0}</li>
-                                </ul>}
-                              </div>
-                            </div>
-                          </div>
-                          
-                        </div>
-                        <div className="col-lg-6">
-                          <div className="review_list">
-                            {review.length > 0 ? review.map((item, index)=>{
+            <section className="product_description_area mt-1">
+              <div className="container">
+                <ul className="nav nav-tabs" id="myTab" role="tablist">
+                  <li className="nav-item">
+                    <a className="nav-link" id="home-tab" data-bs-toggle="tab" href="#description" role="tab" aria-controls="home" aria-selected="true">{t('detail.description.tab')}</a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" id="profile-tab" data-bs-toggle="tab" href="#specification" role="tab" aria-controls="profile"
+                    aria-selected="false">{t('detail.specification.tab')}</a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" id="contact-tab" data-bs-toggle="tab" href="#comment" role="tab" aria-controls="contact"
+                    aria-selected="false">{t('detail.comment.tab')}</a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link active" id="review-tab" data-bs-toggle="tab" href="#review" role="tab" aria-controls="review"
+                    aria-selected="false">{t('detail.review.tab')}</a>
+                  </li>
+                </ul>
+                <div className="tab-content" id="myTabContent">
+                  <div className="tab-pane fade" id="description" role="tabpanel" aria-labelledby="home-tab">
+                    {product.description ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(product.description))}}></div> : ""}
+                  </div>
+                  <div className="tab-pane fade" id="specification" role="tabpanel" aria-labelledby="profile-tab">
+                    <div className="table-responsive">
+                      <table className="table">
+                        <tbody>
+                          {product && product.specifications.map((item,index)=>{
+                            /* eslint-disable */
                               return (
-                                <div className="row" key={index}>
-                                  <div className="col-12">
-                                  <div className="float-start mr-3">
-                                    <img className="rounded-circle square-60" src={item.user && item.user.image ? item.user.image.public_url : INITIAL_IMAGE} alt=""/>
-                                  </div>
-                                  <div className="">
-                                    <p className="font-weight-bold mb-0">{item.user && item.user.firstname} {item.user && item.user.lastname}</p>
-                                    <p className="mb-0"><Rating
-                                      initialRating={item.rating}
-                                      emptySymbol="fa fa-star text-secondary"
-                                      fullSymbol="fa fa-star text-warning"
-                                      readonly
-                                    /> | <span className="font-italic">{item.createdAt}</span></p>
-                                    <p className="text-secondary mb-0">Màu sắc: {item.color.name_vn}</p>
-                                    <p className="mb-0">{item.content}</p>
-                                    <p><i onClick={()=>{this.onLiked(item._id, item.like)}} className="fa fa-thumbs-up text-secondary"></i><span className="ml-2 text-secondary">{item.like.length > 0 ? item.like.length :  `${t('detail.review.useful')}?`}</span></p>
-                                  </div>
-                                  </div>
-                                </div>
+                              <tr key={index}>
+                                <td className="font-weight-bold" scope="row">{item.name}</td>
+                                <td>{item.selection.length > 0 ? this.setSelector(item.selection) : item.value}</td>
+                              </tr>
                               )
-                            }) : <div className="row my-1">
-                            <div className="col-12">
-                                <div className="text-center my-5">
-                                  <div className="h-120">
-                                    <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/d3eb7b91baeb280516583f958b10f601.png" alt="404 not found"></img>
-                                  </div>
-                                  <h4>{t('detail.review.not-yet')}</h4>
+                            /* eslint-disable */
+                            })}
+                            
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div className="tab-pane fade" id="comment" role="tabpanel" aria-labelledby="contact-tab">
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="fb-comments" data-href={`${LOCAL}/#/product/${product.pathseo}/${product._id}`} data-width="100%" data-numposts="5"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+                    <div className="row">
+                      <div className="col-lg-6">
+                        <div className="row total_rate">
+                          <div className="col-6">
+              
+                            <div className="box_total">
+                              <h5>Overall</h5>
+                              <h1>{product.stars ? product.stars : ""}</h1>
+                              <h6>({total} {t('common.review')})</h6>
+                            </div>
+                          </div>
+                          <div className="col-6">
+                            <div className="rating_list">
+                              <h3>{t('detail.base.on')} {total} {t('common.review')}</h3>
+                              {count && <ul className="list-unstyled">
+                                <li>5 Star <span className="mx-2"><Rating
+                                  initialRating={5}
+                                  emptySymbol="fa fa-star text-secondary"
+                                  fullSymbol="fa fa-star text-warning"
+                                  readonly
+                                  /></span>{count.find(i => i._id===5) ? count.find(i => i._id===5).count  : 0}</li>
+                                <li>4 Star <span className="mx-2"><Rating
+                                  initialRating={4}
+                                  emptySymbol="fa fa-star text-secondary"
+                                  fullSymbol="fa fa-star text-warning"
+                                  readonly
+                                  /></span>{count.find(i => i._id===4) ? count.find(i => i._id===4).count  : 0}</li>
+                                <li>3 Star <span className="mx-2"><Rating
+                                  initialRating={3}
+                                  emptySymbol="fa fa-star text-secondary"
+                                  fullSymbol="fa fa-star text-warning"
+                                  readonly
+                                  /></span>{count.find(i => i._id===3) ? count.find(i => i._id===3).count  : 0}</li>
+                                <li>2 Star <span className="mx-2"><Rating
+                                  initialRating={2}
+                                  emptySymbol="fa fa-star text-secondary"
+                                  fullSymbol="fa fa-star text-warning"
+                                  readonly
+                                /></span>{count.find(i => i._id===2) ? count.find(i => i._id===2).count  : 0}</li>
+                                <li>1 Star <span className="mx-2"><Rating
+                                  initialRating={1}
+                                  emptySymbol="fa fa-star text-secondary"
+                                  fullSymbol="fa fa-star text-warning"
+                                  readonly
+                                /></span>{count.find(i => i._id===1) ? count.find(i => i._id===1).count  : 0}</li>
+                              </ul>}
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                      <div className="col-lg-6">
+                        <div className="review_list">
+                          {review.length > 0 ? review.map((item, index)=>{
+                            return (
+                              <div className="row" key={index}>
+                                <div className="col-12">
+                                <div className="float-start mr-3">
+                                  <img className="rounded-circle square-60" src={item.user && item.user.image ? item.user.image.public_url : INITIAL_IMAGE} alt=""/>
+                                </div>
+                                <div className="">
+                                  <p className="font-weight-bold mb-0">{item.user && item.user.firstname} {item.user && item.user.lastname}</p>
+                                  <p className="mb-0"><Rating
+                                    initialRating={item.rating}
+                                    emptySymbol="fa fa-star text-secondary"
+                                    fullSymbol="fa fa-star text-warning"
+                                    readonly
+                                  /> | <span className="font-italic">{item.createdAt}</span></p>
+                                  <p className="text-secondary mb-0">Màu sắc: {item.color.name_vn}</p>
+                                  <p className="mb-0">{item.content}</p>
+                                  <p><i onClick={()=>{this.onLiked(item._id, item.like)}} className="fa fa-thumbs-up text-secondary"></i><span className="ml-2 text-secondary">{item.like.length > 0 ? item.like.length :  `${t('detail.review.useful')}?`}</span></p>
+                                </div>
                                 </div>
                               </div>
-                            </div>}
-                          </div>
-                          {review && review.length > 0 && <div className="product-pagination text-center">
-                            <nav className="float-end">
-                              <Pagination
-                                activePage={filter.page ? parseInt(filter.page)+1 : 1}
-                                itemsCountPerPage={3}
-                                totalItemsCount={total ? total : 10}
-                                pageRangeDisplayed={3}
-                                linkClass="page-link"
-                                itemClass="page-item"
-                                prevPageText={t('shop.pagination.prev')}
-                                nextPageText={t('shop.pagination.next')}
-                                hideFirstLastPages={true}
-                                onChange={this.handlePageChange.bind(this)}
-                              />
-                              </nav>
-                            </div>}
+                            )
+                          }) : <div className="row my-1">
+                          <div className="col-12">
+                              <div className="text-center my-5">
+                                <div className="h-120">
+                                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/d3eb7b91baeb280516583f958b10f601.png" alt="404 not found"></img>
+                                </div>
+                                <h4>{t('detail.review.not-yet')}</h4>
+                              </div>
+                            </div>
+                          </div>}
                         </div>
+                        {review && review.length > 0 && <div className="product-pagination text-center">
+                          <nav className="float-end">
+                            <Pagination
+                              activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                              itemsCountPerPage={3}
+                              totalItemsCount={total ? total : 10}
+                              pageRangeDisplayed={3}
+                              linkClass="page-link"
+                              itemClass="page-item"
+                              prevPageText={t('shop.pagination.prev')}
+                              nextPageText={t('shop.pagination.next')}
+                              hideFirstLastPages={true}
+                              onChange={this.handlePageChange.bind(this)}
+                            />
+                            </nav>
+                          </div>}
                       </div>
                     </div>
                   </div>
                 </div>
-              </section>
-            </div>
+              </div>
+            </section>
           </div>
         </div>
-        : <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="">
-              <div className="my-2">
-                <a className="text-decoration-none" href="/#/">{t('header.home.menu')}</a>
+      </div>
+      : 
+      <div className="container my-3">
+        <div className="row justify-content-center">
+          <div className="col-md-5 col-12">
+            <ImageLoader/>
+          </div>
+          <div className="col-md-5 col-12">
+            <div className="row">
+              <div className="col-12 my-2">
+                <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
                 <i className="fa fa-chevron-right px-2 w-25-px "></i>
               </div>
-              <div className="row">
-                <div className="col-sm-5">
-                  <ImageLoader/>
-                </div>
-                <div className="col-sm-7">
-                  <ProductInfoLoader/>
-                </div>
+              <div className="col-12">
+                <ProductInfoLoader/>
               </div>
             </div>
           </div>
         </div>
         <div className="row">
-            <div className="col-12">
+          <div className="col-12">
             <section className="product_description_area pb-0">
-                <div className="container">
-                  <ul className="nav nav-tabs" id="myTab" role="tablist">
-                    <li className="nav-item">
-                      <a className="nav-link" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent"
-                      aria-selected="false">{t('detail.recent.tab')}</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
-                      aria-selected="false">{t('detail.like.tab')}</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link active" id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
-                      >{t('detail.relate.tab')}</a>
-                    </li>
-                  </ul>
-                  <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane fade" id="recent" role="tab" aria-labelledby="recent-tab">
-                      <div className="row">
-                        <Loader/>
-                      </div>
+              <div className="container">
+                <ul className="nav nav-tabs" id="myTab" role="tablist">
+                  <li className="nav-item">
+                    <a className="nav-link" id="recent-tab" data-bs-toggle="tab" href="#recent" role="tab" aria-controls="recent"
+                    aria-selected="false">{t('detail.recent.tab')}</a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" id="like-tab" data-bs-toggle="tab" href="#like" role="tab" aria-controls="like"
+                    aria-selected="false">{t('detail.like.tab')}</a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link active" id="relate-tab" data-bs-toggle="tab" href="#relate" role="tab" aria-controls="relate"
+                    >{t('detail.relate.tab')}</a>
+                  </li>
+                </ul>
+                <div className="tab-content" id="myTabContent">
+                  <div className="tab-pane fade" id="recent" role="tab" aria-labelledby="recent-tab">
+                    <div className="row">
+                      <Loader/>
                     </div>
-                    <div className="tab-pane fade" id="like" role="tab" aria-labelledby="like-tab">
-                      <div className="row">
-                        <Loader/>
-                      </div>
+                  </div>
+                  <div className="tab-pane fade" id="like" role="tab" aria-labelledby="like-tab">
+                    <div className="row">
+                      <Loader/>
                     </div>
-                    <div className="tab-pane fade show active" id="relate" role="tab" aria-labelledby="relate-tab">
-                      <div className="row">
-                        <Loader/>
-                      </div>
+                  </div>
+                  <div className="tab-pane fade show active" id="relate" role="tab" aria-labelledby="relate-tab">
+                    <div className="row">
+                      <Loader/>
                     </div>
                   </div>
                 </div>
-              </section>
-            </div>
+              </div>
+            </section>
           </div>
         </div>
-      }</div>
-    </>
-    )
+      </div>}
+    </>)
   }
 }
 

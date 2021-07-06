@@ -11,6 +11,7 @@ import InstallmentActions from "../../redux/actions/installment";
 import installmentRules from "./installmentRules.json";
 import installmentData from "../../utils/installment.json";
 import installmentQuestion from "./installmentQuestion.json";
+import { assets } from '../../constants/assetsImage';
 // @Functions
 import { toastError } from "../../utils/toastHelper";
 import tryConvert from '../../utils/changeMoney'
@@ -308,19 +309,20 @@ class InstallmentPage extends Component {
               <div className="px-3 py-2">
                 <h3 className="mb-1">{t('installment.info.title')}</h3>
                 <div className="mb-2 border-bottom"></div>
-                <table className="table table-striped border">
-                  <tbody>
-                    {installmentRules &&
-                      installmentRules.rules.map((item, index) => {
-                        return (
-                          <tr key={index}>
-                            <th scope="row">{item.title}</th>
-                            <td>{item.content}</td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
+                <div className="row">
+                  {installmentRules && installmentRules.rules.map((item, index) => {
+                    return (
+                      <div className="col-6 col-xl-4 my-1" key={index}>
+                        <div className="rounded bg-aqua text-center h-100 p-2" style={{height: "215px"}}>
+                          <img className="w-50" src={assets(item.image)} alt={index}></img>
+                          <h4 className="my-0">{item.title}</h4>
+                          <p className="my-0 text-secondary smaller">{item.content}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  
+                </div>
               </div>
             </div>
           </div>

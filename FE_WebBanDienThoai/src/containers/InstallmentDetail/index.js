@@ -4,7 +4,7 @@ import {compose} from 'redux';
 import { withTranslation } from 'react-i18next'
 // @Components
 import Paypal from './Paypal';
-import { toastError } from '../../utils/toastHelper';
+import { toastWarning } from '../../utils/toastHelper';
 // @Functions
 import numberWithCommas from '../../utils/formatPrice'
 import tryConvert from '../../utils/changeMoney'
@@ -179,14 +179,17 @@ class InstallmentDetail extends Component {
                       <div className="row">
                         <div className="col-9">
                           <div className="form-floating mb-3">
-                            <input type="text" className="form-control" name="money" value={money} onChange={this.onChange} disabled={paypal}/>
+                            <input type="number" className="form-control" name="money" value={money} onChange={this.onChange} disabled={paypal}/>
                             <label>{t('installment.payment.label')} (VND)</label>
                           </div>
                         </div>
                         <div className="col-3 my-2">
                           <button className="btn btn-primary w-100" onClick={()=> {
-                            if(money !== 0) this.setState({paypal: !paypal})
-                            else toastError(`${t('installment.payment.placeholder')}`)
+                            if(parseInt(money) > 50000) {
+                              if(parseInt(money) > parseInt(installmentItem.debt)) toastWarning(`${t('installment.over.placeholder')}`)
+                              else this.setState({paypal: !paypal})
+                            }
+                            else toastWarning(`${t('installment.payment.placeholder')}`)
                           }}>{paypal ? "Edit" : "Submit"}</button>
                         </div>
                       </div>

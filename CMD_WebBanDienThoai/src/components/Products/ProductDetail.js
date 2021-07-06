@@ -39,6 +39,8 @@ class ProductDetail extends Component {
       name: product ? product.name : "",
       pathseo: product ? product.pathseo : "",
       warrently: product ? product.warrently : "",
+      circumstance: product ? product.circumstance : "",
+      included: product ? product.included : "",
       category: product ? product.category._id : listCategories[0]._id,
       brand: product ? product.brand._id : listBrands[0]._id,
       bigimage: product ? product.bigimage : "",
@@ -438,6 +440,8 @@ class ProductDetail extends Component {
       price,
       amount,
       warrently,
+      circumstance,
+      included,
       category,
       brand,
       bigimage,
@@ -459,6 +463,8 @@ class ProductDetail extends Component {
         price,
         amount,
         warrently,
+        circumstance,
+        included,
         category,
         brand,
         bigimage,
@@ -485,6 +491,8 @@ class ProductDetail extends Component {
         price,
         amount,
         warrently,
+        circumstance,
+        included,
         category,
         brand,
         bigimage,
@@ -603,6 +611,8 @@ class ProductDetail extends Component {
       name,
       pathseo,
       warrently,
+      circumstance,
+      included,
       category,
       brand,
       bigimage,
@@ -640,7 +650,7 @@ class ProductDetail extends Component {
       groupDetail
     } = this.props;
     return (
-      <CModal show={large} onClose={() => onClose(!large)} size="lg" closeOnBackdrop={false}>
+      <CModal show={large} onClose={() => onClose(!large)} size="xl" closeOnBackdrop={false}>
         <CModalHeader closeButton>
           <CModalTitle>
             {product ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm mới"}
@@ -648,134 +658,193 @@ class ProductDetail extends Component {
         </CModalHeader>
         <CModalBody>
           <div className="row">
-            <div className="col-12 col-lg-6">
-              <form>
-                <div className="row">
-                  <div className="col-6">
-                    <div className="form-group">
-                      <label>Tên sản phẩm:</label>
+            <div className="col-12 col-lg-4">
+              <div className="row">
+                <div className="col-6">
+                  <div className="form-group">
+                    <label>Tên sản phẩm:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="name"
+                      value={name}
+                      onChange={this.onChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Slug:</label>
+                    {name ? (
                       <input
                         type="text"
                         className="form-control"
-                        name="name"
-                        value={name}
+                        name="pathseo"
+                        value={pathseo ? pathseo : changeToSlug(name)}
                         onChange={this.onChange}
                       />
-                    </div>
-                    <div className="form-group">
-                      <label>Slug:</label>
-                      {name ? (
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="pathseo"
-                          value={pathseo ? pathseo : changeToSlug(name)}
-                          onChange={this.onChange}
-                        />
-                      ) : (
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="pathseo"
-                          value={pathseo}
-                          onChange={this.onChange}
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <div className="col-6">
-                  {bigimage ? (
-                  <div className="form-group img-thumbnail3">
-                    {previewSource ? (
-                      <img src={previewSource} className="border rounded w-100" alt="" />
                     ) : (
-                      <img
-                        src={bigimage.public_url}
-                        className="border rounded w-100"
-                        alt=""
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="pathseo"
+                        value={pathseo}
+                        onChange={this.onChange}
                       />
                     )}
-                    <div className="file btn btn-lg btn-primary">
-                      Change Photo
-                      <input
-                        type="file"
-                        name="previewSource"
-                        onChange={this.handleFileInputChange}
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    </div>
                   </div>
-                ) : (
-                  <div className="form-group img-thumbnail3">
-                    {previewSource ? (
-                      <img src={previewSource} className="border rounded w-100" alt="" />
-                    ) : (
-                      <img
-                        src={INITIAL_IMAGE}
-                        alt=""
-                        className="border rounded w-100"
-                      ></img>
-                    )}
-                    <div className="file btn btn-lg btn-primary">
-                      Change Photo
-                      <input
-                        type="file"
-                        name="previewSource"
-                        onChange={this.handleFileInputChange}
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    </div>
+                </div>
+                <div className="col-6">
+                {bigimage ? (
+                <div className="form-group img-thumbnail3">
+                  {previewSource ? (
+                    <img src={previewSource} className="border rounded w-100" alt="" />
+                  ) : (
+                    <img
+                      src={bigimage.public_url}
+                      className="border rounded w-100"
+                      alt=""
+                    />
+                  )}
+                  <div className="file btn btn-lg btn-primary">
+                    Change Photo
+                    <input
+                      type="file"
+                      name="previewSource"
+                      onChange={this.handleFileInputChange}
+                      style={{ width: "100%", height: "100%" }}
+                    />
                   </div>
-                )}
                 </div>
+              ) : (
+                <div className="form-group img-thumbnail3">
+                  {previewSource ? (
+                    <img src={previewSource} className="border rounded w-100" alt="" />
+                  ) : (
+                    <img
+                      src={INITIAL_IMAGE}
+                      alt=""
+                      className="border rounded w-100"
+                    ></img>
+                  )}
+                  <div className="file btn btn-lg btn-primary">
+                    Change Photo
+                    <input
+                      type="file"
+                      name="previewSource"
+                      onChange={this.handleFileInputChange}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label>Thời hạn bảo hành:</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="warrently"
-                    value={warrently}
-                    onChange={this.onChange}
-                  />
+              )}
+              </div>
+              </div>
+              <div className="form-group">
+                <label>Bảo hành:</label>
+                <textarea
+                  type="text" rows="3"
+                  className="form-control"
+                  name="warrently"
+                  value={warrently}
+                  onChange={this.onChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Tình trạng:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="circumstance"
+                  value={circumstance}
+                  onChange={this.onChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Hộp bao gồm:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="included"
+                  value={included}
+                  onChange={this.onChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Loại sản phẩm:</label>
+                <select
+                  className="form-control"
+                  required="required"
+                  name="category"
+                  value={category}
+                  onChange={this.onSelect}
+                >
+                  {listCategories.map((category, index) => {
+                    return (
+                      <option key={index} value={category._id}>
+                        {category.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Tên thương hiệu:</label>
+                <select
+                  className="form-control"
+                  required="required"
+                  name="brand"
+                  value={brand}
+                  onChange={this.onChange}
+                >
+                  {listBrands.map((brand, index) => {
+                    return (
+                      <option key={index} value={brand._id}>
+                        {brand.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Nhóm sản phẩm liên quan:</label>
+                <div className="float-right">
+                  <button type="button" className="btn btn-primary" onClick={()=> this.onCloseModal("_modal", true)}>Thêm nhóm</button>
                 </div>
-                <div className="form-group">
-                  <label>Loại sản phẩm:</label>
-                  <select
-                    className="form-control"
-                    required="required"
-                    name="category"
-                    value={category}
-                    onChange={this.onSelect}
-                  >
-                    {listCategories.map((category, index) => {
+              </div>
+              <div className="form-group">
+                <div className="position-relative">
+                  <input className="form-control" name="keyword" value={keyword} onChange={this.handleFilter} placeholder="Tìm nhóm có sẵn"></input>
+                  <div className="card mb-0 w-100 position-absolute" style={{ zIndex: 1}}>
+                    {listSearch && keyword && listSearch.map((group, index) =>{
                       return (
-                        <option key={index} value={category._id}>
-                          {category.name}
-                        </option>
-                      );
+                        <div key={index}>
+                          <div className="row">
+                            <div className="col-12" onClick={()=>this.setState({group, keyword: ""})}>
+                              <p className="my-1 mx-2">{group.name}</p>
+                            </div>
+                          </div>
+                          <div className="border-bottom"></div>
+                        </div>
+                      )
                     })}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Tên thương hiệu:</label>
-                  <select
-                    className="form-control"
-                    required="required"
-                    name="brand"
-                    value={brand}
-                    onChange={this.onChange}
-                  >
-                    {listBrands.map((brand, index) => {
-                      return (
-                        <option key={index} value={brand._id}>
-                          {brand.name}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  </div>
                 </div>
 
+                {group && <div className="input-group">
+                  <input
+                    disabled
+                    type="string"
+                    className="form-control"
+                    name="group"
+                    value={group.name}
+                    onChange={this.onChange}
+                  />
+                  <div className="input-group-append" style={{zIndex:0}}>
+                    <button className="btn btn-warning" type="button" onClick={this.onEditGroup}>Sửa</button>
+                  </div>
+                </div>}
+              </div>
+            </div>
+            <div className="col-12 col-lg-4">
               <div className="row">
                 <div className="col-12">
                   <label className="float-left">Danh sách màu:</label>
@@ -998,44 +1067,7 @@ class ProductDetail extends Component {
                     </div>
                   </div>
                 </div>
-              </form>
-              <div className="form-group">
-                <label className="float-left">Nhóm sản phẩm liên quan:</label>
-                <div className="float-right">
-                  <button type="button" className="btn btn-primary" onClick={()=> this.onCloseModal("_modal", true)}>Thêm nhóm</button>
-                </div>
-                <div style={{position: "relative"}}>
-                  <input className="form-control" name="keyword" value={keyword} onChange={this.handleFilter} placeholder="Tìm nhóm có sẵn"></input>
-                  <div className="card mb-0 w-100" style={{ position: "absolute", zIndex: 1}}>
-                    {listSearch && keyword && listSearch.map((group, index) =>{
-                      return (
-                        <div key={index}>
-                          <div className="row">
-                            <div className="col-12" onClick={()=>this.setState({group, keyword: ""})}>
-                              <p className="my-1 mx-2">{group.name}</p>
-                            </div>
-                          </div>
-                          <div className="border-bottom"></div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
 
-                {group && <div className="input-group">
-                  <input
-                    disabled
-                    type="string"
-                    className="form-control"
-                    name="group"
-                    value={group.name}
-                    onChange={this.onChange}
-                  />
-                  <div className="input-group-append" style={{zIndex:0}}>
-                    <button className="btn btn-warning" type="button" onClick={this.onEditGroup}>Sửa</button>
-                  </div>
-                </div>}
-              </div>
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">
                   Thông tin vận chuyển
@@ -1094,8 +1126,7 @@ class ProductDetail extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-lg-6">
-
+            <div className="col-12 col-lg-4">
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">
                   Chi tiết sản phẩm
@@ -1130,7 +1161,7 @@ class ProductDetail extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-12">
+            <div className="col-8">
               <Editor
                 editorState={description}
                 wrapperClassName="desc-wrapper"

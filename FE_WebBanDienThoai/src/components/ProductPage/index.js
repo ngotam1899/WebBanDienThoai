@@ -161,6 +161,11 @@ class ProductPage extends Component {
     history.push(pathname)
   }
 
+  componentWillUnmount(){
+    const {onClearStateBrand} = this.props;
+    onClearStateBrand();
+  }
+
   render() {
     const {min_p, max_p, more} = this.state;
     const { listProducts, listBrand, t, location, total, category } = this.props;
@@ -169,15 +174,15 @@ class ProductPage extends Component {
     return (
     <div className="container my-3">
       <div className="row">
-        <div className="col-12 col-md-3">
+        <div className="col-12 col-md-2 pl-0">
           <div className="row">
-            {location.search.length > 0 && <div className="col-6 col-md-12 mb-3">
+            {location.search.length > 0 && <div className="col-6 col-md-12 mb-2">
               <button type="button" className="btn btn-light w-100 shadow-sm" onClick={()=> this.destroyFilter()}>
                 <i className="fa fa-eraser mr-1"></i>
                 {t('common.clear-filter.button')}
               </button>
             </div>}
-            <div className="col-6 col-md-12 mb-3">
+            <div className="col-6 col-md-12 mb-2">
               <div className="shadow-sm rounded">
                 <div className="px-3 py-2">
                   <h3 className="mb-1">{t('shop.distance.label')}</h3>
@@ -238,7 +243,7 @@ class ProductPage extends Component {
             })}
           </div>
         </div>
-        <div className="col-md-9 col-12">
+        <div className="col-md-10 col-12">
           <div className="row">
             {category && <><div className="my-2">
                 <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
@@ -345,6 +350,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    onClearStateBrand: () =>{
+      dispatch(BrandActions.onClearState())
+    },
     onGetList: (params) => {
       dispatch(ProductsActions.onGetList(params))
     },

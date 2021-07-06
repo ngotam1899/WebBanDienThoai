@@ -45,7 +45,7 @@ function* handleFilter({ payload }) {
  */
 function* handleCreate( {payload} ) {
   var {name, price, amount, pathseo, warrently, brand, category,bigimage, specifications, colors, description, desc_text, weight,
-    height,
+    height, circumstance, included,
     width,
     length, group} = payload.data;
   var params = payload.params;
@@ -60,7 +60,7 @@ function* handleCreate( {payload} ) {
       })
       result = yield call(addProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
-        height,
+        height, circumstance, included,
         width,
         length,
         "bigimage":bigimage.data.images[0]._id,
@@ -74,7 +74,7 @@ function* handleCreate( {payload} ) {
       bigimage = yield call(addImage, payload.data.bigimage);
       result = yield call(addProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
-        height,
+        height, circumstance, included,
         width,
         length,
         "bigimage":bigimage.data.images[0]._id
@@ -90,7 +90,7 @@ function* handleCreate( {payload} ) {
       })
       result = yield call(addProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group,weight,
-        height,
+        height, circumstance, included,
         width,
         length,
         "image": imageArray
@@ -100,7 +100,7 @@ function* handleCreate( {payload} ) {
     }
     else{
       result = yield call(addProduct,{ name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, desc_text, group,
-        weight,
+        weight, circumstance, included,
         height,
         width,
         length, });
@@ -120,7 +120,7 @@ function* handleCreate( {payload} ) {
  */
 function* handleUpdateImage( {payload} ) {
   var {name, price, amount, pathseo, warrently, brand, category, specifications, colors, description, desc_text, group, weight,
-    height,
+    height, circumstance, included,
     width,
     length,} = payload.data;
   var params = payload.params;
@@ -134,7 +134,7 @@ function* handleUpdateImage( {payload} ) {
       })
       var result = yield call(updateProduct,
       { name, price, amount, pathseo, warrently, category, brand, specifications, colors, description, desc_text, group, weight,
-        height,
+        height, circumstance, included,
         width,
         length,
         "bigimage":bigimage.data.images[0]._id,
@@ -149,7 +149,7 @@ function* handleUpdateImage( {payload} ) {
       var bigimage = yield call(addImage, payload.data.bigimage);
       var result = yield call(updateProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
-        height,
+        height, circumstance, included,
         width,
         length,
         "bigimage":bigimage.data.images[0]._id
@@ -165,7 +165,7 @@ function* handleUpdateImage( {payload} ) {
       })
       var result = yield call(updateProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group, weight,
-        height,
+        height, circumstance, included,
         width,
         length,
         "image": payload.data.image.concat(imageArray)
@@ -177,7 +177,7 @@ function* handleUpdateImage( {payload} ) {
     else{
       var result = yield call(updateProduct,
       { name, price, amount, pathseo, warrently, category, brand,specifications, colors, description, desc_text, group,weight,
-        height,
+        height, circumstance, included,
         width,
         length,
         "image": payload.data.image

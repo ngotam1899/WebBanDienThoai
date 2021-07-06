@@ -11,7 +11,6 @@ export default function(state = init, action) {
       return {
         detail: null,
       };
-
     case ProductsActionTypes.CLEAR_STATE:
       return {
         ...init,

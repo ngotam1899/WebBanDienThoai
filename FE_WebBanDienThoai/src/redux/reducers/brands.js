@@ -3,11 +3,15 @@ import { BrandActionTypes } from "../actions/brands";
 const init = {
   loading: true,
   detail: null,
-  processing: false,
+  list: [],
 };
 
 export default function(state = init, action) {
   switch (action.type) {
+    case BrandActionTypes.CLEAR_STATE:
+      return {
+        ...init,
+      };
     case BrandActionTypes.GET_LIST:
     case BrandActionTypes.GET_ACCESSORY:
       return {

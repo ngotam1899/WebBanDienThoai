@@ -130,6 +130,11 @@ class AccessoryPage extends Component {
     history.push(pathname)
   }
 
+  componentWillUnmount(){
+    const {onClearStateBrand} = this.props;
+    onClearStateBrand();
+  }
+
   render() {
     const { more } = this.state;
     const { t, listAccessory, totalBrand, listProducts, total, location } = this.props;
@@ -271,6 +276,9 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
+    onClearStateBrand: () =>{
+      dispatch(BrandActions.onClearState())
+    },
     onGetListProduct: (params) => {
       dispatch(ProductsActions.onGetAccessory(params))
     },

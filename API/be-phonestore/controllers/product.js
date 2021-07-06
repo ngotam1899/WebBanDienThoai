@@ -114,6 +114,8 @@ const updateProduct = async (req, res, next) => {
 			amount,
 			pathseo,
 			warrently,
+			circumstance,
+			included,
 			bigimage,
 			image,
 			category,
@@ -134,6 +136,8 @@ const updateProduct = async (req, res, next) => {
 		if (amount) product.amount = amount;
 		if (pathseo) product.pathseo = pathseo;
 		if (warrently) product.warrently = warrently;
+		if (circumstance) product.circumstance = circumstance;
+		if (included) product.included = included;
 		if (bigimage) product.bigimage = bigimage;
 		if (image) product.image = image;
 		if (description) product.description = description;
@@ -235,6 +239,8 @@ const addProduct = async(req, res, next) => {
 			amount, 
 			pathseo, 
 			warrently, 
+			circumstance,
+			included,
 			bigimage, 
 			image, 
 			category, 
@@ -262,6 +268,8 @@ const addProduct = async(req, res, next) => {
 			else product.pathseo = pathseo;
 		}
 		if (warrently) product.warrently = warrently;
+		if (circumstance) product.circumstance = circumstance;
+		if (included) product.included = included;
 		if (bigimage) product.bigimage = bigimage;
 		if (image) product.image = image
 		if (description) product.description = description;
