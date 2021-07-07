@@ -79,7 +79,7 @@ class OrderItem extends Component {
           <Text style={styles.orderCode}>Mã đơn hàng: {item.item._id}</Text>
         </View>
         {item.item.order_list.map((itemProduct, index) => (
-          <View key={itemProduct._id} style={styles.bodyCart}>
+          <View key={index} style={styles.bodyCart}>
             <Image
               style={styles.imgProduct}
               source={{
@@ -211,9 +211,8 @@ class PageView extends Component {
               orderItem={orderItem ? orderItem : null}
               onCloseModal={this.onCloseModal}
               showModal={this.state.showModal}></OrderDetailView>
-
             <FlatList
-              data={orderList ? orderList : null}
+              data={orderList}
               pagingEnabled={true}
               showsHorizontalScrollIndicator={true}
               scrollEventThrottle={10}
@@ -222,7 +221,7 @@ class PageView extends Component {
                 return (
                   <OrderItem
                     item={item}
-                    key={index}
+                    key={item._id}
                     onUpdateOrder={onUpdateOrder}
                     params={params}
                     onAddProductToCart={onAddProductToCart}

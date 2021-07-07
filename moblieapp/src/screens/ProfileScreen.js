@@ -41,7 +41,7 @@ class ProfileScreen extends Component {
 
   setLogout = () => {
     const {onLogout, navigation} = this.props;
-    localStorage.removeItem('AUTH_USER');
+    AsyncStorage.removeItem('AUTH_USER');
     onLogout();
     navigation.navigate('HomeScreen');
   };

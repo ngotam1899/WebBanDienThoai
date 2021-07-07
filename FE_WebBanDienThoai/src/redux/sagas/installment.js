@@ -1,12 +1,20 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
-import InstallmentActions, { InstallmentActionTypes } from "../actions/installment";
-import { getAllInstallments, getDetailInstallment, addInstallment, updateInstallment, deleteInstallment } from "../apis/installment";
+import InstallmentActions, {
+  InstallmentActionTypes,
+} from "../actions/installment";
+import {
+  getAllInstallments,
+  getDetailInstallment,
+  addInstallment,
+  updateInstallment,
+  deleteInstallment,
+} from "../apis/installment";
 import { getUser } from "../apis/user";
 /* Notification */
-import io from 'socket.io-client';
+import io from "socket.io-client";
 import NotificationActions from "../actions/notification";
-const socket = io('http://localhost:3000');
+const socket = io("http://localhost:3000");
 /* Notification */
 
 function* handleGetList({ payload }) {
@@ -14,7 +22,9 @@ function* handleGetList({ payload }) {
     const result = yield call(getAllInstallments, payload);
     const data = get(result, "data");
     if (data.code !== 200) throw data;
-    yield put(InstallmentActions.onGetListSuccess(data.installments, data.total));
+    yield put(
+      InstallmentActions.onGetListSuccess(data.installments, data.total)
+    );
   } catch (error) {
     yield put(InstallmentActions.onGetListError(error));
   }
@@ -45,14 +55,19 @@ function* handleCreate({ payload }) {
     const userRes = yield call(getUser, payload.params.user);
     const instRes = yield call(getDetailInstallment, data.installment._id);
     /* Notification */
-    socket.emit('installment', { email: userRes.data.user.email, installment: data.installment._id });
-    yield put(NotificationActions.onCreate({
-      name : "Yêu cầu trả góp mới cần duyệt",
-      image : instRes.data.installment.product._id.bigimage._id,
-      link: data.installment._id,
-      type: 2,
-      content :  `${userRes.data.user.email} vừa gửi yêu cầu trả góp cho sản phẩm`
-    }))
+    socket.emit("installment", {
+      email: userRes.data.user.email,
+      installment: data.installment._id,
+    });
+    yield put(
+      NotificationActions.onCreate({
+        name: "Yêu cầu trả góp mới cần duyệt",
+        image: instRes.data.installment.product._id.bigimage._id,
+        link: data.installment._id,
+        type: 2,
+        content: `${userRes.data.user.email} vừa gửi yêu cầu trả góp cho sản phẩm`,
+      })
+    );
     /* Notification */
   } catch (error) {
     yield put(InstallmentActions.onCreateError(error));
@@ -73,16 +88,21 @@ function* handleUpdate({ payload }) {
     yield put(InstallmentActions.onGetList());
     const userRes = yield call(getUser, data.installment.user);
     // Thanh toán thành công thì báo về cho admin
-    if(payload.data.money) {
-      socket.emit('installmentMoney', { email: userRes.data.user.email, installment: data.installment._id });
-      yield put(NotificationActions.onCreate({
-        type: 2,
-        user: null,
-        link: data.installment._id,
-        name : `Phiếu trả góp ${data.installment._id} vừa được thanh toán`,
-        image : detailResult.data.installment.product._id.bigimage._id,
-        content :  `${data.installment._id} đã được thanh toán tại cửa hàng với số tiền là ${payload.data.money} VND`
-      }))
+    if (payload.data.money) {
+      socket.emit("installmentMoney", {
+        email: userRes.data.user.email,
+        installment: data.installment._id,
+      });
+      yield put(
+        NotificationActions.onCreate({
+          type: 2,
+          user: null,
+          link: data.installment._id,
+          name: `Phiếu trả góp ${data.installment._id} vừa được thanh toán`,
+          image: detailResult.data.installment.product._id.bigimage._id,
+          content: `${data.installment._id} đã được thanh toán tại cửa hàng với số tiền là ${payload.data.money} VND`,
+        })
+      );
     }
   } catch (error) {
     yield put(InstallmentActions.onUpdateError(error));

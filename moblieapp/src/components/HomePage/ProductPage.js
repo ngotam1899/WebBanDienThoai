@@ -11,6 +11,7 @@ import {Picker} from '@react-native-community/picker';
 import {Rating} from 'react-native-ratings';
 import {connect} from 'react-redux';
 import styles from './style';
+
 import numberWithCommas from '../../utils/formatPrice';
 import ProductsActions from '../../redux/actions/products';
 
@@ -87,15 +88,17 @@ class ProductItem extends Component {
 class ProductPage extends Component {
   constructor(props) {
     super(props);
-    const {category} = this.props;
+    const {category, listProducts} = this.props;
     this.state = {
       brandName: 'Tất cả',
       paramValue: {
         category: category,
         brand: '',
-        limit: '',
+        limit: 9,
         sort_p: '',
       },
+      number: 1,
+      productList: listProducts ? listProducts : null,
       sortValue: 0,
     };
   }
@@ -106,7 +109,7 @@ class ProductPage extends Component {
     });
     var params = {
       category: category,
-      limit: '',
+      limit: 9,
       brand: '',
       sort_p: 0,
     };
@@ -146,12 +149,29 @@ class ProductPage extends Component {
     onGetList(params);
     onAddParams(params);
   };
-  componentDidUpdate(prevProps) {
+  ReadMore() {
     const {category, onAddParams} = this.props;
+    const {number} = this.state;
+    var params = {
+      category: category,
+      limit: 10,
+      page: number,
+      brand: '',
+      sort_p: 0,
+    };
+    onAddParams(params);
+    this.setState({
+      number: number + 1,
+    });
+  }
+  componentDidUpdate(prevProps) {
+    const {category, onAddParams, listProducts} = this.props;
+    const {productList} = this.state;
     if (category !== prevProps.category) {
       var params = {
         category: category,
-        limit: '',
+        limit: 15,
+        page: 0,
         brand: '',
         sort_p: 0,
       };
@@ -159,8 +179,8 @@ class ProductPage extends Component {
     }
   }
   render() {
-    const {listProducts, navigation, listBrand, params, category} = this.props;
-    const {brandName, sortValue} = this.state;
+    const {listProducts, navigation, listBrand} = this.props;
+    const {brandName, sortValue, productList} = this.state;
     return (
       <View style={{paddingHorizontal: 12, paddingBottom: 130}}>
         <View style={{marginVertical: 8}}>
@@ -223,6 +243,8 @@ class ProductPage extends Component {
         <FlatList
           data={listProducts}
           numColumns={3}
+          onEndReached={() => this.ReadMore()}
+          onEndReachedThreshold={0.01}
           contentContainerStyle={{flexGrow: 1}}
           keyExtractor={(item, index) => item._id}
           renderItem={({item, index}) => {

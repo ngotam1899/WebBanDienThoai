@@ -10,13 +10,20 @@ import {
   updateInstallment,
   deleteInstallment,
 } from '../apis/installment';
+import {getUser} from '../apis/user';
+import io from 'socket.io-client';
+import {API_ENDPOINT_AUTH} from '../../constants/index';
+
+let socket = io(API_ENDPOINT_AUTH);
 
 function* handleGetList({payload}) {
   try {
     const result = yield call(getAllInstallments, payload);
     const data = get(result, 'data');
     if (data.code !== 200) throw data;
-    yield put(InstallmentActions.onGetListSuccess(data.installments));
+    yield put(
+      InstallmentActions.onGetListSuccess(data.installments, data.total),
+    );
   } catch (error) {
     yield put(InstallmentActions.onGetListError(error));
   }
@@ -44,22 +51,6 @@ function* handleCreate({payload}) {
     if (data.code !== 201) throw data;
     yield put(InstallmentActions.onCreateSuccess(data.installment));
     yield put(InstallmentActions.onGetList());
-  } catch (error) {
-    yield put(InstallmentActions.onCreateError(error));
-  }
-}
-
-/**
- *
- * update
- */
-function* handleUpdate({payload}) {
-  try {
-    const result = yield call(updateInstallment, payload.data, payload.id);
-    const data = get(result, 'data', {});
-    if (data.code !== 200) throw data;
-    yield put(InstallmentActions.onUpdateSuccess(get('data')));
-    yield put(InstallmentActions.onGetList(payload.params));
     const userRes = yield call(getUser, payload.params.user);
     const instRes = yield call(getDetailInstallment, data.installment._id);
     /* Notification */
@@ -76,6 +67,43 @@ function* handleUpdate({payload}) {
         content: `${userRes.data.user.email} vừa gửi yêu cầu trả góp cho sản phẩm`,
       }),
     );
+    /* Notification */
+  } catch (error) {
+    yield put(InstallmentActions.onCreateError(error));
+  }
+}
+
+/**
+ *
+ * update
+ */
+function* handleUpdate({payload}) {
+  try {
+    const result = yield call(updateInstallment, payload.data, payload.id);
+    console.log(payload);
+    const data = get(result, 'data', {});
+    if (data.code !== 200) throw data;
+    yield put(InstallmentActions.onUpdateSuccess(get('data')));
+    yield put(InstallmentActions.onGetDetail(payload.id));
+    yield put(InstallmentActions.onGetList(payload.params));
+    const userRes = yield call(getUser, data.installment.user);
+    // Thanh toán thành công thì báo về cho admin
+    if (payload.data.money) {
+      socket.emit('installmentMoney', {
+        email: userRes.data.user.email,
+        installment: data.installment._id,
+      });
+      yield put(
+        NotificationActions.onCreate({
+          type: 2,
+          user: null,
+          link: data.installment._id,
+          name: `Phiếu trả góp ${data.installment._id} vừa được thanh toán`,
+          image: detailResult.data.installment.product._id.bigimage._id,
+          content: `${data.installment._id} đã được thanh toán tại cửa hàng với số tiền là ${payload.data.money} VND`,
+        }),
+      );
+    }
   } catch (error) {
     yield put(InstallmentActions.onUpdateError(error));
   }
