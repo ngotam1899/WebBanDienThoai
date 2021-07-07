@@ -13,6 +13,8 @@ import UsersActions from '../../redux/actions/user';
 import styles from './style';
 
 import ProductLoader from './ProductLoader';
+import ItemProduct from '../ContentLoader/ItemProduct';
+
 import Header from '../HeaderComponent';
 import {INITIAL_IMAGE} from '../../constants';
 import numberWithCommas from '../../utils/formatPrice';
@@ -74,6 +76,7 @@ class FlatListImage extends Component {
           source={{
             uri: this.props.item.public_url,
           }}
+          resizeMode="contain"
         />
       </View>
     );
@@ -540,24 +543,36 @@ class ProductDetail extends Component {
               <Text style={styles.textGroupButton}>SP tương tự</Text>
             </TouchableOpacity>
           </View>
-          {recommend === -1 && authInfo && authInfo.history ? (
-            <FlatListProduct
-              product={authInfo.history}
-              navigation={navigation}></FlatListProduct>
+          {recommend === -1 && authInfo ? (
+            authInfo.history ? (
+              <FlatListProduct
+                product={authInfo.history}
+                navigation={navigation}></FlatListProduct>
+            ) : (
+              <ItemProduct></ItemProduct>
+            )
           ) : (
             <></>
           )}
-          {recommend === 0 && like ? (
-            <FlatListProduct
-              product={like}
-              navigation={navigation}></FlatListProduct>
+          {recommend === 0 ? (
+            like ? (
+              <FlatListProduct
+                product={like}
+                navigation={navigation}></FlatListProduct>
+            ) : (
+              <ItemProduct></ItemProduct>
+            )
           ) : (
             <></>
           )}
-          {recommend === 1 && relate ? (
-            <FlatListProduct
-              product={relate}
-              navigation={navigation}></FlatListProduct>
+          {recommend === 1 ? (
+            relate ? (
+              <FlatListProduct
+                product={relate}
+                navigation={navigation}></FlatListProduct>
+            ) : (
+              <ItemProduct></ItemProduct>
+            )
           ) : (
             <></>
           )}

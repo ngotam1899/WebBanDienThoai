@@ -124,7 +124,7 @@ class CheckoutPage extends Component {
     });
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     const {
       service_type_id,
       totalHeight,

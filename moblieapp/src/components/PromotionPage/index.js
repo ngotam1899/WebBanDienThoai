@@ -54,11 +54,11 @@ class PromotionPage extends Component {
                       {new Date(ad.endedAt).toLocaleDateString('vn-VN')})
                     </Text>
                   </View>
-                  <View style={styles.containerButton}>
+                  {/* <View style={styles.containerButton}>
                     <TouchableHighlight style={styles.btnDetail}>
                       <Text style={styles.textBtn}>Xem chi tiết</Text>
                     </TouchableHighlight>
-                  </View>
+                  </View> */}
                 </View>
               );
             })}

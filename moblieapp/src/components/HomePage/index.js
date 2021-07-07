@@ -99,7 +99,6 @@ class HomePage extends Component {
         ...filter,
         ...filters,
       };
-      onGetList(params);
       onGetListBrand(filters);
       onAddParams(params);
     } else if (val === 3) {
@@ -147,7 +146,7 @@ class HomePage extends Component {
         );
       case 'Promotion':
         return <PromotionPage></PromotionPage>;
-      case 'Phone':
+      case 'Smartphone':
         return (
           <ThirdRoute
             navigation={this.props.navigation}
@@ -156,7 +155,7 @@ class HomePage extends Component {
             category={this.state.category}
           />
         );
-      case 'PC':
+      case 'Computer':
         return (
           <FourRoute
             navigation={this.props.navigation}

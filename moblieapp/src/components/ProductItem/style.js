@@ -1,9 +1,9 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   itemContainer: {
     width: 120,
-    marginRight: 8,
+    marginRight: 9,
     marginTop: 10,
   },
   itemImage: {
@@ -13,33 +13,33 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 13,
     color: '#222',
-    fontWeight:'bold',
+    fontWeight: 'bold',
     marginVertical: 4,
   },
-  itemPriceReal:{
+  itemPriceReal: {
     fontSize: 12,
     color: '#444',
-    textDecorationLine:'line-through',
-    marginRight: 0
+    textDecorationLine: 'line-through',
+    marginRight: 0,
   },
-  reducePrice:{
+  reducePrice: {
     fontSize: 12,
     color: '#444',
-    fontWeight:'bold'
+    fontWeight: 'bold',
   },
   itemPrice: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#d70018',
   },
-  rating:{
+  rating: {
     marginTop: 5,
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     marginRight: 0,
   },
-  countRating:{
-    fontSize: 11
+  countRating: {
+    fontSize: 11,
   },
 });
 

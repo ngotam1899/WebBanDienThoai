@@ -56,7 +56,7 @@ class FirstRoute extends Component {
           {installmentList &&
             installmentList.map((item, index) => {
               return (
-                <View style={styles.containerInstallmentPage}>
+                <View key={item._id} style={styles.containerInstallmentPage}>
                   <View style={styles.containerId}>
                     <Text style={styles.textId}>
                       Mã phiếu trả góp: {item._id}
@@ -348,6 +348,7 @@ class UserInstallmentPage extends Component {
     });
     const {onGetDetail} = this.props;
     onGetDetail(id);
+    console.log(id);
   };
   renderScene = ({route}) => {
     switch (route.key) {

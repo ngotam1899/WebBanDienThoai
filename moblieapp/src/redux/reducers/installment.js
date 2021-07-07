@@ -34,7 +34,8 @@ export default function (state = init, action) {
       return {
         ...state,
         loading: false,
-        list: get(action, 'payload', []),
+        list: action.payload.list,
+        total: action.payload.total,
       };
     case InstallmentActionTypes.GET_DETAIL:
       return {

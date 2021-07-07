@@ -19,21 +19,25 @@ import InstallmentActions from '../redux/actions/installment';
 import OrdersActions from '../redux/actions/order';
 import AuthorizationActions from '../redux/actions/auth';
 
+import NotificationLoader from '../components/ContentLoader/NotificationLoader';
 import Header from '../components/HeaderComponent';
 import DetailModal from '../components/UserInstallmentPage/DetailModal';
 import OrderDetailView from '../components/OrdersPage/OrderDetailView';
 class NotificationScreen extends Component {
   constructor(props) {
     super(props);
-    const {userInfo} = props;
+
+    const {userInfo, listNotification} = props;
     this.state = {
       params: {
-        limit: 20,
+        limit: 10,
         page: 0,
         user: userInfo ? userInfo._id : '',
       },
+      number: 1,
       showModal: false,
       statusModal: false,
+      notificationList: listNotification ? listNotification : null,
     };
   }
   setModal = (value, id) => {
@@ -75,20 +79,28 @@ class NotificationScreen extends Component {
         default:
           return null;
       }
+      this.setState({
+        notificationList: null,
+        number: 1,
+      });
       onUpdate(id, data, params);
     } else {
+      this.setState({
+        notificationList: null,
+        number: 1,
+      });
       onDelete(id, params);
     }
   }
 
   componentDidMount = async () => {
-    const {onGetProfile, userInfo, onGetList} = this.props;
+    const {onGetProfile, userInfo, onGetList, listNotification} = this.props;
     await AsyncStorage.getItem('AUTH_USER').then(data => {
       onGetProfile(null, data);
     });
     if (userInfo) {
       var params1 = {
-        limit: 20,
+        limit: 10,
         page: 0,
         user: userInfo._id,
       };
@@ -96,26 +108,55 @@ class NotificationScreen extends Component {
     }
   };
   componentDidUpdate(prevProps) {
-    const {totalNotification, userInfo, onGetList} = this.props;
-    const {params} = this.state;
-    if (userInfo !== prevProps.userInfo && userInfo) {
-      var user = userInfo._id;
-      onGetList({user, limit: 20, page: 0, active: 1});
+    const {
+      totalNotification,
+      userInfo,
+      onGetList,
+      listNotification,
+    } = this.props;
+    const {notificationList} = this.state;
+    if (listNotification !== prevProps.listNotification && listNotification) {
+      if (prevProps.listNotification && notificationList !== null) {
+        var temp = notificationList;
+        listNotification.map(item => {
+          temp.push(item);
+        });
+        console.log(temp.length);
+        this.setState({
+          notificationList: temp,
+        });
+      } else {
+        this.setState({
+          notificationList: listNotification,
+        });
+      }
     }
     if (totalNotification !== prevProps.totalNotification && userInfo) {
       var user = userInfo._id;
-      onGetList({user, limit: 20, page: 0, active: 1});
+      onGetList({user, limit: 10, page: 0, active: 1});
     }
+  }
+  ReadMore() {
+    const {userInfo, onGetList} = this.props;
+    const {number} = this.state;
+    var user = userInfo._id;
+    onGetList({user, limit: 10, page: number, active: 1});
+    this.setState({
+      number: number + 1,
+    });
   }
   onReadAllNoti() {
     const {userInfo, onUpdateAll} = this.props;
-    var id = userInfo._id;
+    var data = {user: userInfo._id};
     var params = {
-      limit: 20,
+      limit: 10,
       page: 0,
-      user: id,
     };
-    onUpdateAll(id, params);
+    this.setState({
+      notificationList: null,
+      number: 1,
+    });
+    onUpdateAll(data, params);
   }
   onDeleteAllNoti() {
     const {userInfo, onDeleteAll} = this.props;
@@ -125,16 +166,37 @@ class NotificationScreen extends Component {
       page: 0,
       user: id,
     };
+    this.setState({
+      notificationList: null,
+      number: 1,
+    });
     onDeleteAll(id, params);
   }
+  footer = () => {
+    return (
+      <View style={styles.groupBtn}>
+        <TouchableOpacity
+          style={styles.btnReadAll}
+          onPress={() => this.onReadAllNoti()}>
+          <Text style={{color: '#fff'}}>Đánh dấu đã đọc tất cả</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btnDeleteAll}
+          onPress={() => this.onDeleteAllNoti()}>
+          <Text style={{color: '#fff'}}>Xóa tất cả</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
   render() {
     const {
       navigation,
       listNotification,
       installmentItem,
       orderItem,
+      userInfo,
     } = this.props;
-    const {statusModal, params, showModal} = this.state;
+    const {statusModal, params, showModal, notificationList} = this.state;
     return (
       <View style={styles.screenContainer}>
         <DetailModal
@@ -150,110 +212,125 @@ class NotificationScreen extends Component {
         <Header value="1" title="Thông báo" navigation={navigation} />
         <View style={styles.bodyContainer}>
           <View style={styles.listContainer}>
-            {listNotification && listNotification.length > 0 ? (
-              <View>
-                <FlatList
-                  data={listNotification}
-                  keyExtractor={item => item._id}
-                  renderItem={({item}) => (
-                    <View
-                      style={
-                        item.active === true
-                          ? styles.itemContainerActive
-                          : styles.itemContainer
-                      }>
-                      <View style={styles.itemTopContainer}>
-                        <View style={{flex: 1}}>
-                          {item.type === 0 && (
-                            <View
-                              style={[
-                                styles.itemTypeContainer,
-                                {backgroundColor: '#42b8fc'},
-                              ]}>
-                              <MaterialCommunityIcons
-                                name="cart-arrow-right"
-                                color="#fff"
-                                size={22}
-                              />
+            {userInfo ? (
+              notificationList ? (
+                notificationList.length > 0 ? (
+                  <View>
+                    <FlatList
+                      data={notificationList}
+                      onEndReached={() => this.ReadMore()}
+                      onEndReachedThreshold={0.01}
+                      ListFooterComponent={this.footer}
+                      keyExtractor={item => item._id}
+                      renderItem={({item}) => (
+                        <View
+                          style={
+                            item.active === true
+                              ? styles.itemContainerActive
+                              : styles.itemContainer
+                          }>
+                          <View style={styles.itemTopContainer}>
+                            <View style={{flex: 1}}>
+                              {item.type === 0 && (
+                                <View
+                                  style={[
+                                    styles.itemTypeContainer,
+                                    {backgroundColor: '#42b8fc'},
+                                  ]}>
+                                  <MaterialCommunityIcons
+                                    name="cart-arrow-right"
+                                    color="#fff"
+                                    size={22}
+                                  />
+                                </View>
+                              )}
+                              {item.type === 1 && (
+                                <View
+                                  style={[
+                                    styles.itemTypeContainer,
+                                    {backgroundColor: 'red'},
+                                  ]}>
+                                  <MaterialCommunityIcons
+                                    name="file-document"
+                                    color="#fff"
+                                    size={22}
+                                  />
+                                </View>
+                              )}
+                              {item.type === 2 && (
+                                <View style={styles.itemTypeContainer}>
+                                  <MaterialCommunityIcons
+                                    name="cash-multiple"
+                                    color="#fff"
+                                    size={22}
+                                  />
+                                </View>
+                              )}
                             </View>
-                          )}
-                          {item.type === 1 && (
-                            <View
-                              style={[
-                                styles.itemTypeContainer,
-                                {backgroundColor: 'red'},
-                              ]}>
-                              <MaterialCommunityIcons
-                                name="file-document"
-                                color="#fff"
-                                size={22}
-                              />
+                            <View style={styles.itemTopTextContainer}>
+                              <Text style={styles.itemName}>{item.name}</Text>
+                              <Moment
+                                element={Text}
+                                format="DD/MM/YYYY - HH:mm:ss"
+                                style={styles.itemDate}>
+                                {item.createdAt}
+                              </Moment>
                             </View>
-                          )}
-                          {item.type === 2 && (
-                            <View style={styles.itemTypeContainer}>
-                              <MaterialCommunityIcons
-                                name="cash-multiple"
-                                color="#fff"
-                                size={22}
-                              />
+                            <View style={{flex: 1}}>
+                              <ModalDropdown
+                                showsVerticalScrollIndicator={false}
+                                dropdownStyle={{width: 150, height: 86}}
+                                dropdownTextStyle={{
+                                  fontSize: 16,
+                                  color: '#333',
+                                }}
+                                onSelect={val =>
+                                  this.selectButton(
+                                    val,
+                                    item._id,
+                                    item.type,
+                                    item.link,
+                                  )
+                                }
+                                options={['Đã xem', 'Xóa']}>
+                                <MaterialCommunityIcons
+                                  name="dots-vertical"
+                                  color="#000"
+                                  size={25}
+                                />
+                              </ModalDropdown>
                             </View>
-                          )}
+                          </View>
+                          <View>
+                            <Text style={styles.itemDetail}>
+                              {item.content}
+                            </Text>
+                          </View>
                         </View>
-                        <View style={styles.itemTopTextContainer}>
-                          <Text style={styles.itemName}>{item.name}</Text>
-                          <Moment
-                            element={Text}
-                            format="DD/MM/YYYY - HH:mm:ss"
-                            style={styles.itemDate}>
-                            {item.createdAt}
-                          </Moment>
-                        </View>
-                        <View style={{flex: 1}}>
-                          <ModalDropdown
-                            showsVerticalScrollIndicator={false}
-                            dropdownStyle={{width: 150, height: 86}}
-                            dropdownTextStyle={{fontSize: 16, color: '#333'}}
-                            onSelect={val =>
-                              this.selectButton(
-                                val,
-                                item._id,
-                                item.type,
-                                item.link,
-                              )
-                            }
-                            options={['Đã xem', 'Xóa']}>
-                            <MaterialCommunityIcons
-                              name="dots-vertical"
-                              color="#000"
-                              size={25}
-                            />
-                          </ModalDropdown>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={styles.itemDetail}>{item.content}</Text>
-                      </View>
-                    </View>
-                  )}
-                />
-                <View style={styles.groupBtn}>
-                  <TouchableOpacity
-                    style={styles.btnReadAll}
-                    onPress={() => this.onReadAllNoti()}>
-                    <Text style={{color: '#fff'}}>Đánh dấu đã đọc tất cả</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.btnDeleteAll}
-                    onPress={() => this.onDeleteAllNoti()}>
-                    <Text style={{color: '#fff'}}>Xóa tất cả</Text>
-                  </TouchableOpacity>
+                      )}
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.boxZeroNotifi}>
+                    <Text styles={styles.textZeroNotifi}>
+                      Không có thông báo mới
+                    </Text>
+                  </View>
+                )
+              ) : (
+                <View
+                  style={{
+                    backgroundColor: '#fff',
+                    marginTop: 30,
+                    paddingHorizontal: 10,
+                  }}>
+                  <NotificationLoader></NotificationLoader>
                 </View>
-              </View>
+              )
             ) : (
               <View style={styles.boxZeroNotifi}>
                 <Text styles={styles.textZeroNotifi}>
-                  Không có thông báo mới
+                  Vui lòng đăng nhập để xem thông báo
                 </Text>
               </View>
             )}
@@ -388,8 +465,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 30,
-    paddingBottom: 40,
-    marginBottom: 60,
+    paddingBottom: 20,
   },
   btnReadAll: {
     paddingHorizontal: 20,

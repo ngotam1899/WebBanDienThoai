@@ -15,6 +15,8 @@ import {AsyncStorage} from 'react-native';
 
 // @Components
 import ProductItem from '../ProductItem';
+import ItemProduct from '../ContentLoader/ItemProduct';
+import BannerLoader from '../ContentLoader/BannerLoader';
 // @Actions
 import ProductsActions from '../../redux/actions/products';
 import AuthorizationActions from '../../redux/actions/auth';
@@ -63,98 +65,110 @@ class HomeContainer extends Component {
                   keyExtractor={(item, index) => index}
                 />
               ) : (
-                <Image source={section_banner} style={styles.sectionImage} />
+                <BannerLoader></BannerLoader>
               )}
               <Text style={styles.sectionTitle}>Sản phẩm bán chạy nhất</Text>
               <View style={styles.listItemContainer}>
-                <FlatList
-                  data={bestSeller}
-                  pagingEnabled={false}
-                  showsHorizontalScrollIndicator={true}
-                  scrollEventThrottle={10}
-                  keyExtractor={(item, index) => index}
-                  horizontal={true}
-                  renderItem={({item, index}) => {
-                    return (
-                      <ProductItem
-                        name={item._id.name}
-                        image={
-                          item && item._id.bigimage
-                            ? item._id.bigimage.public_url
-                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
-                        }
-                        price={item._id.price_min}
-                        price_real={item._id.real_price_min}
-                        stars={item._id.stars}
-                        reviewCount={item._id.reviewCount}
-                        navigation={navigation}
-                        id={item._id._id}
-                        index={index}
-                        key={item._id._id}
-                      />
-                    );
-                  }}></FlatList>
+                {bestSeller ? (
+                  <FlatList
+                    data={bestSeller}
+                    pagingEnabled={false}
+                    showsHorizontalScrollIndicator={true}
+                    scrollEventThrottle={10}
+                    keyExtractor={(item, index) => index}
+                    horizontal={true}
+                    renderItem={({item, index}) => {
+                      return (
+                        <ProductItem
+                          name={item._id.name}
+                          image={
+                            item && item._id.bigimage
+                              ? item._id.bigimage.public_url
+                              : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
+                          }
+                          price={item._id.price_min}
+                          price_real={item._id.real_price_min}
+                          stars={item._id.stars}
+                          reviewCount={item._id.reviewCount}
+                          navigation={navigation}
+                          id={item._id._id}
+                          index={index}
+                          key={item._id._id}
+                        />
+                      );
+                    }}></FlatList>
+                ) : (
+                  <ItemProduct></ItemProduct>
+                )}
               </View>
               <Text style={styles.sectionTitle}>Sản phẩm mới</Text>
               <View style={styles.listItemContainer}>
-                <FlatList
-                  data={newest}
-                  pagingEnabled={false}
-                  showsHorizontalScrollIndicator={true}
-                  scrollEventThrottle={10}
-                  keyExtractor={(item, index) => item._id}
-                  horizontal={true}
-                  renderItem={({item, index}) => {
-                    return (
-                      <ProductItem
-                        name={item.name}
-                        image={
-                          item.bigimage
-                            ? item.bigimage.public_url
-                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
-                        }
-                        price={item.price_min}
-                        price_real={item.real_price_min}
-                        stars={item.stars}
-                        reviewCount={item.reviewCount}
-                        navigation={navigation}
-                        id={item._id}
-                        index={index}
-                        key={item._id._id}
-                      />
-                    );
-                  }}></FlatList>
+                {newest ? (
+                  <FlatList
+                    data={newest}
+                    pagingEnabled={false}
+                    showsHorizontalScrollIndicator={true}
+                    scrollEventThrottle={10}
+                    keyExtractor={(item, index) => item._id}
+                    horizontal={true}
+                    renderItem={({item, index}) => {
+                      return (
+                        <ProductItem
+                          name={item.name}
+                          image={
+                            item.bigimage
+                              ? item.bigimage.public_url
+                              : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
+                          }
+                          price={item.price_min}
+                          price_real={item.real_price_min}
+                          stars={item.stars}
+                          reviewCount={item.reviewCount}
+                          navigation={navigation}
+                          id={item._id}
+                          index={index}
+                          key={item._id._id}
+                        />
+                      );
+                    }}></FlatList>
+                ) : (
+                  <ItemProduct></ItemProduct>
+                )}
               </View>
               <Text style={styles.sectionTitle}>
                 Sản phẩm được đánh giá cao
               </Text>
               <View style={styles.listItemContainer}>
-                <FlatList
-                  data={favorite}
-                  pagingEnabled={false}
-                  showsHorizontalScrollIndicator={true}
-                  scrollEventThrottle={10}
-                  keyExtractor={(item, index) => item._id}
-                  horizontal={true}
-                  renderItem={({item, index}) => {
-                    return (
-                      <ProductItem
-                        name={item.name}
-                        image={
-                          item.bigimage
-                            ? item.bigimage.public_url
-                            : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
-                        }
-                        price={item.price_min}
-                        price_real={item.real_price_min}
-                        reviewCount={item.reviewCount}
-                        stars={item.stars}
-                        navigation={navigation}
-                        id={item._id}
-                        key={item._id._id}
-                      />
-                    );
-                  }}></FlatList>
+                {favorite ? (
+                  <FlatList
+                    data={favorite}
+                    pagingEnabled={false}
+                    showsHorizontalScrollIndicator={true}
+                    scrollEventThrottle={10}
+                    keyExtractor={(item, index) => item._id}
+                    horizontal={true}
+                    renderItem={({item, index}) => {
+                      return (
+                        <ProductItem
+                          name={item.name}
+                          image={
+                            item.bigimage
+                              ? item.bigimage.public_url
+                              : 'https://cdn.tgdd.vn/Products/Images/42/204088/asus-rog-phone-2-1-600x600.jpg'
+                          }
+                          price={item.price_min}
+                          price_real={item.real_price_min}
+                          reviewCount={item.reviewCount}
+                          stars={item.stars}
+                          navigation={navigation}
+                          id={item._id}
+                          key={item._id._id}
+                        />
+                      );
+                    }}></FlatList>
+                ) : (
+                  <ItemProduct></ItemProduct>
+                )}
               </View>
             </View>
           </ScrollView>

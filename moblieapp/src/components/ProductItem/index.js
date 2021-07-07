@@ -3,7 +3,7 @@ import styles from './style';
 import numberWithCommas from '../../utils/formatPrice';
 import {Rating} from 'react-native-ratings';
 
-import {TouchableOpacity, Image, Text, View, StyleSheet} from 'react-native';
+import {TouchableOpacity, Image, Text, View} from 'react-native';
 export default class ProductItem extends Component {
   render() {
     const {
@@ -22,7 +22,11 @@ export default class ProductItem extends Component {
         onPress={() => {
           navigation.navigate('Detail', {id});
         }}>
-        <Image source={{uri: image}} style={styles.itemImage} />
+        <Image
+          source={{uri: image}}
+          style={styles.itemImage}
+          resizeMode="contain"
+        />
         <View style={{paddingLeft: 6}}>
           <Text style={styles.itemName} numberOfLines={2}>
             {name}

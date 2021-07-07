@@ -17,6 +17,7 @@ class NotificationBottom extends Component {
       itemsCount: 0,
       status: -1,
       order: '',
+      installment: '',
     };
   }
 
@@ -28,7 +29,7 @@ class NotificationBottom extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const {itemsCount, order, status} = this.state;
+    const {itemsCount, order, status, installment, type} = this.state;
     const {onGetNewestNotifications, userInfo, totalNotification} = this.props;
     if (userInfo !== prevProps.userInfo && userInfo) {
       var user = userInfo._id;
@@ -38,34 +39,52 @@ class NotificationBottom extends Component {
       this.setState({itemsCount: totalNotification});
     }
     if (userInfo) {
-      socket.on(`${userInfo._id}`, res => {
+      socket.on(`order_${userInfo._id}`, res => {
         this.setState({
           itemsCount: itemsCount + 1,
           status: res.status,
           order: res.order,
+          type: 0,
+        });
+      });
+      socket.on(`installment_${userInfo._id}`, res => {
+        this.setState({
+          itemsCount: itemsCount + 1,
+          status: res.status,
+          installment: res.installment,
+          type: 2,
         });
       });
     }
     if (itemsCount !== prevState.itemsCount && itemsCount > totalNotification) {
-      switch (status) {
-        case 0:
-          ToastAndroid.showWithGravity(
-            `Đơn hàng ${order} đã xuất kho vận chuyển`,
-            ToastAndroid.SHORT,
-            ToastAndroid.TOP,
-          );
-          onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
-          break;
-        case 1:
-          ToastAndroid.showWithGravity(
-            `Đơn hàng ${order} đã vận chuyển thành công`,
-            ToastAndroid.SHORT,
-            ToastAndroid.TOP,
-          );
-          onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
-          break;
-        default:
-          onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
+      if (type === 2) {
+        ToastAndroid.showWithGravity(
+          `Phiếu trả góp ${installment} đã được duyệt thành công.`,
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+        );
+        onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
+      } else {
+        switch (status) {
+          case 0:
+            ToastAndroid.showWithGravity(
+              `Đơn hàng ${order} đã xuất kho vận chuyển.`,
+              ToastAndroid.SHORT,
+              ToastAndroid.TOP,
+            );
+            onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
+            break;
+          case 1:
+            ToastAndroid.showWithGravity(
+              `Đơn hàng ${order} đã vận chuyển thành công.`,
+              ToastAndroid.SHORT,
+              ToastAndroid.TOP,
+            );
+            onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
+            break;
+          default:
+            onGetNewestNotifications({user: userInfo._id, limit: 5, page: 0});
+        }
       }
     }
   }

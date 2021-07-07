@@ -175,10 +175,10 @@ class DetailModal extends Component {
                     </View>
                   </View>
                   <View style={styles.containerItem}>
-                    <View style={[styles.iconItem, {marginRight: -15}]}>
+                    <View style={[styles.iconItem, {marginRight: -40}]}>
                       <FontAwesome5
                         name="business-time"
-                        size={40}
+                        size={26}
                         color="#000"
                       />
                     </View>
@@ -198,8 +198,8 @@ class DetailModal extends Component {
                     </View>
                   </View>
                   <View style={styles.containerItem}>
-                    <View style={[styles.iconItem, {marginRight: -15}]}>
-                      <FontAwesome5 name="gifts" size={40} color="#000" />
+                    <View style={[styles.iconItem, {marginRight: -40}]}>
+                      <FontAwesome5 name="gifts" size={26} color="#000" />
                     </View>
                     <View style={styles.infoItem}>
                       <Text style={styles.titleItem}>Tình trạng trả góp</Text>
@@ -209,10 +209,10 @@ class DetailModal extends Component {
                     </View>
                   </View>
                   <View style={styles.containerItem}>
-                    <View style={[styles.iconItem, {marginRight: -15}]}>
+                    <View style={[styles.iconItem, {marginRight: -40}]}>
                       <FontAwesome5
                         name="address-card"
-                        size={40}
+                        size={26}
                         color="#000"
                       />
                     </View>
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   containerModal: {
-    width: width - 30,
+    width: width - 20,
     height: height - 140,
     backgroundColor: '#fff',
     borderRadius: 5,
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
   containerContent: {
     flex: 0.92,
     paddingTop: 16,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   containerCancel: {
     flex: 0.08,

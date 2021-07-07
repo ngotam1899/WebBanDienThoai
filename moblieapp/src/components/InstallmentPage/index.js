@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  LogBox,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {AsyncStorage} from 'react-native';
@@ -28,29 +29,7 @@ import numberWithCommas from '../../utils/formatPrice';
 
 const {width} = Dimensions.get('window');
 
-class InstallmentPage extends Component {
-  constructor(props) {
-    super(props);
-    const {route} = props;
-    this.state = {
-      color: route.params.color,
-      percent: 30,
-      loan: 0,
-      detail: [],
-      total_interest: 0,
-      total: 0,
-      prepay: 0,
-      period: 0,
-    };
-  }
-
-  componentDidMount = async () => {
-    const {route, onGetDetailProduct, onGetProfile} = this.props;
-    await AsyncStorage.getItem('AUTH_USER').then(data => {
-      onGetProfile(null, data);
-    });
-    onGetDetailProduct(route.params.productID);
-  };
+class ListQuestion extends Component {
   _head(item) {
     return (
       <View style={styles.headQuestion}>
@@ -75,6 +54,45 @@ class InstallmentPage extends Component {
       </View>
     );
   }
+  render() {
+    return (
+      <View style={{flex: 1}}>
+        <AccordionList
+          nestedScrollEnabled={true}
+          list={installmentQuestion.questions}
+          header={this._head}
+          body={this._body}
+          keyExtractor={(item, index) => index}
+        />
+      </View>
+    );
+  }
+}
+class InstallmentPage extends Component {
+  constructor(props) {
+    super(props);
+    const {route} = props;
+    this.state = {
+      color: route.params.color,
+      percent: 30,
+      loan: 0,
+      detail: [],
+      total_interest: 0,
+      total: 0,
+      prepay: 0,
+      period: 0,
+    };
+  }
+
+  componentDidMount = async () => {
+    const {route, onGetDetailProduct, onGetProfile} = this.props;
+    await AsyncStorage.getItem('AUTH_USER').then(data => {
+      onGetProfile(null, data);
+    });
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    onGetDetailProduct(route.params.productID);
+  };
+
   setPercent = (itemValue, index) => {
     this.setState({
       percent: itemValue,
@@ -227,7 +245,7 @@ class InstallmentPage extends Component {
     });
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.containerScroll}>
+        <ScrollView nestedScrollEnabled={true} style={styles.containerScroll}>
           <View style={styles.containerProduct}>
             <Text style={styles.title}> Sản phẩm </Text>
             {product && (
@@ -304,7 +322,7 @@ class InstallmentPage extends Component {
                     <FontAwesome
                       name="check-square"
                       size={24}
-                      color="#00"
+                      color="#000"
                       style={styles.fontAwesome}
                     />
                     <View>
@@ -444,14 +462,7 @@ class InstallmentPage extends Component {
           </View>
           <View style={styles.containerInfoUser}>
             <Text style={styles.title}> Câu hỏi thường gặp</Text>
-            {installmentQuestion && (
-              <AccordionList
-                list={installmentQuestion.questions}
-                header={this._head}
-                body={this._body}
-                keyExtractor={(item, index) => index}
-              />
-            )}
+            <ListQuestion nestedScrollEnabled={true}></ListQuestion>
           </View>
         </ScrollView>
       </View>

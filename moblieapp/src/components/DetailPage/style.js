@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   },
   productImg: {
     flex: 1,
-    width: width - 66,
+    width: width - 40,
     height: 340,
   },
   flatListItemName: {

@@ -150,7 +150,7 @@ class OrderDetailView extends Component {
                   <Text style={styles.title}>Items List</Text>
                   {orderItem && orderItem.order_list ? (
                     orderItem.order_list.map((item, index) => (
-                      <View style={styles.items}>
+                      <View key={index} style={styles.items}>
                         <Image
                           style={styles.imageItem}
                           source={{
