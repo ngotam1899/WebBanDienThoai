@@ -4,7 +4,7 @@ import UIActions from "../actions/ui";
 import ProductsActions, { ProductsActionTypes } from "../actions/products";
 import { 
   getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest, getLikeProducts, getRelateProducts,
-  getAllAccessory
+  getAllAccessory, compareProduct
 } from "../apis/products";
 import GroupActions from "../actions/group";
 
@@ -69,18 +69,46 @@ function* handleGetNewest({ payload }) {
   yield put(UIActions.hideLoading());
 }
 
+function* handleCompare({ payload }) {
+  yield put(UIActions.showLoading());
+  try {
+    const result = yield call(compareProduct, payload);
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onCompareSuccess(data.products));
+  } catch (error) {
+    yield put(ProductsActions.onCompareError(error));
+  }
+  yield put(UIActions.hideLoading());
+}
+
 function* handleFilter({ payload }) {
   try {
     yield delay(1000);
-    const { keyword } = payload;
-    const result = yield call(getAllProducts, {
-      keyword,
-      limit: 4,
+    var result = yield call(getAllProducts, {
+      ...payload,
+      limit: 5,
       active: 1
     });
     const data = get(result, "data");
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onFilterSuccess(data.products));
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+function* handleCompareFilter({ payload }) {
+  try {
+    yield delay(1000);
+    var result = yield call(getAllProducts, {
+      ...payload,
+      limit: 5,
+      active: 1
+    });
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onCompareFilterSuccess(data.products));
   } catch (error) {
     console.log(error)
   }
@@ -128,6 +156,9 @@ function* handleGetDetail({ id }) {
 export function* watchGetList() {
   yield takeEvery(ProductsActionTypes.GET_LIST, handleGetList);
 }
+export function* watchCompare() {
+  yield takeEvery(ProductsActionTypes.COMPARE, handleCompare);
+}
 export function* watchGetAccessory() {
   yield takeEvery(ProductsActionTypes.GET_ACCESSORY, handleGetAccessory);
 }
@@ -152,10 +183,14 @@ export function* watchGetDetail() {
 export function* watchFilter() {
   yield takeEvery(ProductsActionTypes.FILTER, handleFilter);
 }
+export function* watchCompareFilter() {
+  yield takeEvery(ProductsActionTypes.COMPARE_FILTER, handleCompareFilter);
+}
 
 export default function* rootSaga() {
   yield all([
     fork(watchGetList),
+    fork(watchCompare),
     fork(watchGetAccessory),
     fork(watchGetBestSeller),
     fork(watchGetFavorite),
@@ -164,5 +199,6 @@ export default function* rootSaga() {
     fork(watchGetRelate),
     fork(watchGetDetail),
     fork(watchFilter),
+    fork(watchCompareFilter),
   ]);
 }

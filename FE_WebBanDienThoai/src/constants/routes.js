@@ -6,6 +6,7 @@ import ActivePassword from '../containers/ActivePassword';
 import AccessoryPage from '../components/AccessoryPage';
 import CartPage from '../components/CartPage';
 import CheckoutPage from '../components/CheckoutPage';
+import ComparePage from '../components/ComparePage';
 import DetailPage from '../components/DetailPage';
 import HomePage from '../components/HomePage';
 import InstallmentPage from '../components/InstallmentPage';
@@ -113,6 +114,12 @@ const routes = [
 		exact: true,
 		name: "Detail Page",
 		main: ({match, history, location}) => <DetailPage match={match} history={history} location={location}/>
+	},
+	{
+		path: '/compare/:categoryID',
+		exact: true,
+		name: "Compare Page",
+		main: ({match, history, location}) => <ComparePage match={match} history={history} location={location}/>
 	},
 	{
 		path: '/installment/:pathseo.:productID.:colorID',

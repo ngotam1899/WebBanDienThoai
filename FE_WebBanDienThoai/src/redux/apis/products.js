@@ -68,3 +68,12 @@ export const getAllAccessory = (params = {}) =>{
   }
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}/accessory${queryParams}`);
 };
+
+// http://localhost:3000/products/compare?compare=608c1b07d1dfc82f0411a8ee
+export const compareProduct = (params = {}) =>{
+  let queryParams = '';
+  if(Object.keys(params).length>0){
+    queryParams = `?${queryString.stringify(params)}`;
+  }
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/compare${queryParams}`);
+};

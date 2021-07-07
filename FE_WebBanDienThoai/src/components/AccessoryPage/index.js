@@ -56,6 +56,7 @@ class AccessoryPage extends Component {
   }
 
   componentDidMount(){
+    document.title = "Phụ kiện | Accessories";
     const { onGetAccessory, onGetListBrand, onGetListProduct, location } = this.props;
     const { filter } = this.state;
     const filters = getFilterParams(location.search);

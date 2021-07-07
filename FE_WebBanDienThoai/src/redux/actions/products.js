@@ -2,6 +2,13 @@ export const ProductsActionTypes = {
   FILTER: "FILTER",
   FILTER_SUCCESS: "FILTER_SUCCESS",
 
+  COMPARE: "COMPARE",
+  COMPARE_SUCCESS: "COMPARE_SUCCESS",
+  COMPARE_ERROR: "COMPARE_ERROR",
+
+  COMPARE_FILTER: "COMPARE_FILTER",
+  COMPARE_FILTER_SUCCESS: "COMPARE_FILTER_SUCCESS",
+
   GET_LIST: "GET_LIST",
   GET_LIST_SUCCESS: "GET_LIST_SUCCESS",
   GET_LIST_ERROR: "GET_LIST_ERROR",
@@ -72,6 +79,25 @@ const onClearCart = () => ({
 });
 const onClearState = () => ({
   type: ProductsActionTypes.CLEAR_STATE,
+});
+
+/**
+ * compare
+ **/
+
+const onCompare = (payload) => ({
+  type: ProductsActionTypes.COMPARE,
+  payload,
+});
+
+const onCompareSuccess = (payload) => ({
+  type: ProductsActionTypes.COMPARE_SUCCESS,
+  payload
+});
+
+const onCompareError = (error) => ({
+  type: ProductsActionTypes.COMPARE_ERROR,
+  payload: error,
 });
 
 /**
@@ -312,11 +338,9 @@ const onChangeCurrency = (unit) =>{
  * filter
  */
 
-const onFilter = keyword => ({
+const onFilter = payload => ({
   type: ProductsActionTypes.FILTER,
-  payload: {
-    keyword,
-  },
+  payload,
 });
 
 const onFilterSuccess = payload => ({
@@ -324,13 +348,30 @@ const onFilterSuccess = payload => ({
   payload
 });
 
+const onCompareFilter = payload => ({
+  type: ProductsActionTypes.COMPARE_FILTER,
+  payload,
+});
+
+const onCompareFilterSuccess = payload => ({
+  type: ProductsActionTypes.COMPARE_FILTER_SUCCESS,
+  payload
+});
+
 const ProductsActions = {
   onFilter,
   onFilterSuccess,
 
+  onCompareFilter,
+  onCompareFilterSuccess,
+
   onClearDetail,
   onClearState,
   onClearCart,
+
+  onCompare,
+  onCompareSuccess,
+  onCompareError,
   
   onGetList,
   onGetListSuccess,

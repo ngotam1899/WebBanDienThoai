@@ -141,6 +141,12 @@ class DetailPage extends Component {
       history.push(`/installment/${product.pathseo}.${product._id}.${check}`)
     }
   }
+
+  onCompare = (product) => {
+    const { history } = this.props;
+    console.log(product.category._id)
+    history.push(`/compare/${product.category._id}?compare=${product._id}`)
+  }
   
   setPrice = (currency, min, max) =>{
     if(currency==="VND"){
@@ -332,7 +338,7 @@ class DetailPage extends Component {
               <div className="col-12">
                 <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
                 <button className="ml-2 installment_button" type="button" onClick={() => this.onInstallment(product)}>{t('detail.installment.button')}</button>
-                <button className="ml-2 installment_button" type="button" /* onClick={() => this.onInstallment(product)} */>So sánh chi tiết</button>
+                <button className="ml-2 installment_button" type="button" onClick={() => this.onCompare(product)}>So sánh chi tiết</button>
               </div>
             </div>
           </div>
@@ -498,7 +504,7 @@ class DetailPage extends Component {
                       </div>
                       <div className="col-lg-6">
                         <div className="review_list">
-                          {review.length > 0 ? review.map((item, index)=>{
+                          {review && review.length > 0 ? review.map((item, index)=>{
                             return (
                               <div className="row" key={index}>
                                 <div className="col-12">

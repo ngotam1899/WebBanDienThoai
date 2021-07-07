@@ -82,10 +82,10 @@ const getAllProduct = async (req, res, next) => {
 				condition.price_min = { $lte: req.query.max_p || 50000000, $gte: req.query.min_p || 0 };
 			}
 		}
-		let products;
-		products = await Product.find(condition, { name: 1, pathseo: 1, bigimage: 1, brand: 1, price_max: 1, 
+		const products = await Product.find(condition, { name: 1, pathseo: 1, bigimage: 1, brand: 1, price_max: 1,
 			price_min: 1, active: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1, colors: 1 })
 			.populate({ path: 'bigimage', select: 'public_url' })
+			.populate({ path: 'image', select: 'public_url' })
 			.populate({ path: 'brand', select: "image", populate : {path : 'image', select: "public_url"} })
 			.sort(sort)
 			.limit(limit)
@@ -106,6 +106,39 @@ const getAllProduct = async (req, res, next) => {
 		return next(error);
 	}
 };
+
+const compareProduct = async (req, res, next) => {
+	try {
+		let condition = {
+			active: true
+		};
+		if (req.query.compare != undefined) {
+			if(req.query.compare == ''){
+				condition._id= null
+			}
+			else{
+				const products = req.query.compare.split(",");
+				condition._id = {$in: products}
+			}
+		}
+		const products = await Product.find(condition, { name: 1, brand: 1, price_max: 1,
+			price_min: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1, colors: 1, specifications: 1 })
+			.populate({ path: 'image', select: 'public_url' })
+			.populate({ path: 'specifications', select: "selection", populate : {path : 'selection', select: "name"} })
+			.limit(3)
+			return res
+			.status(200)
+			.json({
+				success: true,
+				code: 200,
+				message: '',
+				products
+			});
+	} catch (error) {
+		return next(error);
+	}
+}
+
 const updateProduct = async (req, res, next) => {
 	try {
 		const { IDProduct } = req.params;
@@ -511,6 +544,7 @@ const accessoryProduct = async (req, res, next) => {
 module.exports = {
 	getAllProduct,
 	getProductDetail,
+	compareProduct,
 	updateProduct,
 	addProduct,
 	deleteProduct,

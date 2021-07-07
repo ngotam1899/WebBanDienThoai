@@ -15,6 +15,8 @@ export default function(state = init, action) {
       return {
         ...init,
       };
+    case ProductsActionTypes.COMPARE:
+    case ProductsActionTypes.COMPARE_ERROR:
     case ProductsActionTypes.GET_LIST:
     case ProductsActionTypes.GET_LIST_ERROR:
     case ProductsActionTypes.GET_ACCESSORY:
@@ -58,6 +60,11 @@ export default function(state = init, action) {
         ...state,
         relate: get(action, "payload"),
       };
+    case ProductsActionTypes.COMPARE_SUCCESS:
+      return {
+        ...state,
+        list: get(action, "payload"),
+      };
     case ProductsActionTypes.GET_LIST_SUCCESS:
     case ProductsActionTypes.GET_ACCESSORY_SUCCESS:
       return {
@@ -69,6 +76,11 @@ export default function(state = init, action) {
       return {
         ...state,
         filter: get(action, "payload", []),
+      };
+    case ProductsActionTypes.COMPARE_FILTER_SUCCESS:
+      return {
+        ...state,
+        compare: get(action, "payload", []),
       };
     case ProductsActionTypes.GET_DETAIL:
       return {
@@ -91,6 +103,7 @@ export default function(state = init, action) {
     case ProductsActionTypes.CREATE:
     case ProductsActionTypes.UPDATE:
     case ProductsActionTypes.FILTER:
+    case ProductsActionTypes.COMPARE_FILTER:
     case ProductsActionTypes.DELETE:
       return {
         ...state,

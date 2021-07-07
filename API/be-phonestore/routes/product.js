@@ -84,6 +84,9 @@ router.route('/cluster')
 router.route('/accessory')
 	.get(productController.accessoryProduct)
 
+router.route('/compare')
+	.get(productController.compareProduct)
+
 router.route('/')
 	.get(productController.getAllProduct)
 	.post(passport.authenticate('jwt', { session: false }), productController.addProduct);

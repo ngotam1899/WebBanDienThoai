@@ -131,7 +131,7 @@ class Header extends Component {
       [name]: value
     })
     const { onFilter } = this.props;
-    onFilter(value);
+    onFilter({keyword: value});
   }
 
   // Chuyển router (thêm vào params) 
@@ -357,8 +357,8 @@ class Header extends Component {
                   <div className="card" style={{ zIndex: 1}}>
                   {listProducts && keyword && listProducts.map((product, index) =>{
                     return (
-                      <Link to={`/product/${product.pathseo}.${product._id}`} className="text-decoration-none">
-                      <div className="row text-dark text-decoration-none " style={{height: "80px"}} key={index}>
+                      <Link to={`/product/${product.pathseo}.${product._id}`} className="text-decoration-none" key={index}>
+                      <div className="row text-dark text-decoration-none " style={{height: "80px"}}>
                         <div className="col-3 my-auto">
                           <><img style={{height: "80px"}} src={product.bigimage.public_url} alt={product.name}></img></>
                         </div>
@@ -477,8 +477,8 @@ const mapStateToProps = (state) =>{
 
 const mapDispatchToProps =(dispatch)=> {
 	return {
-    onFilter: (keyword) => {
-      dispatch(ProductsActions.onFilter(keyword));
+    onFilter: (payload) => {
+      dispatch(ProductsActions.onFilter(payload));
     },
 		onGetProfile : (data, headers) =>{
 			dispatch(AuthorizationActions.onGetProfile(data, headers))

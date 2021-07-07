@@ -13,7 +13,7 @@ import installmentData from "../../utils/installment.json";
 import installmentQuestion from "./installmentQuestion.json";
 import { assets } from '../../constants/assetsImage';
 // @Functions
-import { toastError } from "../../utils/toastHelper";
+import { toastError, toastWarning } from "../../utils/toastHelper";
 import tryConvert from '../../utils/changeMoney'
 import numberWithCommas from "../../utils/formatPrice";
 
@@ -50,7 +50,8 @@ class InstallmentPage extends Component {
   onCreateInstallment = () => {
     const { onCreate, product, authInfo } = this.props;
     var { color, period, prepay } = this.state;
-    if (period === "") return toastError("Bạn chưa chọn thời gian vay");
+    if (!authInfo) return toastError("Bạn phải đăng nhập để tiến hành xét duyệt trả góp");
+    if (period === "") return toastWarning("Bạn chưa chọn thời gian vay");
     const interest_rate = JSON.parse(period).percent;
     period = JSON.parse(period).month_sum;
     var data = {
@@ -70,7 +71,7 @@ class InstallmentPage extends Component {
   onGetInstallment = () => {
     const { product } = this.props;
     var { color, percent, period } = this.state;
-    if (period === "") return toastError("Bạn chưa chọn thời gian vay");
+    if (period === "") return toastWarning("Bạn chưa chọn thời gian vay");
     const interest_rate = JSON.parse(period).percent;
     period = JSON.parse(period).month_sum;
     //var debt = Math.ceil(((product.product_price-prepay )*(1 + interest_rate*0.01))/1000)* 1000
@@ -149,17 +150,18 @@ class InstallmentPage extends Component {
     } = this.state;
 
     return (
-      <div className="container mb-3">
+      <div className="container my-3">
         <div className="row">
           <div className="col-12 my-2">
-            <a className="text-decoration-none" href="/#/">
-              {t("header.home.menu")}
-            </a>
-            <i className="fa fa-chevron-right px-2 w-25-px"></i>
-            <a className="text-decoration-none" href="/#/promotion">
-            {t('installment.page.title')}
-            </a>
+            <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
+            <i className="fa fa-chevron-right px-2 w-25-px "></i>
+            {product && <>
+            <a className="text-decoration-none directory rounded p-2" href={`/#/products/${product.category.pathseo}.${product.category._id}`}>{product.category.name}</a>
+            <i className="fa fa-chevron-right px-2 w-25-px "></i>
+            <a className="text-decoration-none directory rounded p-2" href={`/#/product/${product.pathseo}.${product._id}`}>{product.name}</a>
+            <i className="fa fa-chevron-right px-2 w-25-px "></i></>}
           </div>
+          <h1 className="my-0 font-weight-bold">{t('installment.page.title')}</h1>
           <div className="col-md-6 col-12">
             <div className="rounded shadow-sm my-3">
               <div className="px-3 py-2">
@@ -523,9 +525,9 @@ class InstallmentPage extends Component {
                             aria-expanded="true"
                             aria-controls={`collapse${index}`}
                           >
-                            <p className="mb-0 font-weight-bold">
+                            <h4 className="mb-0">
                               {question.title}
-                            </p>
+                            </h4>
                           </button>
                         </h2>
                         <div

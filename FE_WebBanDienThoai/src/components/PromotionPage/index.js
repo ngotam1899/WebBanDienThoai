@@ -11,6 +11,7 @@ import { LOCAL } from '../../constants/index';
 class PromotionPage extends Component {
 
   componentDidMount(){
+    document.title = "Quảng cáo | Promotion";
     const { onGetList } = this.props;
     onGetList({active: 1});
     /* FB comment plugin */
