@@ -7,6 +7,10 @@ export const InstallmentActionTypes = {
   GET_DETAIL_SUCCESS: "GET_DETAIL_SUCCESS",
   GET_DETAIL_ERROR: "GET_DETAIL_ERROR",
 
+  GET_SESSION: "GET_SESSION",
+  GET_SESSION_SUCCESS: "GET_SESSION_SUCCESS",
+  GET_SESSION_ERROR: "GET_SESSION_ERROR",
+
   CREATE: "CREATE",
   CREATE_SUCCESS: "CREATE_SUCCESS",
   CREATE_ERROR: "CREATE_ERROR",
@@ -138,6 +142,26 @@ const onFilterSuccess = data => ({
   payload: data,
 });
 
+/**
+ *
+ * session
+ */
+
+ const onGetSession = (payload) => ({
+  type: InstallmentActionTypes.GET_SESSION,
+  payload,
+});
+
+const onGetSessionSuccess = (payload) => ({
+  type: InstallmentActionTypes.GET_SESSION_SUCCESS,
+  payload
+});
+
+const onGetSessionError = (error) => ({
+  type: InstallmentActionTypes.GET_SESSION_ERROR,
+  payload: error,
+});
+
 const InstallmentActions = {
   onGetList,
   onGetListSuccess,
@@ -152,6 +176,10 @@ const InstallmentActions = {
   onGetDetail,
   onGetDetailSuccess,
   onGetDetailError,
+
+  onGetSession,
+  onGetSessionSuccess,
+  onGetSessionError,
 
   onCreate,
   onCreateSuccess,

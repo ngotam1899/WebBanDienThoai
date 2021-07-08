@@ -141,7 +141,7 @@ class AccessoryPage extends Component {
     const { t, listAccessory, totalBrand, listProducts, total, location } = this.props;
     const filter = getFilterParams(location.search);
     return (
-      <div className="container mb-3">
+      <div className="container my-3">
         <div className="row">
           <div className="col-12 my-2">
             <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>

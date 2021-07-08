@@ -35,3 +35,11 @@ export const deleteInstallment  = (installmentID) =>{
   return axiosService.delete(`${API_ENDPOINT_AUTH}${url}/${installmentID}`);
 }
 
+// http://localhost:3000/installment/session-installment  METHOD = GET
+export const getSessionInstallment  = (params = {}) =>{
+  let queryParams = '';
+    if(Object.keys(params).length>0){
+        queryParams = `?${queryString.stringify(params)}`;
+    }
+    return axiosService.get(`${API_ENDPOINT_AUTH}${url}/session-installment${queryParams}`);
+}

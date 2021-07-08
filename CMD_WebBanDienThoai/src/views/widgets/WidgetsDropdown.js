@@ -14,7 +14,8 @@ import ChartBarSimple from '../charts/ChartBarSimple'
 import { connect } from "react-redux";
 import qs from "query-string";
 // @Actions
-import UsersActions from "../../redux/actions/user";
+import UsersActions from "../../redux/actions/user"
+import InstallmentActions from "../../redux/actions/installment";
 import OrderActions from "../../redux/actions/order";
 // @Functions
 import getFilterParams from "../../utils/getFilterParams";
@@ -33,7 +34,7 @@ class WidgetsDropdown extends Component {
   }
 
   componentDidMount(){
-    const {onGetRevenue, onGetSessionOrder, onGetTotalUser, onGetSessionUser, location} = this.props;
+    const {onGetRevenue, onGetSessionOrder, onGetSessionInstallment, onGetSessionUser, location} = this.props;
     const { filter } = this.state;
     const filters = getFilterParams(location.search);
     var params = {
@@ -42,12 +43,12 @@ class WidgetsDropdown extends Component {
     };
     onGetRevenue(params);
     onGetSessionOrder(params);
-    onGetTotalUser();
+    onGetSessionInstallment(params);
     onGetSessionUser(params);
   }
 
   componentDidUpdate(prevProps) {
-    const {onGetRevenue, onGetSessionOrder, onGetSessionUser} = this.props;
+    const {onGetRevenue, onGetSessionOrder, onGetSessionUser, onGetSessionInstallment} = this.props;
     if (prevProps.location.search !== this.props.location.search) {
       const filters = getFilterParams(this.props.location.search);
       const { filter } = this.state;
@@ -57,6 +58,7 @@ class WidgetsDropdown extends Component {
       };
       onGetRevenue(params);
       onGetSessionOrder(params);
+      onGetSessionInstallment(params);
       onGetSessionUser(params);
     }
   }
@@ -78,7 +80,7 @@ class WidgetsDropdown extends Component {
   };
 
   render(){
-    const {revenue, totalUser, sessionOrder, sessionUser, location} = this.props;
+    const {revenue, sessionInstallment, sessionOrder, sessionUser, location} = this.props;
     const filter = getFilterParams(location.search);
     return (
       <CRow>
@@ -101,7 +103,7 @@ class WidgetsDropdown extends Component {
           >
             <CDropdown>
               <CDropdownToggle color="transparent">
-                <CIcon name="cil-settings"/>
+                <CIcon name="cil-money"/>
               </CDropdownToggle>
               <CDropdownMenu className="pt-0" placement="bottom-end">
                 <CDropdownItem active = {filter.browse==='day' ? true : false}  onClick={()=>this.handleChangeFilter("day")}>Ngày</CDropdownItem>
@@ -116,7 +118,7 @@ class WidgetsDropdown extends Component {
           <CWidgetDropdown
             color="gradient-info"
             header={`${sessionOrder ? sessionOrder : 0}`}
-            text="Đơn hàng"
+            text="Đơn hàng thành công"
             footerSlot={
               <ChartLineSimple
                 pointed
@@ -132,7 +134,7 @@ class WidgetsDropdown extends Component {
           >
             <CDropdown>
               <CDropdownToggle caret={false} color="transparent">
-                <CIcon name="cil-location-pin"/>
+                <CIcon name="cil-basket"/>
               </CDropdownToggle>
               <CDropdownMenu className="pt-0" placement="bottom-end">
               <CDropdownItem active = {filter.browse==='day' ? true : false}  onClick={()=>this.handleChangeFilter("day")}>Ngày</CDropdownItem>
@@ -146,8 +148,8 @@ class WidgetsDropdown extends Component {
         <CCol sm="6" lg="3">
           <CWidgetDropdown
             color="gradient-warning"
-            header={`${totalUser ? totalUser : 0}`}
-            text="Số khách hàng"
+            header={`${sessionInstallment ? sessionInstallment : 0}`}
+            text="Phiếu trả góp thành công"
             footerSlot={
               <ChartLineSimple
                 className="mt-3"
@@ -161,6 +163,16 @@ class WidgetsDropdown extends Component {
               />
             }
           >
+            <CDropdown>
+              <CDropdownToggle caret={false} color="transparent">
+                <CIcon name="cil-institution"/>
+              </CDropdownToggle>
+              <CDropdownMenu className="pt-0" placement="bottom-end">
+              <CDropdownItem active = {filter.browse==='day' ? true : false}  onClick={()=>this.handleChangeFilter("day")}>Ngày</CDropdownItem>
+                <CDropdownItem active = {filter.browse==='month' ? true : false} onClick={()=>this.handleChangeFilter("month")}>Tháng</CDropdownItem>
+                <CDropdownItem active = {filter.browse==='year' || filter.browse===undefined ? true : false}  onClick={()=>this.handleChangeFilter("year")}>Năm</CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
           </CWidgetDropdown>
         </CCol>
 
@@ -181,7 +193,7 @@ class WidgetsDropdown extends Component {
           >
             <CDropdown>
               <CDropdownToggle caret className="text-white" color="transparent">
-                <CIcon name="cil-settings"/>
+                <CIcon name="cil-hand-point-down"/>
               </CDropdownToggle>
               <CDropdownMenu className="pt-0" placement="bottom-end">
               <CDropdownItem active = {filter.browse==='day' ? true : false}  onClick={()=>this.handleChangeFilter("day")}>Ngày</CDropdownItem>
@@ -200,7 +212,7 @@ const mapStateToProps = (state) => {
   return {
     revenue: state.order.revenue,
     sessionOrder: state.order.session,
-    totalUser: state.user.total,
+    sessionInstallment: state.installment.session,
     sessionUser: state.user.session,
   }
 }
@@ -213,8 +225,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetSessionOrder: (params) => {
       dispatch(OrderActions.onGetSession(params))
     },
-    onGetTotalUser: (params) => {
-      dispatch(UsersActions.onGetList(params))
+    onGetSessionInstallment: (params) => {
+      dispatch(InstallmentActions.onGetSession(params))
     },
     onGetSessionUser: (params) => {
       dispatch(UsersActions.onGetSession(params))

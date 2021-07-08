@@ -453,12 +453,17 @@ const sessionOrder = async (req, res, next) => {
 		}
 		const pipeline = [
 			{
+				'$match': {
+					'status': 1
+				}
+			},
+			{
 				'$group':
 				{
 					'_id':  {						
-						day: {'$dayOfMonth': '$createdAt'}, 
-						month: {'$month': '$createdAt'}, 
-						year: {'$year': '$createdAt'}
+						day: {'$dayOfMonth': '$updatedAt'}, 
+						month: {'$month': '$updatedAt'}, 
+						year: {'$year': '$updatedAt'}
 					},
 					'count': {
 						'$sum': 1

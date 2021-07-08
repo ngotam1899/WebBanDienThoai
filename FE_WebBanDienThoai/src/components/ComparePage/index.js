@@ -5,12 +5,14 @@ import { withTranslation } from "react-i18next";
 import qs from "query-string";
 // @Components
 import ImageGalleries from '../DetailPage/ImageGalleries';
+import Rating from 'react-rating'
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import CategoryActions from "../../redux/actions/categories";
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
 import tryConvert from '../../utils/changeMoney'
+import numberWithCommas from "../../utils/formatPrice";
 import { toastError } from '../../utils/toastHelper';
 
 class ComparePage extends Component {
@@ -28,6 +30,7 @@ class ComparePage extends Component {
   }
 
   componentDidMount() {
+    document.title = "[TellMe] Trang bán hàng"
     const { onCompare, onGetCategory, location, match } = this.props;
     const { filter } = this.state;
     const filters = getFilterParams(location.search);
@@ -50,7 +53,7 @@ class ComparePage extends Component {
       };
       this.props.onCompare(params);
     }
-    if (prevProps.category !== category && listProducts || prevProps.location.search !== location.search) {
+    if ((prevProps.category !== category && listProducts) || (prevProps.listProducts !== listProducts && category && listProducts)) {
       var specifications = category.specifications;
       for(let i = 0; i < specifications.length; i++){
         var product = [];
@@ -109,6 +112,7 @@ class ComparePage extends Component {
       compareString = compare.join()
     }
     this.handleUpdateFilter({ compare: compareString });
+    if(compareString === "") window.location.reload()
   }
 
   handleFilter = (event) => {
@@ -128,7 +132,7 @@ class ComparePage extends Component {
 
   render() {
     const { keyword, specifications } = this.state;
-    const { t, listProducts, category, listSearch, currency } = this.props;
+    const { t, listProducts, category, listSearch, currency, history } = this.props;
     return (
       <div className="container my-3">
         <div className="row">
@@ -157,6 +161,39 @@ class ComparePage extends Component {
                       </div>
                     </div>
                     <ImageGalleries imageDetail={product.image}/>
+                    <div className="row">
+                      <div className="col-12 text-center">
+                      <ins className="text-decoration-none font-weight-bold mr-2">
+                        {currency === "VND" && product.price_min 
+                          ? numberWithCommas(product.price_min)
+                          : numberWithCommas(
+                              parseFloat(
+                                tryConvert(product.price_min, currency, false)
+                              ).toFixed(2)
+                            )}{" "}
+                        {currency}
+                      </ins>
+                      {product.real_price_min && product.real_price_min > product.price_min && <del>
+                        {currency === "VND" && product.real_price_min 
+                          ? numberWithCommas(product.real_price_min)
+                          : numberWithCommas(
+                              parseFloat(
+                                tryConvert(product.real_price_min, currency, false)
+                              ).toFixed(2)
+                            )}{" "}
+                        {currency}
+                      </del>}
+                      </div>
+                      {product.stars &&<div className="col-12 col-xl-6 text-center my-1"><Rating
+                          initialRating={product.stars}
+                          emptySymbol="fa fa-star text-secondary"
+                          fullSymbol="fa fa-star text-warning"
+                          readonly
+                        /><span className="ml-2 text-secondary font-size-12">{product.reviewCount} {t('common.review')}</span></div>}
+                      <div className={product.stars ? "col-12 col-xl-6" : "col-12"}>
+                        <button type="button" className="btn btn-primary w-100" onClick={() => {history.push(`/product/${product.pathseo}.${product._id}`)}}>View detail</button>
+                      </div>
+                    </div>
                   </div>
                 )
               })
@@ -196,27 +233,56 @@ class ComparePage extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-12">
+          <div className="col-12 my-2">
             <div className="shadow-sm rounded">
               <div className="px-3 py-2">
                 <h3 className="mb-1">Thông tin cơ bản</h3>
                 <table className="table">
                 <tbody>
-                  {specifications && specifications.map(item => {
+                  {specifications.map(item => {
                     return(
                     <tr key={item._id}>
                       <th colSpan="1" style={{width: "16%"}}>{item.name}</th>
-                      {item.product.map((element, index) => {
+                      {item.product && item.product.length > 0 && item.product.map((element, index) => {
                         return (
                           <td colSpan="1" style={{width: "28%"}} key={index}>{element.length > 0 ? element : "Đang cập nhật"}</td>
                         )
                       })}
-                      {item.product.length !== 3 && Array.from({ length: 3 - item.product.length }, (_, k) => (<td key={k} colSpan="1" style={{width: "28%"}}></td>))}
+                      {item.product && item.product.length !== 3 && Array.from({ length: 3 - item.product.length }, (_, k) => (<td key={k} colSpan="1" style={{width: "28%"}}></td>))}
                     </tr>
                     )
                   })}
                 </tbody>
               </table>
+              </div>
+            </div>
+          </div>
+          <div className="col-12 my-2">
+            <div className="shadow-sm rounded">
+              <div className="px-3 py-2">
+                <h3 className="mb-1">Thông tin khác</h3>
+                <table className="table">
+                {listProducts && <tbody>
+                  <tr>
+                    <th colSpan="1" style={{width: "16%"}}>Bảo hành</th>
+                    {listProducts.map(item => {
+                      return(
+                        <td colSpan="1" style={{width: "28%"}}>{item ? (item.warrently || "Đang cập nhật") : ""}</td>
+                      )
+                    })}
+                    {listProducts.length !== 3 && Array.from({ length: 3 - listProducts.length }, (_, k) => (<td key={k} colSpan="1" style={{width: "28%"}}></td>))}
+                  </tr>
+                  <tr>
+                    <th colSpan="1" style={{width: "16%"}}>Hộp bao gồm</th>
+                    {listProducts.map(item => {
+                      return(
+                        <td colSpan="1" style={{width: "28%"}}>{item ? (item.included || "Đang cập nhật") : ""}</td>
+                      )
+                    })}
+                    {listProducts.length !== 3 && Array.from({ length: 3 - listProducts.length }, (_, k) => (<td key={k} colSpan="1" style={{width: "28%"}}></td>))}
+                  </tr>
+                </tbody>}
+                </table>
               </div>
             </div>
           </div>

@@ -139,12 +139,6 @@ class CategoryDetail extends Component {
     };
   };
 
-  setSpecification = (specification) =>{
-    const {listSpecification} = this.props;
-    const specificationName = listSpecification.find(obj => obj._id === specification);
-    return get(specificationName, "name");
-  }
-
   onAddSpecification = (specification) =>{
     const {specifications} = this.state;
     if(specifications.findIndex(i => i.name === specification.name)!== -1){
@@ -448,7 +442,7 @@ class CategoryDetail extends Component {
                 pagination
                 scopedSlots = {{
                   'name': (item) => (
-                    <td>{this.setSpecification(item._id)}</td>
+                    <td>{item.name}</td>
                   ),
                   'actions': (item) => (
                     <td>
@@ -525,7 +519,7 @@ class CategoryDetail extends Component {
                 pagination
                 scopedSlots = {{
                   'name': (item) => (
-                    <td>{this.setSpecification(item._id._id)}</td>
+                    <td>{item._id.name}</td>
                   ),
                   'actions': (item) => (
                     <td>

@@ -82,17 +82,63 @@ const addInstallment = async (req, res, next) => {
       // đặt lại detailItem.status là -1 (quá hạn)
       const _startedAt = new Date(startedAt);
       const expire = new Date(_startedAt.setMonth(_startedAt.getMonth() + period));
-      var job = new CronJob(`* * ${_startedAt.getDate()+1} * *`, 
+      var job = new CronJob( `${_startedAt.getMinutes()} ${_startedAt.getHours()} * * *`, 
         async() => {
+          //Mỗi ngày, chạy kiểm tra xem hôm nay đã tới hẹn trả chưa?
           const thisTime = new Date();
           const installmentNow = await Installment.findById(installment._id);
-          installmentNow.detail.map(item => {
+          // Thông báo khi đơn hết hạn
+          const productInstallment = await Product.findById(installment.product._id)
+          const staffInstallment = await User.findById(installment.staff)
+          const userInstallment = await User.findById(installment.user)
+          installmentNow.detail.map(async item => {
             var due_date = new Date(item.due_date); // Ngày tới hạn
             var due_pay = item.payable*item.month;  // Số tiền phải trả = payable*số tháng
             if(due_date >= thisTime && installment.paid < due_pay){  
               // Nếu quá hạn và số tiền đã trả ít hơn số tiền phải trả (status = -1) -> quá hạn
               item.status = -1;
               installmentNow.status = 2;
+              // 1. Thông báo cho người dùng
+              await Notification.insert({
+                name: `Phiếu trả góp ${installment._id} đã quá hạn`,
+                link: installment._id,
+                user: installment.user,
+                image: productInstallment.bigimage,
+                type: 2,
+                content: `Hãy liên hệ với nhân viên phụ trách ${staffInstallment.firstname} ${staffInstallment.lastname} qua số điện thoại ${staffInstallment.phonenumber} hoặc email ${staffInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
+              })
+              // 2. Thông báo cho admin
+              await Notification.insert({
+                name: `Phiếu trả góp ${installment._id} đã quá hạn`,
+                link: installment._id,
+                user: null,
+                image: productInstallment.bigimage,
+                type: 2,
+                content: `Hãy liên hệ với khách hàng ${userInstallment.firstname} ${userInstallment.lastname} qua số điện thoại ${userInstallment.phonenumber} hoặc email ${userInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
+              })
+              await job.stop();
+            }
+            // Nếu còn 5 ngày nữa thì tới hạn, gửi thông báo cho user + mail mỗi ngày
+            if((due_date - thisTime > 1 || due_date - thisTime < 5) && installment.paid < due_pay){
+              // 1. Thông báo cho người dùng
+              await Notification.insert({
+                name: `Phiếu trả góp ${installment._id} còn ${due_date - thisTime} ngày để thanh toán`,
+                link: installment._id,
+                user: installment.user,
+                image: productInstallment.bigimage,
+                type: 2,
+                content: `Hãy đến chi nhánh của TellMe để tiến hành trả góp trước ngày ${due_date} hoặc thanh toán online thông qua Paypal trên Trang cá nhân của bạn trên TellMe`
+              })
+              // 2. Thông báo cho admin
+              await Notification.insert({
+                name: `Phiếu trả góp ${installment._id} còn ${due_date - thisTime} ngày để thanh toán`,
+                link: installment._id,
+                user: null,
+                image: productInstallment.bigimage,
+                type: 2,
+                content: `Hãy liên hệ với khách hàng ${userInstallment.firstname} ${userInstallment.lastname} qua số điện thoại ${userInstallment.phonenumber} hoặc email ${userInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
+              })
+
             }
           })
           await installmentNow.save();
@@ -101,28 +147,7 @@ const addInstallment = async (req, res, next) => {
             await job.stop();
           }
         },async () => {
-          // Sau khi dừng Job (hết hạn)
-          const productInstallment = await Product.findById(installment.product._id)
-          const staffInstallment = await User.findById(installment.staff)
-          const userInstallment = await User.findById(installment.user)
-          // 1. Thông báo cho người dùng
-          await Notification.insert({
-            name: `Phiếu trả góp ${installment._id} đã quá hạn`,
-            link: installment._id,
-            user: installment.user,
-            image: productInstallment.bigimage,
-            type: 2,
-            content: `Hãy liên hệ với nhân viên phụ trách ${staffInstallment.firstname} ${staffInstallment.lastname} qua số điện thoại ${staffInstallment.phonenumber} hoặc email ${staffInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
-          })
-          // 2. Thông báo cho admin
-          await Notification.insert({
-            name: `Phiếu trả góp ${installment._id} đã quá hạn`,
-            link: installment._id,
-            user: null,
-            image: productInstallment.bigimage,
-            type: 2,
-            content: `Hãy liên hệ với khách hàng ${userInstallment.firstname} ${userInstallment.lastname} qua số điện thoại ${userInstallment.phonenumber} hoặc email ${userInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
-          })
+          
         },
         true, /* Start the job right now */
         'Asia/Ho_Chi_Minh' /* Time zone of this job. */
@@ -195,17 +220,62 @@ const updateInstallment = async (req, res, next) => {
       const _startedAt = new Date(startedAt);
       const expire = new Date(_startedAt.setMonth(_startedAt.getMonth() + period));
       installment.endedAt = expire;
-      var job = new CronJob(`* * ${_startedAt.getDate()+1} * *`, 
+      var job = new CronJob(`${_startedAt.getMinutes()} ${_startedAt.getHours()} * * *`, 
         async() => {
           const thisTime = new Date();
           const installmentNow = await Installment.findById(installment._id);
-          installmentNow.detail.map(item => {
+          // Thông báo khi đơn hết hạn
+          const productInstallment = await Product.findById(installment.product._id)
+          const staffInstallment = await User.findById(installment.staff)
+          const userInstallment = await User.findById(installment.user)
+          installmentNow.detail.map(async item => {
             var due_date = new Date(item.due_date); // Ngày tới hạn
             var due_pay = item.payable*item.month;  // Số tiền phải trả = payable*số tháng
             if(due_date >= thisTime && installment.paid < due_pay){  
               // Nếu quá hạn và số tiền đã trả ít hơn số tiền phải trả (status = -1) -> quá hạn
               item.status = -1;
               installmentNow.status = 2;
+              // 1. Thông báo cho người dùng
+              await Notification.insert({
+                name: `Phiếu trả góp ${installment._id} đã quá hạn`,
+                link: installment._id,
+                user: installment.user,
+                image: productInstallment.bigimage,
+                type: 2,
+                content: `Hãy liên hệ với nhân viên phụ trách ${staffInstallment.firstname} ${staffInstallment.lastname} qua số điện thoại ${staffInstallment.phonenumber} hoặc email ${staffInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
+              })
+              // 2. Thông báo cho admin
+              await Notification.insert({
+                name: `Phiếu trả góp ${installment._id} đã quá hạn`,
+                link: installment._id,
+                user: null,
+                image: productInstallment.bigimage,
+                type: 2,
+                content: `Hãy liên hệ với khách hàng ${userInstallment.firstname} ${userInstallment.lastname} qua số điện thoại ${userInstallment.phonenumber} hoặc email ${userInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
+              })
+              await job.stop();
+            }
+            // Nếu còn 5 ngày nữa thì tới hạn, gửi thông báo cho user + mail mỗi ngày
+            if((due_date - thisTime > 1 || due_date - thisTime < 5) && installment.paid < due_pay){
+              // 1. Thông báo cho người dùng
+              await Notification.insert({
+                name: `Phiếu trả góp ${installment._id} còn ${due_date - thisTime} ngày để thanh toán`,
+                link: installment._id,
+                user: installment.user,
+                image: productInstallment.bigimage,
+                type: 2,
+                content: `Hãy đến chi nhánh của TellMe để tiến hành trả góp trước ngày ${due_date} hoặc thanh toán online thông qua Paypal trên Trang cá nhân của bạn trên TellMe`
+              })
+              // 2. Thông báo cho admin
+              await Notification.insert({
+                name: `Phiếu trả góp ${installment._id} còn ${due_date - thisTime} ngày để thanh toán`,
+                link: installment._id,
+                user: null,
+                image: productInstallment.bigimage,
+                type: 2,
+                content: `Hãy liên hệ với khách hàng ${userInstallment.firstname} ${userInstallment.lastname} qua số điện thoại ${userInstallment.phonenumber} hoặc email ${userInstallment.email} để kiểm tra và xác thực tình trạng trả góp`
+              })
+
             }
           })
           await installmentNow.save();
@@ -262,10 +332,89 @@ const getDetailInstallment = async (req, res, next) => {
   }
 };
 
+// Số lượng installment mỗi ngày, mỗi tháng, mỗi quí
+const sessionInstallment = async (req, res, next) => {
+	const today = new Date();
+	try {
+		let condition = {};
+		if (req.query.browse != undefined && req.query.browse != '') {
+			switch(req.query.browse){
+				case 'day':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1, 
+							'_id.day': today.getDate()
+						}
+					}
+					break;
+				case 'month':
+					condition.browse = { 
+						'$match': { 
+							'_id.year' : today.getFullYear(), 
+							'_id.month' : today.getMonth() + 1 
+						}
+					}
+					break;
+				case 'year':
+					condition.browse = {
+						'$match': { 
+							'_id.year' : today.getFullYear()
+						}
+					}
+					break;
+				default:
+					condition.browse = {
+						'$project': { 
+							'_id' : 1, 'count': 1
+						}
+					};
+			}
+		}
+		else{
+			condition.browse = {
+				'$project': { 
+					'_id' : 1, 'count': 1
+				}
+			};
+		}
+		const pipeline = [
+      {
+        '$match': {
+          'status': 1
+        }
+      },
+			{
+				'$group':
+				{
+					'_id':  {						
+						day: {'$dayOfMonth': '$updatedAt'}, 
+						month: {'$month': '$updatedAt'}, 
+						year: {'$year': '$updatedAt'}
+					},
+					'count': {
+						'$sum': 1
+					}
+				}
+			},
+			{ '$sort': { '_id.year': 1, '_id.month': 1, '_id.day': 1} },
+			condition.browse
+		];
+		const installment = await Installment.aggregate(pipeline);
+		const count = installment.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0);
+		return res
+			.status(200)
+			.json({ success: true, code: 200, message: '', count, installment});
+	} catch (error) {
+		return next(error);
+	}
+};
+
 module.exports = {
 	getAllInstallment,
 	addInstallment,
 	updateInstallment,
 	deleteInstallment,
-	getDetailInstallment
+	getDetailInstallment,
+  sessionInstallment
 };

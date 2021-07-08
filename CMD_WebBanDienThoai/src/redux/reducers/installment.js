@@ -21,14 +21,17 @@ export default function(state = init, action) {
         ...init,
       };
     case InstallmentActionTypes.GET_LIST:
-      return {
-        ...state,
-        loading: true,
-      };
     case InstallmentActionTypes.GET_LIST_ERROR:
+    case InstallmentActionTypes.GET_SESSION:
+    case InstallmentActionTypes.GET_SESSION_ERROR:
       return {
         ...state,
          loading: false,
+      };
+    case InstallmentActionTypes.GET_SESSION_SUCCESS:
+      return {
+        ...state,
+        session: action.payload,
       };
     case InstallmentActionTypes.GET_LIST_SUCCESS:
       return {

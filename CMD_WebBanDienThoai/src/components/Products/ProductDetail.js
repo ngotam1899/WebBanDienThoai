@@ -96,6 +96,7 @@ class ProductDetail extends Component {
         categoryDetail.specifications.map((item) => {
           specifications.push({
             _id: item._id,
+            name: item.name,
             value: "",
             selections: item.selections
           });
@@ -110,6 +111,7 @@ class ProductDetail extends Component {
         categoryDetail.specifications.map((item) => {
           specifications.push({
             _id: item._id,
+            name: item.name,
             value: "",
             selections: item.selections
           });
@@ -120,6 +122,7 @@ class ProductDetail extends Component {
       categoryDetail.specifications.map((item) => {
         specifications.push({
           _id: item._id,
+          name: item.name,
           value: "",
           selections: item.selections
         });
@@ -514,14 +517,6 @@ class ProductDetail extends Component {
     }
   };
 
-  setSpecification = (specification) => {
-    const { listSpecification } = this.props;
-    const specificationName = listSpecification.find(
-      (obj) => obj._id === specification
-    );
-    return specificationName.name;
-  };
-
   onCloseModal = (name, value) =>{
     this.setState({
       [name] : value
@@ -590,7 +585,6 @@ class ProductDetail extends Component {
   }
 
   setSelector = (selection, value) => {
-    console.log("value", value)
     const _value = JSON.parse(value)
     var selector = []
     for(let i=0; i<selection.length; i++){
@@ -658,7 +652,9 @@ class ProductDetail extends Component {
         </CModalHeader>
         <CModalBody>
           <div className="row">
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-8">
+              <div className="row">
+                <div className="col-12 col-lg-6">
               <div className="row">
                 <div className="col-6">
                   <div className="form-group">
@@ -844,288 +840,302 @@ class ProductDetail extends Component {
                 </div>}
               </div>
             </div>
-            <div className="col-12 col-lg-4">
-              <div className="row">
-                <div className="col-12">
-                  <label className="float-left">Danh sách màu:</label>
-                  <div className="float-right">
-                    <button
-                      className="btn btn-success mr-2"
-                      style={{ display: colorEditing }}
-                      onClick={() => this.onSaveColor()}
-                      type="button"
-                    >
-                      Lưu
-                    </button>
-                    <button
-                      className="btn btn-primary"
-                      type="button"
-                      onClick={() => this.onAddColor(colorEditing)}
-                    >
-                      {btnStatus}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className="row"
-                style={{ display: colorEditing }}
-              >
-                <div className="col-5">
-                  <div className="img-thumbnail2">
-                    {previewColorImage
-                      ? <img src={previewColorImage}
-                        className="border rounded w-100"
-                        alt=""></img>
-                      : <img
-                        src={imageColor}
-                        className="border rounded w-100"
-                        alt=""
-                      ></img>
-                    }
-                    <div className="btn btn-lg btn-primary img-des">
-                      Choose Photo
-                      <input
-                        type="button"
-                        name="previewColorImage"
-                        className="w-100 h-100"
-                        onClick={() => this.onCloseModal("modal", true)}
-                      />
-                    </div>
-                  </div>
-                  <div className="input-group mb-3">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">Số lượng</span>
-                    </div>
-                    <input
-                      className="form-control"
-                      placeholder="Nhập số lượng"
-                      type="number"
-                      name="amountColor"
-                      value={amountColor}
-                      onChange={this.onChange}
-                      min="0"
-                    ></input>
-                  </div>
-
-                </div>
-                <div className="col-7">
-                  <select
-                    className="form-control my-1"
-                    required="required"
-                    name="nameColor"
-                    value={nameColor}
-                    onChange={this.onChange}
-                  >
-                    <option value={-1}>Chọn màu</option>
-                    {listColor && listColor.map((color, index) => {
-                      return (
-                        <option key={index} value={color._id}>
-                          {color.name_vn}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <label>Giá đã giảm:</label>
-                  <div className="input-group mb-0">
-                    <input
-                      className="form-control"
-                      placeholder="Nhập giá sản phẩm"
-                      type="number"
-                      name="priceColor"
-                      value={priceColor}
-                      onChange={this.onChange}
-                      min="0"
-                    ></input>
-                    <div className="input-group-append">
-                      <span className="input-group-text">VND</span>
-                    </div>
-                  </div>
-                  <label>Giá chưa giảm:</label>
-                  <div className="input-group mb-0">
-                    <input
-                      className="form-control"
-                      placeholder="Nhập giá sản phẩm"
-                      type="number"
-                      name="realPriceColor"
-                      value={realPriceColor}
-                      onChange={this.onChange}
-                      min="0"
-                    ></input>
-                    <div className="input-group-append">
-                      <span className="input-group-text">VND</span>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              {colors.map((item, index) => {
-                return (
-                  <div className="row" key={index}>
-                    <div className="col-3">
-                      <img
-                        src={item.image_link ? item.image_link: INITIAL_IMAGE}
-                        alt={item.name_vn}
-                        className="border rounded w-100"
-                      />
-                    </div>
-                    <div className="col-5">
-                      <p className="font-weight-bold my-0">
-                        {item.name_vn}
-                      </p>
-                      <p className="font-italic my-0">
-                        {item.price} VND
-                      </p>
-                      <p className="my-0">
-                        Số lượng {item.amount}
-                      </p>
-                    </div>
-                    <div className="col-4">
-                      <button
-                        className="btn btn-warning d-inline-block float-right m-1"
-                        type="button"
-                        onClick={() => this.onEditColor(item)}
-                      >
-                        <i className="fa fa-highlighter"></i>
-                      </button>
-                      <button
-                        className="btn btn-danger d-inline-block float-right m-1"
-                        type="button"
-                        onClick={() => this.onDeleteColor(item)}
-                      >
-                        <i className="fa fa-trash-alt"></i>
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-                <div className="form-group mt-1">
+                <div className="col-12 col-lg-6">
                   <div className="row">
-                    {image &&
-                      image.map((item, index) => {
-                        return (
-                          <div className="col-3" key={index}>
-                            <div className=" img-thumbnail2">
-                              <img
-                                src={item.public_url}
-                                className="border rounded w-100"
-                                alt=""
-                              ></img>
-                              <div className="btn btn-lg btn-primary img-des">
-                                Delete Photo
-                                <input
-                                  type="button"
-                                  name="image"
-                                  className="w-100 h-100"
-                                  onClick={() => this.deletePhoto(item._id)}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    {previewList[0] && (
-                      <>
-                        {previewList.map((item, index) => {
+                    <div className="col-12">
+                      <label className="float-left">Danh sách màu:</label>
+                      <div className="float-right">
+                        <button
+                          className="btn btn-success mr-2"
+                          style={{ display: colorEditing }}
+                          onClick={() => this.onSaveColor()}
+                          type="button"
+                        >
+                          Lưu
+                        </button>
+                        <button
+                          className="btn btn-primary"
+                          type="button"
+                          onClick={() => this.onAddColor(colorEditing)}
+                        >
+                          {btnStatus}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    className="row"
+                    style={{ display: colorEditing }}
+                  >
+                    <div className="col-5">
+                      <div className="img-thumbnail2">
+                        {previewColorImage
+                          ? <img src={previewColorImage}
+                            className="border rounded w-100"
+                            alt=""></img>
+                          : <img
+                            src={imageColor}
+                            className="border rounded w-100"
+                            alt=""
+                          ></img>
+                        }
+                        <div className="btn btn-lg btn-primary img-des">
+                          Choose Photo
+                          <input
+                            type="button"
+                            name="previewColorImage"
+                            className="w-100 h-100"
+                            onClick={() => this.onCloseModal("modal", true)}
+                          />
+                        </div>
+                      </div>
+                      <div className="input-group mb-3">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">Số lượng</span>
+                        </div>
+                        <input
+                          className="form-control"
+                          placeholder="Nhập số lượng"
+                          type="number"
+                          name="amountColor"
+                          value={amountColor}
+                          onChange={this.onChange}
+                          min="0"
+                        ></input>
+                      </div>
+
+                    </div>
+                    <div className="col-7">
+                      <select
+                        className="form-control my-1"
+                        required="required"
+                        name="nameColor"
+                        value={nameColor}
+                        onChange={this.onChange}
+                      >
+                        <option value={-1}>Chọn màu</option>
+                        {listColor && listColor.map((color, index) => {
                           return (
-                            <div className="col-3" key={index}>
-                              <div className="img-thumbnail2">
-                                <img src={item} alt="" className="border rounded w-100" />
-                                <div className="btn btn-lg btn-primary img-des">
-                                  Delete Photo
-                                  <input
-                                    type="button"
-                                    name="image"
-                                    className="w-100 h-100"
-                                    onClick={() => this.deletePreview(item)}
-                                  />
-                                </div>
-                              </div>
-                            </div>
+                            <option key={index} value={color._id}>
+                              {color.name_vn}
+                            </option>
                           );
                         })}
-                      </>
-                    )}
-                    <div className="col-3">
-                      <div className=" img-thumbnail2">
-                        <img
-                          src={INITIAL_IMAGE}
-                          alt=""
-                          className="border rounded w-100"
-                        ></img>
-                        <div className="btn btn-lg btn-primary img-des">
-                          Add Photo
-                          <input
-                            type="file"
-                            onChange={this.handleListInputChange}
-                            className="w-100 h-100"
+                      </select>
+                      <label>Giá đã giảm:</label>
+                      <div className="input-group mb-0">
+                        <input
+                          className="form-control"
+                          placeholder="Nhập giá sản phẩm"
+                          type="number"
+                          name="priceColor"
+                          value={priceColor}
+                          onChange={this.onChange}
+                          min="0"
+                        ></input>
+                        <div className="input-group-append">
+                          <span className="input-group-text">VND</span>
+                        </div>
+                      </div>
+                      <label>Giá chưa giảm:</label>
+                      <div className="input-group mb-0">
+                        <input
+                          className="form-control"
+                          placeholder="Nhập giá sản phẩm"
+                          type="number"
+                          name="realPriceColor"
+                          value={realPriceColor}
+                          onChange={this.onChange}
+                          min="0"
+                        ></input>
+                        <div className="input-group-append">
+                          <span className="input-group-text">VND</span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {colors.map((item, index) => {
+                    return (
+                      <div className="row" key={index}>
+                        <div className="col-3">
+                          <img
+                            src={item.image_link ? item.image_link: INITIAL_IMAGE}
+                            alt={item.name_vn}
+                            className="border rounded w-100"
                           />
+                        </div>
+                        <div className="col-5">
+                          <p className="font-weight-bold my-0">
+                            {item.name_vn}
+                          </p>
+                          <p className="font-italic my-0">
+                            {item.price} VND
+                          </p>
+                          <p className="my-0">
+                            Số lượng {item.amount}
+                          </p>
+                        </div>
+                        <div className="col-4">
+                          <button
+                            className="btn btn-warning d-inline-block float-right m-1"
+                            type="button"
+                            onClick={() => this.onEditColor(item)}
+                          >
+                            <i className="fa fa-highlighter"></i>
+                          </button>
+                          <button
+                            className="btn btn-danger d-inline-block float-right m-1"
+                            type="button"
+                            onClick={() => this.onDeleteColor(item)}
+                          >
+                            <i className="fa fa-trash-alt"></i>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                    <div className="form-group mt-1">
+                      <div className="row">
+                        {image &&
+                          image.map((item, index) => {
+                            return (
+                              <div className="col-3" key={index}>
+                                <div className=" img-thumbnail2">
+                                  <img
+                                    src={item.public_url}
+                                    className="border rounded w-100"
+                                    alt=""
+                                  ></img>
+                                  <div className="btn btn-lg btn-primary img-des">
+                                    Delete Photo
+                                    <input
+                                      type="button"
+                                      name="image"
+                                      className="w-100 h-100"
+                                      onClick={() => this.deletePhoto(item._id)}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        {previewList[0] && (
+                          <>
+                            {previewList.map((item, index) => {
+                              return (
+                                <div className="col-3" key={index}>
+                                  <div className="img-thumbnail2">
+                                    <img src={item} alt="" className="border rounded w-100" />
+                                    <div className="btn btn-lg btn-primary img-des">
+                                      Delete Photo
+                                      <input
+                                        type="button"
+                                        name="image"
+                                        className="w-100 h-100"
+                                        onClick={() => this.deletePreview(item)}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </>
+                        )}
+                        <div className="col-3">
+                          <div className=" img-thumbnail2">
+                            <img
+                              src={INITIAL_IMAGE}
+                              alt=""
+                              className="border rounded w-100"
+                            ></img>
+                            <div className="btn btn-lg btn-primary img-des">
+                              Add Photo
+                              <input
+                                type="file"
+                                onChange={this.handleListInputChange}
+                                className="w-100 h-100"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <div className="card text-white mb-3">
+                    <div className="card-header bg-primary">
+                      Thông tin vận chuyển
+                    </div>
+                    <div className="card-body text-dark">
+                      <div className="row">
+                        <div className="col-6">
+                          <div className="form-group">
+                            <label>Khối lượng: (gram)</label>
+                            <input
+                              type="number"
+                              className="form-control"
+                              name="weight"
+                              value={weight}
+                              onChange={this.onChange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="form-group">
+                            <label>Chiều cao: (cm)</label>
+                            <input
+                              type="number"
+                              className="form-control"
+                              name="height"
+                              value={height}
+                              onChange={this.onChange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="form-group">
+                            <label>Chiều rộng: (cm)</label>
+                            <input
+                              type="number"
+                              className="form-control"
+                              name="width"
+                              value={width}
+                              onChange={this.onChange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="form-group">
+                            <label>Chiều dài: (cm)</label>
+                            <input
+                              type="number"
+                              className="form-control"
+                              name="length"
+                              value={length}
+                              onChange={this.onChange}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-
-              <div className="card text-white mb-3">
-                <div className="card-header bg-primary">
-                  Thông tin vận chuyển
-                </div>
-                <div className="card-body text-dark">
-                  <div className="row">
-                    <div className="col-6">
-                      <div className="form-group">
-                        <label>Khối lượng: (gram)</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="weight"
-                          value={weight}
-                          onChange={this.onChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="form-group">
-                        <label>Chiều cao: (cm)</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="height"
-                          value={height}
-                          onChange={this.onChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="form-group">
-                        <label>Chiều rộng: (cm)</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="width"
-                          value={width}
-                          onChange={this.onChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="form-group">
-                        <label>Chiều dài: (cm)</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="length"
-                          value={length}
-                          onChange={this.onChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <div className="col-12">
+              <Editor
+                editorState={description}
+                wrapperClassName="desc-wrapper"
+                editorClassName="desc-editor"
+                onEditorStateChange={(description) => this.setState({description})}
+                toolbar={{
+                  image: { uploadCallback: this.uploadImageCallBack, alt: { present: true, mandatory: true } },
+                }}
+              />
+            </div>
               </div>
             </div>
+
             <div className="col-12 col-lg-4">
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">
@@ -1136,7 +1146,7 @@ class ProductDetail extends Component {
                     return (
                       <div className="form-group" key={index} className="my-1">
                         <label key={index + 1} className="my-0">
-                          {this.setSpecification(item._id)}
+                          {item.name}
                         </label>
                         {item.selections.length > 0 ?
                         <Select
@@ -1161,17 +1171,7 @@ class ProductDetail extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-8">
-              <Editor
-                editorState={description}
-                wrapperClassName="desc-wrapper"
-                editorClassName="desc-editor"
-                onEditorStateChange={(description) => this.setState({description})}
-                toolbar={{
-                  image: { uploadCallback: this.uploadImageCallBack, alt: { present: true, mandatory: true } },
-                }}
-              />
-            </div>
+
           </div>
           {modal && image && <Images modal={modal} onCloseModal={this.onCloseModal} image={image} setImage={this.setImage}/>}
           {_modal && groupDetail && <Group modal={_modal} onCloseModal={this.onCloseModal} group={groupDetail}/>}

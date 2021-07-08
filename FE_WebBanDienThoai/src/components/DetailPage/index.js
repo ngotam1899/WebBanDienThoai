@@ -242,10 +242,10 @@ class DetailPage extends Component {
       </div>
       {product ? <div className="container my-3">
         <div className="row justify-content-center">
-          <div className="col-md-5 col-12">
+          <div className="col-lg-5 col-md-6 col-12">
             {product.image && <ImageGalleries imageDetail={product.image} imageColor={imageColor}/> }
           </div>
-          <div className="col-md-5 col-12">
+          <div className="col-lg-5 col-md-6 col-12">
             <div className="row">
               <div className="col-12 my-2">
                 <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>

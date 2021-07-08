@@ -83,7 +83,16 @@ class SearchPage extends Component {
     const filter = getFilterParams(location.search);
     return (
       <div className="single-product-area">
-        <div className="container">
+        <div className="container my-3">
+          <div className="row">
+            <div className="col-12 my-2">
+              <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
+              <i className="fa fa-chevron-right px-2 w-25-px"></i>
+            </div>
+            <div className="col-12">
+              <h1 className="font-weight-bold">Tìm kiếm sản phẩm</h1>
+            </div>
+          </div>
           {total > 0 && <div className="row">
             <div className="col-12">
               <h3 className="border-bottom pb-2">{t('search.result.title')} '{filter.keyword}'</h3> 

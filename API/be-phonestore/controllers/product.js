@@ -121,7 +121,7 @@ const compareProduct = async (req, res, next) => {
 				condition._id = {$in: products}
 			}
 		}
-		const products = await Product.find(condition, { name: 1, brand: 1, price_max: 1,
+		const products = await Product.find(condition, { name: 1, brand: 1, price_max: 1, warrently: 1, included: 1,
 			price_min: 1, stars: 1, reviewCount: 1, real_price_max: 1, real_price_min: 1, colors: 1, specifications: 1 })
 			.populate({ path: 'image', select: 'public_url' })
 			.populate({ path: 'specifications', select: "selection", populate : {path : 'selection', select: "name"} })

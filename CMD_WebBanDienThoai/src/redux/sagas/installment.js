@@ -1,7 +1,7 @@
 import { takeEvery, fork, all, call, put } from "redux-saga/effects";
 import { get } from "lodash";
 import InstallmentActions, { InstallmentActionTypes } from "../actions/installment";
-import { getAllInstallments, getDetailInstallment, addInstallment, updateInstallment, deleteInstallment } from "../apis/installment";
+import { getAllInstallments, getDetailInstallment, getSessionInstallment, addInstallment, updateInstallment, deleteInstallment } from "../apis/installment";
 /* Notification */
 import io from 'socket.io-client';
 import NotificationActions from "../actions/notification";
@@ -102,6 +102,17 @@ function* handleDelete({ id, params }) {
   }
 }
 
+function* handleGetSession({ payload }) {
+  try {
+    const result = yield call(getSessionInstallment, payload);
+    const data = get(result, "data");
+    if (data.code !== 200) throw data;
+    yield put(InstallmentActions.onGetSessionSuccess(data.count));
+  } catch (error) {
+    yield put(InstallmentActions.onGetSessionError(error));
+  }
+}
+
 export function* watchGetList() {
   yield takeEvery(InstallmentActionTypes.GET_LIST, handleGetList);
 }
@@ -117,6 +128,9 @@ export function* watchUpdate() {
 export function* watchDelete() {
   yield takeEvery(InstallmentActionTypes.DELETE, handleDelete);
 }
+export function* watchGetSession() {
+  yield takeEvery(InstallmentActionTypes.GET_SESSION, handleGetSession);
+}
 
 export default function* rootSaga() {
   yield all([
@@ -125,5 +139,6 @@ export default function* rootSaga() {
     fork(watchCreate),
     fork(watchUpdate),
     fork(watchDelete),
+    fork(watchGetSession)
   ]);
 }
