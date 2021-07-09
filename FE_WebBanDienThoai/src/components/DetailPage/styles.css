@@ -25,27 +25,14 @@
 	text-decoration: none;
 }
 
-.add_to_cart_button {
-	background: none repeat scroll 0 0 #5a88ca;
-	border: medium none;
-	color: #fff;
-	padding: 6px 25px;
-	border-radius: 40px;
+.btn-lighter{
+	background-color: #fff;
 }
 
-.installment_button {
-	background: none repeat scroll 0 0 #ffffff;
-	border: 2px solid rgb(22, 0, 145);
-	color: rgb(22, 0, 145);
-	padding: 6px 25px;
-	border-radius: 40px;
+.btn-lighter:hover{
+	background-color: #ececec;
 }
 
-.add_to_cart_button:hover, .installment_button:hover {
-	background-color: #222;
-	color: #fff;
-	text-decoration: none;
-}
 .product_description_area {
 	padding-bottom: 100px;
 	margin-top: 60px;

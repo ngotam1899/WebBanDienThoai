@@ -51,7 +51,7 @@ class ProductList extends Component {
     const { onGetList, onGetListBrand, location, onClearState, onGetListCategory } = this.props;
     const { filter } = this.state;
     onClearState();
-    onGetListCategory();
+    onGetListCategory({limit : 20});
     onGetListBrand();
     const filters = getFilterParams(location.search);
     var params = {
@@ -398,8 +398,8 @@ const mapDispatchToProps = (dispatch) => {
     onDeactivate: (id, params) => {
       dispatch(ProductsActions.onDeactivate({id, params}));
     },
-    onGetListCategory: () => {
-      dispatch(CategoryActions.onGetList())
+    onGetListCategory: (params) => {
+      dispatch(CategoryActions.onGetList(params))
     },
     onClearState: () =>{
       dispatch(ProductsActions.onClearState())

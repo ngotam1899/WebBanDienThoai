@@ -50,6 +50,8 @@ class InstallmentPage extends Component {
   onCreateInstallment = () => {
     const { onCreate, product, authInfo } = this.props;
     var { color, period, prepay } = this.state;
+    const productPrice = parseInt(product.colors.find((i) => i._id === color).price)
+    if(productPrice < 2500000) return toastError("Không hỗ trợ trả góp cho sản phẩm dưới 2.500.000 VND");
     if (!authInfo) return toastError("Bạn phải đăng nhập để tiến hành xét duyệt trả góp");
     if (period === "") return toastWarning("Bạn chưa chọn thời gian vay");
     const interest_rate = JSON.parse(period).percent;
@@ -74,7 +76,6 @@ class InstallmentPage extends Component {
     if (period === "") return toastWarning("Bạn chưa chọn thời gian vay");
     const interest_rate = JSON.parse(period).percent;
     period = JSON.parse(period).month_sum;
-    //var debt = Math.ceil(((product.product_price-prepay )*(1 + interest_rate*0.01))/1000)* 1000
     var detail = [];
     for (let i = 0; i < period; i++) {
       detail[i] = {

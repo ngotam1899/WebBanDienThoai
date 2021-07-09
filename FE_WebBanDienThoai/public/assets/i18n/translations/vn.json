@@ -12,6 +12,7 @@
   "common.destroy.button": "Hủy",
   "common.toastify.not-login": "Bạn chưa đăng nhập",
   "common.clear-filter.button": "Xóa tất cả bộ lọc",
+  "common.update.label": "Đang cập nhật",
 
   "accessory.page.title":"Trang phụ kiện",
   "accessory.category.title":"Danh mục phụ kiện",
@@ -62,6 +63,13 @@
   "checkout.modal.select.1": "Phù hợp với địa chỉ nhà riêng, luôn có người nhận hàng",
   "checkout.modal.select.2": "Phù hợp với địa chỉ văn phòng/cơ quan",
 
+  "compare.page.title": "So sánh sản phẩm",
+  "compare.placeholder.input": "Nhập sản phẩm cần so sánh",
+  "compare.not-yet.h4": "Thêm sản phẩm để so sánh",
+  "compare.primary.h3": "Thông tin cơ bản",
+  "compare.secondary.h3": "Thông tin khác",
+  "compare.toastify.error": "Sản phẩm này đã có sẵn trong danh sách so sánh của bạn",
+
   "detail.shop.title":"Trang chi tiết",
   "detail.category.label":"Loại sản phẩm",
   "detail.brand.label": "Tên thương hiệu",
@@ -78,6 +86,11 @@
   "detail.installment.button": "Mua trả góp",
   "detail.review.useful": "Hữu ích",
   "detail.review.not-yet": "Chưa có đánh giá sản phẩm",
+  "detail.warranty.label": "Bảo hành",
+  "detail.included.label": "Hộp bao gồm",
+  "detail.status.label": "Tình trạng",
+  "detail.weight.label": "Khối lượng",
+  "detail.size.label": "Kích thước",
 
   "home.feature.1":"30 ngày đổi trả",
   "home.feature.3":"Thanh toán bảo mật",

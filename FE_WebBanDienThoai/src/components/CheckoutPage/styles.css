@@ -36,6 +36,9 @@ th {
 .express{
     width: 50px;
 }
+.larger{
+    font-size: larger;
+}
 .smaller{
     font-size: smaller;
 }

@@ -29,7 +29,7 @@ class ProductPage extends Component {
       min_p: filter.min_p ===null ? "" : filter.min_p,
       max_p: filter.max_p ===null ? "" : filter.max_p,
       filter: {
-        limit: 12,
+        limit: 16,
         page: 0,
         active: 1,
         category: match.params.categoryID ? match.params.categoryID : null
@@ -210,7 +210,7 @@ class ProductPage extends Component {
                     <input type="number" value={max_p} name="max_p" step={100000} min={100000} onChange={this.onChange} placeholder={t('shop.distance.to')} className="form-control w-40"></input>
                   </div>
                   <button className="btn btn-primary w-100 mb-2" onClick={() => this.distancePrice()}>
-                  <i className="fa fa-search-dollar"></i> Áp dụng
+                  <i className="fa fa-search-dollar"></i> {t("shop.apply.button")}
                   </button>
                 </div>
               </div>
@@ -277,7 +277,7 @@ class ProductPage extends Component {
                 <option value="1">{t('shop.sort.inc')}</option>
                 <option value="-1">{t('shop.sort.des')}</option>
               </select>
-              {category && <button type="button" className="btn btn-primary float-end mr-2 mt-1 mt-lg-0" onClick={()=> {history.push(`/compare/${category._id}?compare=`)}}>So sánh sản phẩm</button>}
+              {category && <button type="button" className="btn float-end mr-2 mt-1 mt-lg-0 bg-aqua text-primary" onClick={()=> {history.push(`/compare/${category._id}?compare=`)}}><i className="fa fa-balance-scale"></i> {t("compare.page.title")}</button>}
             </div>
           </div>
           <div className="row">
@@ -287,53 +287,53 @@ class ProductPage extends Component {
                 )
             }) : <Loader/>}
           </div>
-        </div>
-      </div>
-      {total > 12 && <div className="row">
-        <div className="col-md-12">
-          <div className="product-pagination text-center">
-          <nav className="float-end">
-          <Pagination
-            activePage={filter.page ? parseInt(filter.page)+1 : 1}
-            itemsCountPerPage={12}
-            totalItemsCount={total ? total : 10}
-            pageRangeDisplayed={3}
-            linkClass="page-link"
-            itemClass="page-item"
-            prevPageText={t('shop.pagination.prev')}
-            nextPageText={t('shop.pagination.next')}
-            hideFirstLastPages={true}
-            onChange={this.handlePageChange.bind(this)}
-          />
-          </nav>
-          </div>
-        </div>
-      </div>}
-      {category && <>
-      <div className={ more ? "row rounded shadow-sm" : "row description rounded shadow-sm"}>
-        <div className="px-3 py-2">
-          <h3 className="mb-1">{t('shop.intro.title')}</h3>
-          <div className="mb-2 border-bottom"></div>
-        {category.description && category.description.length > 150 ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : <div className="row my-1">
-            <div className="col-12">
-              <div className="text-center my-4">
-                <div className="h-120">
-                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/eac95a8ac896158642c2761a9e9cd52e.png" alt="404 not found"></img>
-                </div>
-                <h4>{t('shop.intro.not-yet')}</h4>
+          {total > 16 && <div className="row">
+            <div className="col-md-12">
+              <div className="product-pagination text-center">
+              <nav className="float-end">
+              <Pagination
+                activePage={filter.page ? parseInt(filter.page)+1 : 1}
+                itemsCountPerPage={16}
+                totalItemsCount={total ? total : 16}
+                pageRangeDisplayed={3}
+                linkClass="page-link"
+                itemClass="page-item"
+                prevPageText={t('shop.pagination.prev')}
+                nextPageText={t('shop.pagination.next')}
+                hideFirstLastPages={true}
+                onChange={this.handlePageChange.bind(this)}
+              />
+              </nav>
               </div>
             </div>
           </div>}
-        {!more && <div className="view-more" onClick={() => this.setState({ more: true })}>
-          <p>{t('common.readmore.button')}<span><i className="fa fa-angle-down ml-2"></i></span></p>
-        </div>}
+          {category && <>
+          <div className={ more ? "row rounded shadow-sm" : "row description rounded shadow-sm"}>
+            <div className="px-3 py-2">
+              <h3 className="mb-1">{t('shop.intro.title')}</h3>
+              <div className="mb-2 border-bottom"></div>
+            {category.description && category.description.length > 150 ? <div className="text-center" dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(category.description))}}></div> : <div className="row my-1">
+                <div className="col-12">
+                  <div className="text-center my-4">
+                    <div className="h-120">
+                      <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/eac95a8ac896158642c2761a9e9cd52e.png" alt="404 not found"></img>
+                    </div>
+                    <h4>{t('shop.intro.not-yet')}</h4>
+                  </div>
+                </div>
+              </div>}
+            {!more && <div className="view-more" onClick={() => this.setState({ more: true })}>
+              <p>{t('common.readmore.button')}<span><i className="fa fa-angle-down ml-2"></i></span></p>
+            </div>}
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12">
+              <div className="fb-comments" data-href={`${LOCAL}/#/products/${category.pathseo}.${category._id}`} data-width="100%" data-numposts="5"></div>
+            </div>
+          </div></>}
         </div>
       </div>
-      <div className="row">
-        <div className="col-12">
-          <div className="fb-comments" data-href={`${LOCAL}/#/products/${category.pathseo}.${category._id}`} data-width="100%" data-numposts="5"></div>
-        </div>
-      </div></>}
     </div>
     );
   }

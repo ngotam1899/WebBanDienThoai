@@ -81,6 +81,7 @@ class CategoryDetail extends Component {
 
   onSubmit = async () =>{
     const {id, image} = this.state;
+    console.log(image)
     /* Xử lý ảnh */
     const {selectedFile} = this.state;
     if (selectedFile) {

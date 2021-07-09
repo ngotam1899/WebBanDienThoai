@@ -46,7 +46,7 @@ class Header extends Component {
   
   componentDidMount(){
     const {onGetProfile, onGetListCategory} = this.props;
-    const token = localStorage.getItem('AUTH_USER')
+    const token = localStorage.getItem('AUTH_USER');
     onGetProfile(null,token);
     onGetListCategory({ accessories: -1 });
   }
@@ -81,7 +81,7 @@ class Header extends Component {
     }
     if (userInfo !== prevProps.userInfo && userInfo) {
       var user = userInfo._id;
-      onGetNewestNotifications({user, limit: 5, page: 0})
+      onGetNewestNotifications({user, limit: 5, page: 0});
     }
     if (totalNotification !== prevProps.totalNotification) {
       this.setState({itemsCount: totalNotification})

@@ -12,6 +12,7 @@
   "common.destroy.button": "Cancel",
   "common.toastify.not-login": "You are not logged in", 
   "common.clear-filter.button": "Clear all filters",
+  "common.update.label": "Updating", 
 
   "accessory.category.title":"Accessories catalog",
   "accessory.page.title":"Accessory Page",
@@ -62,6 +63,13 @@
   "checkout.modal.select.1": "Suitable for a private home address, there is always a consignee",
   "checkout.modal.select.2": "Suitable for office/agency address ",
 
+  "compare.page.title": "Compare products", 
+  "compare.placeholder.input": "Enter products to compare",
+  "compare.not-yet.h4": "Add products to compare",
+  "compare.primary.h3": "Basic information",
+  "compare.secondary.h3": "More info", 
+  "compare.toastify.error": "This product is already in your comparison list",
+
   "detail.shop.title":"Product detail",
   "detail.category.label":"Category",
   "detail.brand.label": "Brand",
@@ -78,6 +86,11 @@
   "detail.installment.button": "Installment purchase",
   "detail.review.useful": "Useful",
   "detail.review.not-yet": "No product reviews yet", 
+  "detail.warranty.label": "Warranty",
+  "detail.included.label": "Include box",
+  "detail.status.label": "Status", 
+  "detail.weight.label": "Weight",
+  "detail.size.label": "Size",
 
   "home.feature.1":"30 Days return",
   "home.feature.3":"Secure payments",

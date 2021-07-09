@@ -242,7 +242,7 @@ class DetailPage extends Component {
       </div>
       {product ? <div className="container my-3">
         <div className="row justify-content-center">
-          <div className="col-lg-5 col-md-6 col-12">
+          <div className="col-lg-4 col-md-6 col-12">
             {product.image && <ImageGalleries imageDetail={product.image} imageColor={imageColor}/> }
           </div>
           <div className="col-lg-5 col-md-6 col-12">
@@ -313,8 +313,8 @@ class DetailPage extends Component {
                   <i className="fa fa-fan text-xl "></i>
                 </div>
                 <div className="ml-3 my-1" style={{width: "85%"}}>
-                  <p className="text-secondary smaller mb-0">Tình trạng</p>
-                  <p className="mb-1">{product.circumstance || "Đang cập nhật"}</p>
+                  <p className="text-secondary smaller mb-0">{t("detail.status.label")}</p>
+                  <p className="mb-1">{product.circumstance || t("common.update.label")}</p>
                 </div>
               </div>
               {product.included && product.included.length > 0 && <div className="col-12 form-inline">
@@ -322,7 +322,7 @@ class DetailPage extends Component {
                   <i className="fa fa-eye text-xl "></i>
                 </div>
                 <div className="ml-3 my-1" style={{width: "85%"}}>
-                  <p className="text-secondary smaller mb-0">Hộp bao gồm</p>
+                  <p className="text-secondary smaller mb-0">{t("detail.included.label")}</p>
                   <p className="mb-1">{product.included}</p>
                 </div>
               </div>}
@@ -331,14 +331,15 @@ class DetailPage extends Component {
                   <i className="fa fa-shield-alt text-xl "></i>
                 </div>
                 <div className="ml-3 my-1" style={{width: "85%"}}>
-                  <p className="text-secondary smaller mb-0">Bảo hành</p>
-                  <p className="mb-1">{product.warrently || "Đang cập nhật"}</p>
+                  <p className="text-secondary smaller mb-0">{t("detail.warranty.label")}</p>
+                  <p className="mb-1">{product.warrently || t("common.update.label")}</p>
                 </div>
               </div>
-              <div className="col-12">
-                <button className="add_to_cart_button" type="button" onClick={() => {this.onAddToCart(product, quantity)}}>{t('shop.add-to-cart.button')}</button>
-                <button className="ml-2 installment_button" type="button" onClick={() => this.onInstallment(product)}>{t('detail.installment.button')}</button>
-                <button className="ml-2 installment_button" type="button" onClick={() => this.onCompare(product)}>So sánh chi tiết</button>
+              <div className="mb-2 border-bottom"></div>
+              <div className="col-12 text-center">
+                <button className="btn btn-lighter" type="button" onClick={() => this.onAddToCart(product, quantity)}><i className="fa fa-cart-plus text-danger"></i> {t('shop.add-to-cart.button')}</button>
+                <button className="btn btn-lighter" type="button" onClick={() => this.onInstallment(product)}><i className="fa fa-money-check-alt text-success"></i> {t('detail.installment.button')}</button>
+                <button className="btn btn-lighter" type="button" onClick={() => this.onCompare(product)}><i className="fa fa-balance-scale text-warning"></i> {t("compare.page.title")}</button>
               </div>
             </div>
           </div>
@@ -565,10 +566,10 @@ class DetailPage extends Component {
       : 
       <div className="container my-3">
         <div className="row justify-content-center">
-          <div className="col-md-5 col-12">
+          <div className="col-lg-4 col-md-6 col-12">
             <ImageLoader/>
           </div>
-          <div className="col-md-5 col-12">
+          <div className="col-lg-5 col-md-6 col-12">
             <div className="row">
               <div className="col-12 my-2">
                 <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>

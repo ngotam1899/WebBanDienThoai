@@ -90,7 +90,7 @@ class SearchPage extends Component {
               <i className="fa fa-chevron-right px-2 w-25-px"></i>
             </div>
             <div className="col-12">
-              <h1 className="font-weight-bold">Tìm kiếm sản phẩm</h1>
+              <h1 className="font-weight-bold">{t("search.label")}</h1>
             </div>
           </div>
           {total > 0 && <div className="row">
