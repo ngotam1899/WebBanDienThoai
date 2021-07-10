@@ -6,7 +6,7 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 
-url = 'http://localhost:3000/products/cluster'
+url = 'http://be-phonestore.herokuapp.com/products/cluster'
 r = requests.get(url)
 data = r.json()
 

@@ -36,7 +36,7 @@ select {border: none;}
   z-index: 99;
 }
 .product-upper{
-  height: 200px;
+  height: 15vw;
 }
 .w-40{
   width:40%
@@ -75,6 +75,7 @@ select {border: none;}
 }
 .directory{
   color: #222;
+  cursor: pointer;
 }
 .content-center{
   width: fit-content;

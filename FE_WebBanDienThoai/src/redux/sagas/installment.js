@@ -14,7 +14,7 @@ import { getUser } from "../apis/user";
 /* Notification */
 import io from "socket.io-client";
 import NotificationActions from "../actions/notification";
-const socket = io("http://localhost:3000");
+const socket = io("http://be-phonestore.herokuapp.com");
 /* Notification */
 
 function* handleGetList({ payload }) {

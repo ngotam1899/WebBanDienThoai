@@ -110,7 +110,7 @@ class UserDetail extends Component {
     var formData = new FormData();
     formData.append("image",selectedFile);
     /* Xử lý ảnh */
-    var data = {firstname, lastname, phonenumber, address : `${address}, ${ward}, ${district}, ${city}`, email, image: selectedFile ? formData : null}
+    var data = {firstname, lastname, phonenumber, address : `${address.replaceAll(',', '')}, ${ward}, ${district}, ${city}`, email, image: selectedFile ? formData : null}
     onUpdate(userInfo._id, data);
   }
 

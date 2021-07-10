@@ -51,7 +51,7 @@ function* handleCreate({ payload }) {
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(GroupActions.onCreateSuccess(data.group));
-    yield put(GroupActionTypes.onGetList(payload.params))
+    if(payload.params) yield put(GroupActionTypes.onGetList(payload.params))
   } catch (error) {
     yield put(GroupActions.onCreateError(error));
   }

@@ -32,9 +32,13 @@ const getAllGroup = async(req, res, next) => {
   }
 }
 const addGroup = async(req, res, next) => {
-  const newGroup = new Group(req.body)
-  await newGroup.save()
-  return res.status(200).json({ success: true, code: 201, message: '', group: newGroup })
+  try {
+    const newGroup = new Group(req.body)
+    await newGroup.save()
+    return res.status(200).json({ success: true, code: 201, message: '', group: newGroup })
+  } catch (error) {
+    return next(error)
+  }
 }
 const updateGroup = async(req, res, next) => {
   const { IDGroup } = req.params

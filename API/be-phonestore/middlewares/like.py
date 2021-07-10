@@ -7,13 +7,13 @@ import numpy as np
 import sklearn
 from sklearn.decomposition import TruncatedSVD
 
-url = 'http://localhost:3000/reviews/list?limit=100'
+url = 'http://be-phonestore.herokuapp.com/reviews/list?limit=100'
 r = requests.get(url)
 data = r.json()
 
 for i in data['reviews']:
-  if i['user'] is not None:
-    i['user'] = i['user']['_id']
+  i['user'] = i['user']['_id']
+  i['product'] = i['product']['_id']
 
 orders = pd.DataFrame(data['reviews'])
 orders = orders.dropna()
@@ -28,12 +28,13 @@ correlation_matrix = np.corrcoef(decomposed_matrix)
 i = sys.argv[1]
 
 product_names = list(X.index)
+
 product_ID = product_names.index(i)
 correlation_product_ID = correlation_matrix[product_ID]
 
 Recommend = list(X.index[correlation_product_ID > 0.90])
 Recommend.remove(i) 
-recommend = Recommend[0:3]
+recommend = Recommend[0:4]
 resp = {
   "data": recommend
 }

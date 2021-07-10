@@ -143,7 +143,6 @@ class SearchPage extends Component {
                   <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/a60759ad1dabe909c46a817ecbf71878.png" alt="404 not found"></img>
                 </div>
                 <h3>{t('search.not-yet.h3')}</h3>
-                <h4>{t('search.not-yet.h4')}</h4>
               </div>
             </div>
           </div>}

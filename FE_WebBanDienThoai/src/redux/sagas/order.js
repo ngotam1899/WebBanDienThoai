@@ -6,7 +6,7 @@ import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, updateOrder, 
 /* Notification */
 import io from 'socket.io-client';
 import NotificationActions from "../actions/notification";
-const socket = io('http://localhost:3000');
+const socket = io('http://be-phonestore.herokuapp.com');
 /* Notification */
 
 function* handleGetList({payload}) {
@@ -53,8 +53,6 @@ function* handleCreate({ payload }) {
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(OrdersActions.onCreateSuccess(data));
-    const email = yield call(sendConfirmEmail, data.order._id);
-    yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
     localStorage.removeItem("CART");
     /* Notification */
     if(payload.payment_method ==="paypal"){
@@ -69,6 +67,8 @@ function* handleCreate({ payload }) {
     }
     /* Notification */
     yield put(ProductsActions.onClearCart())
+    const email = yield call(sendConfirmEmail, data.order._id);
+    yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
   } catch (error) {
     yield put(OrdersActions.onCreateError(error));
   }

@@ -28,7 +28,7 @@ class OrderDetail extends Component {
 
   onRenderDetail = (id) =>{
     const {history} = this.props;
-    history.push(`/product/a/${id}`);
+    history.push(`/product/undefined.${id}`);
     window.location.reload();
   }
 

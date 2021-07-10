@@ -91,6 +91,7 @@
   "detail.status.label": "Status", 
   "detail.weight.label": "Weight",
   "detail.size.label": "Size",
+  "detail.like.not-founded": "This product has no recommended data ",
 
   "home.feature.1":"30 Days return",
   "home.feature.3":"Secure payments",

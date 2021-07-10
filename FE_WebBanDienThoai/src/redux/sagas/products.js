@@ -84,7 +84,7 @@ function* handleCompare({ payload }) {
 
 function* handleFilter({ payload }) {
   try {
-    yield delay(1000);
+    yield delay(300);
     var result = yield call(getAllProducts, {
       ...payload,
       limit: 5,
@@ -100,7 +100,7 @@ function* handleFilter({ payload }) {
 
 function* handleCompareFilter({ payload }) {
   try {
-    yield delay(1000);
+    yield delay(300);
     var result = yield call(getAllProducts, {
       ...payload,
       limit: 5,

@@ -52,7 +52,7 @@ class ProductList extends Component {
     const { filter } = this.state;
     onClearState();
     onGetListCategory({limit : 20});
-    onGetListBrand();
+    onGetListBrand({limit : 20});
     const filters = getFilterParams(location.search);
     var params = {
       ...filter,
@@ -389,8 +389,8 @@ const mapDispatchToProps = (dispatch) => {
     onGetDetail: (id) => {
       dispatch(ProductsActions.onGetDetail(id))
     },
-    onGetListBrand: () => {
-      dispatch(BrandActions.onGetList())
+    onGetListBrand: (params) => {
+      dispatch(BrandActions.onGetList(params))
     },
     onActivate: (id, params) => {
       dispatch(ProductsActions.onActivate({id, params}));

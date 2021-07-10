@@ -287,6 +287,17 @@ class ProductPage extends Component {
                 )
             }) : <Loader/>}
           </div>
+          {total === 0 && <div className="row my-1">
+            <div className="col-12">
+              <div className="text-center my-5 py-5">
+                <div className="h-120">
+                  <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/a60759ad1dabe909c46a817ecbf71878.png" alt="404 not found"></img>
+                </div>
+                <h3>{t('search.not-yet.h3')}</h3>
+                <h4>{t('search.not-yet.h4')}</h4>
+              </div>
+            </div>
+          </div>}
           {total > 16 && <div className="row">
             <div className="col-md-12">
               <div className="product-pagination text-center">

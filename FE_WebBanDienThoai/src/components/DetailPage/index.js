@@ -292,7 +292,7 @@ class DetailPage extends Component {
                   </button>)
                 })}
               </div>}
-              <div className="mb-2 border-bottom"></div>
+              <div className="my-2 border-bottom"></div>
               <h4 className="mb-0">{t('detail.color.label')}</h4>
               <div className="col-12 form-inline">
                 {product.colors.map((item, index)=>{
@@ -337,9 +337,9 @@ class DetailPage extends Component {
               </div>
               <div className="mb-2 border-bottom"></div>
               <div className="col-12 text-center">
-                <button className="btn btn-lighter" type="button" onClick={() => this.onAddToCart(product, quantity)}><i className="fa fa-cart-plus text-danger"></i> {t('shop.add-to-cart.button')}</button>
-                <button className="btn btn-lighter" type="button" onClick={() => this.onInstallment(product)}><i className="fa fa-money-check-alt text-success"></i> {t('detail.installment.button')}</button>
                 <button className="btn btn-lighter" type="button" onClick={() => this.onCompare(product)}><i className="fa fa-balance-scale text-warning"></i> {t("compare.page.title")}</button>
+                <button className="btn btn-lighter bg-aqua" type="button" onClick={() => this.onAddToCart(product, quantity)}><i className="fa fa-cart-plus text-danger"></i> {t('shop.add-to-cart.button')}</button>
+                <button className="btn btn-lighter" type="button" onClick={() => this.onInstallment(product)}><i className="fa fa-money-check-alt text-success"></i> {t('detail.installment.button')}</button>
               </div>
             </div>
           </div>
@@ -383,20 +383,43 @@ class DetailPage extends Component {
                     </div>
                     <div className="tab-pane fade" id="like" role="tab" aria-labelledby="like-tab">
                       <div className="row">
-                        {like ? like.map((product, index) => {
+                        {review && review.length > 0 ? (like ? (like.length > 0 ? like.map((product, index) => {
                           return (
                               <ProductItem product={product} key={index} />
                             )
-                        }) : <Loader/>}
+                        }) : <div className="col-12 my-4">
+                        <div className="text-center my-5">
+                          <div className="h-120">
+                          <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/a60759ad1dabe909c46a817ecbf71878.png" alt="404 not found"></img>
+                          </div>
+                          <h4>{t("detail.like.not-founded")}</h4>
+                        </div>
+                      </div>) : <Loader/>)
+                        : <div className="col-12 my-4">
+                        <div className="text-center my-5">
+                          <div className="h-120">
+                          <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/a60759ad1dabe909c46a817ecbf71878.png" alt="404 not found"></img>
+                          </div>
+                          <h4>{t("detail.like.not-founded")}</h4>
+                        </div>
+                      </div>}
                       </div>
                     </div>
                     <div className="tab-pane fade show active" id="relate" role="tab" aria-labelledby="relate-tab">
                       <div className="row">
-                        {relate ? relate.map((product, index) => {
+                        {product.description ? (relate ? relate.map((product, index) => {
                           return (
                               <ProductItem product={product} key={index}/>
                             )
-                        }) : <Loader/>}
+                        }) : <Loader/>)
+                        : <div className="col-12 my-4">
+                        <div className="text-center my-5">
+                          <div className="h-120">
+                          <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/a60759ad1dabe909c46a817ecbf71878.png" alt="404 not found"></img>
+                          </div>
+                          <h4>{t("detail.like.not-founded")}</h4>
+                        </div>
+                      </div>}
                       </div>
                     </div>
                   </div>
@@ -439,7 +462,6 @@ class DetailPage extends Component {
                               )
                             /* eslint-disable */
                             })}
-                            
                         </tbody>
                       </table>
                     </div>
@@ -522,7 +544,7 @@ class DetailPage extends Component {
                                   /> | <span className="font-italic">{item.createdAt}</span></p>
                                   <p className="text-secondary mb-0">Màu sắc: {item.color.name_vn}</p>
                                   <p className="mb-0">{item.content}</p>
-                                  <p><i onClick={()=>{this.onLiked(item._id, item.like)}} className="fa fa-thumbs-up text-secondary"></i><span className="ml-2 text-secondary">{item.like.length > 0 ? item.like.length :  `${t('detail.review.useful')}?`}</span></p>
+                                  <p className="directory rounded p-2 w-fit-content" onClick={()=> this.onLiked(item._id, item.like)}><i className="fa fa-thumbs-up text-secondary"></i><span className="ml-2 text-secondary">{item.like.length > 0 ? item.like.length :  `${t('detail.review.useful')}?`}</span></p>
                                 </div>
                                 </div>
                               </div>

@@ -77,18 +77,12 @@ class Group extends Component {
   onSave = () =>{
     const {onUpdate, onCreate, group} = this.props;
     const {listProduct, nameGroup} = this.state;
-    if(group){
-      onUpdate(group._id, {
-        name: nameGroup,
-        products: listProduct
-      });
+    var data = {
+      name: nameGroup,
+      products: listProduct
     }
-    else{
-      onCreate({
-        name: nameGroup,
-        products: listProduct
-      })
-    }
+    if(group) onUpdate(group._id, data);
+    else onCreate(data)
   }
 
   onClose = () => {
@@ -262,11 +256,11 @@ const mapDispatchToProps = (dispatch) => {
     onFilter : (keyword) =>{
       dispatch(ProductsActions.onFilter(keyword))
     },
-    onCreate: (params) =>{
-      dispatch(GroupActions.onCreate({params}))
+    onCreate: (data, params) =>{
+      dispatch(GroupActions.onCreate(data, params))
     },
-    onUpdate: (id, params) =>{
-      dispatch(GroupActions.onUpdate({id, params}))
+    onUpdate: (id, data, params) =>{
+      dispatch(GroupActions.onUpdate(id, data, params))
     },
     onClearDetail: () =>{
       dispatch(GroupActions.onClearDetail())

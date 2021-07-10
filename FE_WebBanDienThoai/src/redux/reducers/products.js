@@ -21,19 +21,39 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_LIST_ERROR:
     case ProductsActionTypes.GET_ACCESSORY:
     case ProductsActionTypes.GET_ACCESSORY_ERROR:
+      return {
+        ...state,
+        list: null
+      };
     case ProductsActionTypes.GET_BEST_SELLER:
     case ProductsActionTypes.GET_BEST_SELLER_ERROR:
+      return {
+        ...state,
+        best: null, 
+      };
     case ProductsActionTypes.GET_FAVORITE:
     case ProductsActionTypes.GET_FAVORITE_ERROR:
+      return {
+        ...state,
+        favorite: null, 
+      };
     case ProductsActionTypes.GET_NEWEST:
     case ProductsActionTypes.GET_NEWEST_ERROR:
+      return {
+        ...state,
+        new: null,
+      };
     case ProductsActionTypes.GET_LIKE:
     case ProductsActionTypes.GET_LIKE_ERROR:
+      return {
+        ...state,
+        like: null,
+      };
     case ProductsActionTypes.GET_RELATE:
     case ProductsActionTypes.GET_RELATE_ERROR:
       return {
         ...state,
-        list: null
+        relate: null,
       };
     case ProductsActionTypes.GET_BEST_SELLER_SUCCESS:
       return {

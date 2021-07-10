@@ -91,6 +91,7 @@
   "detail.status.label": "Tình trạng",
   "detail.weight.label": "Khối lượng",
   "detail.size.label": "Kích thước",
+  "detail.like.not-founded": "Sản phẩm này chưa có dữ liệu gợi ý",
 
   "home.feature.1":"30 ngày đổi trả",
   "home.feature.3":"Thanh toán bảo mật",

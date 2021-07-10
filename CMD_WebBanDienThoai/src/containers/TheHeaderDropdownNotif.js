@@ -21,7 +21,7 @@ import OrderActions from "../redux/actions/order";
 // @Functions
 import {INITIAL_IMAGE} from '../constants';
 import io from 'socket.io-client';
-const ENDPOINT = 'http://localhost:3000';
+const ENDPOINT = 'https://be-phonestore.herokuapp.com';
 let socket = io(ENDPOINT);
 
 class TheHeaderDropdownNotif extends Component {

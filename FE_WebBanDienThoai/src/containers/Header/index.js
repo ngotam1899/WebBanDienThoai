@@ -24,7 +24,7 @@ import getFilterParams from "../../utils/getFilterParams";
 import tryConvert from '../../utils/changeMoney'
 import { toastInfo } from '../../utils/toastHelper';
 import {INITIAL_IMAGE} from '../../constants';
-const ENDPOINT = 'http://localhost:3000';
+const ENDPOINT = 'http://be-phonestore.herokuapp.com';
 let socket = io(ENDPOINT);
 
 class Header extends Component {
@@ -143,7 +143,7 @@ class Header extends Component {
       ...queryParams,
       ...data,
     };
-    history.push(`https://localhost:5000/#/products/dien-thoai/?${qs.stringify(queryParams)}`);
+    history.push(`http://fe-phonestore.herokuapp.com/#/products/dien-thoai/?${qs.stringify(queryParams)}`);
   };
 
   pressSearch = (event) => {
