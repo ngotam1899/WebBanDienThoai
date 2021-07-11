@@ -141,10 +141,17 @@ class SignUpPage extends Component {
     } = this.state;
     const {onRegister, t} = this.props;
 
-    const data = {firstname, lastname, phonenumber, address : `${address}, ${ward}, ${district}, ${city}`, email, password};
+    const data = {
+      firstname,
+      lastname,
+      phonenumber,
+      address: `${address}, ${ward}, ${district}, ${city}`,
+      email,
+      password,
+    };
 
-    if(password === confirmPassword){
-    	onRegister(data);
+    if (password === confirmPassword) {
+      onRegister(data);
     }
   }
 

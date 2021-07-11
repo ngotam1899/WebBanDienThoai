@@ -150,6 +150,7 @@ class NotificationScreen extends Component {
     var params = {
       limit: 10,
       page: 0,
+      user: userInfo._id,
     };
     this.setState({
       notificationList: null,
@@ -161,7 +162,7 @@ class NotificationScreen extends Component {
     const {userInfo, onDeleteAll} = this.props;
     var id = userInfo._id;
     var params = {
-      limit: 20,
+      limit: 10,
       page: 0,
       user: id,
     };

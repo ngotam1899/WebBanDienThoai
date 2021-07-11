@@ -61,10 +61,24 @@ function* handleCreate({payload}) {
     const data = get(result, 'data', {});
     if (data.code !== 201) throw data;
     yield put(OrdersActions.onCreateSuccess(data));
+    AsyncStorage.removeItem('cart');
+    /* Notification */
+    if (payload.payment_method === 'paypal') {
+      socket.emit('order', {email: data.order.email, order: data.order._id});
+      yield put(
+        NotificationActions.onCreate({
+          name: 'Đơn hàng mới được xác nhận',
+          image: data.order.order_list[0].image,
+          link: data.order._id,
+          type: 0,
+          content: `${data.order.email} vừa xác nhận đặt hàng thành công`,
+        }),
+      );
+    }
+    /* Notification */
+    yield put(ProductsActions.onClearCart());
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
-    AsyncStorage.removeItem('cart');
-    yield put(ProductsActions.onClearCart());
   } catch (error) {
     yield put(OrdersActions.onCreateError(error));
   }

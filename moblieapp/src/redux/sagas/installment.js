@@ -3,6 +3,7 @@ import {get} from 'lodash';
 import InstallmentActions, {
   InstallmentActionTypes,
 } from '../actions/installment';
+import NotificationActions from '../actions/notification';
 import {
   getAllInstallments,
   getDetailInstallment,

@@ -9,6 +9,7 @@ import ProductsActions from '../../redux/actions/products';
 import AuthorizationActions from '../../redux/actions/auth';
 import ReviewActions from '../../redux/actions/review';
 import UsersActions from '../../redux/actions/user';
+import GroupActions from '../../redux/actions/group';
 
 import styles from './style';
 
@@ -242,7 +243,10 @@ class ProductDetail extends Component {
       this.props.onGetProfile(null, data);
     });
   };
-
+  componentWillUnmount() {
+    const {onClearDetailGroup} = this.props;
+    onClearDetailGroup();
+  }
   UNSAFE_componentWillReceiveProps(nextProps) {
     const {authInfo, onHistoryProduct} = this.props;
     if (nextProps.authInfo !== authInfo && nextProps.authInfo) {
@@ -882,6 +886,9 @@ const mapDispatchToProps = dispatch => {
     },
     onGetProfile: (data, headers) => {
       dispatch(AuthorizationActions.onGetProfile(data, headers));
+    },
+    onClearDetailGroup: () => {
+      dispatch(GroupActions.onClearDetail());
     },
   };
 };
