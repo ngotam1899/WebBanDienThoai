@@ -1,13 +1,49 @@
-import { takeEvery, fork, all, call, put, delay } from "redux-saga/effects";
-import { get } from "lodash";
-import ProductsActions, { ProductsActionTypes } from "../actions/products";
-import { getAllProducts, getDetailProduct, getBestSeller, getFavorite, getNewest, getLikeProducts, getRelateProducts  } from "../apis/products";
-import GroupActions from "../actions/group";
+import {takeEvery, fork, all, call, put, delay} from 'redux-saga/effects';
+import {get} from 'lodash';
+import ProductsActions, {ProductsActionTypes} from '../actions/products';
+import {
+  getAllProducts,
+  getDetailProduct,
+  getBestSeller,
+  getFavorite,
+  getNewest,
+  getLikeProducts,
+  getRelateProducts,
+  compareProduct,
+} from '../apis/products';
+import GroupActions from '../actions/group';
 
-function* handleGetList({ payload }) {
+function* handleCompare({payload}) {
+  try {
+    const result = yield call(compareProduct, payload);
+    const data = get(result, 'data');
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onCompareSuccess(data.products));
+  } catch (error) {
+    yield put(ProductsActions.onCompareError(error));
+  }
+}
+
+function* handleCompareFilter({payload}) {
+  try {
+    yield delay(1000);
+    var result = yield call(getAllProducts, {
+      ...payload,
+      limit: 5,
+      active: 1,
+    });
+    const data = get(result, 'data');
+    if (data.code !== 200) throw data;
+    yield put(ProductsActions.onCompareFilterSuccess(data.products));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* handleGetList({payload}) {
   try {
     const result = yield call(getAllProducts, payload);
-    const data = get(result, "data");
+    const data = get(result, 'data');
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetListSuccess(data.products, data.total));
   } catch (error) {
@@ -15,10 +51,10 @@ function* handleGetList({ payload }) {
   }
 }
 
-function* handleGetBestSeller({ payload }) {
+function* handleGetBestSeller({payload}) {
   try {
     const result = yield call(getBestSeller, payload);
-    const data = get(result, "data");
+    const data = get(result, 'data');
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetBestSellerSuccess(data.products));
   } catch (error) {
@@ -26,10 +62,10 @@ function* handleGetBestSeller({ payload }) {
   }
 }
 
-function* handleGetFavorite({ payload }) {
+function* handleGetFavorite({payload}) {
   try {
     const result = yield call(getFavorite, payload);
-    const data = get(result, "data");
+    const data = get(result, 'data');
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetFavoriteSuccess(data.products));
   } catch (error) {
@@ -37,10 +73,10 @@ function* handleGetFavorite({ payload }) {
   }
 }
 
-function* handleGetNewest({ payload }) {
+function* handleGetNewest({payload}) {
   try {
     const result = yield call(getNewest, payload);
-    const data = get(result, "data");
+    const data = get(result, 'data');
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetNewestSuccess(data.products));
   } catch (error) {
@@ -48,39 +84,40 @@ function* handleGetNewest({ payload }) {
   }
 }
 
-function* handleFilter({ payload }) {
+function* handleFilter({payload}) {
   try {
     yield delay(1000);
-    const { keyword } = payload;
+    const {keyword} = payload;
     const result = yield call(getAllProducts, {
       keyword,
       limit: 4,
-      active: 1
+      active: 1,
     });
-    const data = get(result, "data");
+    const data = get(result, 'data');
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onFilterSuccess(data.products));
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
-function* handleGetDetail({ filters, id }) {
+function* handleGetDetail({filters, id}) {
   try {
     const result = yield call(getDetailProduct, id);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetDetailSuccess(data.product));
-    if(data.product.group) yield put(GroupActions.onGetDetail(data.product.group._id))
+    if (data.product.group)
+      yield put(GroupActions.onGetDetail(data.product.group._id));
   } catch (error) {
     yield put(ProductsActions.onGetDetailError(error));
   }
 }
 
-function* handleGetLike({ id }) {
+function* handleGetLike({id}) {
   try {
     const result = yield call(getLikeProducts, id);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetLikeSuccess(data.result));
   } catch (error) {
@@ -88,10 +125,10 @@ function* handleGetLike({ id }) {
   }
 }
 
-function* handleGetRelate({ id }) {
+function* handleGetRelate({id}) {
   try {
     const result = yield call(getRelateProducts, id);
-    const data = get(result, "data", {});
+    const data = get(result, 'data', {});
     if (data.code !== 200) throw data;
     yield put(ProductsActions.onGetRelateSuccess(data.result));
   } catch (error) {
@@ -125,6 +162,12 @@ export function* watchGetRelate() {
 export function* watchGetLike() {
   yield takeEvery(ProductsActionTypes.GET_LIKE, handleGetLike);
 }
+export function* watchCompare() {
+  yield takeEvery(ProductsActionTypes.COMPARE, handleCompare);
+}
+export function* watchCompareFilter() {
+  yield takeEvery(ProductsActionTypes.COMPARE_FILTER, handleCompareFilter);
+}
 
 export default function* rootSaga() {
   yield all([
@@ -136,5 +179,7 @@ export default function* rootSaga() {
     fork(watchGetRelate),
     fork(watchGetDetail),
     fork(watchFilter),
+    fork(watchCompareFilter),
+    fork(watchCompare),
   ]);
 }

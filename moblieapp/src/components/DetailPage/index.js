@@ -3,7 +3,7 @@ import getRNDraftJSBlocks from 'react-native-draftjs-render';
 import {AsyncStorage} from 'react-native';
 import {Rating} from 'react-native-ratings';
 import {connect} from 'react-redux';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 
 import ProductsActions from '../../redux/actions/products';
 import AuthorizationActions from '../../redux/actions/auth';
@@ -347,6 +347,13 @@ class ProductDetail extends Component {
       this.showAlert();
     }
   };
+  onCompare = product => {
+    const {navigation} = this.props;
+    navigation.navigate('Compare', {
+      category: product.category._id,
+      id: product._id,
+    });
+  };
   onChangeViewMore = value => {
     this.setState({
       viewMore: !value,
@@ -505,10 +512,30 @@ class ProductDetail extends Component {
               onPress={() => this.onClickAddCart(product, color, 1)}>
               <Text style={styles.shareButtonText}>Mua Ngay</Text>
             </TouchableOpacity>
+          </View>
+          <View style={styles.addToCarContainer}>
             <TouchableOpacity
               style={[
                 styles.shareButton,
-                {marginLeft: 5, flex: 0.4, backgroundColor: '#1e88e5'},
+                {
+                  flex: 0.5,
+                  marginRight: 0,
+                  marginTop: 0,
+                  backgroundColor: '#1e88e5',
+                },
+              ]}
+              onPress={() => this.onCompare(product)}>
+              <Text style={styles.shareButtonText}>So sánh</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.shareButton,
+                {
+                  marginLeft: 5,
+                  marginTop: 0,
+                  flex: 0.5,
+                  backgroundColor: '#1e88e5',
+                },
               ]}
               onPress={() => this.onCreateInstallment(product, color)}>
               <Text style={styles.shareButtonText}>Trả Góp</Text>
@@ -578,8 +605,60 @@ class ProductDetail extends Component {
           )}
           {product && (
             <View>
+              <Text style={styles.titleDescription}>THÔNG TIN MUA HÀNG</Text>
+              <View style={styles.infoItemBox}>
+                <FontAwesome
+                  name="fan"
+                  size={30}
+                  color="#000"
+                  style={styles.fontAwesome}
+                />
+                <View style={{flex: 0.9}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                    Tình trạng
+                  </Text>
+                  <Text style={{fontSize: 16}}>
+                    Mới, đầy đủ phụ kiện từ nhà sản xuất
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.infoItemBox}>
+                <FontAwesome
+                  name="eye"
+                  size={30}
+                  color="#000"
+                  style={styles.fontAwesome}
+                />
+                <View style={{flex: 0.9}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}}>
+                    Hộp bao gồm
+                  </Text>
+                  <Text style={{fontSize: 15}}>
+                    Thân máy, cáp USB-C to Lightning, sách HDSD
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.infoItemBox}>
+                <FontAwesome
+                  name="shield-alt"
+                  size={30}
+                  color="#000"
+                  style={styles.fontAwesome}
+                />
+                <View style={{flex: 0.9}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                    Bảo hành
+                  </Text>
+                  <Text style={{fontSize: 16}}>
+                    Bảo hành 12 tháng tại trung tâm bảo hành chính hãng Apple
+                    Việt Nam. 1 ĐỔI 1 trong 30 ngày nếu có lỗi phần cứng nhà sản
+                    xuất.
+                  </Text>
+                </View>
+              </View>
               <Text style={styles.titleDescription}>MÔ TẢ VỀ SẢN PHẨM</Text>
               <ScrollView
+                scrollEnabled={false}
                 style={
                   viewMore && viewMore === true
                     ? styles.viewMore

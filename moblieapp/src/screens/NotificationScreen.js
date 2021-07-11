@@ -121,7 +121,6 @@ class NotificationScreen extends Component {
         listNotification.map(item => {
           temp.push(item);
         });
-        console.log(temp.length);
         this.setState({
           notificationList: temp,
         });

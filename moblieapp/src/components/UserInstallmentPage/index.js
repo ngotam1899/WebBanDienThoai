@@ -348,7 +348,6 @@ class UserInstallmentPage extends Component {
     });
     const {onGetDetail} = this.props;
     onGetDetail(id);
-    console.log(id);
   };
   renderScene = ({route}) => {
     switch (route.key) {

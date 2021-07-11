@@ -24,6 +24,7 @@ class AccessoriesPage extends Component {
     const {onGetAccessory} = this.props;
     onGetAccessory({
       accessories: 1,
+      limit: 12,
     });
   };
 
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
   },
   boxItem: {
     margin: 8,

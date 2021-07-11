@@ -15,7 +15,7 @@ import HomeContainer from './HomeContainer';
 import ProductPage from './ProductPage';
 import AccessoriesPage from '../AccessoriesPage';
 import PromotionPage from '../PromotionPage';
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 class FirstRoute extends Component {
   render() {
@@ -30,20 +30,6 @@ class SecondRoute extends Component {
   }
 }
 class ThirdRoute extends Component {
-  render() {
-    const {navigation, listProducts, category, listBrand} = this.props;
-    return (
-      <ProductPage
-        navigation={navigation}
-        listProducts={listProducts}
-        listBrand={listBrand}
-        category={category}
-      />
-    );
-  }
-}
-
-class FourRoute extends Component {
   render() {
     const {navigation, listProducts, category, listBrand} = this.props;
     return (
@@ -82,53 +68,32 @@ class HomePage extends Component {
   };
 
   setIndex = val => {
+    const {listCategories, onClearStateBrand, onClearState} = this.props;
     this.setState({
       index: val,
     });
     const {onGetList, onGetListBrand, onAddParams} = this.props;
     var filters = '';
     const {filter} = this.state;
-    if (val === 2) {
-      filters = {
-        category: '608c195b99e77e244c7db4b5',
-      };
-      this.setState({
-        category: '608c195b99e77e244c7db4b5',
-      });
-      var params = {
-        ...filter,
-        ...filters,
-      };
-      onGetListBrand(filters);
-      onAddParams(params);
-    } else if (val === 3) {
-      filters = {
-        category: '608c197a99e77e244c7db4b6',
-      };
-      this.setState({
-        category: '608c197a99e77e244c7db4b6',
-      });
-      var params = {
-        ...filter,
-        ...filters,
-      };
-      onGetList(params);
-      onGetListBrand(filters);
-      onAddParams(params);
-    } else if (val === 4) {
-      filters = {
-        category: '60cf08806a958c26284fa8ad',
-      };
-      this.setState({
-        category: '60cf08806a958c26284fa8ad',
-      });
-      var params = {
-        ...filter,
-        ...filters,
-      };
-      onGetList(params);
-      onGetListBrand(filters);
-      onAddParams(params);
+    const number = listCategories.length;
+    for (let i = 0; i < number; i++) {
+      if (val === i + 3) {
+        filters = {
+          category: listCategories[i]._id,
+        };
+        this.setState({
+          category: listCategories[i]._id,
+        });
+        var params = {
+          ...filter,
+          ...filters,
+        };
+        onClearStateBrand();
+        onClearState();
+        onGetList(params);
+        onGetListBrand(filters);
+        onAddParams(params);
+      }
     }
   };
 
@@ -146,7 +111,7 @@ class HomePage extends Component {
         );
       case 'Promotion':
         return <PromotionPage></PromotionPage>;
-      case 'Smartphone':
+      default:
         return (
           <ThirdRoute
             navigation={this.props.navigation}
@@ -155,17 +120,6 @@ class HomePage extends Component {
             category={this.state.category}
           />
         );
-      case 'Computer':
-        return (
-          <FourRoute
-            navigation={this.props.navigation}
-            listProducts={this.props.listProducts}
-            listBrand={this.props.listBrand}
-            category={this.state.category}
-          />
-        );
-      default:
-        return null;
     }
   };
 
@@ -245,6 +199,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    onClearStateBrand: () => {
+      dispatch(BrandActions.onClearState());
+    },
+    onClearState: () => {
+      dispatch(ProductsActions.onClearState());
+    },
     onGetListCategory: params => {
       dispatch(CategoryActions.onGetList(params));
     },

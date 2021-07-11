@@ -26,6 +26,7 @@ import AccessoriesPage from './src/components/AccessoriesPage';
 import AccProductPage from './src/components/AccProductPage';
 import InstallmentPage from './src/components/InstallmentPage';
 import UserInstallmentPage from './src/components/UserInstallmentPage';
+import ComparePage from './src/components/ComparePage';
 //Redux
 import 'localstorage-polyfill';
 import {Provider} from 'react-redux';
@@ -122,7 +123,7 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
-            marginLeft: 80,
+            marginLeft: 100,
           },
         }}
       />
@@ -132,6 +133,22 @@ function HomeStackScreen({route, navigation}) {
       <HomeStack.Screen name="SignIn" component={SignInPage} />
       <HomeStack.Screen name="Checkout" component={CheckoutPage} />
       <HomeStack.Screen name="AccProduct" component={AccProductPage} />
+      <HomeStack.Screen
+        name="Compare"
+        component={ComparePage}
+        options={{
+          headerShown: true,
+          title: 'TRANG SO SÁNH',
+          headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 16,
+            marginLeft: 70,
+          },
+        }}
+      />
       <HomeStack.Screen
         name="Search"
         component={SearchPage}

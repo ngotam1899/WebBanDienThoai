@@ -186,6 +186,20 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     flex: 8,
   },
+  //
+  btnCompare: {
+    paddingHorizontal: 20,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txtCompare: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

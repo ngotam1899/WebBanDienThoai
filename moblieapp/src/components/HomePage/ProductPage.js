@@ -12,6 +12,7 @@ import {Rating} from 'react-native-ratings';
 import {connect} from 'react-redux';
 import styles from './style';
 
+import ProductPageLoader from '../ContentLoader/ProductPageLoader';
 import numberWithCommas from '../../utils/formatPrice';
 import ProductsActions from '../../redux/actions/products';
 
@@ -164,9 +165,15 @@ class ProductPage extends Component {
       number: number + 1,
     });
   }
+  onCompare = () => {
+    const {navigation, category} = this.props;
+    navigation.navigate('Compare', {
+      category: category,
+      id: '',
+    });
+  };
   componentDidUpdate(prevProps) {
-    const {category, onAddParams, listProducts} = this.props;
-    const {productList} = this.state;
+    const {category, onAddParams} = this.props;
     if (category !== prevProps.category) {
       var params = {
         category: category,
@@ -180,7 +187,7 @@ class ProductPage extends Component {
   }
   render() {
     const {listProducts, navigation, listBrand} = this.props;
-    const {brandName, sortValue, productList} = this.state;
+    const {brandName, sortValue} = this.state;
     return (
       <View style={{paddingHorizontal: 12, paddingBottom: 130}}>
         <View style={{marginVertical: 8}}>
@@ -228,7 +235,7 @@ class ProductPage extends Component {
             )}
           </ScrollView>
         </View>
-        <View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Picker
             selectedValue={sortValue}
             style={sortValue === 0 ? styles.pickerSort : styles.pickerLong}
@@ -239,23 +246,32 @@ class ProductPage extends Component {
             <Picker.Item label="Price: From hight to low" value={-1} />
             <Picker.Item label="Price: From low to hight" value={1} />
           </Picker>
+          <TouchableOpacity
+            onPress={() => this.onCompare()}
+            style={styles.btnCompare}>
+            <Text style={styles.txtCompare}>So sánh</Text>
+          </TouchableOpacity>
         </View>
-        <FlatList
-          data={listProducts}
-          numColumns={3}
-          onEndReached={() => this.ReadMore()}
-          onEndReachedThreshold={0.01}
-          contentContainerStyle={{flexGrow: 1}}
-          keyExtractor={(item, index) => item._id}
-          renderItem={({item, index}) => {
-            return (
-              <ProductItem
-                product={item}
-                index={index}
-                key={item._id}
-                navigation={navigation}></ProductItem>
-            );
-          }}></FlatList>
+        {listProducts ? (
+          <FlatList
+            data={listProducts}
+            numColumns={3}
+            onEndReached={() => this.ReadMore()}
+            onEndReachedThreshold={0.01}
+            contentContainerStyle={{flexGrow: 1}}
+            keyExtractor={(item, index) => item._id}
+            renderItem={({item, index}) => {
+              return (
+                <ProductItem
+                  product={item}
+                  index={index}
+                  key={item._id}
+                  navigation={navigation}></ProductItem>
+              );
+            }}></FlatList>
+        ) : (
+          <ProductPageLoader></ProductPageLoader>
+        )}
       </View>
     );
   }

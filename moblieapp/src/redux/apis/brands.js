@@ -14,3 +14,8 @@ export const getAllBrands = (params = {}) => {
   }
   return axiosService.get(`${API_ENDPOINT_AUTH}${url}-search${queryParams}`);
 };
+
+// http://localhost:3000/products/brands/accessory
+export const getAllAccessory = () => {
+  return axiosService.get(`${API_ENDPOINT_AUTH}${url}/accessory`);
+};

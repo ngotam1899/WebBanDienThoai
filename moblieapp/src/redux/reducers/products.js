@@ -1,11 +1,11 @@
-import { get } from "lodash";
-import { ProductsActionTypes } from "../actions/products";
+import {get} from 'lodash';
+import {ProductsActionTypes} from '../actions/products';
 
 const init = {
   detail: null,
 };
 
-export default function(state = init, action) {
+export default function (state = init, action) {
   switch (action.type) {
     case ProductsActionTypes.CLEAR_DETAIL:
       return {
@@ -16,6 +16,8 @@ export default function(state = init, action) {
       return {
         ...init,
       };
+    case ProductsActionTypes.COMPARE:
+    case ProductsActionTypes.COMPARE_ERROR:
     case ProductsActionTypes.GET_LIST:
     case ProductsActionTypes.GET_LIST_ERROR:
     case ProductsActionTypes.GET_BEST_SELLER:
@@ -30,49 +32,60 @@ export default function(state = init, action) {
     case ProductsActionTypes.GET_RELATE_ERROR:
       return {
         ...state,
+        list: null,
       };
     case ProductsActionTypes.GET_BEST_SELLER_SUCCESS:
       return {
         ...state,
-        best: get(action, "payload"), 
+        best: get(action, 'payload'),
       };
     case ProductsActionTypes.GET_FAVORITE_SUCCESS:
       return {
         ...state,
-        favorite: get(action, "payload"),
+        favorite: get(action, 'payload'),
+      };
+    case ProductsActionTypes.COMPARE_SUCCESS:
+      return {
+        ...state,
+        compare: get(action, 'payload'),
+      };
+    case ProductsActionTypes.COMPARE_FILTER_SUCCESS:
+      return {
+        ...state,
+        compare: get(action, 'payload', []),
       };
     case ProductsActionTypes.GET_NEWEST_SUCCESS:
       return {
         ...state,
-        new: get(action, "payload"),
+        new: get(action, 'payload'),
       };
     case ProductsActionTypes.GET_LIKE_SUCCESS:
       return {
         ...state,
-        like: get(action, "payload"),
+        like: get(action, 'payload'),
       };
     case ProductsActionTypes.GET_RELATE_SUCCESS:
       return {
         ...state,
-        relate: get(action, "payload"),
+        relate: get(action, 'payload'),
       };
     case ProductsActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        total: get(action, "payload.total"),
-        list: get(action, "payload.list", []), //list : action.payload.list
+        total: get(action, 'payload.total'),
+        list: get(action, 'payload.list', []), //list : action.payload.list
       };
     case ProductsActionTypes.FILTER_SUCCESS:
       return {
         ...state,
-        filter: get(action, "payload", []),
+        filter: get(action, 'payload', []),
       };
     case ProductsActionTypes.GET_DETAIL:
       return {
         ...state,
         detail: null,
       };
-    
+
     case ProductsActionTypes.GET_DETAIL_SUCCESS:
       return {
         ...state,
@@ -88,6 +101,7 @@ export default function(state = init, action) {
     case ProductsActionTypes.CREATE:
     case ProductsActionTypes.UPDATE:
     case ProductsActionTypes.FILTER:
+    case ProductsActionTypes.COMPARE_FILTER:
     case ProductsActionTypes.DELETE:
       return {
         ...state,
@@ -108,12 +122,12 @@ export default function(state = init, action) {
       return {
         ...state,
         params: action.params,
-      }
+      };
     case ProductsActionTypes.GET_PARAMS:
-      return{
+      return {
         ...state,
         params: action.params,
-      }
+      };
     default:
       return state;
   }

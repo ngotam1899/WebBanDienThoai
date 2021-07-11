@@ -218,36 +218,44 @@ class DetailModal extends Component {
                     </View>
                     <View style={styles.infoItem}>
                       <Text style={styles.titleItem}>Nhân viên phụ trách</Text>
-                      <Text style={styles.textItem}>
-                        {installmentItem.staff.firstname}{' '}
-                        {installmentItem.staff.lastname} (
-                        {installmentItem.staff.phonenumber})
-                      </Text>
+                      {installmentItem.staff ? (
+                        <Text style={styles.textItem}>
+                          {installmentItem.staff.firstname}{' '}
+                          {installmentItem.staff.lastname} (
+                          {installmentItem.staff.phonenumber})
+                        </Text>
+                      ) : (
+                        <Text>Phiếu trả góp chưa được duyệt</Text>
+                      )}
                     </View>
                   </View>
                   <View style={styles.breakLine}></View>
                   <Text style={[styles.title, {marginBottom: 20}]}>
                     Lịch sử trả góp
                   </Text>
-                  <View>
-                    <Table
-                      borderStyle={{
-                        borderWidth: 2,
-                        borderColor: '#1e88e5',
-                      }}>
-                      <Row
-                        data={tableHead}
-                        style={{height: 60, backgroundColor: '#f1f8ff'}}
-                        textStyle={{
-                          margin: 6,
-                          fontWeight: 'bold',
-                          fontSize: 16,
-                          textAlign: 'center',
-                        }}
-                      />
-                      <Rows data={tableData} textStyle={{margin: 6}} />
-                    </Table>
-                  </View>
+                  {installmentItem.detail ? (
+                    <View>
+                      <Table
+                        borderStyle={{
+                          borderWidth: 2,
+                          borderColor: '#1e88e5',
+                        }}>
+                        <Row
+                          data={tableHead}
+                          style={{height: 60, backgroundColor: '#f1f8ff'}}
+                          textStyle={{
+                            margin: 6,
+                            fontWeight: 'bold',
+                            fontSize: 16,
+                            textAlign: 'center',
+                          }}
+                        />
+                        <Rows data={tableData} textStyle={{margin: 6}} />
+                      </Table>
+                    </View>
+                  ) : (
+                    <Text>Phiếu trả góp chưa được duyệt</Text>
+                  )}
                   <View style={styles.breakLine}></View>
                   <Text style={[styles.title, {marginTop: 10}]}>
                     Thanh toán trả góp online

@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    flex: 0.6,
+    flex: 1,
     backgroundColor: 'red',
   },
   shareButtonText: {
@@ -307,6 +307,17 @@ const styles = StyleSheet.create({
   realPrice: {
     textDecorationLine: 'line-through',
     fontSize: 18,
+  },
+  infoItemBox: {
+    flexDirection: 'row',
+    flex: 1,
+    marginBottom: 15,
+    alignItems: 'flex-start',
+  },
+  fontAwesome: {
+    flex: 0.1,
+    marginRight: 8,
+    paddingTop: 2,
   },
 });
 export default styles;

@@ -365,7 +365,7 @@ class InstallmentPage extends Component {
                     <FontAwesome
                       name="level-up"
                       size={24}
-                      color="#00"
+                      color="#000"
                       style={styles.fontAwesome}
                     />
                     <View>

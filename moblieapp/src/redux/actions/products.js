@@ -2,6 +2,13 @@ export const ProductsActionTypes = {
   FILTER: 'FILTER',
   FILTER_SUCCESS: 'FILTER_SUCCESS',
 
+  COMPARE: 'COMPARE',
+  COMPARE_SUCCESS: 'COMPARE_SUCCESS',
+  COMPARE_ERROR: 'COMPARE_ERROR',
+
+  COMPARE_FILTER: 'COMPARE_FILTER',
+  COMPARE_FILTER_SUCCESS: 'COMPARE_FILTER_SUCCESS',
+
   GET_LIST: 'GET_LIST',
   GET_LIST_SUCCESS: 'GET_LIST_SUCCESS',
   GET_LIST_ERROR: 'GET_LIST_ERROR',
@@ -22,13 +29,13 @@ export const ProductsActionTypes = {
   GET_NEWEST_SUCCESS: 'GET_NEWEST_SUCCESS',
   GET_NEWEST_ERROR: 'GET_NEWEST_ERROR',
 
-  GET_LIKE: "GET_LIKE",
-  GET_LIKE_SUCCESS: "GET_LIKE_SUCCESS",
-  GET_LIKE_ERROR: "GET_LIKE_ERROR",
+  GET_LIKE: 'GET_LIKE',
+  GET_LIKE_SUCCESS: 'GET_LIKE_SUCCESS',
+  GET_LIKE_ERROR: 'GET_LIKE_ERROR',
 
-  GET_RELATE: "GET_RELATE",
-  GET_RELATE_SUCCESS: "GET_RELATE_SUCCESS",
-  GET_RELATE_ERROR: "GET_RELATE_ERROR",
+  GET_RELATE: 'GET_RELATE',
+  GET_RELATE_SUCCESS: 'GET_RELATE_SUCCESS',
+  GET_RELATE_ERROR: 'GET_RELATE_ERROR',
 
   CREATE: 'CREATE',
   CREATE_SUCCESS: 'CREATE_SUCCESS',
@@ -47,7 +54,7 @@ export const ProductsActionTypes = {
   UPDATE_PRODUCT_CART: 'UPDATE_PRODUCT_CART',
   DELETE_PRODUCT_CART: 'DELETE_PRODUCT_CART',
   ON_CLEAR_CART: 'ON_CLEAR_CART',
-  PURCHASE_AGAIN: "PURCHASE_AGAIN",
+  PURCHASE_AGAIN: 'PURCHASE_AGAIN',
 
   ON_CHECKOUT: 'ON_CHECKOUT',
   END_CHECKOUT: 'END_CHECKOUT',
@@ -61,20 +68,49 @@ Object.keys(ProductsActionTypes).forEach(key => {
 });
 
 /**
+ * compare
+ **/
+
+const onCompare = payload => ({
+  type: ProductsActionTypes.COMPARE,
+  payload,
+});
+
+const onCompareSuccess = payload => ({
+  type: ProductsActionTypes.COMPARE_SUCCESS,
+  payload,
+});
+
+const onCompareError = error => ({
+  type: ProductsActionTypes.COMPARE_ERROR,
+  payload: error,
+});
+
+const onCompareFilter = payload => ({
+  type: ProductsActionTypes.COMPARE_FILTER,
+  payload,
+});
+
+const onCompareFilterSuccess = payload => ({
+  type: ProductsActionTypes.COMPARE_FILTER_SUCCESS,
+  payload,
+});
+
+/**
  * like
  **/
 
- const onGetLike = (id) => ({
+const onGetLike = id => ({
   type: ProductsActionTypes.GET_LIKE,
   id,
 });
 
-const onGetLikeSuccess = (payload) => ({
+const onGetLikeSuccess = payload => ({
   type: ProductsActionTypes.GET_LIKE_SUCCESS,
-  payload
+  payload,
 });
 
-const onGetLikeError = (error) => ({
+const onGetLikeError = error => ({
   type: ProductsActionTypes.GET_LIKE_ERROR,
   payload: error,
 });
@@ -83,17 +119,17 @@ const onGetLikeError = (error) => ({
  * relate
  **/
 
-const onGetRelate = (id) => ({
+const onGetRelate = id => ({
   type: ProductsActionTypes.GET_RELATE,
   id,
 });
 
-const onGetRelateSuccess = (payload) => ({
+const onGetRelateSuccess = payload => ({
   type: ProductsActionTypes.GET_RELATE_SUCCESS,
-  payload
+  payload,
 });
 
-const onGetRelateError = (error) => ({
+const onGetRelateError = error => ({
   type: ProductsActionTypes.GET_RELATE_ERROR,
   payload: error,
 });
@@ -235,12 +271,12 @@ const onAddProductToCart = () => ({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
 });
 
-const onAddParams = (params) => {
+const onAddParams = params => {
   return {
     type: ProductsActionTypes.ADD_PARAMS,
-    params
-  }
-}
+    params,
+  };
+};
 
 const onGetParams = () => ({
   type: ProductsActionTypes.GET_PARAMS,
@@ -257,14 +293,13 @@ const onDeleteProductToCart = color => {
   };
 };
 
-const onPurchaseAgain = (order_list) =>{
+const onPurchaseAgain = order_list => {
   return {
     type: ProductsActionTypes.PURCHASE_AGAIN,
-    order_list
-  }
-}
-const onCheckout = () => (
-  {
+    order_list,
+  };
+};
+const onCheckout = () => ({
   type: ProductsActionTypes.ON_CHECKOUT,
 });
 
@@ -304,6 +339,13 @@ const onFilterSuccess = data => ({
 const ProductsActions = {
   onFilter,
   onFilterSuccess,
+
+  onCompareFilter,
+  onCompareFilterSuccess,
+
+  onCompare,
+  onCompareSuccess,
+  onCompareError,
 
   onClearDetail,
   onClearState,
