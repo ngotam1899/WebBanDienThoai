@@ -85,8 +85,9 @@ span {
 .shopping-item {
     float: right;
     font-size: 18px;
-    padding: 10px;
+    padding: 7px;
     position: relative;
+    border: solid 1px #ccc;
 }
 .shopping-item a {
     color: #666;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withTranslation } from 'react-i18next'
 import './styles.css';

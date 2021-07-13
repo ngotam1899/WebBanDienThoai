@@ -57,8 +57,14 @@ export const ProductsActionTypes = {
   DELETE_PRODUCT_CART: "DELETE_PRODUCT_CART",
   PURCHASE_AGAIN: "PURCHASE_AGAIN",
 
+  ADD_CHECKOUT: "ADD_CHECKOUT",
+  DELETE_CHECKOUT: "DELETE_CHECKOUT",
+  CHECKOUT_ALL: "CHECKOUT_ALL",
+  CLEAR_CHECKOUT: "CLEAR_CHECKOUT",
+
   CLEAR_CART: "CLEAR_CART",
   CHANGE_CURRENCY: "CHANGE_CURRENCY",
+  CHANGE_LANGUAGE: "CHANGE_LANGUAGE",
 };
 
 Object.keys(ProductsActionTypes).forEach((key) => {
@@ -74,8 +80,12 @@ Object.keys(ProductsActionTypes).forEach((key) => {
 const onClearDetail = () => ({
   type: ProductsActionTypes.CLEAR_DETAIL,
 });
-const onClearCart = () => ({
+const onClearCart = (payload) => ({
   type: ProductsActionTypes.CLEAR_CART,
+  payload
+});
+const onClearCheckout = () => ({
+  type: ProductsActionTypes.CLEAR_CHECKOUT,
 });
 const onClearState = () => ({
   type: ProductsActionTypes.CLEAR_STATE,
@@ -298,29 +308,34 @@ const onUpdateError = (error) => ({
  * cart _ products
  */
 
-const onAddProductToCart = (product, color, quantity) =>({
+const onAddProductToCart = (product, color, quantity) => ({
   type: ProductsActionTypes.ADD_PRODUCT_TO_CART,
   product,color, quantity
 })
-const onDeleteProductInCart = (product, color) =>{
-  return {
-    type: ProductsActionTypes.DELETE_PRODUCT_CART,
-    product, color
-  }
-}
-const onUpdateProductInCart = (product,color, quantity) =>{
-  return {
-    type: ProductsActionTypes.UPDATE_PRODUCT_CART,
-    product,color, quantity
-  }
-}
-const onPurchaseAgain = (order_list) =>{
-  return {
-    type: ProductsActionTypes.PURCHASE_AGAIN,
-    order_list
-  }
-}
-
+const onDeleteProductInCart = (product, color) => ({
+  type: ProductsActionTypes.DELETE_PRODUCT_CART,
+  product, color
+})
+const onUpdateProductInCart = (product, color, quantity) => ({
+  type: ProductsActionTypes.UPDATE_PRODUCT_CART,
+  product,color, quantity
+})
+const onPurchaseAgain = (order_list) => ({
+  type: ProductsActionTypes.PURCHASE_AGAIN,
+  order_list
+})
+const onCheckoutAll = (payload) =>({
+  type: ProductsActionTypes.CHECKOUT_ALL,
+  payload
+})
+const onAddCheckout = (payload) =>({
+  type: ProductsActionTypes.ADD_CHECKOUT,
+  payload
+})
+const onDeleteCheckout = (payload) => ({
+  type: ProductsActionTypes.DELETE_CHECKOUT,
+  payload
+})
 /**
  *
  * currency
@@ -332,7 +347,12 @@ const onChangeCurrency = (unit) =>{
     payload: unit
   }
 }
-
+const onChangeLanguage = (payload) =>{
+  return {
+    type: ProductsActionTypes.CHANGE_LANGUAGE,
+    payload
+  }
+}
 /**
  *
  * filter
@@ -367,6 +387,7 @@ const ProductsActions = {
 
   onClearDetail,
   onClearState,
+  onClearCheckout,
   onClearCart,
 
   onCompare,
@@ -417,8 +438,13 @@ const ProductsActions = {
   onDeleteProductInCart,
   onUpdateProductInCart,
   onPurchaseAgain,
+
   onChangeCurrency,
+  onChangeLanguage,
   
+  onAddCheckout,
+  onDeleteCheckout,
+  onCheckoutAll
 };
 
 export default ProductsActions;

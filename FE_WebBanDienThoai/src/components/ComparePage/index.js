@@ -68,7 +68,6 @@ class ComparePage extends Component {
           specifications[i].product = product;
         }
       }
-      console.log(specifications)
       this.setState({specifications})
     }
   }
@@ -133,7 +132,7 @@ class ComparePage extends Component {
 
   render() {
     const { keyword, specifications } = this.state;
-    const { t, listProducts, category, listSearch, currency, history } = this.props;
+    const { t, listProducts, category, listSearch, currency, history, language } = this.props;
     return (
       <div className="container my-3">
         <div className="row">
@@ -141,7 +140,7 @@ class ComparePage extends Component {
             <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
             <i className="fa fa-chevron-right px-2 w-25-px "></i>
             {category && <>
-            <a className="text-decoration-none directory rounded p-2" href={`/#/products/${category.pathseo}.${category._id}`}>{category.name}</a>
+            <a className="text-decoration-none directory rounded p-2" href={`/#/products/${category.pathseo}.${category._id}`}>{language==="vn" ? category.name : category.name_en}</a>
             <i className="fa fa-chevron-right px-2 w-25-px "></i></>}
           </div>
           <h1 className="my-0 font-weight-bold">{t("compare.page.title")}</h1>
@@ -203,30 +202,30 @@ class ComparePage extends Component {
                 <div className="rounded border p-2 my-2 shadow-sm form-inline">
                   <div className="form-group w-100">
                     <div className="position-relative w-100">
-                      <input className="form-control w-100" type="text" placeholder={t("compare.placeholder.input")} value={keyword} name="keyword" onChange={this.handleFilter}/>
-                      <div className="card position-absolute w-100" style={{ zIndex: 1}}>
-                      {listSearch && keyword && listSearch.map((item, index) =>{
+                      <input className="form-control w-100" type="text" placeholder={t("compare.placeholder.input")} value={keyword} name="keyword" 
+                      onChange={this.handleFilter}/>
+                      {listSearch && keyword &&<div className="card position-absolute w-100 shadow-sm py-2" style={{ zIndex: 1}}>
+                       <>{listSearch.map((item, index) =>{
                         return (
-                          <div key={index} onClick={()=> this.setCompare(item._id)}>
-                            <div className="row text-dark text-decoration-none " style={{height: "80px"}}>
-                              <div className="col-4 my-auto">
-                                <img style={{height: "80px"}} src={item.bigimage.public_url} alt={item.name}></img>
+                          <div className=" directory rounded p-2 mx-2" key={index} onClick={()=> this.setCompare(item._id)}>
+                            <div className="row text-dark text-decoration-none" style={{height: "60px"}}>
+                              <div className="col-xl-3 my-auto d-none d-xl-block">
+                                <img style={{height: "60px"}} src={item.bigimage.public_url} alt={item.name}></img>
                               </div>
-                              <div className="col-8 text-left my-auto">
+                              <div className="col-12 col-xl-9 text-left my-auto">
                                 <p className="mb-0">{item.name}</p>
-                                <p className="mb-0">{currency==="VND" ? item.price_min : parseFloat(tryConvert(item.price_min, currency, false)).toFixed(2)} {currency}</p>
+                                <p className="mb-0 smaller text-secondary">{currency==="VND" ? item.price_min : parseFloat(tryConvert(item.price_min, currency, false)).toFixed(2)} {currency}</p>
                               </div>
                             </div>
-                            <div className="border-bottom"></div>
                           </div>
                         )
-                      })}
-                      </div>
+                      })}</>
+                      </div>}
                     </div>
                   </div>
                 </div>
                 <div className="my-5 py-4 text-center">
-                  <img className="w-50 my-3" src="https://cdn.cellphones.com.vn/media/icon/icon-phtb-2.png"></img>
+                  <img className="w-50 my-3" src="https://cdn.cellphones.com.vn/media/icon/icon-phtb-2.png" alt=""></img>
                   <h4 className="my-3">{t("compare.not-yet.h4")}</h4>
                 </div>
               </div>}
@@ -313,6 +312,7 @@ class ComparePage extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    language: state.language,
     listProducts: state.products.list,
     currency: state.currency,
     category : state.categories.detail,

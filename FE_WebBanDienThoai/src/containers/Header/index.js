@@ -22,9 +22,9 @@ import io from 'socket.io-client';
 import numberWithCommas from '../../utils/formatPrice'
 import getFilterParams from "../../utils/getFilterParams";
 import tryConvert from '../../utils/changeMoney'
-import { toastInfo } from '../../utils/toastHelper';
+import { toastError, toastInfo } from '../../utils/toastHelper';
 import {INITIAL_IMAGE} from '../../constants';
-const ENDPOINT = 'http://be-phonestore.herokuapp.com';
+const ENDPOINT = 'https://be-phonestore.herokuapp.com';
 let socket = io(ENDPOINT);
 
 class Header extends Component {
@@ -34,21 +34,24 @@ class Header extends Component {
       total: 0,
       totalPrice: 0,
       currencyCode: "VND",
-      language: "en",
+      language: localStorage.getItem("LANGUAGE") ||"en",
       keyword: "",
       itemsCount: 0,
       status: -1,
       order: "",
       installment: "",
+      edit: false
     }
     this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
   }
   
   componentDidMount(){
+    const {language} = this.state;
     const {onGetProfile, onGetListCategory} = this.props;
     const token = localStorage.getItem('AUTH_USER');
     onGetProfile(null,token);
     onGetListCategory({ accessories: -1 });
+    this.props.i18n.changeLanguage(language);
   }
 
   handleChangeCurrency = (event) => {
@@ -56,11 +59,15 @@ class Header extends Component {
     this.setState({
       currencyCode: event.target.value
     })
+    localStorage.setItem("CURRENCY", event.target.value)
     onChangeCurrency(event.target.value);
   }
 
   changeLanguage = (event) => {
+    const {onChangeLanguage} = this.props
     this.setState({ language: event.target.value})
+    localStorage.setItem("LANGUAGE", event.target.value)
+    onChangeLanguage(event.target.value)
     this.props.i18n.changeLanguage(event.target.value)
   }
   
@@ -134,22 +141,11 @@ class Header extends Component {
     onFilter({keyword: value});
   }
 
-  // Chuyển router (thêm vào params) 
-  handleUpdateFilter = (data) => {
-    const {location, history} = this.props;
-    const {search} = location;
-    let queryParams = getFilterParams(search);
-    queryParams = {
-      ...queryParams,
-      ...data,
-    };
-    history.push(`http://fe-phonestore.herokuapp.com/#/products/dien-thoai/?${qs.stringify(queryParams)}`);
-  };
-
   pressSearch = (event) => {
-    const {keyword} = this.state;
-    const {history} = this.props;
+    const { keyword } = this.state;
+    const { history, t } = this.props;
     if(event.key === 'Enter'){
+      if(keyword === "") return toastError(t("header.toastify.search"))
       history.push(`/#/search?keyword=${keyword}`)
       window.location.reload()
     }
@@ -157,8 +153,9 @@ class Header extends Component {
 
   // Button search
   searchKeyWorld = () => {
-    const {keyword} = this.state;
-    const {history} = this.props;
+    const { keyword } = this.state;
+    const { history, t } = this.props;
+    if(keyword === "") return toastError(t("header.toastify.search"))
     history.push(`/#/search?keyword=${keyword}`)
     window.location.reload()
   }
@@ -231,6 +228,13 @@ class Header extends Component {
     )
   }
 
+  onReload = () => {
+    this.setState({edit: false})
+    setTimeout(()=>{
+      window.location.reload(false);
+    }, 500);
+  }
+
   render() {
     const MenuLink = ({ label, image, to, activeOnlyWhenExact, onClick, last }) => {
       return (
@@ -245,7 +249,7 @@ class Header extends Component {
         }} />
       )
     }
-    const {total, totalPrice, currencyCode, language, keyword, itemsCount}=this.state;
+    const { total, totalPrice, currencyCode, language, keyword, itemsCount, edit }=this.state;
     const {userInfo, isLogin, listCategories, t, listProducts, currency, location, listNotification, cart} = this.props;
     const notVND = currencyCode==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currencyCode, false)).toFixed(2));
     return (
@@ -260,11 +264,6 @@ class Header extends Component {
                       <li>
                         <a href="/#/account/detail" className="text-decoration-none">
                           <FontAwesomeIcon icon={faUser} /> {userInfo.firstname} {userInfo.lastname}
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/#/carts/checkout" className="text-decoration-none">
-                          <i className="fa fa-credit-card"></i> {t('header.checkout.button')}
                         </a>
                       </li>
                       <li>
@@ -326,7 +325,7 @@ class Header extends Component {
                     </li>
                     <li className="dropdown dropdown-small">
                     <i className="fa fa-globe-europe"></i>
-                    <select className="select-box" onChange={this.changeLanguage}>
+                    <select className="select-box" onChange={this.changeLanguage} value={language}>
                       <option value="en" name="language">{t('header.english.select')}</option>
                       <option value="vn" name="language">{t('header.vietnamese.select')}</option>
                     </select>
@@ -347,38 +346,40 @@ class Header extends Component {
                 </div>
               </div>
               <div className="col-md-6 col-12 align-self-center py-1">
-                <div className="input-group shadow rounded-pill position-relative">
-                  <input type="text" className="form-control rounded-pill" value={keyword} name="keyword" onKeyPress={this.pressSearch} onChange={this.handleFilter} placeholder={t('search.placeholder.input')}></input>
+                <div className="input-group shadow-sm rounded-pill position-relative">
+                  <input type="text" className="form-control rounded-pill" value={keyword} name="keyword" onKeyPress={this.pressSearch} onChange={this.handleFilter} 
+                  placeholder={t('search.placeholder.input')} onFocus={()=> this.setState({edit: true})}></input>
                   <div className="input-group-append position-absolute btn-circle" style={{right: '5px', top: '5px'}}>
                     <button className="btn btn-danger h-100 rounded-circle p-revert" onClick={() => this.searchKeyWorld()}><i className="fa fa-search"></i></button>
                   </div>
                 </div>
                 <div style={{ position: "absolute", width: "95%" }}>
-                  <div className="card" style={{ zIndex: 1}}>
-                  {listProducts && keyword && listProducts.map((product, index) =>{
+                  {listProducts && listProducts.length > 0 && keyword && edit &&
+                  <div className="card py-2 shadow-sm" style={{ zIndex: 5}}>
+                  <><h4 className="mb-0 mx-3">{t("header.search.recommended")}</h4>
+                  {listProducts.map((product, index) =>{
                     return (
-                      <Link to={`/product/${product.pathseo}.${product._id}`} className="text-decoration-none" key={index}>
-                      <div className="row text-dark text-decoration-none " style={{height: "80px"}}>
+                      <Link to={`/product/${product.pathseo}.${product._id}`} className="text-decoration-none directory rounded p-2 mx-2" key={index}
+                      onClick={()=> this.onReload()} style={{textDecoration: 'none'}}>
+                      <div className="row text-dark text-decoration-none " style={{height: "60px"}}>
                         <div className="col-3 my-auto">
-                          <><img style={{height: "80px"}} src={product.bigimage.public_url} alt={product.name}></img></>
+                          <><img style={{height: "60px"}} src={product.bigimage.public_url} alt={product.name}></img></>
                         </div>
                         <div className="col-9 text-left my-auto">
                           <p className="mb-0">{product.name}</p>
-                          <p className="mb-0">{currency==="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
+                          <p className="mb-0 smaller text-secondary">{currency==="VND" ? product.price_min : parseFloat(tryConvert(product.price_min, currency, false)).toFixed(2)} {currency}</p>
                         </div>
                       </div>
-                      <div className="border-bottom"></div>
                       </Link>
                     )
-                  })}
-                  </div>
+                  })}</>
+                  </div>}
                 </div>
               </div>
               <div className="col-12 col-xl-3 align-self-center py-1">
-                <div className="shopping-item rounded-pill shadow">
+                <div className="shopping-item rounded-pill shadow-sm">
                   <Link to="/carts" className="text-decoration-none" data-tip data-for='cart'>
-                    {t('header.cart.button')} · <span className="cart-amunt">{notVND} {currencyCode}</span> 
-                    <i className="fa fa-shopping-cart"></i>
+                    <span className="rounded-circle bg-danger" style={{padding: "0.15rem 0.25rem"}}><i className="fa fa-shopping-cart text-white"></i></span> · <span className="cart-amunt">{notVND ? `${notVND} ${currencyCode}` : "Empty"}</span> 
                     <span className="product-count">{total}</span>
                   </Link>
                   <ReactTooltip id='cart' place="bottom" type="light" class="shadow-sm bg-white" effect="solid" getContent={(dataTip) => 
@@ -488,6 +489,9 @@ const mapDispatchToProps =(dispatch)=> {
     },
     onGetListCategory: (params) => {
       dispatch(CategoryActions.onGetList(params))
+    },
+    onChangeLanguage: (payload) => {
+      dispatch(ProductsActions.onChangeLanguage(payload));
     },
     onChangeCurrency: (unit) => {
       dispatch(ProductsActions.onChangeCurrency(unit));

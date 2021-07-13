@@ -18,18 +18,23 @@ import InstallmentActions from "../../redux/actions/installment";
 const statusList = [
   { 
     name: "Chờ duyệt",
+    name_en: "Pending",
     state: { status:-1, active:1 },
   },{
     name: "Chưa hoàn tất",
+    name_en: "Unfinish",
     state: { status:0, active:1 }
   },{
     name: "Đã hoàn tất",
+    name_en: "Finished",
     state: { status:1, active:1 }
   },{
     name: "Qúa hạn",
+    name_en: "Overdue",
     state: { status:2, active:1 }
   },{
     name: "Đã hủy",
+    name_en: "Canceled",
     state: { active:-1 }
   }
 ];
@@ -99,19 +104,20 @@ class UserInstallmentPage extends Component {
   }
 
   setStatus = (status, active) => {
-    if(active===false) return "Đã hủy"
+    const { t } = this.props;
+    if(active===false) return t("installment.status.1")
     else{
       switch(status) {
         case -1:
-          return "Chờ duyệt"
+          return t("installment.status.2")
         case 0:
-          return "Chưa hoàn tất"
+          return t("installment.status.3")
         case 1:
-          return "Đã hoàn tất"
+          return t("installment.status.4")
         case 2:
-          return "Qúa hạn"
+          return t("installment.status.5")
         default:
-          return "Chờ duyệt"
+          return t("installment.status.2")
       }
     }
   }
@@ -166,22 +172,22 @@ class UserInstallmentPage extends Component {
   }
 
   render() {
-    const {queryParams} = this.state;
-    const {installmentList, installmentItem, location, history, total, t} = this.props;
+    const { queryParams } = this.state;
+    const { installmentList, installmentItem, location, history, total, t, language } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
         <div className="container emp-profile p-0 mt-5 mb-2">
           <div className="row mx-3">
-            <div className={filter.type==="0" || filter.type===undefined ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
+            <div className={filter.type==="0" || filter.type===undefined ? "col-2 text-center pt-1 bg-selected font-weight-bold" : "col-2 text-center pt-1 font-weight-bold text-secondary"} 
             onClick={() => this.onList(0, null)}>
-              {t('common.all')}
+              <div className={`${filter.type!=="0" && filter.type!==undefined && "rounded directory"} py-3`}>{t('common.all')}</div>
             </div>
             {statusList.map((status, index)=>{
               return (
-                <div key={index} className={filter.type===(index+1).toString() ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
+                <div key={index} className={filter.type===(index+1).toString() ? "col-2 text-center pt-1 bg-selected font-weight-bold" : "col-2 text-center pt-1 font-weight-bold text-secondary"} 
                 onClick={() => this.onList(index+1, status.state)}>
-                  {status.name}
+                  <div className={`${filter.type!==(index+1).toString() && "rounded directory"} py-3`}>{language==="vn" ? status.name : status.name_en}</div>
                 </div>
               )
             })}
@@ -278,6 +284,7 @@ class UserInstallmentPage extends Component {
 
 const mapStateToProps = (state) =>{
   return {
+    language: state.language,
     authInfo: state.auth.detail,
     installmentList: state.installment.list,
     installmentItem: state.installment.detail,

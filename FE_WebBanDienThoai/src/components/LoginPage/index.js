@@ -9,6 +9,7 @@ import { withTranslation } from "react-i18next";
 import AuthorizationActions from '../../redux/actions/auth'
 // @Components
 import { GoogleLogin } from 'react-google-login';
+import { FacebookProvider, Login } from 'react-facebook';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
@@ -59,7 +60,7 @@ class LoginPage extends Component {
 	}
 
 	UNSAFE_componentWillReceiveProps(props){
-		const {loggedIn,history} = props;
+		const { loggedIn, history } = props;
 		if(loggedIn && loggedIn===true){
 			history.push('/');
 		}
@@ -106,7 +107,6 @@ class LoginPage extends Component {
 					</div>
 					<div className="login-content">
 						<form>
-							<img src="img/avatar.svg" alt="" />
 							<h2 className="title">Welcome to</h2>
 							<img className="pb-4" src={assets("brand.png")} alt=""></img>
 							<div className="input-div one">
@@ -150,18 +150,15 @@ class LoginPage extends Component {
 									/>
 								</div>
 								<form onSubmit={this.onSubmit} className="col-12 w-100">
-									<div className="row">
-										<div className="col-12">
-											<FacebookLogin
-											appId={FACEBOOK_ID}
-											autoLoad={false}
-											callback={this.responseFacebook}
-											render={renderProps => (
-													<button onClick={renderProps.onClick}  className="btn-primary"><FontAwesomeIcon icon={faFacebookF} className="mr-1"/>Login with Facebook</button>
-												)}
-											/>
-										</div>
-									</div>
+									<FacebookLogin
+									appId={FACEBOOK_ID}
+									autoLoad={true}
+									onFailure={this.responseFacebook}
+									callback={this.responseFacebook}
+									render={renderProps => (
+										<button onClick={renderProps.onClick} className="btn-primary"><FontAwesomeIcon icon={faFacebookF} className="mr-1"/>Login with Facebook</button>
+									)}
+									/>
 								</form>
 							</div>
 						</form>

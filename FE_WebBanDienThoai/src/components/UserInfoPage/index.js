@@ -99,8 +99,14 @@ class UserInfoPage extends Component {
              
               </div>
               <div className="col-md-8">
-                <div className="profile-head">
-                  <h2>{t('user.page.title')}</h2>
+                <div className="row">
+                  <div className="col-12 my-2">
+                    <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
+                    <i className="fa fa-chevron-right px-2 w-25-px"></i>
+                  </div>
+                  <div className="col-12">
+                    <h1 className="font-weight-bold">{t('user.page.title')}</h1>
+                  </div>
                 </div>
                 <UserDetail userInfo={authInfo} listCity={listCity} selectedFile={selectedFile}/>
               </div>

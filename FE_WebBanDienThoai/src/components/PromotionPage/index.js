@@ -86,7 +86,7 @@ class PromotionPage extends Component {
                       <p className="float-end mb-0 font-italic text-danger">({new Date(ad.startedAt).toLocaleDateString("vn-VN")} - {new Date(ad.endedAt).toLocaleDateString("vn-VN")})</p>
                     </div>
                     <div className="col-12 text-right">
-                      {this.setStatus(ad.startedAt, ad.endedAt) !== t('promotion.done') && <button type="button" className="btn btn-primary" onClick={()=> history.push(ad.link.replace("https://localhost:5000/#", ""))}>{t('Xem thông tin')}</button>}
+                      {this.setStatus(ad.startedAt, ad.endedAt) !== t('promotion.done') && <button type="button" className="btn btn-primary" onClick={()=> history.push(ad.link.replace("https://localhost:5000/#", ""))}>{t('common.detail.button')}</button>}
                     </div>
                   </div>
                 </div>

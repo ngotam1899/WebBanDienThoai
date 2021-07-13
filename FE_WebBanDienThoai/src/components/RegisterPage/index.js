@@ -73,7 +73,7 @@ class RegisterPage extends Component {
 	onRegister(data){
 		const {firstname, lastname, phonenumber, address, city, district, ward, email, password, confirmPassword} = this.state;
 		const {onRegister,t} = this.props;
-		data = {firstname, lastname, phonenumber, address : `${address}, ${ward}, ${district}, ${city}`, email, password};
+		data = {firstname, lastname, phonenumber, address : `${address.replaceAll(',', '')}, ${ward}, ${district}, ${city}`, email, password};
 		if(password === confirmPassword){
 			onRegister(data);
 		}else{

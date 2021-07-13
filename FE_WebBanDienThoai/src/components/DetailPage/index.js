@@ -123,6 +123,16 @@ class DetailPage extends Component {
   onAddToCart = (product, quantity) =>{
     var { onAddProductToCart, t } = this.props;
     const { check } = this.state;
+    product = {
+      _id: product._id,
+      colors: product.colors,
+      bigimage: product.bigimage,
+      name: product.name,
+      height: product.height,
+      length: product.length,
+      width: product.width,
+      weight: product.weight
+    }
     if(check === 0){
       toastError(`${t('detail.toastify.error')}`)
     }
@@ -407,7 +417,7 @@ class DetailPage extends Component {
                     </div>
                     <div className="tab-pane fade show active" id="relate" role="tab" aria-labelledby="relate-tab">
                       <div className="row">
-                        {product.description ? (relate ? relate.map((product, index) => {
+                        {product.description && product.description.length > 15 ? (relate ? relate.map((product, index) => {
                           return (
                               <ProductItem product={product} key={index}/>
                             )
@@ -456,8 +466,8 @@ class DetailPage extends Component {
                             /* eslint-disable */
                               return (
                               <tr key={index}>
-                                <td className="font-weight-bold" scope="row">{item.name}</td>
-                                <td>{item.selection.length > 0 ? this.setSelector(item.selection) : item.value}</td>
+                                <td colSpan="1" style={{width: "30%"}} className="font-weight-bold" scope="row">{item.name}</td>
+                                <td colSpan="1" style={{width: "70%"}}>{item.selection.length > 0 ? this.setSelector(item.selection) : item.value}</td>
                               </tr>
                               )
                             /* eslint-disable */

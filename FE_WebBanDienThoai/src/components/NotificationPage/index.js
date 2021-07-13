@@ -18,12 +18,15 @@ import OrdersActions from "../../redux/actions/order";
 const statusList = [
   { 
     name: "Đơn hàng",
+    name_en: "Purchase"
   },
   {
     name: "Khuyến mãi",
+    name_en: "Promotion"
   },
   {
     name: "Trả góp",
+    name_en: "Installment"
   }
 ];
 
@@ -163,21 +166,21 @@ class NotificationPage extends Component {
   }
 
   render() {
-    const { listNotification, location, t, installmentItem, orderItem, history, total } = this.props;
+    const { listNotification, location, t, installmentItem, orderItem, history, total, language } = this.props;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
         <div className="container emp-profile p-0 mt-5 mb-2">
           <div className="row mx-3">
-            <div className={filter.type===undefined ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"}
+            <div className={filter.type===undefined ? "col-2 text-center pt-1 bg-selected font-weight-bold " : "col-2 text-center pt-1 font-weight-bold text-secondary"}
             onClick={() => this.handleUpdateFilter()}>
-              {t('common.all')}
+              <div className={`${filter.type!==undefined && "rounded directory"} py-3`}>{t('common.all')}</div>
             </div>
             {statusList.map((status, index)=>{
               return (
-                <div key={index} className={filter.type===(index).toString() ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
+                <div key={index} className={filter.type===(index).toString() ? "col-2 text-center pt-1 bg-selected font-weight-bold" : "col-2 text-center pt-1 font-weight-bold text-secondary"} 
                 onClick={() => this.handleUpdateFilter({type : index})}>
-                  {status.name}
+                  <div className={`${filter.type!==(index).toString() && "rounded directory"} py-3`}>{language==="vn" ? status.name : status.name_en}</div>
                 </div>
               )
             })}
@@ -248,6 +251,7 @@ class NotificationPage extends Component {
 
 const mapStateToProps = (state) =>{
   return {
+    language: state.language,
     authInfo: state.auth.detail,
     listNotification: state.notification.list,
     total : state.notification.total,

@@ -1,45 +1,36 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
-import { withTranslation } from 'react-i18next'
-import ProductsActions from '../../redux/actions/products'
+import { withTranslation } from 'react-i18next';
+import ProductsActions from '../../redux/actions/products';
 import './styles.css';
 // Functions
-import tryConvert from '../../utils/changeMoney'
+import tryConvert from '../../utils/changeMoney';
 import numberWithCommas from "../../utils/formatPrice";
+import { toastError } from '../../utils/toastHelper';
 
 class CartPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       total: 0,
-      totalPrice: 0
+      totalPrice: 0,
+      checkedAll: false
     }
   }
 
   UNSAFE_componentWillMount() {
     document.title = "[TellMe] Trang bán hàng"
-    var total = 0;
-    var totalPrice = 0;
-    var { cart } = this.props;
-    for (let i = 0; i < cart.length; i++) {
-      total = total + cart[i].quantity
-      totalPrice = totalPrice + cart[i].quantity * cart[i].product.colors.find(item=> item._id === cart[i].color).price
-    }
-    this.setState({
-      total,
-      totalPrice
-    })
   }
 
   componentDidUpdate(prevProps) {
     var total = 0;
     var totalPrice=0;
-    var {cart} = this.props;
-    if (cart !== prevProps.cart) {
-      for(let i=0; i< cart.length; i++){
-        total = total+cart[i].quantity
-        totalPrice = totalPrice+ cart[i].quantity* cart[i].product.colors.find(item=> item._id === cart[i].color).price
+    var {checkout} = this.props;
+    if (checkout !== prevProps.checkout) {
+      for(let i=0; i< checkout.length; i++){
+        total = total + checkout[i].quantity
+        totalPrice = totalPrice+ checkout[i].quantity* checkout[i].product.colors.find(item=> item._id === checkout[i].color).price
       }
       this.setState({ 
         total,
@@ -49,8 +40,9 @@ class CartPage extends Component {
   }
 
   checkoutOrder = () =>{
-    const {history} = this.props;
-    history.push('/carts/checkout')
+    const {history, checkout} = this.props;
+    if(checkout.length === 0) toastError("Bạn chưa chọn sản phẩm checkout");
+    else history.push('/carts/checkout')
   }
 
   onUpdateQuantity = (product, color, quantity) => {
@@ -65,9 +57,31 @@ class CartPage extends Component {
     onDeleteProductInCart(product, color);
   }
 
+  setCheckout = (e) => {
+    const { checked, value } = e.target;
+    const { onAddCheckout, onDeleteCheckout } = this.props;
+    if(checked === true) {
+      onAddCheckout(JSON.parse(value));
+    } else {
+      onDeleteCheckout(JSON.parse(value));
+    }
+  }
+
+  setCheckoutAll = (e) => {
+    const { checked } = e.target;
+    const { cart, onCheckoutAll, onClearAllCheckout } = this.props;
+    if(checked === true) {
+      onCheckoutAll(cart);
+      this.setState({checkedAll: true})
+    } else {
+      onClearAllCheckout();
+      this.setState({checkedAll: false})
+    }
+  }
+
   render() {
-    var {totalPrice} = this.state;
-    var {cart, currency, userInfo, t} = this.props;
+    var { totalPrice, checkedAll } = this.state;
+    var { cart, currency, userInfo, t } = this.props;
     return (
     <div className="container my-3">
       <div className="row">
@@ -88,7 +102,7 @@ class CartPage extends Component {
                   <div className="row" key={index}>
                     <div className="col-md-1 col-2 text-center align-self-center">
                       <div className="form-check form-switch">
-                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked disabled/>
+                        <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked={checkedAll || undefined} disabled={checkedAll} value={JSON.stringify(item)} onChange={(e)=>this.setCheckout(e)}/>
                       </div>
                     </div>
                     <div className="col-md-4 col-7">
@@ -151,7 +165,7 @@ class CartPage extends Component {
               <div className="row">
                 <div className="col-md-2 col-5 align-self-center">
                 <div className="form-check form-switch">
-                  <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked disabled/>
+                  <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={(e)=>this.setCheckoutAll(e)}/>
                   <label className="form-check-label" htmlFor="flexSwitchCheckDefault">{t('cart.all.choose')}</label>
                 </div>
                 </div>
@@ -161,7 +175,7 @@ class CartPage extends Component {
                   <p className="my-0 font-weight-bold">
                   {currency==="VND" ? numberWithCommas(totalPrice) : numberWithCommas(parseFloat(tryConvert(totalPrice, currency, false)).toFixed(2))} {currency}
                   </p>
-                  {userInfo && cart[0] && <button className="btn btn-primary ml-2" onClick={() => this.checkoutOrder()}>{t('cart.checkout.button')}</button>}
+                  {userInfo ? (cart[0] && <button className="btn btn-primary ml-2" onClick={() => this.checkoutOrder()}><i className="fa fa-credit-card mr-2"></i>{t('cart.checkout.button')}</button>) :  <a className="btn btn-success ml-2" href="/user/dang-nhap">{t('header.login.button')}</a>}
                 </div>
               </div>
             </div>
@@ -177,6 +191,7 @@ class CartPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     cart: state.cart,
+    checkout: state.checkout,
     currency: state.currency,
     userInfo: state.auth.detail,
   }
@@ -190,6 +205,18 @@ const mapDispatchToProps = (dispatch, props) => {
     onUpdateProductInCart: (product, color, quantity) => {
       dispatch(ProductsActions.onUpdateProductInCart(product,color, quantity))
     },
+    onAddCheckout: (payload) => {
+      dispatch(ProductsActions.onAddCheckout(payload))
+    },
+    onDeleteCheckout: (payload) => {
+      dispatch(ProductsActions.onDeleteCheckout(payload))
+    },
+    onClearAllCheckout: () => {
+      dispatch(ProductsActions.onClearCheckout());
+    },
+    onCheckoutAll: (payload) => {
+      dispatch(ProductsActions.onCheckoutAll(payload))
+    }
   }
 }
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

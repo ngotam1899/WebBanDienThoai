@@ -5,6 +5,7 @@ import { withTranslation } from 'react-i18next'
 // @Actions
 import OrdersActions from '../../redux/actions/order'
 import AddressActions from "../../redux/actions/address";
+import ProductsActions from '../../redux/actions/products';
 import Paypal from './Paypal';
 // @Functions
 import tryConvert from '../../utils/changeMoney'
@@ -16,22 +17,10 @@ import ChangeExpress from './ChangeExpress';
 
 class CheckoutPage extends Component {
   constructor(props) {
-    //1. Lấy cartItem từ LocalStorage
-    const cartItem = JSON.parse(localStorage.getItem("CART"))
-    //2. Chuyển đổi thành mảng ứng với đầu vào req
-    if(cartItem){
-      var items = cartItem.map((item) => {
-        var dataItem = {
-          product: item.product._id, 
-          quantity: item.quantity,
-          color: item.color
-        }
-        return dataItem;
-      })
-    }
     super(props);
+    const {cart} = props;
     this.state = {
-      order_list: cartItem ? items : [],
+      order_list: cart,
       shipToDifferentAddress: false,
       shipping_first_name: '',
       shipping_last_name: '',
@@ -131,8 +120,9 @@ class CheckoutPage extends Component {
   }
 
   componentWillUnmount(){
-    const {onClearState} = this.props;
+    const { onClearState, onClearAllCheckout } = this.props;
     onClearState();
+    onClearAllCheckout();
   }
 
   setDistrict = (event) =>{
@@ -453,7 +443,7 @@ class CheckoutPage extends Component {
               </div>
             </div>
             <div className="col-12 col-lg-6">
-              {ship && <div className="rounded shadow-sm mt-2 mb-3">
+              {ship && cart.length > 0 && <div className="rounded shadow-sm mt-2 mb-3">
                 <div className="px-3 py-2">
                   <h3>{t('checkout.order.title')}</h3>
                   <div id="order_review" style={{ position: 'relative' }}>
@@ -488,7 +478,7 @@ class CheckoutPage extends Component {
               </div>}
               <div className="rounded shadow-sm my-2">
                 <div className="px-3 py-2">
-                {authInfo && ship && (authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
+                {authInfo && ship && cart.length > 0 && (authInfo.address || shipping_address) && (authInfo.phonenumber || shipping_phone) && <div id="payment">
                   <h3>{t('checkout.payment.title')}</h3>
                   <div className="row">
                     <div className="col">
@@ -528,7 +518,7 @@ class CheckoutPage extends Component {
 const mapStateToProps = (state) =>{
   return {
     authInfo: state.auth.detail,
-    cart: state.cart,
+    cart: state.checkout,
     currency: state.currency,
     listCity: state.address.city,
     listDistrict: state.address.district,
@@ -556,7 +546,10 @@ const mapDispatchToProps = (dispatch, props) => {
     },
     onClearState: () =>{
       dispatch(AddressActions.onClearState())
-    }
+    },
+    onClearAllCheckout: () => {
+      dispatch(ProductsActions.onClearCheckout());
+    },
   }
 }
 

@@ -167,8 +167,8 @@ class ProductPage extends Component {
   }
 
   render() {
-    const {min_p, max_p, more} = this.state;
-    const { listProducts, listBrand, t, location, total, category, history } = this.props;
+    const { min_p, max_p, more } = this.state;
+    const { listProducts, listBrand, t, location, total, category, history, language } = this.props;
     const filter = getFilterParams(location.search);
     console.log(location.search)
     return (
@@ -249,7 +249,7 @@ class ProductPage extends Component {
                 <a className="text-decoration-none directory rounded p-2" href="/#/">{t('header.home.menu')}</a>
                 <i className="fa fa-chevron-right px-2 w-25-px "></i>
               </div>
-              <h1 className="mb-0 font-weight-bold">{category.name}</h1>
+              <h1 className="mb-0 font-weight-bold">{language ==="vn" ? category.name : category.name_en}</h1>
             </>}
             <div className="col-12">
             <button type="button" 
@@ -294,7 +294,6 @@ class ProductPage extends Component {
                   <img className="h-100" src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/a60759ad1dabe909c46a817ecbf71878.png" alt="404 not found"></img>
                 </div>
                 <h3>{t('search.not-yet.h3')}</h3>
-                <h4>{t('search.not-yet.h4')}</h4>
               </div>
             </div>
           </div>}
@@ -333,7 +332,7 @@ class ProductPage extends Component {
                   </div>
                 </div>
               </div>}
-            {!more && <div className="view-more" onClick={() => this.setState({ more: true })}>
+            {!more && <div className="view-more " onClick={() => this.setState({ more: true })}>
               <p>{t('common.readmore.button')}<span><i className="fa fa-angle-down ml-2"></i></span></p>
             </div>}
             </div>
@@ -352,6 +351,7 @@ class ProductPage extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    language: state.language,
     listProducts: ProductsSelectors.getList(state),
     listColor: state.color.list,
     listBrand: state.brands.list,

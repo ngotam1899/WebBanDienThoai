@@ -23,7 +23,7 @@ class App extends Component {
       <BrowserRouter>
         <Switch>
           <Route path="/" name="Trang chủ" component={({history, location}) => <Main history={history} location={location}/>} exact/>
-          <Route path="/user/dang-nhap" name="Trang đăng nhập" component={({history}) => <LoginPage history={history} />} exact/>
+          <Route path="/user/dang-nhap" name="Trang đăng nhập" component={({history}) => <LoginPage history={history}/>} exact/>
           <Route path="/user/dang-ky" name="Trang đăng ký" component={RegisterPage} exact/>
           <Redirect to="/" />
         </Switch>

@@ -11,6 +11,8 @@ import {
   CarouselIndicators
 } from 'reactstrap';
 import ProductItem from "../../containers/ProductItem"
+import Loader from '../../containers/ProductItem/ItemLoader';
+import ContentLoader from "react-content-loader"
 // @Actions
 import ProductsActions from "../../redux/actions/products";
 import AdActions from "../../redux/actions/ad";
@@ -73,7 +75,7 @@ class HomePage extends Component {
                 <p>{t('cart.free-ship')}</p>
               </div>
             </div>
-            {listAd && <div className="col-12 col-md-6 align-self-center">
+            {listAd ? <div className="col-12 col-md-6 align-self-center">
               <Carousel
                 activeIndex={activeIndex}
                 next={this.next}
@@ -98,7 +100,16 @@ class HomePage extends Component {
                 <CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
                 <CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
               </Carousel>
-            </div>}
+            </div> : <div className="col-12 col-md-6 align-self-center"><ContentLoader 
+                speed={0}
+                width="100%"
+                height={276}
+                viewBox="0 0 636 276"
+                backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+              >
+                <rect x="3" y="3" rx="12" ry="12" width="636" height="276" />
+              </ContentLoader></div>}
             <div className="col-md-3 col-sm-6 d-none d-md-block align-self-center">
               <div className="single-promo promo3 my-1 rounded">
                 <i className="fa fa-lock"></i>
@@ -121,11 +132,11 @@ class HomePage extends Component {
                 <h2 className="text-center">{t('home.list.best')}</h2>
                 <div className="shadow p-3 mb-5 bg-white rounded">
                   <div className="row">
-                    {bestSeller && bestSeller.map((product, index) => {
+                    {bestSeller ? bestSeller.map((product, index) => {
                       return (
                           <ProductItem product={product._id} key={index} />
                         )
-                    })}
+                    }) : <Loader/>}
                   </div>
                 </div>
               </div>
@@ -135,11 +146,11 @@ class HomePage extends Component {
                 <h2 className="text-center">{t('home.list.new')}</h2>
                 <div className="shadow p-3 mb-5 bg-white rounded">
                   <div className="row">
-                    {newest && newest.map((product, index) => {
+                    {newest ? newest.map((product, index) => {
                       return (
                           <ProductItem product={product} key={index} />
                         )
-                    })}
+                    }) : <Loader/>}
                   </div>
                 </div>
               </div>
@@ -149,11 +160,11 @@ class HomePage extends Component {
                 <h2 className="text-center">{t('home.list.favorite')}</h2>
                 <div className="shadow p-3 mb-5 bg-white rounded">
                   <div className="row">
-                    {favorite && favorite.map((product, index) => {
+                    {favorite ? favorite.map((product, index) => {
                       return (
                           <ProductItem product={product} key={index} />
                         )
-                    })}
+                    }) : <Loader/>}
                   </div>
                 </div>
               </div>

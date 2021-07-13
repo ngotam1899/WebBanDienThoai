@@ -152,6 +152,8 @@
   "header.toastify.cart.done": "đã vận chuyển thành công",
   "header.notification.empty": "Chưa có thông báo mới",
   "header.cart.empty": "Giỏ hàng trống",
+  "header.search.recommended": "Gợi ý tìm kiếm",
+  "header.toastify.search": "Bạn chưa nhập nội dung tìm kiếm", 
 
   "shop.search.button": "Tìm kiếm",
   "shop.brand.card": "Thương hiệu",
@@ -181,6 +183,11 @@
   "order.card.header": "Mã đơn hàng",
   "order.amount.label": "Số lượng",
   "order.not-yet": "Chưa có đơn hàng",
+  "order.status.1": "Chờ xác nhận",
+  "order.status.2": "Chờ giao hàng",
+  "order.status.3": "Đang giao",
+  "order.status.4": "Đã giao",
+  "order.status.5": "Đã hủy",
 
   "search.label": "Tìm kiếm sản phẩm",
   "search.placeholder.input": "Nhập sản phẩm cần tìm",

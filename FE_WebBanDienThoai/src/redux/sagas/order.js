@@ -1,4 +1,4 @@
-import { takeEvery, fork, all, call, put } from "redux-saga/effects";
+import { takeEvery, fork, all, call, put, select } from "redux-saga/effects";
 import { get } from "lodash";
 import OrdersActions, { OrdersActionsTypes } from "../actions/order";
 import ProductsActions from "../actions/products";
@@ -6,7 +6,7 @@ import { addOrder, sendConfirmEmail, confirmOrder, getDetailOrder, updateOrder, 
 /* Notification */
 import io from 'socket.io-client';
 import NotificationActions from "../actions/notification";
-const socket = io('http://be-phonestore.herokuapp.com');
+const socket = io('https://be-phonestore.herokuapp.com');
 /* Notification */
 
 function* handleGetList({payload}) {
@@ -49,24 +49,29 @@ function* handleReConfirm({ payload }) {
  */
 function* handleCreate({ payload }) {
   try {
+    const state = yield select()
     const result = yield call(addOrder, payload);
     const data = get(result, "data", {});
     if (data.code !== 201) throw data;
     yield put(OrdersActions.onCreateSuccess(data));
-    localStorage.removeItem("CART");
     /* Notification */
-    if(payload.payment_method ==="paypal"){
-      socket.emit('order', { email: data.order.email, order: data.order._id });
+    if(payload.payment_method === "paypal"){
+      socket.emit('order', { 
+        email: data.order.email, 
+        order: data.order._id 
+      });
       yield put(NotificationActions.onCreate({
         name : "Đơn hàng mới được xác nhận",
-        image : data.order.order_list[0].image,
+        image : payload.order_list[0].product.image[0]._id,
         link: data.order._id,
         type: 0,
+        user: null,
         content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
       }))
     }
     /* Notification */
-    yield put(ProductsActions.onClearCart())
+    yield put(ProductsActions.onClearCart({cart: state.cart, checkout: state.checkout}))
+    yield put(ProductsActions.onClearCheckout())
     const email = yield call(sendConfirmEmail, data.order._id);
     yield put(OrdersActions.onSendConfirmEmailSuccess(email.data));
   } catch (error) {

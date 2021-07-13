@@ -11,7 +11,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 // @Functions
 import getFilterParams from "../../utils/getFilterParams";
 import numberWithCommas from '../../utils/formatPrice'
-import {INITIAL_IMAGE} from '../../constants';
+import { INITIAL_IMAGE } from '../../constants';
+import { toastError } from '../../utils/toastHelper';
 // @Actions
 import OrdersActions from "../../redux/actions/order";
 import ProductsActions from "../../redux/actions/products";
@@ -19,18 +20,23 @@ import ProductsActions from "../../redux/actions/products";
 const statusList = [
   { 
     name: "Chờ xác nhận",
+    name_en: "Pending",
     state: {confirmed:-1,active:1},
   },{
     name: "Chờ giao hàng",
+    name_en: "Not delivery yet",
     state: {confirmed:1,status:-1}
   },{
     name: "Đang giao",
+    name_en: "Delivering",
     state: {confirmed:1,status:0}
   },{
     name: "Đã giao",
+    name_en: "Delivered",
     state: {confirmed:1,status:1}
   },{
     name: "Đã hủy",
+    name_en: "Cancelled",
     state: {active:-1}
   }
 ];
@@ -96,13 +102,14 @@ class PurchasePage extends Component {
   }
 
   setStatus = (confirmed, status, active) => {
-    if(active===false) return "Đã hủy"
+    const {t} = this.props;
+    if(active===false) return t("order.status.5")
     else{
-      if(confirmed===false) return "Chờ xác nhận"
+      if(confirmed===false) return t("order.status.1")
       else{
-        if(status===-1) return "Chờ giao hàng";
-        else if(status===0) return "Đang giao";
-        else return "Đã giao";
+        if(status===-1) return t("order.status.2");
+        else if(status===0) return t("order.status.3");
+        else return t("order.status.4");
       }
     }
   }
@@ -142,10 +149,21 @@ class PurchasePage extends Component {
     history.push(`${pathname}?${qs.stringify(queryParams)}`);
   };
 
+  pressSearch = (event) => {
+    const { keyword } = this.state;
+    const { t } = this.props;
+    if(event.key === 'Enter'){
+      if(keyword === "") return toastError(t("header.toastify.search"))
+      this.handleUpdateFilter({ keyword, page : 0 });
+    }
+  }
+
   // Button search
-  searchKeyWorld = (e) => {
-    const {keyword} = this.state;
-    this.handleUpdateFilter({ keyword, page : 0});
+  searchKeyWorld = () => {
+    const { keyword } = this.state;
+    const { t } = this.props;
+    if(keyword === "") return toastError(t("header.toastify.search"))
+    this.handleUpdateFilter({ keyword, page : 0 });
   }
 
   // phân trang
@@ -173,22 +191,22 @@ class PurchasePage extends Component {
   }
 
   render() {
-    const { orderList, orderItem, location, history, t, total } = this.props;
+    const { orderList, orderItem, location, history, t, total, language } = this.props;
     const { keyword } = this.state;
     const filter = getFilterParams(location.search);
     return (
       <div className="bg-user-info py-4">
         <div className="container emp-profile p-0 mt-5 mb-2">
           <div className="row mx-3">
-            <div className={filter.type==="0" || filter.type===undefined ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
+            <div className={filter.type==="0" || filter.type===undefined ? "col-2 text-center pt-1 bg-selected font-weight-bold" : "col-2 text-center pt-1 font-weight-bold text-secondary"} 
             onClick={() => this.onList(0, null)}>
-              {t('common.all')}
+              <div className={`${filter.type!=="0" && filter.type!==undefined && "rounded directory"} py-3`}>{t('common.all')}</div>
             </div>
             {statusList.map((status, index)=>{
               return (
-                <div key={index} className={filter.type===(index+1).toString() ? "col-2 text-center py-3 bg-selected font-weight-bold" : "col-2 text-center py-3 font-weight-bold text-secondary"} 
+                <div key={index} className={filter.type===(index+1).toString() ? "col-2 text-center pt-1 bg-selected font-weight-bold" : "col-2 text-center pt-1 font-weight-bold text-secondary"} 
                 onClick={() => this.onList(index+1, status.state)}>
-                  {status.name}
+                  <div className={`${filter.type!==(index+1).toString() && "rounded directory"} py-3`}>{language=== "vn" ? status.name : status.name_en}</div>
                 </div>
               )
             })}
@@ -198,7 +216,7 @@ class PurchasePage extends Component {
           <div className="row">
             <div className="col-12">
             <div className="input-group">
-              <input type="text" className="form-control" name="keyword" value={keyword} onChange={this.onChange} placeholder={t('search.placeholder.input')}></input>
+              <input type="text" className="form-control" name="keyword" value={keyword} onChange={this.onChange} onKeyPress={this.pressSearch} placeholder={t('search.placeholder.input')}></input>
               <div className="input-group-append">
                 <button className="btn btn-danger h-100" onClick={() => this.searchKeyWorld()}>{t('shop.search.button')}</button>
               </div>
@@ -286,7 +304,8 @@ const mapStateToProps = (state) =>{
     authInfo: state.auth.detail,
     orderList: state.order.list,
     orderItem: state.order.detail,
-    total: state.order.total
+    total: state.order.total,
+    language: state.language
   }
 }
 

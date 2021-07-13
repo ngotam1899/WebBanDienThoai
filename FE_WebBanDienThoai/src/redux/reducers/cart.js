@@ -72,7 +72,10 @@ const cart = (state = initialState, action) =>{
       return [...state]
       /* eslint-disable */
     case ProductsActionTypes.CLEAR_CART:
-      return state
+      var {cart, checkout} = action.payload
+      cart = cart.filter(ar => !checkout.find(rm => (rm.product._id === ar.product._id && ar.color === rm.color) ))
+      localStorage.setItem('CART', JSON.stringify(cart));
+      return cart
     default : return [...state]
   }
 }

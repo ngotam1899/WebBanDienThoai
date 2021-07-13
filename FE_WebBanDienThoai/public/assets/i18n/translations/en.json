@@ -152,6 +152,8 @@
   "header.toastify.cart.done": "has been shipped successfully",
   "header.notification.empty": "No new announcements yet",
   "header.cart.empty": "Cart is empty",
+  "header.search.recommended": "Search suggestions", 
+  "header.toastify.search": "You have not entered the search text", 
 
   "shop.search.button": "Search",
   "shop.brand.card": "Brands",
@@ -181,6 +183,11 @@
   "order.card.header": "Order ID",
   "order.amount.label": "Quantity",
   "order.not-yet": "No orders yet", 
+  "order.status.1": "Pending",
+  "order.status.2": "Not delivery yet",
+  "order.status.3": "Delivering",
+  "order.status.4": "Delivered",
+  "order.status.5": "Cancelled",
 
   "search.label": "Search products",
   "search.placeholder.input": "Input product keywork",
