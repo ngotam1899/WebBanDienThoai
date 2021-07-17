@@ -292,7 +292,7 @@ class ComparePage extends Component {
                     textAlign: 'center',
                   }}
                 />
-                <Rows data={tableData1} textStyle={{margin: 6}} />
+                <Rows data={tableData1.reverse()} textStyle={{margin: 6}} />
               </Table>
             </View>
           </View>

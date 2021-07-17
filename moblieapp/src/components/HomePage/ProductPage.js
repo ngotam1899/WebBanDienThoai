@@ -150,21 +150,21 @@ class ProductPage extends Component {
     onGetList(params);
     onAddParams(params);
   };
-  ReadMore() {
-    const {category, onAddParams} = this.props;
-    const {number} = this.state;
-    var params = {
-      category: category,
-      limit: 10,
-      page: number,
-      brand: '',
-      sort_p: 0,
-    };
-    onAddParams(params);
-    this.setState({
-      number: number + 1,
-    });
-  }
+  // ReadMore() {
+  //   const {category, onAddParams} = this.props;
+  //   const {number} = this.state;
+  //   var params = {
+  //     category: category,
+  //     limit: 10,
+  //     page: number,
+  //     brand: '',
+  //     sort_p: 0,
+  //   };
+  //   onAddParams(params);
+  //   this.setState({
+  //     number: number + 1,
+  //   });
+  // }
   onCompare = () => {
     const {navigation, category} = this.props;
     navigation.navigate('Compare', {
@@ -256,8 +256,6 @@ class ProductPage extends Component {
           <FlatList
             data={listProducts}
             numColumns={3}
-            onEndReached={() => this.ReadMore()}
-            onEndReachedThreshold={0.01}
             contentContainerStyle={{flexGrow: 1}}
             keyExtractor={(item, index) => item._id}
             renderItem={({item, index}) => {

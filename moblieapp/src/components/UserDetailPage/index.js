@@ -756,7 +756,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 12,
-    paddingBottom: 15,
+    paddingBottom: 10,
   },
   header: {
     flex: 1,
@@ -826,8 +826,8 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   avatarUser: {
-    height: width - 60,
-    width: width - 60,
+    height: width - 100,
+    width: width - 100,
     marginHorizontal: 20,
     marginTop: 10,
     marginBottom: 20,

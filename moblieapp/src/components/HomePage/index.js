@@ -75,7 +75,7 @@ class HomePage extends Component {
     const {onGetList, onGetListBrand, onAddParams} = this.props;
     var filters = '';
     const {filter} = this.state;
-    const number = listCategories.length;
+    const number = listCategories ? listCategories.length : 0;
     for (let i = 0; i < number; i++) {
       if (val === i + 3) {
         filters = {

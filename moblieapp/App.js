@@ -207,6 +207,8 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 20,
+            textAlign: 'center',
+            marginLeft: -60,
           },
         }}
       />

@@ -33,7 +33,6 @@ class DrawerContent extends Component {
         ...prevState.paramsTemp,
         min_p: min,
         max_p: max,
-        limit: 100,
       },
       min_p: min,
       max_p: max,
@@ -170,7 +169,9 @@ class DrawerContent extends Component {
                   </View>
                   {item._id.selections.map(selector => {
                     return (
-                      <View key={selector._id} style={styles.checkboxPriceRange}>
+                      <View
+                        key={selector._id}
+                        style={styles.checkboxPriceRange}>
                         <CheckBox
                           value={
                             this.state.paramsTemp[`${item.query}`] ===
@@ -225,19 +226,24 @@ export default connect(mapStateToProps, mapDispatchToProps)(DrawerContent);
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  titleContainer:{
+  titleContainer: {
     backgroundColor: '#1e88e5',
-    height:40,
+    height: 40,
     borderTopColor: '#ccc',
     borderTopWidth: 1,
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  textTitle:{
+  textTitle: {
     color: '#fff',
-    fontSize: 16
+    fontSize: 16,
   },
-  containerCrollView: {flex: 1, paddingHorizontal: 12, paddingTop: 20, marginBottom: 20},
+  containerCrollView: {
+    flex: 1,
+    paddingHorizontal: 12,
+    paddingTop: 20,
+    marginBottom: 20,
+  },
   priceRange: {
     fontSize: 20,
     fontWeight: 'bold',

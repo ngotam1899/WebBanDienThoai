@@ -1,10 +1,9 @@
-import { ReviewActionTypes } from "../actions/review";
+import {ReviewActionTypes} from '../actions/review';
 import {ToastAndroid} from 'react-native';
-import { get } from "lodash";
-const init = {
-};
+import {get} from 'lodash';
+const init = {};
 
-export default function(state = init, action) {
+export default function (state = init, action) {
   switch (action.type) {
     case ReviewActionTypes.CLEAR_DETAIL:
       return {
@@ -28,19 +27,14 @@ export default function(state = init, action) {
     case ReviewActionTypes.GET_LIST_SUCCESS:
       return {
         ...state,
-        list: get(action, "payload.list", []),
-        total: get(action, "payload.total"),
-        count: action.payload.count
+        list: get(action, 'payload.list', []),
+        total: get(action, 'payload.total'),
+        count: action.payload.count,
       };
     case ReviewActionTypes.GET_DETAIL_SUCCESS:
-      ToastAndroid.showWithGravity(
-        "Gọi review thành công",
-        ToastAndroid.SHORT,
-        ToastAndroid.TOP
-      );
       return {
         ...state,
-        detail: get(action, "payload", {}),
+        detail: get(action, 'payload', {}),
       };
     case ReviewActionTypes.UPDATE:
       return {
@@ -48,15 +42,15 @@ export default function(state = init, action) {
       };
     case ReviewActionTypes.UPDATE_SUCCESS:
       ToastAndroid.showWithGravity(
-        "Cập nhật review thành công",
+        'Cập nhật review thành công',
         ToastAndroid.SHORT,
-        ToastAndroid.TOP
+        ToastAndroid.TOP,
       );
       return {
         ...state,
       };
     case ReviewActionTypes.UPDATE_ERROR:
-      var { message } = action.payload;
+      var {message} = action.payload;
       return {
         ...state,
       };
@@ -64,15 +58,15 @@ export default function(state = init, action) {
       return {...state};
     case ReviewActionTypes.CREATE_SUCCESS:
       ToastAndroid.showWithGravity(
-        "Tạo review thành công",
+        'Tạo review thành công',
         ToastAndroid.SHORT,
-        ToastAndroid.TOP
+        ToastAndroid.TOP,
       );
       return {...state};
     case ReviewActionTypes.CREATE_ERROR:
       /* eslint-disable */
-      var { message } = action.payload;
-      toastError(message)
+      var {message} = action.payload;
+      toastError(message);
       /* eslint-disable */
       return {...state};
     default:

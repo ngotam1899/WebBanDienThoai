@@ -130,7 +130,7 @@ class SearchPage extends Component {
               {listCategory ? (
                 listCategory.map((category, index) => {
                   return (
-                    <View style={{flexDirection: 'row'}}>
+                    <View key={category._id} style={{flexDirection: 'row'}}>
                       <TouchableOpacity
                         style={
                           categoryName && categoryName === category._id.name

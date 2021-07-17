@@ -1,4 +1,6 @@
 rootProject.name = 'moblieapp'
+include ':react-native-vector-icons'
+project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 include ':react-native-search-bar'
 project(':react-native-search-bar').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-search-bar/android')
 include ':react-native-search-bar'

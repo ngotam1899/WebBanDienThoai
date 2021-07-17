@@ -43,7 +43,7 @@ class AccProductPage extends Component {
   render() {
     const {navigation, listBrand, listProducts, route} = this.props;
     return (
-      <ScrollView style={{backgroundColor: '#fff', flex: 1}}>
+      <View style={{backgroundColor: '#fff', flex: 1}}>
         <View style={styles.headerContainer}>
           <View style={styles.inputContainer}>
             <TouchableOpacity onPress={() => this.onSearchProduct()}>
@@ -66,7 +66,7 @@ class AccProductPage extends Component {
           listBrand={listBrand}
           category={route.params.id}
         />
-      </ScrollView>
+      </View>
     );
   }
 }
