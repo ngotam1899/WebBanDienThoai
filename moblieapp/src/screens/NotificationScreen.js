@@ -76,6 +76,9 @@ class NotificationScreen extends Component {
           onGetDetailInstallment(link);
           this.setModal(true);
           break;
+        case 1:
+        case 3:
+          break;
         default:
           return null;
       }
@@ -83,6 +86,7 @@ class NotificationScreen extends Component {
         notificationList: null,
         number: 1,
       });
+      console.log(id, data, params);
       onUpdate(id, data, params);
     } else {
       this.setState({
@@ -114,15 +118,25 @@ class NotificationScreen extends Component {
       onGetList,
       listNotification,
     } = this.props;
-    const {notificationList} = this.state;
+    const {notificationList, params} = this.state;
     if (listNotification !== prevProps.listNotification && listNotification) {
       if (prevProps.listNotification && notificationList !== null) {
         var temp = notificationList;
         listNotification.map(item => {
-          temp.push(item);
+          var findIndexItem = temp.findIndex(i => i._id === item._id);
+          if (findIndexItem < 0) {
+            temp.push(item);
+          }
         });
+        var number = listNotification.length;
         this.setState({
           notificationList: temp,
+        });
+        this.setState({
+          params: {
+            ...params,
+            limit: params.limit + number,
+          },
         });
       } else {
         this.setState({
