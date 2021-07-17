@@ -182,7 +182,7 @@ class act_filter(Action):
         brand = tracker.latest_message['entities'][2]['value']
         category = tracker.latest_message['entities'][3]['value']
 
-        url = 'http://localhost:3000/products?brand=' + str(brand) + '&category=' + str(category) + '&min_p=' + str(min) + '&max_p=' + str(max) + '&limit=3&page=0&active=1'
+        url = 'http://be-phonestore.herokuapp.com/products?brand=' + str(brand) + '&category=' + str(category) + '&min_p=' + str(min) + '&max_p=' + str(max) + '&limit=3&page=0&active=1'
         page = requests.get(url, verify=False)
         json = page.json()
         
@@ -215,7 +215,7 @@ class act_promotion(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         print('[%s] <- %s' % (self.name(), tracker.latest_message['text']))
 
-        url = 'http://localhost:3000/ad?status=0&active=1&limit=3&page=0'
+        url = 'http://be-phonestore.herokuapp.com/ad?status=0&active=1&limit=3&page=0'
         page = requests.get(url, verify=False)
         json = page.json()
 
