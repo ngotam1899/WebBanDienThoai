@@ -174,12 +174,8 @@ class NotificationScreen extends Component {
   }
   onDeleteAllNoti() {
     const {userInfo, onDeleteAll} = this.props;
+    const {params} = this.state;
     var id = userInfo._id;
-    var params = {
-      limit: 10,
-      page: 0,
-      user: id,
-    };
     this.setState({
       notificationList: null,
       number: 1,
