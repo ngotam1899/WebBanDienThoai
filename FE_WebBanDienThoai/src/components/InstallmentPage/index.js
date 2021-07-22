@@ -163,7 +163,7 @@ class InstallmentPage extends Component {
             <i className="fa fa-chevron-right px-2 w-25-px "></i></>}
           </div>
           <h1 className="my-0 font-weight-bold">{t('installment.page.title')}</h1>
-          <div className="col-md-6 col-12">
+          <div className="col-lg-6 col-12">
             <div className="rounded shadow-sm my-3">
               <div className="px-3 py-2">
                 <h3 className="mb-1">{t('common.product')}</h3>
@@ -329,7 +329,7 @@ class InstallmentPage extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-6 col-12">
+          <div className="col-lg-6 col-12">
             <div className="rounded shadow-sm my-3">
               <div className="px-3 py-2">
                 <h3 className="mb-1">{t('installment.plan.title')}</h3>

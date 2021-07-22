@@ -3,7 +3,6 @@ import { Link, Route } from 'react-router-dom'
 import MessengerCustomerChat from 'react-messenger-customer-chat';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import qs from "query-string";
 import './styles.css';
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,7 +19,6 @@ import io from 'socket.io-client';
 
 // @Functions
 import numberWithCommas from '../../utils/formatPrice'
-import getFilterParams from "../../utils/getFilterParams";
 import tryConvert from '../../utils/changeMoney'
 import { toastError, toastInfo } from '../../utils/toastHelper';
 import {INITIAL_IMAGE} from '../../constants';
@@ -33,7 +31,7 @@ class Header extends Component {
     this.state = {
       total: 0,
       totalPrice: 0,
-      currencyCode: "VND",
+      currencyCode: localStorage.getItem("CURRENCY") || "VND",
       language: localStorage.getItem("LANGUAGE") ||"en",
       keyword: "",
       itemsCount: 0,
@@ -315,7 +313,7 @@ class Header extends Component {
                   <ul className="list-inline ">
                     <li className="dropdown dropdown-small">
                     <i className="fa fa-money-bill-wave"></i>
-                    <select className="select-box" onChange={this.handleChangeCurrency}>
+                    <select className="select-box" onChange={this.handleChangeCurrency} value={currencyCode}>
                       <option value="VND">{t('header.vnd.select')}</option>
                       <option value="USD">{t('header.usd.select')}</option>
                       <option value="CNY">{t('header.cny.select')}</option>
@@ -449,14 +447,14 @@ class Header extends Component {
             pageId="104334418256109"
             appId="804609327113718"
             htmlRef="https://localhost:5000"
-          />  */}
+          /> 
           <Widget
             socketUrl={"http://localhost:5005"}
             socketPath={"/socket.io/"}
             customData={{"language": "en"}} // arbitrary custom data. Stay minimal as this will be added to the socket
             title={"TellMe - Mobile Shopping Online"}
             profileAvatar={assets("logo_fe.png")}
-          />
+          /> */}
         </div>
       </>
     );

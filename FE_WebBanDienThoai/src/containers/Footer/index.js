@@ -1,96 +1,70 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { faFacebookF, faTwitter, faYoutube , faLinkedin, faCcDiscover, faCcMastercard, faCcPaypal, faCcVisa } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { assets } from '../../constants/assetsImage';
+import { withTranslation } from 'react-i18next'
 
 class Footer extends Component {
-    render() {
-        return (
-            <>
-    <div className="footer-top-area">
-        <div className="zigzag-bottom"></div>
-        <div className="container">
+
+
+
+  render() {
+    const {t} = this.props;
+    return (
+      <>
+        <div className="footer-top-area py-2">
+          <div className="container">
             <div className="row">
-                <div className="col-md-3 col-sm-6">
-                    <div className="footer-about-us">
-                        <h2><img src={ assets('brand-footer.png') } className="w-100" alt="TellMe"/></h2>
-                        <p>3109 Phạm Thế Hiển, Phường 7, Quận 8, TPHCM</p>
-                        <div className="footer-social">
-                            <a href="/#" target="_blank"><FontAwesomeIcon icon={faFacebookF} /></a>
-                            <a href="/#" target="_blank"><FontAwesomeIcon icon={faTwitter} /></a>
-                            <a href="/#" target="_blank"><FontAwesomeIcon icon={faYoutube} /></a>
-                            <a href="/#" target="_blank"><FontAwesomeIcon icon={faLinkedin} /></a>
-                        </div>
+              <div className="col-md-3 col-sm-6">
+                <img src={assets('brand-footer.png')} className="w-100" alt="TellMe" />
+                <div className="row">
+                  <div className="col-12 form-inline">
+                    <div className="bill-icon" style={{width: "12%"}}>
+                      <i className="fa fa-map-marker-alt text-xl"></i>
                     </div>
-                </div>
-                
-                <div className="col-md-3 col-sm-6">
-                    <div className="footer-menu">
-                        <h2 className="footer-wid-title">User Navigation </h2>
-                        <ul>
-                            <li><a href="/#">My account</a></li>
-                            <li><a href="/#">Order history</a></li>
-                            <li><a href="/#">Wishlist</a></li>
-                            <li><a href="/#">Vendor contact</a></li>
-                            <li><a href="/#">Front page</a></li>
-                        </ul>                        
+                    <div className="ml-3 my-1" style={{width: "80%"}}>
+                      <p className="mb-0">{t("common.address")}</p>
                     </div>
+                  </div>
                 </div>
-                
-                <div className="col-md-3 col-sm-6">
-                    <div className="footer-menu">
-                        <h2 className="footer-wid-title">Categories</h2>
-                        <ul>
-                            <li><a href="/#">Mobile Phone</a></li>
-                            <li><a href="/#">Home accesseries</a></li>
-                            <li><a href="/#">LED TV</a></li>
-                            <li><a href="/#">Computer</a></li>
-                            <li><a href="/#">Gadets</a></li>
-                        </ul>                        
-                    </div>
+              </div>
+
+              <div className="col-md-3 col-sm-6">
+                <h3 className="mt-4 text-light">{t("order.payment.way")}</h3>
+                <img className="rounded" src="https://logos-world.net/wp-content/uploads/2020/04/PayPal-Logo-2014-present.jpg" style={{ width: '30%' }} alt=""></img>
+              </div>
+
+              <div className="col-md-3 col-sm-5">
+                <h3 className="mt-4 text-light">{t("checkout.express-unit.input")}</h3>
+                <img className="rounded bg-light" style={{ width: '30%' }} src="https://donhang.ghn.vn/static/media/Giao_Hang_Nhanh_Toan_Quoc_color.b7d18fe5.png"></img>
+              </div>
+
+              <div className="col-md-3 col-sm-7">
+                <h3 className="mt-4 text-light">Fanpage</h3>
+                <div className="w-100">
+                  <div className="fb-page" data-href="https://www.facebook.com/tellme.tieuluanchuyennganh"
+                    data-width="320" data-height="" data-small-header="false" data-adapt-container-width="false" data-hide-cover="false" data-show-facepile="false">
+                    <blockquote cite="https://www.facebook.com/tellme.tieuluanchuyennganh" class="fb-xfbml-parse-ignore">
+                      <a href="https://www.facebook.com/tellme.tieuluanchuyennganh">TellMe - Hệ thống điện thoại</a></blockquote></div>
                 </div>
-                
-                <div className="col-md-3 col-sm-6">
-                    <div className="footer-newsletter">
-                        <h2 className="footer-wid-title">Newsletter</h2>
-                        <p>Sign up to our newsletter and get exclusive deals you wont find anywhere else straight to your inbox!</p>
-                        <div className="newsletter-form">
-                            <form action="#">
-                                <input type="email" placeholder="Type your email"/>
-                                <input type="submit" value="Subscribe"/>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div> 
-    
-    <div className="footer-bottom-area">
-        <div className="container">
+
+        <div className="footer-bottom-area">
+          <div className="container">
             <div className="row">
-                <div className="col-md-8">
-                    <div className="copyright">
-                        <p>&copy; 2020 Tiểu luận chuyên ngành</p>
-                    </div>
+              <div className="col-12 text-center">
+                <div className="copyright">
+                  <p className="my-1">&copy; 2021 {t("common")}</p>
                 </div>
-                
-                <div className="col-md-4">
-                    <div className="footer-card-icon">
-                        <FontAwesomeIcon icon={faCcDiscover} />
-                        <FontAwesomeIcon icon={faCcMastercard} />
-                        <FontAwesomeIcon icon={faCcPaypal} />
-                        <FontAwesomeIcon icon={faCcVisa} />
-                    </div>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div> 
-    </>
-            
-        );
-    }
+      </>
+    );
+  }
 }
 
-export default Footer;
+export default withTranslation()(Footer);

@@ -112,12 +112,12 @@ class act_brand(Action):
         #get all categories
         category = tracker.latest_message['entities'][0]['value']
         print(category)
-        url = 'http://be-phonestore.herokuapp.com/products/brands?category=' + str(category)
+        url = 'http://be-phonestore.herokuapp.com/products/brands-search?category=' + str(category)
         res = requests.get(url, verify=False)
         json = res.json()
 
         brand_arr = []
-        for j in json['count']:
+        for j in json['brands']:
             brand_arr.append({"_id": j['_id']['_id'], "name" : j['_id']['name']})
 
         temp_button_lst = []
