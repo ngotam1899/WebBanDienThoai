@@ -25,8 +25,8 @@ class ReviewDetail extends Component {
   }
 
   onReview = () =>{
-    const {rating, message} = this.state;
-    const {onAddReview, onUpdateReview,  authInfo, product, review} = this.props;
+    const { rating, message } = this.state;
+    const { onAddReview, onUpdateReview,  authInfo, product, review, onCloseModal, modal, onClearDetail } = this.props;
     var data = {
       content: message,
       user: authInfo._id,
@@ -40,6 +40,8 @@ class ReviewDetail extends Component {
     else{
       onAddReview(data);
     }
+    onClearDetail();
+    onCloseModal("modal", !modal)
   }
 
   onChange = (event) => {

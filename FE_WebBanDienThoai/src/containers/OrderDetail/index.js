@@ -99,7 +99,7 @@ class OrderDetail extends Component {
                   </div>
                   <div className="form-floating">
                     <input type="text" className="form-control border-0 " id="status" name="status" 
-                    defaultValue={orderItem.status===true ? `${t('order.status.true')}` : `${t('order.status.false')}`}/>
+                    defaultValue={orderItem.status===1 ? `${t('order.status.true')}` : `${t('order.status.false')}`}/>
                     <label htmlFor="status">{t('order.status.label')}</label>
                   </div>
                 </div>

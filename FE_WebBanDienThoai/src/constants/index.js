@@ -4,5 +4,5 @@ export const API_ENDPOINT_AUTH = process.env.REACT_APP_API_AUTH
 export const GOOGLE_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 export const FACEBOOK_ID = process.env.REACT_APP_FACEBOOK_CLIENT_ID;
 export const LOCAL = "https://fe-phonestore.herokuapp.com"
-export const SHIPPING_EXPRESS = "Tất cả các ngày trong tuần"
-export const SHIPPING_STANDARD = "Chỉ giao vào giờ hành chính"
+export const SHIPPING_EXPRESS = "Giao hàng tiêu chuẩn"
+export const SHIPPING_STANDARD = "Giao hàng hỏa tốc"

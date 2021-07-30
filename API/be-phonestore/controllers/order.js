@@ -170,8 +170,8 @@ const addOrder = async (req, res, next) => {
 			true, /* Start the job right now */
 			'Asia/Ho_Chi_Minh' /* Time zone of this job. */
 		);
-
-		return res.status(200).json({ success: true, code: 201, message: 'success', order: order });
+		await User.populate(order, {path: "user", select: 'image'})
+		return res.status(200).json({ success: true, code: 201, message: 'success', order });
 	} catch (error) {
 		next(error);
 	}

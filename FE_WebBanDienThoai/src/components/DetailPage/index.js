@@ -551,7 +551,7 @@ class DetailPage extends Component {
                                     emptySymbol="fa fa-star text-secondary"
                                     fullSymbol="fa fa-star text-warning"
                                     readonly
-                                  /> | <span className="font-italic">{item.createdAt}</span></p>
+                                  /> | <span className="font-italic">{item.updatedAt.slice(0,10)}</span></p>
                                   <p className="text-secondary mb-0">Màu sắc: {item.color.name_vn}</p>
                                   <p className="mb-0">{item.content}</p>
                                   <p className="directory rounded p-2 w-fit-content" onClick={()=> this.onLiked(item._id, item.like)}><i className="fa fa-thumbs-up text-secondary"></i><span className="ml-2 text-secondary">{item.like.length > 0 ? item.like.length :  `${t('detail.review.useful')}?`}</span></p>

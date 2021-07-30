@@ -21,6 +21,7 @@ import InstallmentActions from "../../redux/actions/installment";
 import OrderActions from "../../redux/actions/order";
 // @Function
 import getFilterParams from "../../utils/getFilterParams";
+import {INITIAL_IMAGE} from '../../constants';
 
 const fields = ['date', 'user', 'content',{ key: 'actions', _style: { width: '10%'} }]
 
@@ -165,7 +166,7 @@ class NotificationList extends Component {
                       <td>{new Date(item.createdAt).toLocaleDateString("vi-VN")}</td>
                     ),
                     'user': (item) => (
-                      <td><img src={item.image.public_url} style={{width:'8vw'}} className="rounded-circle" alt={item.image._id}></img></td>
+                      <td><img src={item.image ? item.image.public_url : INITIAL_IMAGE} style={{width:'8vw'}} className="rounded-circle" alt=""></img></td>
                     ),
                     'content': (item) => (
                       <td>

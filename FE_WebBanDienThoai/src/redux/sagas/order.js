@@ -61,12 +61,12 @@ function* handleCreate({ payload }) {
         order: data.order._id 
       });
       yield put(NotificationActions.onCreate({
-        name : "Đơn hàng mới được xác nhận",
-        image : payload.order_list[0].product.image[0]._id,
+        name : "Đơn hàng mới được thanh toán qua Paypal",
+        image : data.order.user.image,
         link: data.order._id,
         type: 0,
         user: null,
-        content :  `${data.order.email} vừa xác nhận đặt hàng thành công`
+        content :  `${data.order.email} vừa thanh toán và xác nhận thành công`
       }))
     }
     /* Notification */

@@ -31,6 +31,7 @@ const getAllProductReView = async(req, res, next) => {
     .populate({ path: 'color', select: "name_vn"})
     .populate({ path: 'product', select: ["bigimage", "name", "stars", "reviewCount"], populate : {path : 'bigimage', select: "public_url"}})
     .limit(limit)
+    .sort({updatedAt: -1})
     .skip(limit * page)
     const pipeline = [
       {'$match': {'product': ObjectId(condition.product)}},

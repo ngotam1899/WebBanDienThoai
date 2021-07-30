@@ -4,8 +4,34 @@ import { assets } from '../../constants/assetsImage';
 import { withTranslation } from 'react-i18next'
 
 class Footer extends Component {
+  componentDidUpdate() {
+    /*global FB*/
+    if (FB) {
+      FB.XFBML.parse();
+    }
+  }
+  componentDidMount(){
+    /* FB comment plugin */
+    window.fbAsyncInit = () => {
+      /* eslint-disable */
+      window.FB.init({
+        appId: '308035613517523',
+        xfbml: true,
+        version: 'v2.6'
+      });
+      FB.XFBML.parse();
+      /* eslint-disable */
+    };
 
-
+    (function(d, s, id){
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = '//connect.facebook.net/en_US/sdk.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    /* FB comment plugin */
+  }
 
   render() {
     const {t} = this.props;
@@ -30,7 +56,7 @@ class Footer extends Component {
 
               <div className="col-md-3 col-sm-6">
                 <h3 className="mt-4 text-light">{t("order.payment.way")}</h3>
-                <img className="rounded" src="https://logos-world.net/wp-content/uploads/2020/04/PayPal-Logo-2014-present.jpg" style={{ width: '30%' }} alt=""></img>
+                <img className="rounded bg-light" src="https://cdn.pixabay.com/photo/2015/05/26/09/37/paypal-784404__480.png" style={{ width: '30%' }} alt=""></img>
               </div>
 
               <div className="col-md-3 col-sm-5">
