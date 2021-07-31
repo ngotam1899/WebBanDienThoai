@@ -1,6 +1,6 @@
-import {get} from 'lodash';
-import {InstallmentActionTypes} from '../actions/installment';
-import {ToastAndroid} from 'react-native';
+import { get } from 'lodash';
+import { InstallmentActionTypes } from '../actions/installment';
+import { ToastAndroid } from 'react-native';
 
 const init = {
   loading: true,
@@ -85,11 +85,6 @@ export default function (state = init, action) {
         processing: false,
       };
     case InstallmentActionTypes.UPDATE_SUCCESS:
-      ToastAndroid.showWithGravity(
-        'Cập nhật thành công',
-        ToastAndroid.SHORT,
-        ToastAndroid.TOP,
-      );
       return {
         ...state,
         processing: true,

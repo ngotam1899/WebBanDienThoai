@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -7,9 +7,9 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import {Picker} from '@react-native-community/picker';
-import {Rating} from 'react-native-ratings';
-import {connect} from 'react-redux';
+import { Picker } from '@react-native-community/picker';
+import { Rating } from 'react-native-ratings';
+import { connect } from 'react-redux';
 import styles from './style';
 
 import ProductPageLoader from '../ContentLoader/ProductPageLoader';
@@ -18,12 +18,12 @@ import ProductsActions from '../../redux/actions/products';
 
 class ProductItem extends Component {
   render() {
-    const {product, navigation} = this.props;
+    const { product, navigation } = this.props;
     return (
       <TouchableOpacity
         style={[styles.itemContainer, (flex = 0.33)]}
         onPress={() => {
-          navigation.push('Detail', {id: product._id});
+          navigation.push('Detail', { id: product._id });
         }}>
         <Image
           source={{
@@ -32,12 +32,12 @@ class ProductItem extends Component {
           }}
           style={styles.itemImage}
         />
-        <View style={{paddingLeft: 5}}>
+        <View style={{ paddingLeft: 5 }}>
           <Text style={styles.itemName} numberOfLines={2}>
             {product && product.name ? product.name.substring(0, 22) : ''}
           </Text>
           {product.real_price_min ? (
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Text style={styles.itemPriceReal}>
                 {numberWithCommas(product.real_price_min)}
               </Text>
@@ -89,7 +89,7 @@ class ProductItem extends Component {
 class ProductPage extends Component {
   constructor(props) {
     super(props);
-    const {category, listProducts} = this.props;
+    const { category, listProducts } = this.props;
     this.state = {
       brandName: 'Tất cả',
       paramValue: {
@@ -104,9 +104,9 @@ class ProductPage extends Component {
     };
   }
   componentDidMount() {
-    const {category, onAddParams} = this.props;
+    const { category, onAddParams } = this.props;
     this.setState({
-      paramValue: {category: category},
+      paramValue: { category: category },
     });
     var params = {
       category: category,
@@ -117,8 +117,8 @@ class ProductPage extends Component {
     onAddParams(params);
   }
   setSortValue = (itemValue, index) => {
-    const {onGetList, category, onAddParams} = this.props;
-    const {paramValue} = this.state;
+    const { onGetList, category, onAddParams } = this.props;
+    const { paramValue } = this.state;
     this.setState({
       sortValue: itemValue,
     });
@@ -132,7 +132,7 @@ class ProductPage extends Component {
     onGetList(params);
   };
   onSetBrand = value => {
-    const {listBrand, category, onGetList, onAddParams} = this.props;
+    const { listBrand, category, onGetList, onAddParams } = this.props;
     var brandId =
       value !== 'Tất cả'
         ? listBrand.find(item => item._id.name === value)._id._id
@@ -165,15 +165,19 @@ class ProductPage extends Component {
   //     number: number + 1,
   //   });
   // }
+  componentWillUnmount() {
+    const { onClear } = this.props;
+    onClear();
+  }
   onCompare = () => {
-    const {navigation, category} = this.props;
+    const { navigation, category } = this.props;
     navigation.navigate('Compare', {
       category: category,
       id: '',
     });
   };
   componentDidUpdate(prevProps) {
-    const {category, onAddParams} = this.props;
+    const { category, onAddParams } = this.props;
     if (category !== prevProps.category) {
       var params = {
         category: category,
@@ -186,13 +190,13 @@ class ProductPage extends Component {
     }
   }
   render() {
-    const {listProducts, navigation, listBrand} = this.props;
-    const {brandName, sortValue} = this.state;
+    const { listProducts, navigation, listBrand } = this.props;
+    const { brandName, sortValue } = this.state;
     return (
-      <View style={{paddingHorizontal: 12, paddingBottom: 130}}>
-        <View style={{marginVertical: 8}}>
+      <View style={{ paddingHorizontal: 12, paddingBottom: 130 }}>
+        <View style={{ marginVertical: 8 }}>
           <ScrollView
-            contentContainerStyle={{paddingTop: 10}}
+            contentContainerStyle={{ paddingTop: 10 }}
             horizontal={true}
             scrollEnabled={true}>
             <TouchableOpacity
@@ -214,7 +218,7 @@ class ProductPage extends Component {
             {listBrand ? (
               listBrand.map((brand, index) => {
                 return (
-                  <View key={brand._id._id} style={{flexDirection: 'row'}}>
+                  <View key={brand._id._id} style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                       style={
                         brandName && brandName === brand._id.name
@@ -235,7 +239,7 @@ class ProductPage extends Component {
             )}
           </ScrollView>
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Picker
             selectedValue={sortValue}
             style={sortValue === 0 ? styles.pickerSort : styles.pickerLong}
@@ -256,9 +260,9 @@ class ProductPage extends Component {
           <FlatList
             data={listProducts}
             numColumns={3}
-            contentContainerStyle={{flexGrow: 1}}
+            contentContainerStyle={{ flexGrow: 1 }}
             keyExtractor={(item, index) => item._id}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
               return (
                 <ProductItem
                   product={item}
@@ -290,6 +294,9 @@ const mapDispatchToProps = dispatch => {
     onAddParams: params => {
       dispatch(ProductsActions.onAddParams(params));
     },
+    onClear: () => {
+      dispatch(ProductsActions.onClearState());
+    }
   };
 };
 

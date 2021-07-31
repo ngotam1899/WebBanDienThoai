@@ -16,42 +16,42 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import Header from '../components/HeaderComponent';
 import AuthorizationActions from '../redux/actions/auth';
-import {AsyncStorage} from 'react-native';
-import {connect} from 'react-redux';
-import {compose} from 'redux';
-import {Component} from 'react';
+import { AsyncStorage } from 'react-native';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { Component } from 'react';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-const ProfileItem = ({icon, name}) => (
+const ProfileItem = ({ icon, name }) => (
   <View style={styles.itemContainer}>
     <MaterialCommunityIcons name={icon} size={26} color="#1e1e1e" />
-    <Text style={[styles.itemText, {marginLeft: icon ? 20 : 0}]}>{name}</Text>
+    <Text style={[styles.itemText, { marginLeft: icon ? 20 : 0 }]}>{name}</Text>
     <FontAwesome name="angle-right" size={26} color="#1e1e1e" />
   </View>
 );
 
 class ProfileScreen extends Component {
   componentDidMount = async () => {
-    const {onGetProfile} = this.props;
+    const { onGetProfile } = this.props;
     await AsyncStorage.getItem('AUTH_USER').then(data => {
       onGetProfile(null, data);
     });
   };
 
   setLogout = () => {
-    const {onLogout, navigation} = this.props;
+    const { onLogout, navigation } = this.props;
     AsyncStorage.removeItem('AUTH_USER');
     onLogout();
     navigation.navigate('HomeScreen');
   };
 
   render() {
-    const {navigation, userInfo} = this.props;
+    const { navigation, userInfo } = this.props;
     return (
       <View style={styles.screenContainer}>
         <StatusBar barStyle="light-content" />
-        <Header value="1" title="Cá nhân" navigation={navigation} />
+        <Header value="1" title="TRANG CÁ NHÂN" navigation={navigation} />
         <View style={styles.bodyContainer}>
           {userInfo ? (
             <View style={styles.userContainer}>
@@ -112,7 +112,7 @@ class ProfileScreen extends Component {
           <ProfileItem icon="headphones" name="Hỗ trợ" />
         </View>
         {userInfo ? (
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <View style={styles.button}>
               <TouchableOpacity
                 style={styles.signOut}

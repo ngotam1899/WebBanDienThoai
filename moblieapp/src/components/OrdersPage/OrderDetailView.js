@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -12,8 +12,8 @@ import {
 import Modal from 'react-native-modal';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import {connect} from 'react-redux';
-import {compose} from 'redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import Review from './Review';
 
@@ -23,7 +23,7 @@ import ReviewActions from '../../redux/actions/review';
 // @Functions
 import numberWithCommas from '../../utils/formatPrice';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 class OrderDetailView extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ class OrderDetailView extends Component {
     };
   }
   onClose() {
-    const {onCloseModal} = this.props;
+    const { onCloseModal } = this.props;
     onCloseModal();
   }
   onClose1 = () => {
@@ -49,8 +49,8 @@ class OrderDetailView extends Component {
     });
   };
   onReview = product => {
-    const {onGetReview, authInfo} = this.props;
-    const {params} = this.props;
+    const { onGetReview, authInfo } = this.props;
+    const { params } = this.props;
     this.setState({
       product: product,
     });
@@ -71,30 +71,30 @@ class OrderDetailView extends Component {
     onGetReview(params1);
   };
   render() {
-    const {orderItem} = this.props;
-    const {modal, product, params} = this.state;
+    const { orderItem } = this.props;
+    const { modal, product, params } = this.state;
 
     return (
       <Modal visible={this.props.showModal}>
         <View style={styles.containerModal}>
           <View style={styles.backgroundModal}>
             <View style={styles.modalBox}>
-              <View style={{alignItems: 'flex-end'}}>
+              <View style={{ alignItems: 'flex-end' }}>
                 <TouchableOpacity
                   style={styles.btnClose}
                   onPress={() => this.onClose()}>
                   <FontAwesome name="close" size={24} color="#969696" />
                 </TouchableOpacity>
               </View>
-              <ScrollView style={{flex: 1}}>
+              <ScrollView style={{ flex: 1 }}>
                 <View style={styles.containerInput}>
-                  <Text style={styles.title}>Order ID</Text>
+                  <Text style={styles.title}>Mã đơn hàng</Text>
                   <TextInput
                     style={styles.textInput}
                     value={orderItem ? orderItem._id : ''}></TextInput>
                 </View>
                 <View style={styles.containerInput}>
-                  <Text style={styles.title}>Total of the bill: (VND)</Text>
+                  <Text style={styles.title}>Tổng hóa đơn: (VND)</Text>
                   <TextInput
                     style={styles.textInput}
                     value={
@@ -104,17 +104,17 @@ class OrderDetailView extends Component {
                     }></TextInput>
                 </View>
                 <View style={styles.containerInput}>
-                  <Text style={styles.title}>Status of the bill</Text>
+                  <Text style={styles.title}>Tình trạng đơn hàng</Text>
                   <TextInput
                     style={styles.textInput}
                     value={
                       orderItem && orderItem.status === true
-                        ? 'Not received yet'
-                        : 'Received yet'
+                        ? 'Đã nhận được'
+                        : 'Chưa nhận được'
                     }></TextInput>
                 </View>
                 <View style={styles.containerInput}>
-                  <Text style={styles.title}>Payment Method:</Text>
+                  <Text style={styles.title}>Phương thức thanh toán:</Text>
                   <TextInput
                     style={styles.textInput}
                     value={
@@ -125,29 +125,29 @@ class OrderDetailView extends Component {
                 </View>
                 {orderItem && orderItem.payment_method === 'local' ? (
                   <View style={styles.containerInput}>
-                    <Text style={styles.title}>Status of the order:</Text>
+                    <Text style={styles.title}>Trạng thái đơn hàng:</Text>
                     <TextInput
                       style={styles.textInput}
                       value={
                         orderItem && orderItem.confirmed === true
-                          ? 'Confirmed Yet'
-                          : 'Not Confirmed Yet'
+                          ? 'Đã xác nhận'
+                          : 'Chưa xác nhận'
                       }></TextInput>
                   </View>
                 ) : (
                   <View style={styles.containerInput}>
-                    <Text style={styles.title}>Status of the order:</Text>
+                    <Text style={styles.title}>Trạng thái đơn hàng:</Text>
                     <TextInput
                       style={styles.textInput}
                       value={
                         orderItem && orderItem.paid === true
-                          ? 'Confirmed Yet'
-                          : 'Not Confirmed Yet'
+                          ? 'Đã xác nhận'
+                          : 'Chưa xác nhận'
                       }></TextInput>
                   </View>
                 )}
                 <View style={styles.containerInput}>
-                  <Text style={styles.title}>Items List</Text>
+                  <Text style={styles.title}>Danh sách sản phẩm</Text>
                   {orderItem && orderItem.order_list ? (
                     orderItem.order_list.map((item, index) => (
                       <View key={index} style={styles.items}>
@@ -179,7 +179,7 @@ class OrderDetailView extends Component {
                             <TouchableOpacity
                               style={styles.btnReview}
                               onPress={() => this.onReview(item)}>
-                              <Text style={{fontWeight: 'bold'}}>Đánh giá</Text>
+                              <Text style={{ fontWeight: 'bold' }}>Đánh giá</Text>
                             </TouchableOpacity>
                           ) : (
                             <></>
@@ -192,7 +192,7 @@ class OrderDetailView extends Component {
                   )}
                 </View>
                 <View style={styles.containerInput}>
-                  <Text style={styles.title}>Phone of receiver</Text>
+                  <Text style={styles.title}>Số điện thoại người nhận</Text>
                   <TextInput
                     style={styles.textInput}
                     value={
@@ -200,7 +200,7 @@ class OrderDetailView extends Component {
                     }></TextInput>
                 </View>
                 <View style={styles.containerInput}>
-                  <Text style={styles.title}>Address of receiver</Text>
+                  <Text style={styles.title}>Địa chỉ người nhận</Text>
                   <TextInput
                     editable={false}
                     style={styles.textInput}
@@ -210,7 +210,7 @@ class OrderDetailView extends Component {
                     }></TextInput>
                 </View>
                 <View style={styles.containerInput}>
-                  <Text style={styles.title}>Email of receiver</Text>
+                  <Text style={styles.title}>Email người nhận</Text>
                   <TextInput
                     editable={false}
                     style={styles.textInput}
@@ -220,14 +220,14 @@ class OrderDetailView extends Component {
                   <TouchableOpacity
                     onPress={() => this.onClose()}
                     style={styles.btnCancel}>
-                    <Text style={styles.txtCancel}>Close</Text>
+                    <Text style={styles.txtCancel}>Đóng</Text>
                   </TouchableOpacity>
                 </View>
                 <Modal visible={this.state.modal}>
                   <View style={styles.containerModal}>
                     <View style={styles.backgroundModal}>
                       <View style={styles.modalBox}>
-                        <View style={{alignItems: 'flex-end'}}>
+                        <View style={{ alignItems: 'flex-end' }}>
                           <TouchableOpacity
                             style={styles.btnClose}
                             onPress={() => this.onClose1()}>

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {AsyncStorage} from 'react-native';
-import {connect} from 'react-redux';
+import { AsyncStorage } from 'react-native';
+import { connect } from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Moment from 'react-moment';
@@ -27,7 +27,7 @@ class NotificationScreen extends Component {
   constructor(props) {
     super(props);
 
-    const {userInfo, listNotification} = props;
+    const { userInfo, listNotification } = props;
     this.state = {
       params: {
         limit: 10,
@@ -62,7 +62,7 @@ class NotificationScreen extends Component {
       onGetDetailInstallment,
       onGetDetailOrder,
     } = this.props;
-    const {params} = this.state;
+    const { params } = this.state;
     if (val === 0) {
       const data = {
         active: false,
@@ -86,7 +86,6 @@ class NotificationScreen extends Component {
         notificationList: null,
         number: 1,
       });
-      console.log(id, data, params);
       onUpdate(id, data, params);
     } else {
       this.setState({
@@ -98,7 +97,7 @@ class NotificationScreen extends Component {
   }
 
   componentDidMount = async () => {
-    const {onGetProfile, userInfo, onGetList, listNotification} = this.props;
+    const { onGetProfile, userInfo, onGetList, listNotification } = this.props;
     await AsyncStorage.getItem('AUTH_USER').then(data => {
       onGetProfile(null, data);
     });
@@ -118,7 +117,7 @@ class NotificationScreen extends Component {
       onGetList,
       listNotification,
     } = this.props;
-    const {notificationList, params} = this.state;
+    const { notificationList, params } = this.state;
     if (listNotification !== prevProps.listNotification && listNotification) {
       if (prevProps.listNotification && notificationList !== null) {
         var temp = notificationList;
@@ -136,6 +135,7 @@ class NotificationScreen extends Component {
           params: {
             ...params,
             limit: params.limit + number,
+            user: userInfo._id
           },
         });
       } else {
@@ -146,21 +146,21 @@ class NotificationScreen extends Component {
     }
     if (totalNotification !== prevProps.totalNotification && userInfo) {
       var user = userInfo._id;
-      onGetList({user, limit: 10, page: 0, active: 1});
+      onGetList({ user, limit: 10, page: 0, active: 1 });
     }
   }
   ReadMore() {
-    const {userInfo, onGetList} = this.props;
-    const {number} = this.state;
+    const { userInfo, onGetList } = this.props;
+    const { number } = this.state;
     var user = userInfo._id;
-    onGetList({user, limit: 10, page: number, active: 1});
+    onGetList({ user, limit: 10, page: number, active: 1 });
     this.setState({
       number: number + 1,
     });
   }
   onReadAllNoti() {
-    const {userInfo, onUpdateAll} = this.props;
-    var data = {user: userInfo._id};
+    const { userInfo, onUpdateAll } = this.props;
+    var data = { user: userInfo._id };
     var params = {
       limit: 10,
       page: 0,
@@ -173,8 +173,8 @@ class NotificationScreen extends Component {
     onUpdateAll(data, params);
   }
   onDeleteAllNoti() {
-    const {userInfo, onDeleteAll} = this.props;
-    const {params} = this.state;
+    const { userInfo, onDeleteAll } = this.props;
+    const { params } = this.state;
     var id = userInfo._id;
     this.setState({
       notificationList: null,
@@ -188,12 +188,12 @@ class NotificationScreen extends Component {
         <TouchableOpacity
           style={styles.btnReadAll}
           onPress={() => this.onReadAllNoti()}>
-          <Text style={{color: '#fff'}}>Đánh dấu đã đọc tất cả</Text>
+          <Text style={{ color: '#fff' }}>Đánh dấu đã đọc tất cả</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.btnDeleteAll}
           onPress={() => this.onDeleteAllNoti()}>
-          <Text style={{color: '#fff'}}>Xóa tất cả</Text>
+          <Text style={{ color: '#fff' }}>Xóa tất cả</Text>
         </TouchableOpacity>
       </View>
     );
@@ -206,7 +206,7 @@ class NotificationScreen extends Component {
       orderItem,
       userInfo,
     } = this.props;
-    const {statusModal, params, showModal, notificationList} = this.state;
+    const { statusModal, params, showModal, notificationList } = this.state;
     return (
       <View style={styles.screenContainer}>
         <DetailModal
@@ -229,10 +229,10 @@ class NotificationScreen extends Component {
                     <FlatList
                       data={notificationList}
                       onEndReached={() => this.ReadMore()}
-                      onEndReachedThreshold={0.01}
+                      onEndReachedThreshold={0.7}
                       ListFooterComponent={this.footer}
                       keyExtractor={item => item._id}
-                      renderItem={({item}) => (
+                      renderItem={({ item }) => (
                         <View
                           style={
                             item.active === true
@@ -240,12 +240,12 @@ class NotificationScreen extends Component {
                               : styles.itemContainer
                           }>
                           <View style={styles.itemTopContainer}>
-                            <View style={{flex: 1}}>
+                            <View style={{ flex: 1 }}>
                               {item.type === 0 && (
                                 <View
                                   style={[
                                     styles.itemTypeContainer,
-                                    {backgroundColor: '#42b8fc'},
+                                    { backgroundColor: '#42b8fc' },
                                   ]}>
                                   <MaterialCommunityIcons
                                     name="cart-arrow-right"
@@ -258,7 +258,7 @@ class NotificationScreen extends Component {
                                 <View
                                   style={[
                                     styles.itemTypeContainer,
-                                    {backgroundColor: 'red'},
+                                    { backgroundColor: 'red' },
                                   ]}>
                                   <MaterialCommunityIcons
                                     name="file-document"
@@ -286,10 +286,10 @@ class NotificationScreen extends Component {
                                 {item.createdAt}
                               </Moment>
                             </View>
-                            <View style={{flex: 1}}>
+                            <View style={{ flex: 1 }}>
                               <ModalDropdown
                                 showsVerticalScrollIndicator={false}
-                                dropdownStyle={{width: 150, height: 86}}
+                                dropdownStyle={{ width: 150, height: 86 }}
                                 dropdownTextStyle={{
                                   fontSize: 16,
                                   color: '#333',
@@ -302,7 +302,7 @@ class NotificationScreen extends Component {
                                     item.link,
                                   )
                                 }
-                                options={['Đã xem', 'Xóa']}>
+                                options={['Xem', 'Xóa']}>
                                 <MaterialCommunityIcons
                                   name="dots-vertical"
                                   color="#000"

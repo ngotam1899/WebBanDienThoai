@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -10,12 +10,12 @@ import {
   Alert,
   LogBox,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {AsyncStorage} from 'react-native';
-import {AccordionList} from 'accordion-collapse-react-native';
-import {Picker} from '@react-native-community/picker';
+import { connect } from 'react-redux';
+import { AsyncStorage } from 'react-native';
+import { AccordionList } from 'accordion-collapse-react-native';
+import { Picker } from '@react-native-community/picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Table, Row, Rows} from 'react-native-table-component';
+import { Table, Row, Rows } from 'react-native-table-component';
 // @Actions
 import ProductsActions from '../../redux/actions/products';
 import InstallmentActions from '../../redux/actions/installment';
@@ -27,20 +27,20 @@ import installmentData from '../../utils/installment.json';
 import installmentQuestion from './installmentQuestion.json';
 import numberWithCommas from '../../utils/formatPrice';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class ListQuestion extends Component {
   _head(item) {
     return (
       <View style={styles.headQuestion}>
-        <Text style={{fontWeight: 'bold', flex: 0.9}}>{item.title}</Text>
+        <Text style={{ fontWeight: 'bold', flex: 0.9 }}>{item.title}</Text>
         <FontAwesome
           name="angle-down"
           size={20}
           color="#000"
           style={[
             styles.fontAwesome,
-            {flex: 0.1, marginRight: -20, marginLeft: 5},
+            { flex: 0.1, marginRight: -20, marginLeft: 5 },
           ]}
         />
       </View>
@@ -49,14 +49,14 @@ class ListQuestion extends Component {
 
   _body(item) {
     return (
-      <View style={{padding: 10}}>
+      <View style={{ padding: 10 }}>
         <Text>{item.content}</Text>
       </View>
     );
   }
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <AccordionList
           nestedScrollEnabled={true}
           list={installmentQuestion.questions}
@@ -71,7 +71,7 @@ class ListQuestion extends Component {
 class InstallmentPage extends Component {
   constructor(props) {
     super(props);
-    const {route} = props;
+    const { route } = props;
     this.state = {
       color: route.params.color,
       percent: 30,
@@ -85,7 +85,7 @@ class InstallmentPage extends Component {
   }
 
   componentDidMount = async () => {
-    const {route, onGetDetailProduct, onGetProfile} = this.props;
+    const { route, onGetDetailProduct, onGetProfile } = this.props;
     await AsyncStorage.getItem('AUTH_USER').then(data => {
       onGetProfile(null, data);
     });
@@ -134,8 +134,8 @@ class InstallmentPage extends Component {
     );
   };
   onGetInstallment = () => {
-    const {product} = this.props;
-    var {color, percent, period, detail} = this.state;
+    const { product } = this.props;
+    var { color, percent, period, detail } = this.state;
     if (period === 0) return this.showAlert();
     const interest_rate = JSON.parse(period).percent;
     period = JSON.parse(period).month_sum;
@@ -147,8 +147,8 @@ class InstallmentPage extends Component {
           Math.ceil(
             (product.colors.find(i => i._id === color).price *
               (1 - percent * 0.01)) /
-              period /
-              1000,
+            period /
+            1000,
           ) * 1000,
         interest:
           Math.ceil(
@@ -156,16 +156,16 @@ class InstallmentPage extends Component {
               (1 - percent * 0.01) *
               interest_rate *
               0.01) /
-              period /
-              1000,
+            period /
+            1000,
           ) * 1000,
         total:
           Math.ceil(
             (product.colors.find(i => i._id === color).price *
               (1 - percent * 0.01) *
               (1 + interest_rate * 0.01)) /
-              period /
-              1000,
+            period /
+            1000,
           ) * 1000,
       };
     }
@@ -173,13 +173,13 @@ class InstallmentPage extends Component {
       prepay:
         Math.ceil(
           (product.colors.find(i => i._id === color).price * percent * 0.01) /
-            1000,
+          1000,
         ) * 1000,
       loan:
         Math.ceil(
           (product.colors.find(i => i._id === color).price *
             (1 - percent * 0.01)) /
-            1000,
+          1000,
         ) * 1000,
       detail,
       total_interest:
@@ -188,20 +188,20 @@ class InstallmentPage extends Component {
             (1 - percent * 0.01) *
             interest_rate *
             0.01) /
-            1000,
+          1000,
         ) * 1000,
       total:
         Math.ceil(
           (product.colors.find(i => i._id === color).price *
             (1 - percent * 0.01) *
             (1 + interest_rate * 0.01)) /
-            1000,
+          1000,
         ) * 1000,
     });
   };
   onCreateInstallment = () => {
-    const {onCreate, product, authInfo} = this.props;
-    var {color, period, prepay} = this.state;
+    const { onCreate, product, authInfo } = this.props;
+    var { color, period, prepay } = this.state;
     if (period === 0) return this.showAlert();
     if (authInfo) {
       const interest_rate = JSON.parse(period).percent;
@@ -223,7 +223,7 @@ class InstallmentPage extends Component {
     }
   };
   render() {
-    const {authInfo, product} = this.props;
+    const { authInfo, product } = this.props;
     const {
       color,
       percent,
@@ -286,7 +286,7 @@ class InstallmentPage extends Component {
                   <Picker.Item label="Trả trước 70%" value={70} />
                 </Picker>
               </View>
-              <View style={[styles.borderPicker, {marginLeft: 6}]}>
+              <View style={[styles.borderPicker, { marginLeft: 6 }]}>
                 <Picker
                   selectedValue={period}
                   style={styles.pickerLong}
@@ -326,7 +326,7 @@ class InstallmentPage extends Component {
                       style={styles.fontAwesome}
                     />
                     <View>
-                      <Text style={{fontWeight: 'bold'}}>Thanh toán trước</Text>
+                      <Text style={{ fontWeight: 'bold' }}>Thanh toán trước</Text>
                       <Text>{prepay}</Text>
                     </View>
                   </View>
@@ -338,7 +338,7 @@ class InstallmentPage extends Component {
                       style={styles.fontAwesome}
                     />
                     <View>
-                      <Text style={{fontWeight: 'bold'}}>
+                      <Text style={{ fontWeight: 'bold' }}>
                         Tổng số tiền cần vay
                       </Text>
                       <Text>{loan}</Text>
@@ -346,10 +346,10 @@ class InstallmentPage extends Component {
                   </View>
                 </View>
                 <View>
-                  <Table borderStyle={{borderWidth: 2, borderColor: '#1e88e5'}}>
+                  <Table borderStyle={{ borderWidth: 2, borderColor: '#1e88e5' }}>
                     <Row
                       data={tableHead}
-                      style={{height: 60, backgroundColor: '#f1f8ff'}}
+                      style={{ height: 60, backgroundColor: '#f1f8ff' }}
                       textStyle={{
                         margin: 6,
                         fontWeight: 'bold',
@@ -357,7 +357,7 @@ class InstallmentPage extends Component {
                         textAlign: 'center',
                       }}
                     />
-                    <Rows data={tableData} textStyle={{margin: 6}} />
+                    <Rows data={tableData} textStyle={{ margin: 6 }} />
                   </Table>
                 </View>
                 <View style={styles.containerPrepayLoan}>
@@ -369,7 +369,7 @@ class InstallmentPage extends Component {
                       style={styles.fontAwesome}
                     />
                     <View>
-                      <Text style={{fontWeight: 'bold'}}>
+                      <Text style={{ fontWeight: 'bold' }}>
                         Tổng lãi chênh lệch
                       </Text>
                       <Text>{total_interest}</Text>
@@ -383,7 +383,7 @@ class InstallmentPage extends Component {
                       style={styles.fontAwesome}
                     />
                     <View>
-                      <Text style={{fontWeight: 'bold'}}>
+                      <Text style={{ fontWeight: 'bold' }}>
                         Tổng tiền phải trả
                       </Text>
                       <Text>{total}</Text>
@@ -393,7 +393,7 @@ class InstallmentPage extends Component {
                 <View style={styles.boxBtn}>
                   <TouchableOpacity
                     onPress={() => this.onCreateInstallment()}
-                    style={[styles.btnFilter, {marginBottom: 10}]}>
+                    style={[styles.btnFilter, { marginBottom: 10 }]}>
                     <Text style={styles.textBtn}>Đăng ký chờ xét duyệt</Text>
                   </TouchableOpacity>
                 </View>
@@ -407,27 +407,27 @@ class InstallmentPage extends Component {
             </View>
           </View>
           <View style={styles.containerInfoUser}>
-            <Text style={styles.title}> Installment details </Text>
+            <Text style={styles.title}> Thông tin khách hàng </Text>
             {authInfo && (
               <View style={styles.containerInfo}>
                 <View style={styles.containerNameUser}>
                   <View
-                    style={[styles.boxInfoUser, {flex: 0.5, marginRight: 10}]}>
-                    <Text style={styles.titleInfo}>Frist Name*</Text>
+                    style={[styles.boxInfoUser, { flex: 0.5, marginRight: 10 }]}>
+                    <Text style={styles.titleInfo}>Tên*</Text>
                     <Text>{authInfo.firstname}</Text>
                   </View>
-                  <View style={[styles.boxInfoUser, {flex: 0.5}]}>
-                    <Text style={styles.titleInfo}>Last Name*</Text>
+                  <View style={[styles.boxInfoUser, { flex: 0.5 }]}>
+                    <Text style={styles.titleInfo}>Họ và tên đệm*</Text>
                     <Text>{authInfo.lastname}</Text>
                   </View>
                 </View>
-                <View style={{marginBottom: 10}}>
+                <View style={{ marginBottom: 10 }}>
                   <View style={styles.boxInfoUser}>
-                    <Text style={styles.titleInfo}>Address*</Text>
+                    <Text style={styles.titleInfo}>Địa chỉ*</Text>
                     <Text>{authInfo.address}</Text>
                   </View>
                 </View>
-                <View style={{marginBottom: 10}}>
+                <View style={{ marginBottom: 10 }}>
                   <View style={styles.boxInfoUser}>
                     <Text style={styles.titleInfo}>Email*</Text>
                     <Text>{authInfo.email}</Text>
@@ -435,7 +435,7 @@ class InstallmentPage extends Component {
                 </View>
                 <View>
                   <View style={styles.boxInfoUser}>
-                    <Text style={styles.titleInfo}>Phone*</Text>
+                    <Text style={styles.titleInfo}>Số điện thoại*</Text>
                     <Text>{authInfo.phonenumber}</Text>
                   </View>
                 </View>
@@ -483,7 +483,7 @@ const mapDispatchToProps = (dispatch, props) => {
       dispatch(ProductsActions.onGetDetail(payload));
     },
     onCreate: params => {
-      dispatch(InstallmentActions.onCreate({params}));
+      dispatch(InstallmentActions.onCreate({ params }));
     },
     onGetProfile: (data, headers) => {
       dispatch(AuthorizationActions.onGetProfile(data, headers));

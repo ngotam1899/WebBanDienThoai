@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -15,12 +15,12 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import {Picker} from '@react-native-community/picker';
+import { Picker } from '@react-native-community/picker';
 
 import AuthorizationActions from '../../redux/actions/auth';
 import AddressActions from '../../redux/actions/address';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 class SignUpPage extends Component {
   constructor(props) {
@@ -44,22 +44,22 @@ class SignUpPage extends Component {
     };
   }
   componentDidMount() {
-    const {onGetListCity} = this.props;
+    const { onGetListCity } = this.props;
     onGetListCity();
   }
   setDistrict = (value, index) => {
-    const {onGetListDistrict} = this.props;
+    const { onGetListDistrict } = this.props;
     this.setState({
       cityInfo: value,
       city: value.ProvinceName,
       cityID: value.ProvinceID,
     });
-    onGetListDistrict({province_id: value.ProvinceID});
+    onGetListDistrict({ province_id: value.ProvinceID });
   };
 
   setWard = (value, index) => {
-    const {onGetListWard} = this.props;
-    const {cityID} = this.state.cityID;
+    const { onGetListWard } = this.props;
+    const { cityID } = this.state.cityID;
     this.setState({
       districtInfo: value,
       district: value.DistrictName,
@@ -104,7 +104,7 @@ class SignUpPage extends Component {
   };
 
   updateSecureTextEntry = () => {
-    const {secureTextEntry} = this.state;
+    const { secureTextEntry } = this.state;
     this.setState({
       secureTextEntry: !secureTextEntry,
     });
@@ -139,7 +139,7 @@ class SignUpPage extends Component {
       password,
       confirmPassword,
     } = this.state;
-    const {onRegister, t} = this.props;
+    const { onRegister, t } = this.props;
 
     const data = {
       firstname,
@@ -164,20 +164,20 @@ class SignUpPage extends Component {
       secureTextEntry,
       confirm_secureTextEntry,
     } = this.state;
-    const {listCity, listDistrict, listWard, navigation} = this.props;
+    const { listCity, listDistrict, listWard, navigation } = this.props;
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#1e88e5" barStyle="light-content" />
         <View style={styles.header}>
-          <Text style={styles.text_header}>Register Now!</Text>
+          <Text style={styles.text_header}> Đăng ký ngay tài khoản TellPhone!</Text>
         </View>
         <Animatable.View animation="fadeInUpBig" style={styles.footer}>
           <ScrollView>
-            <Text style={styles.text_footer}>Username</Text>
+            <Text style={styles.text_footer}>Tên đăng nhập</Text>
             <View style={styles.action}>
               <FontAwesome name="envelope" color="#05375a" size={20} />
               <TextInput
-                placeholder="Your Username"
+                placeholder="Tên đăng nhập của bạn"
                 style={styles.textInput}
                 autoCapitalize="none"
                 onChangeText={val => this.textInputChange(val)}
@@ -196,12 +196,12 @@ class SignUpPage extends Component {
                   marginTop: 20,
                 },
               ]}>
-              First Name
+              Tên
             </Text>
             <View style={styles.action}>
               <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
-                placeholder="Your First Name"
+                placeholder="Vui lòng nhập tên của bạn"
                 style={styles.textInput}
                 autoCapitalize="none"
                 onChangeText={val => this.onChangeFirstname(val)}
@@ -215,12 +215,12 @@ class SignUpPage extends Component {
                   marginTop: 20,
                 },
               ]}>
-              Last Name
+              Họ về tên đệm
             </Text>
             <View style={styles.action}>
               <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
-                placeholder="Your Last Name"
+                placeholder="Vui lòng nhập họ của bạn"
                 style={styles.textInput}
                 autoCapitalize="none"
                 onChangeText={val => this.onChangeLastname(val)}
@@ -234,12 +234,12 @@ class SignUpPage extends Component {
                   marginTop: 20,
                 },
               ]}>
-              Phone Number
+              Số điện thoại
             </Text>
             <View style={styles.action}>
               <FontAwesome name="phone" color="#05375a" size={20} />
               <TextInput
-                placeholder="Your Phone Number"
+                placeholder="Số điện thoại của bạn"
                 style={styles.textInput}
                 autoCapitalize="none"
                 keyboardType="numeric"
@@ -258,12 +258,12 @@ class SignUpPage extends Component {
                   marginTop: 20,
                 },
               ]}>
-              Your Address
+              Địa chỉ
             </Text>
             <View style={styles.action}>
               <FontAwesome name="home" color="#05375a" size={20} />
               <TextInput
-                placeholder="Your Address"
+                placeholder="Địa chỉ nhà của bạn"
                 style={styles.textInput}
                 autoCapitalize="none"
                 onChangeText={val =>
@@ -273,10 +273,10 @@ class SignUpPage extends Component {
                 }
               />
             </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Picker
                 selectedValue={cityInfo}
-                style={{height: 50, width: 180}}
+                style={{ height: 50, width: 180 }}
                 onValueChange={(itemValue, index) =>
                   this.setDistrict(itemValue, index)
                 }>
@@ -293,7 +293,7 @@ class SignUpPage extends Component {
               </Picker>
               <Picker
                 selectedValue={districtInfo}
-                style={{height: 50, width: 180}}
+                style={{ height: 50, width: 180 }}
                 onValueChange={(itemValue, index) =>
                   this.setWard(itemValue, index)
                 }>
@@ -309,10 +309,10 @@ class SignUpPage extends Component {
                   })}
               </Picker>
             </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Picker
                 selectedValue={ward}
-                style={{height: 50, width: 220}}
+                style={{ height: 50, width: 220 }}
                 onValueChange={(itemValue, index) =>
                   this.setAddress(itemValue, index)
                 }>
@@ -335,12 +335,12 @@ class SignUpPage extends Component {
                   marginTop: 20,
                 },
               ]}>
-              Password
+              Mật khẩu
             </Text>
             <View style={styles.action}>
               <Feather name="lock" color="#05375a" size={20} />
               <TextInput
-                placeholder="Your Password"
+                placeholder="Vui lòng nhập mật khẩu"
                 secureTextEntry={secureTextEntry ? true : false}
                 style={styles.textInput}
                 autoCapitalize="none"
@@ -362,12 +362,12 @@ class SignUpPage extends Component {
                   marginTop: 20,
                 },
               ]}>
-              Confirm Password
+              Xác nhận mật khẩu
             </Text>
             <View style={styles.action}>
               <Feather name="lock" color="#05375a" size={20} />
               <TextInput
-                placeholder="Confirm Your Password"
+                placeholder="Vui lòng nhập lại mậu khẩu"
                 secureTextEntry={confirm_secureTextEntry ? true : false}
                 style={styles.textInput}
                 autoCapitalize="none"
@@ -388,16 +388,16 @@ class SignUpPage extends Component {
             </View>
             <View style={styles.textPrivate}>
               <Text style={styles.color_textPrivate}>
-                By signing up you agree to our
+                Bằng cách đăng ký, bạn đồng ý với
               </Text>
-              <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
+              <Text style={[styles.color_textPrivate, { fontWeight: 'bold' }]}>
                 {' '}
-                Terms of service
+                Điều khoản dịch vụ
               </Text>
               <Text style={styles.color_textPrivate}> and</Text>
-              <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
+              <Text style={[styles.color_textPrivate, { fontWeight: 'bold' }]}>
                 {' '}
-                Privacy policy
+                Chính sách bảo mật
               </Text>
             </View>
             <View style={styles.button}>
@@ -414,7 +414,7 @@ class SignUpPage extends Component {
                         color: '#fff',
                       },
                     ]}>
-                    Sign Up
+                    Đăng ký
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
@@ -436,7 +436,7 @@ class SignUpPage extends Component {
                       color: '#1e88e5',
                     },
                   ]}>
-                  Sign In
+                  Đăng nhập
                 </Text>
               </TouchableOpacity>
             </View>

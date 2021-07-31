@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {AsyncStorage, ScrollView} from 'react-native';
+import React, { Component } from 'react';
+import { AsyncStorage, ScrollView } from 'react-native';
 import ProductsActions from '../../redux/actions/products';
-import {connect} from 'react-redux';
-import {Text, View, Image, TouchableOpacity, Dimensions} from 'react-native';
+import { connect } from 'react-redux';
+import { Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import numberWithCommas from '../../utils/formatPrice';
 import styles from './style'
-var {width} = Dimensions.get('window');
+var { width, height } = Dimensions.get('window');
 
 // import icons
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -27,9 +27,9 @@ class Cart extends Component {
       totalPrice =
         totalPrice +
         dataCart[i].quantity *
-          dataCart[i].product.colors.find(
-            item => item._id === dataCart[i].color,
-          ).price;
+        dataCart[i].product.colors.find(
+          item => item._id === dataCart[i].color,
+        ).price;
     }
     this.setState({
       total,
@@ -41,7 +41,7 @@ class Cart extends Component {
       .then(cart => {
         if (cart !== null) {
           const cartData = JSON.parse(cart);
-          this.setState({dataCart: cartData});
+          this.setState({ dataCart: cartData });
           this.setTotalPrice(cartData);
         }
       })
@@ -57,27 +57,27 @@ class Cart extends Component {
       if (type === true) {
         cantd = cantd + 1;
         data[i].quantity = cantd;
-        this.setState({dataCart: data});
+        this.setState({ dataCart: data });
         this.setTotalPrice(data);
         AsyncStorage.setItem('cart', JSON.stringify(data));
         this.props.onAddProductToCart();
       } else if (type == false && cantd >= 2) {
         cantd = cantd - 1;
         data[i].quantity = cantd;
-        this.setState({dataCart: data});
+        this.setState({ dataCart: data });
         this.setTotalPrice(data);
         AsyncStorage.setItem('cart', JSON.stringify(data));
         this.props.onDeleteProductToCart();
       } else if (type == false && cantd == 1) {
         if (data.length === 1) {
           data.splice(i, 1);
-          this.setState({dataCart: data});
+          this.setState({ dataCart: data });
           this.setTotalPrice(data);
           AsyncStorage.removeItem('cart');
           this.props.onDeleteProductToCart();
         } else {
           data.splice(i, 1);
-          this.setState({dataCart: data});
+          this.setState({ dataCart: data });
           this.setTotalPrice(data);
           AsyncStorage.setItem('cart', JSON.stringify(data));
           this.props.onDeleteProductToCart();
@@ -87,103 +87,113 @@ class Cart extends Component {
   }
 
   checkOut = () => {
-    const {navigation, onCheckout} = this.props;
+    const { navigation, onCheckout } = this.props;
     onCheckout();
     navigation.navigate('SignIn');
   }
 
   render() {
-    const {navigation, isLogin} = this.props;
+    const { navigation, isLogin } = this.props;
     return (
       <ScrollView style={styles.container}>
         <View style={styles.boxContainer}>
-          <Text style={styles.title}>Cart Detail</Text>
-          {this.state.dataCart.map((item, index) => {
-            return (
-              <View style={styles.itemContainer} key={index}>
-                <View
-                  style={styles.boxItemContainer}>
-                  <Image
-                    resizeMode={'contain'}
-                    style={styles.imgItem}
-                    source={{
-                      uri: item.product.bigimage.public_url,
-                    }}
-                  />
-                  <View
-                    style={styles.titleContainer}>
-                    <View>
-                      <Text style={styles.name}>
-                        {item.product.name}
-                      </Text>
-                      <Text style={styles.color}>
-                        Màu: {
-                          item.product.colors.find(i => i._id === item.color)
-                            .name_vn
-                        }
-                      </Text>
-                    </View>
+          {this.state.dataCart.length > 0 ? (
+            <>
+              <Text style={styles.title}>Danh sách sản phẩm</Text>
+              {this.state.dataCart.map((item, index) => {
+                return (
+                  <View style={styles.itemContainer} key={index}>
                     <View
-                      style={styles.boxPrice}>
-                      <Text
-                        style={styles.price}>
-                        {numberWithCommas(item.product.colors.find(i => i._id === item.color).price * item.quantity)} VNĐ
-                      </Text>
+                      style={styles.boxItemContainer}>
+                      <Image
+                        resizeMode={'contain'}
+                        style={styles.imgItem}
+                        source={{
+                          uri: item.product.bigimage.public_url,
+                        }}
+                      />
                       <View
-                        style={styles.boxCountNumber}>
-                        <TouchableOpacity
-                          onPress={() => this.onChangeQual(index, false)}>
-                          <Icon
-                            name="ios-remove-circle"
-                            size={35}
-                            color={'#1e88e5'}
-                          />
-                        </TouchableOpacity>
-                        <Text
-                          style={styles.number}>
-                          {item.quantity}
-                        </Text>
-                        <TouchableOpacity
-                          onPress={() => this.onChangeQual(index, true)}>
-                          <Icon
-                            name="ios-add-circle"
-                            size={35}
-                            color={'#1e88e5'}
-                          />
-                        </TouchableOpacity>
+                        style={styles.titleContainer}>
+                        <View>
+                          <Text style={styles.name}>
+                            {item.product.name}
+                          </Text>
+                          <Text style={styles.color}>
+                            Màu: {
+                              item.product.colors.find(i => i._id === item.color)
+                                .name_vn
+                            }
+                          </Text>
+                        </View>
+                        <View
+                          style={styles.boxPrice}>
+                          <Text
+                            style={styles.price}>
+                            {numberWithCommas(item.product.colors.find(i => i._id === item.color).price * item.quantity)} VNĐ
+                          </Text>
+                          <View
+                            style={styles.boxCountNumber}>
+                            <TouchableOpacity
+                              onPress={() => this.onChangeQual(index, false)}>
+                              <Icon
+                                name="ios-remove-circle"
+                                size={26}
+                                color={'#1e88e5'}
+                              />
+                            </TouchableOpacity>
+                            <Text
+                              style={styles.number}>
+                              {item.quantity}
+                            </Text>
+                            <TouchableOpacity
+                              onPress={() => this.onChangeQual(index, true)}>
+                              <Icon
+                                name="ios-add-circle"
+                                size={26}
+                                color={'#1e88e5'}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
+                );
+              })}
+
+              <View style={styles.totalPriceContainer}>
+                <Text style={styles.totalPrice}>
+                  Tạm tính: {numberWithCommas(this.state.totalPrice) || 0} VNĐ
+                </Text>
               </View>
-            );
-          })}
 
-          <View style={styles.totalPriceContainer}>
-            <Text style={styles.totalPrice}>
-              Tạm tính: {numberWithCommas(this.state.totalPrice)} VNĐ
-            </Text>
-          </View>
+              {isLogin ? (
+                <TouchableOpacity
+                  style={styles.btnContainer}
+                  onPress={() => navigation.navigate('Checkout')}>
+                  <Text
+                    style={styles.btn}>
+                    THANH TOÁN
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.btnContainer}
+                  onPress={() => this.checkOut()}>
+                  <Text
+                    style={styles.btn}>
+                    THANH TOÁN
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </>
+          ) :
+            (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: height - 200 }}>
+                <Text>Không có sản phẩm trong giỏ hàng</Text>
+              </View>
+            )}
 
-          {isLogin ? (
-            <TouchableOpacity
-              style={styles.btnContainer}
-              onPress={() => navigation.navigate('Checkout')}>
-              <Text
-                style={styles.btn}>
-                CHECKOUT
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.btnContainer}
-              onPress={() => this.checkOut()}>
-              <Text
-                style={styles.btn}>
-                CHECKOUT
-              </Text>
-            </TouchableOpacity>
-          )}
         </View>
       </ScrollView>
     );

@@ -1,12 +1,12 @@
 import { UsersActionTypes } from "../actions/user";
-import {ToastAndroid} from 'react-native';
+import { ToastAndroid } from 'react-native';
 
 const init = {
   loading: true,
   detail: null,
   processing: false,
 };
-export default function(state = init, action) {
+export default function (state = init, action) {
   switch (action.type) {
     case UsersActionTypes.UPDATE:
       return {
@@ -25,6 +25,11 @@ export default function(state = init, action) {
         processing: false,
       };
     case UsersActionTypes.UPDATE_SUCCESS:
+      ToastAndroid.showWithGravity(
+        'Cập nhật thành công!',
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+      );
       return {
         ...state,
         processing: false,

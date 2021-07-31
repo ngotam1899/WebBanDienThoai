@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import * as Animatable from 'react-native-animatable';
 import ProductsActions from '../../redux/actions/products';
@@ -33,7 +33,7 @@ import Modal from 'react-native-modal';
 // @Actions
 import AuthorizationActions from '../../redux/actions/auth';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 class SignInPage extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +53,7 @@ class SignInPage extends Component {
     };
   }
 
-  
+
   getInfoFromToken = token => {
     const PROFILE_REQUEST_PARAMS = {
       fields: {
@@ -62,13 +62,13 @@ class SignInPage extends Component {
     };
     const profileRequest = new GraphRequest(
       '/me',
-      {token, parameters: PROFILE_REQUEST_PARAMS},
+      { token, parameters: PROFILE_REQUEST_PARAMS },
       (error, result) => {
         if (error) {
           console.log('login info has error: ' + error);
         } else {
-          const {onLoginFacebook, navigation} = this.props;
-          this.setState({userFacebookInfo: result});
+          const { onLoginFacebook, navigation } = this.props;
+          this.setState({ userFacebookInfo: result });
           onLoginFacebook(token);
           navigation.navigate('HomeScreen');
         }
@@ -78,9 +78,9 @@ class SignInPage extends Component {
   };
 
   onClickLogin = () => {
-    const {email, password, isValidPassword, isValidUser} = this.state.data;
-    const {onLogin} = this.props;
-    const data = {email, password};
+    const { email, password, isValidPassword, isValidUser } = this.state.data;
+    const { onLogin } = this.props;
+    const data = { email, password };
     if (data && isValidUser && isValidPassword) {
       onLogin(data);
     }
@@ -120,7 +120,7 @@ class SignInPage extends Component {
       }));
     } else {
       this.setState(prevState => ({
-        data: {...prevState.data, password: val, isValidPassword: false},
+        data: { ...prevState.data, password: val, isValidPassword: false },
       }));
     }
   };
@@ -135,7 +135,7 @@ class SignInPage extends Component {
   };
 
   UNSAFE_componentWillReceiveProps(props) {
-    const {loggedIn, navigation, isCheckout} = props;
+    const { loggedIn, navigation, isCheckout } = props;
     if (loggedIn && loggedIn === true && isCheckout === false) {
       navigation.navigate('HomeScreen');
     }
@@ -151,7 +151,7 @@ class SignInPage extends Component {
     });
   }
   signIn = async () => {
-    const {onLoginGoogle} = this.props;
+    const { onLoginGoogle } = this.props;
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
@@ -171,17 +171,17 @@ class SignInPage extends Component {
   };
 
   toggleModal = () => {
-    const {isModalVisible} = this.state;
+    const { isModalVisible } = this.state;
     this.setState({
       isModalVisible: !isModalVisible,
     });
   };
 
   sendEmail() {
-    const {email, isModalVisible} = this.state;
-    const {onForgotPassword} = this.props;
+    const { email, isModalVisible } = this.state;
+    const { onForgotPassword } = this.props;
     if (email) {
-      onForgotPassword({email});
+      onForgotPassword({ email });
       this.setState({
         isModalVisible: !isModalVisible,
       });
@@ -191,23 +191,25 @@ class SignInPage extends Component {
   }
 
   render() {
-    const {navigation, isCheckout} = this.props;
-    const {data, isModalVisible} = this.state;
+    const { navigation, isCheckout } = this.props;
+    const { data, isModalVisible } = this.state;
     return (
-      <ScrollView style={{backgroundColor: '#fff'}}>
+      <ScrollView style={{ backgroundColor: '#fff' }}>
         <View style={styles.container}>
           <StatusBar backgroundColor="#1e88e5" barStyle="light-content" />
           <View style={styles.header}>
-            <Text style={styles.text_header}>Welcome!</Text>
+            <Text style={styles.text_header}>Xin chào đến với TellPhone!</Text>
           </View>
           <Animatable.View
             animation="fadeInUpBig"
-            style={[{backgroundColor: '#fff'}, styles.footer]}>
-            <Text style={[styles.text_footer, {color: '#05375a'}]}>Email</Text>
+            style={[{ backgroundColor: '#fff' }, styles.footer]}>
+            <Text style={[styles.text_footer, { color: '#05375a' }]}>
+              Tên đăng nhập
+            </Text>
             <View style={styles.action}>
-              <FontAwesome name="user-o" color={{color: '#05375a'}} size={20} />
+              <FontAwesome name="user-o" color={{ color: '#05375a' }} size={20} />
               <TextInput
-                placeholder="Your Username"
+                placeholder="Tên đăng nhập của bạn"
                 placeholderTextColor="#666666"
                 style={[
                   styles.textInput,
@@ -227,7 +229,7 @@ class SignInPage extends Component {
             {data.isValidUser ? null : (
               <Animatable.View animation="fadeInLeft" duration={500}>
                 <Text style={styles.errorMsg}>
-                  Username must be 4 characters long.
+                  Tên đăng nhập cần có ít nhất 4 kí tự.
                 </Text>
               </Animatable.View>
             )}
@@ -240,12 +242,12 @@ class SignInPage extends Component {
                   marginTop: 35,
                 },
               ]}>
-              Password
+              Mật khẩu
             </Text>
             <View style={styles.action}>
-              <Feather name="lock" color={{color: '#05375a'}} size={20} />
+              <Feather name="lock" color={{ color: '#05375a' }} size={20} />
               <TextInput
-                placeholder="Your Password"
+                placeholder="Mật khẩu của bạn"
                 placeholderTextColor="#666666"
                 secureTextEntry={data.secureTextEntry ? true : false}
                 onChangeText={val => this.handlePasswordChange(val)}
@@ -268,14 +270,14 @@ class SignInPage extends Component {
             {data.isValidPassword ? null : (
               <Animatable.View animation="fadeInLeft" duration={500}>
                 <Text style={styles.errorMsg}>
-                  Password must be 6 characters long.
+                  Mật khẩu có ít nhất 6 kí tự.
                 </Text>
               </Animatable.View>
             )}
 
             <TouchableOpacity onPress={this.toggleModal}>
-              <Text style={{color: '#1877F2', marginTop: 15}}>
-                Forgot password?
+              <Text style={{ color: '#1877F2', marginTop: 15 }}>
+                Quên mật khẩu?
               </Text>
             </TouchableOpacity>
             <Modal isVisible={isModalVisible}>
@@ -299,7 +301,7 @@ class SignInPage extends Component {
                   <View style={styles.action}>
                     <FontAwesome name="user-o" color="#05375a" size={20} />
                     <TextInput
-                      placeholder="Your Email"
+                      placeholder="Nhập email của bạn"
                       style={styles.textInput}
                       autoCapitalize="none"
                       onChangeText={val => {
@@ -394,11 +396,11 @@ class SignInPage extends Component {
                       });
                     }
                   }}
-                  onLogoutFinished={() => this.setState({userFacebookInfo: {}})}
+                  onLogoutFinished={() => this.setState({ userFacebookInfo: {} })}
                 />
               </View>
               <GoogleSigninButton
-                style={{width: 200, height: 50}}
+                style={{ width: 200, height: 50 }}
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Dark}
                 onPress={this.signIn}
@@ -419,7 +421,7 @@ class SignInPage extends Component {
                           color: '#fff',
                         },
                       ]}>
-                      Sign In
+                      Đăng nhập
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -437,7 +439,7 @@ class SignInPage extends Component {
                           color: '#fff',
                         },
                       ]}>
-                      Sign In
+                      Đăng nhập
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -459,7 +461,7 @@ class SignInPage extends Component {
                       color: '#1e88e5',
                     },
                   ]}>
-                  Sign Up
+                  Đăng ký
                 </Text>
               </TouchableOpacity>
             </View>

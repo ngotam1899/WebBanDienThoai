@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import getRNDraftJSBlocks from 'react-native-draftjs-render';
-import {AsyncStorage} from 'react-native';
-import {Rating} from 'react-native-ratings';
-import {connect} from 'react-redux';
+import { AsyncStorage } from 'react-native';
+import { Rating } from 'react-native-ratings';
+import { connect } from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+import Moment from 'react-moment';
 
 import ProductsActions from '../../redux/actions/products';
 import AuthorizationActions from '../../redux/actions/auth';
@@ -17,7 +18,7 @@ import ProductLoader from './ProductLoader';
 import ItemProduct from '../ContentLoader/ItemProduct';
 
 import Header from '../HeaderComponent';
-import {INITIAL_IMAGE} from '../../constants';
+import { INITIAL_IMAGE } from '../../constants';
 import numberWithCommas from '../../utils/formatPrice';
 
 import {
@@ -32,7 +33,7 @@ import {
   Alert,
 } from 'react-native';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class ItemSpecification extends Component {
   setSelector = selection => {
@@ -43,7 +44,7 @@ class ItemSpecification extends Component {
     return selectorArray.join(', ');
   };
   render() {
-    const {item} = this.props;
+    const { item } = this.props;
     return (
       <View
         key={item._id}
@@ -85,7 +86,7 @@ class FlatListImage extends Component {
 }
 class FlatListProductImage extends Component {
   render() {
-    const {product} = this.props;
+    const { product } = this.props;
     return (
       <FlatList
         nestedScrollEnabled={true}
@@ -95,7 +96,7 @@ class FlatListProductImage extends Component {
         scrollEventThrottle={0}
         keyExtractor={(item, index) => item._id}
         horizontal={true}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           return <FlatListImage item={item} key={item._id}></FlatListImage>;
         }}></FlatList>
     );
@@ -103,7 +104,7 @@ class FlatListProductImage extends Component {
 }
 class ListReview extends Component {
   render() {
-    const {item, onLiked} = this.props;
+    const { item, onLiked } = this.props;
     return (
       <View key={item._id} style={styles.containerBoxReview}>
         <View style={styles.containerItemReview}>
@@ -140,7 +141,13 @@ class ListReview extends Component {
                 size={15}
                 imageSize={15}
               />
-              <Text>| {item.createdAt}</Text>
+              <Text>| {" "}
+                <Moment
+                  element={Text}
+                  format="DD/MM/YYYY - HH:mm:ss"
+                  style={styles.itemDate}>
+                  {item.createdAt}
+                </Moment></Text>
             </View>
             <Text style={styles.colorReview}>
               Màu sắc: {item.color.name_vn}
@@ -162,7 +169,7 @@ class ListReview extends Component {
 }
 class FlatListProduct extends Component {
   render() {
-    const {product, navigation} = this.props;
+    const { product, navigation } = this.props;
     return (
       <FlatList
         nestedScrollEnabled={true}
@@ -172,7 +179,7 @@ class FlatListProduct extends Component {
         scrollEventThrottle={10}
         keyExtractor={(item, index) => item._id}
         horizontal={true}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           return (
             <ProductItem
               product={item}
@@ -186,12 +193,12 @@ class FlatListProduct extends Component {
 }
 class ProductItem extends Component {
   render() {
-    const {product, navigation} = this.props;
+    const { product, navigation } = this.props;
     return (
       <TouchableOpacity
         style={styles.itemContainer}
         onPress={() => {
-          navigation.replace('Detail', {id: product._id});
+          navigation.replace('Detail', { id: product._id });
         }}>
         <Image
           source={{
@@ -223,7 +230,7 @@ class ProductDetail extends Component {
       quantity: 'page: 0',
       recommend: -1,
     };
-    const token = AsyncStorage.getItem('AUTH_USER').then(data => {});
+    const token = AsyncStorage.getItem('AUTH_USER').then(data => { });
     this.props.onGetProfile(null, token);
   }
 
@@ -235,7 +242,7 @@ class ProductDetail extends Component {
       onGetRelate,
       onGetLike,
     } = this.props;
-    onGetReviews({product: route.params.id});
+    onGetReviews({ product: route.params.id });
     onGetDetailProduct(route.params.id);
     onGetRelate(route.params.id);
     onGetLike(route.params.id);
@@ -244,11 +251,11 @@ class ProductDetail extends Component {
     });
   };
   componentWillUnmount() {
-    const {onClearDetailGroup} = this.props;
+    const { onClearDetailGroup } = this.props;
     onClearDetailGroup();
   }
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const {authInfo, onHistoryProduct} = this.props;
+    const { authInfo, onHistoryProduct } = this.props;
     if (nextProps.authInfo !== authInfo && nextProps.authInfo) {
       var history = [];
       nextProps.authInfo.history.map(item => history.push(item._id));
@@ -260,7 +267,7 @@ class ProductDetail extends Component {
         if (history.length > 4) {
           history.shift();
         }
-        onHistoryProduct(nextProps.authInfo._id, {history});
+        onHistoryProduct(nextProps.authInfo._id, { history });
       }
     }
   }
@@ -341,7 +348,7 @@ class ProductDetail extends Component {
     );
   };
   onCreateInstallment = (data, color) => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     if (color !== '') {
       navigation.navigate('Installment', {
         productID: data._id,
@@ -352,7 +359,7 @@ class ProductDetail extends Component {
     }
   };
   onCompare = product => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     navigation.navigate('Compare', {
       category: product.category._id,
       id: product._id,
@@ -364,15 +371,15 @@ class ProductDetail extends Component {
     });
   };
   onLiked = (id, like) => {
-    const {onUpdateReview, authInfo} = this.props;
-    const {queryParams} = this.state;
+    const { onUpdateReview, authInfo } = this.props;
+    const { queryParams } = this.state;
     if (authInfo) {
       if (like.indexOf(authInfo._id) === -1) {
         like.push(authInfo._id);
       } else {
         like.splice(like.indexOf(authInfo._id), 1);
       }
-      onUpdateReview(id, {like}, queryParams);
+      onUpdateReview(id, { like }, queryParams);
     } else {
       ToastAndroid.showWithGravity(
         'Bạn chưa đăng nhập',
@@ -394,7 +401,7 @@ class ProductDetail extends Component {
       like,
       authInfo,
     } = this.props;
-    const {color, viewMore, viewMoreReview, recommend} = this.state;
+    const { color, viewMore, viewMoreReview, recommend } = this.state;
     const atomicHandler = (
       item: Object,
       entityMap: Object,
@@ -402,7 +409,7 @@ class ProductDetail extends Component {
       switch (item.data.type) {
         case 'image':
           return (
-            <View key={item.key} style={{flex: 1}}>
+            <View key={item.key} style={{ flex: 1 }}>
               <Image
                 style={{
                   width: 240,
@@ -410,7 +417,7 @@ class ProductDetail extends Component {
                   borderColor: '#ccc',
                   borderWidth: 1,
                 }}
-                source={{uri: item.data.url}}
+                source={{ uri: item.data.url }}
               />
             </View>
           );
@@ -425,22 +432,22 @@ class ProductDetail extends Component {
           {product ? (
             <>
               <FlatListProductImage product={product}></FlatListProductImage>
-              <View style={{marginTop: 10}}>
+              <View style={{ marginTop: 10 }}>
                 <Text style={styles.name}>{product.name}</Text>
-                <View style={{flexDirection: 'row', marginVertical: 3}}>
+                <View style={{ flexDirection: 'row', marginVertical: 3 }}>
                   <Rating
                     type="star"
                     ratingCount={5}
                     readonly={true}
                     startingValue={product.stars}
-                    style={{alignItems: 'flex-start'}}
+                    style={{ alignItems: 'flex-start' }}
                     size={15}
                     imageSize={18}
                   />
-                  <Text style={{fontSize: 16}}> | {total} đánh giá</Text>
+                  <Text style={{ fontSize: 16 }}> | {total} đánh giá</Text>
                 </View>
                 {product.real_price_min && product.real_price_max ? (
-                  <View style={{flexDirection: 'row'}}>
+                  <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.realPrice}>
                       {numberWithCommas(product.real_price_max)}
                       {' - '}
@@ -455,8 +462,8 @@ class ProductDetail extends Component {
                   {product.price_min === product.price_max
                     ? product.price_min
                     : `${numberWithCommas(
-                        product.price_min,
-                      )}-${numberWithCommas(product.price_max)}`}{' '}
+                      product.price_min,
+                    )}-${numberWithCommas(product.price_max)}`}{' '}
                   VND
                 </Text>
                 {group ? (
@@ -552,7 +559,7 @@ class ProductDetail extends Component {
                   ? [styles.groupButton, styles.groupButtonActive]
                   : styles.groupButton
               }
-              onPress={() => this.setState({recommend: -1})}>
+              onPress={() => this.setState({ recommend: -1 })}>
               <Text style={styles.textGroupButton}>SP đã xem</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -561,7 +568,7 @@ class ProductDetail extends Component {
                   ? [styles.groupButton, styles.groupButtonActive]
                   : styles.groupButton
               }
-              onPress={() => this.setState({recommend: 0})}>
+              onPress={() => this.setState({ recommend: 0 })}>
               <Text style={styles.textGroupButton}>Có thể bạn thích</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -570,7 +577,7 @@ class ProductDetail extends Component {
                   ? [styles.groupButton, styles.groupButtonActive]
                   : styles.groupButton
               }
-              onPress={() => this.setState({recommend: 1})}>
+              onPress={() => this.setState({ recommend: 1 })}>
               <Text style={styles.textGroupButton}>SP tương tự</Text>
             </TouchableOpacity>
           </View>
@@ -617,11 +624,11 @@ class ProductDetail extends Component {
                   color="#000"
                   style={styles.fontAwesome}
                 />
-                <View style={{flex: 0.9}}>
-                  <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                <View style={{ flex: 0.9 }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
                     Tình trạng
                   </Text>
-                  <Text style={{fontSize: 16}}>
+                  <Text style={{ fontSize: 16 }}>
                     Mới, đầy đủ phụ kiện từ nhà sản xuất
                   </Text>
                 </View>
@@ -633,11 +640,11 @@ class ProductDetail extends Component {
                   color="#000"
                   style={styles.fontAwesome}
                 />
-                <View style={{flex: 0.9}}>
-                  <Text style={{fontWeight: 'bold', fontSize: 15}}>
+                <View style={{ flex: 0.9 }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 15 }}>
                     Hộp bao gồm
                   </Text>
-                  <Text style={{fontSize: 15}}>
+                  <Text style={{ fontSize: 15 }}>
                     Thân máy, cáp USB-C to Lightning, sách HDSD
                   </Text>
                 </View>
@@ -649,11 +656,11 @@ class ProductDetail extends Component {
                   color="#000"
                   style={styles.fontAwesome}
                 />
-                <View style={{flex: 0.9}}>
-                  <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                <View style={{ flex: 0.9 }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
                     Bảo hành
                   </Text>
-                  <Text style={{fontSize: 16}}>
+                  <Text style={{ fontSize: 16 }}>
                     Bảo hành 12 tháng tại trung tâm bảo hành chính hãng Apple
                     Việt Nam. 1 ĐỔI 1 trong 30 ngày nếu có lỗi phần cứng nhà sản
                     xuất.
@@ -682,7 +689,7 @@ class ProductDetail extends Component {
                     })
                   }>
                   <Text style={styles.textViewMore}>
-                    {viewMore && viewMore === true ? 'View More' : 'Less More'}
+                    {viewMore && viewMore === true ? 'Xem thêm' : 'Rút gọn'}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -700,13 +707,13 @@ class ProductDetail extends Component {
               <View style={styles.containerReviews}>
                 <View style={styles.containerOverallReview}>
                   <View style={styles.overallReview}>
-                    <Text style={styles.titleOverall}>Overall</Text>
+                    <Text style={styles.titleOverall}>Tổng thể</Text>
                     <Text style={styles.numberOverall}>{product.stars}</Text>
                     <Text style={styles.textOverall}>( {total} reviews)</Text>
                   </View>
                   <View style={styles.baseOnReview}>
                     <Text style={styles.titleBaseOn}>
-                      Base on {total} Reviews
+                      Dựa trên {total} đánh giá
                     </Text>
                     <View style={styles.lineBaseReview}>
                       <Text>5 Star </Text>
@@ -715,7 +722,7 @@ class ProductDetail extends Component {
                         ratingCount={5}
                         readonly={true}
                         startingValue={5}
-                        style={{alignItems: 'flex-start'}}
+                        style={{ alignItems: 'flex-start' }}
                         size={15}
                         imageSize={15}
                       />
@@ -733,7 +740,7 @@ class ProductDetail extends Component {
                         ratingCount={5}
                         readonly={true}
                         startingValue={4}
-                        style={{alignItems: 'flex-start'}}
+                        style={{ alignItems: 'flex-start' }}
                         size={15}
                         imageSize={15}
                       />
@@ -751,7 +758,7 @@ class ProductDetail extends Component {
                         ratingCount={5}
                         readonly={true}
                         startingValue={3}
-                        style={{alignItems: 'flex-start'}}
+                        style={{ alignItems: 'flex-start' }}
                         size={15}
                         imageSize={15}
                       />
@@ -769,7 +776,7 @@ class ProductDetail extends Component {
                         ratingCount={5}
                         readonly={true}
                         startingValue={2}
-                        style={{alignItems: 'flex-start'}}
+                        style={{ alignItems: 'flex-start' }}
                         size={15}
                         imageSize={15}
                       />
@@ -787,7 +794,7 @@ class ProductDetail extends Component {
                         ratingCount={5}
                         readonly={true}
                         startingValue={1}
-                        style={{alignItems: 'flex-start'}}
+                        style={{ alignItems: 'flex-start' }}
                         size={15}
                         imageSize={15}
                       />
@@ -828,8 +835,8 @@ class ProductDetail extends Component {
                     }>
                     <Text style={styles.textViewMore}>
                       {viewMoreReview && viewMoreReview === true
-                        ? 'View More'
-                        : 'Less More'}
+                        ? 'Xem thêm'
+                        : 'Rút gọn'}
                     </Text>
                   </TouchableOpacity>
                 ) : (
@@ -882,7 +889,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(ReviewActions.onUpdate(id, params));
     },
     onHistoryProduct: (id, params) => {
-      dispatch(UsersActions.onUpdate({id, params}));
+      dispatch(UsersActions.onUpdate({ id, params }));
     },
     onGetProfile: (data, headers) => {
       dispatch(AuthorizationActions.onGetProfile(data, headers));

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -9,13 +9,13 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {TabView, TabBar} from 'react-native-tab-view';
+import { connect } from 'react-redux';
+import { TabView, TabBar } from 'react-native-tab-view';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Table, Row, Rows} from 'react-native-table-component';
-import {AsyncStorage} from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
+import { AsyncStorage } from 'react-native';
 import Modal from 'react-native-modal';
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 // @Actions
 import InstallmentActions from '../../redux/actions/installment';
 import AuthorizationActions from '../../redux/actions/auth';
@@ -23,9 +23,9 @@ import AuthorizationActions from '../../redux/actions/auth';
 import numberWithCommas from '../../utils/formatPrice';
 import tryConvert from '../../utils/changeMoney';
 
-import {API_ENDPOINT_AUTH} from '../../constants';
+import { API_ENDPOINT_AUTH } from '../../constants';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 setStatusItem = status => {
   switch (status) {
@@ -49,29 +49,42 @@ class DetailModal extends Component {
     };
   }
   paypalOrder(id) {
-    const {onUpdate, params} = this.props;
-    const {money} = this.state;
-    onUpdate(id, {money: money}, params);
+    const { onUpdate, params } = this.props;
+    const { money } = this.state;
+    onUpdate(id, { money: money }, params);
   }
   handleResponse = (data, id) => {
     if (data.title === 'success') {
       this.paypalOrder(id);
-      this.setState({showModal: false, status: 'Complete'});
+      this.setState({ showModal: false, status: 'Complete' });
     } else if (data.title === 'cancel') {
-      this.setState({showModal: false, status: 'Cancelled'});
+      this.setState({ showModal: false, status: 'Cancelled' });
     } else {
       return;
     }
   };
 
   setStatusModal(value, id) {
-    const {openModal} = this.props;
+    const { openModal } = this.props;
     openModal(value, id);
   }
-
+  paymentInstallment() {
+    const { installmentItem } = this.props;
+    const { money } = this.state;
+    if (installmentItem.debt == 0) {
+      alert("Đơn trả góp đã thanh toán đủ!")
+    }
+    else if (money <= installmentItem.debt) {
+      this.setState({
+        showModal: true
+      })
+    } else {
+      alert("Số tiền đã nhập lớn hơn số tiền bạn cần trả!")
+    }
+  }
   render() {
-    const {status, installmentItem, params} = this.props;
-    const {money} = this.state;
+    const { status, installmentItem, params } = this.props;
+    const { money } = this.state;
     const tableHead = ['Tháng', 'Ngày tới hạn', 'Tiền cần trả', 'Status'];
     const tableData =
       installmentItem &&
@@ -85,6 +98,7 @@ class DetailModal extends Component {
           temp,
         ];
       });
+
     return (
       <View>
         <Modal style={styles.container} visible={status}>
@@ -118,8 +132,8 @@ class DetailModal extends Component {
                   </View>
                   <View style={styles.breakLine}></View>
                   <Text style={styles.title}>Thông tin trả góp</Text>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={[styles.containerItem, {flex: 0.5}]}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={[styles.containerItem, { flex: 0.5 }]}>
                       <View style={[styles.iconItem]}>
                         <FontAwesome5
                           name="money-check-alt"
@@ -134,7 +148,7 @@ class DetailModal extends Component {
                         </Text>
                       </View>
                     </View>
-                    <View style={[styles.containerItem, {flex: 0.5}]}>
+                    <View style={[styles.containerItem, { flex: 0.5 }]}>
                       <View style={styles.iconItem}>
                         <FontAwesome5 name="coins" size={26} color="#000" />
                       </View>
@@ -146,8 +160,8 @@ class DetailModal extends Component {
                       </View>
                     </View>
                   </View>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={[styles.containerItem, {flex: 0.5}]}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={[styles.containerItem, { flex: 0.5 }]}>
                       <View style={styles.iconItem}>
                         <FontAwesome5 name="percent" size={26} color="#000" />
                       </View>
@@ -158,7 +172,7 @@ class DetailModal extends Component {
                         </Text>
                       </View>
                     </View>
-                    <View style={[styles.containerItem, {flex: 0.5}]}>
+                    <View style={[styles.containerItem, { flex: 0.5 }]}>
                       <View style={styles.iconItem}>
                         <FontAwesome5
                           name="hand-holding-usd"
@@ -175,7 +189,7 @@ class DetailModal extends Component {
                     </View>
                   </View>
                   <View style={styles.containerItem}>
-                    <View style={[styles.iconItem, {marginRight: -40}]}>
+                    <View style={[styles.iconItem, { marginRight: -40 }]}>
                       <FontAwesome5
                         name="business-time"
                         size={26}
@@ -198,7 +212,7 @@ class DetailModal extends Component {
                     </View>
                   </View>
                   <View style={styles.containerItem}>
-                    <View style={[styles.iconItem, {marginRight: -40}]}>
+                    <View style={[styles.iconItem, { marginRight: -40 }]}>
                       <FontAwesome5 name="gifts" size={26} color="#000" />
                     </View>
                     <View style={styles.infoItem}>
@@ -209,7 +223,7 @@ class DetailModal extends Component {
                     </View>
                   </View>
                   <View style={styles.containerItem}>
-                    <View style={[styles.iconItem, {marginRight: -40}]}>
+                    <View style={[styles.iconItem, { marginRight: -40 }]}>
                       <FontAwesome5
                         name="address-card"
                         size={26}
@@ -230,7 +244,7 @@ class DetailModal extends Component {
                     </View>
                   </View>
                   <View style={styles.breakLine}></View>
-                  <Text style={[styles.title, {marginBottom: 20}]}>
+                  <Text style={[styles.title, { marginBottom: 20 }]}>
                     Lịch sử trả góp
                   </Text>
                   {installmentItem.detail ? (
@@ -242,7 +256,7 @@ class DetailModal extends Component {
                         }}>
                         <Row
                           data={tableHead}
-                          style={{height: 60, backgroundColor: '#f1f8ff'}}
+                          style={{ height: 60, backgroundColor: '#f1f8ff' }}
                           textStyle={{
                             margin: 6,
                             fontWeight: 'bold',
@@ -250,19 +264,19 @@ class DetailModal extends Component {
                             textAlign: 'center',
                           }}
                         />
-                        <Rows data={tableData} textStyle={{margin: 6}} />
+                        <Rows data={tableData} textStyle={{ margin: 6 }} />
                       </Table>
                     </View>
                   ) : (
                     <Text>Phiếu trả góp chưa được duyệt</Text>
                   )}
                   <View style={styles.breakLine}></View>
-                  <Text style={[styles.title, {marginTop: 10}]}>
+                  <Text style={[styles.title, { marginTop: 10 }]}>
                     Thanh toán trả góp online
                   </Text>
                   <Modal
                     visible={this.state.showModal}
-                    onRequestClose={() => this.setState({showModal: false})}>
+                    onRequestClose={() => this.setState({ showModal: false })}>
                     <WebView
                       source={{
                         uri: `${API_ENDPOINT_AUTH}/paypal?total=${parseFloat(
@@ -275,28 +289,31 @@ class DetailModal extends Component {
                       injectedJavaScript={`document.f1.submit()`}
                     />
                   </Modal>
-                  <View style={styles.containerPayment}>
-                    <View>
-                      <Text style={styles.titleItem}>
-                        Nhập số tiền thanh toán (VND)
-                      </Text>
-                      <View style={styles.boxPayment}>
-                        <TextInput
-                          placeholder="5.000.000"
-                          style={styles.inputText}
-                          onChangeText={val => {
-                            this.setState({
-                              money: val,
-                            });
-                          }}></TextInput>
-                        <TouchableOpacity
-                          style={styles.boxBtn}
-                          onPress={() => this.setState({showModal: true})}>
-                          <Text style={styles.textBtn}>Xác nhận</Text>
-                        </TouchableOpacity>
+                  {installmentItem.active === false || installmentItem.status === -1 || installmentItem.status === 2 ? <></> : (
+                    <View style={styles.containerPayment}>
+                      <View>
+                        <Text style={styles.titleItem}>
+                          Nhập số tiền thanh toán (VND)
+                        </Text>
+                        <View style={styles.boxPayment}>
+                          <TextInput
+                            placeholder="5.000.000"
+                            style={styles.inputText}
+                            onChangeText={val => {
+                              this.setState({
+                                money: val,
+                              });
+                            }}></TextInput>
+                          <TouchableOpacity
+                            style={styles.boxBtn}
+                            onPress={() => this.paymentInstallment()}>
+                            <Text style={styles.textBtn}>Xác nhận</Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
-                  </View>
+                  )}
+
                 </View>
                 <View style={styles.containerCancel}>
                   <TouchableOpacity
@@ -304,7 +321,7 @@ class DetailModal extends Component {
                       this.setStatusModal(false, installmentItem._id)
                     }
                     style={styles.btnCancel}>
-                    <Text style={styles.txtCancel}>Close</Text>
+                    <Text style={styles.txtCancel}>Đóng</Text>
                   </TouchableOpacity>
                 </View>
               </ScrollView>
@@ -329,7 +346,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(InstallmentActions.onGetList(payload));
     },
     onUpdate: (id, data, params) => {
-      dispatch(InstallmentActions.onUpdate({id, data, params}));
+      dispatch(InstallmentActions.onUpdate({ id, data, params }));
     },
     onGetProfile: (data, headers) => {
       dispatch(AuthorizationActions.onGetProfile(data, headers));

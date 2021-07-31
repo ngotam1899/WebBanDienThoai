@@ -1,11 +1,11 @@
 import 'react-native-gesture-handler';
-import React, {Component} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import React, { Component } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {createStackNavigator} from '@react-navigation/stack';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import HomePage from './src/components/HomePage';
 import DetailPage from './src/components/DetailPage';
@@ -29,7 +29,7 @@ import UserInstallmentPage from './src/components/UserInstallmentPage';
 import ComparePage from './src/components/ComparePage';
 //Redux
 import 'localstorage-polyfill';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import configureStore from './src/redux/store';
 
 const Tab = createBottomTabNavigator();
@@ -37,21 +37,21 @@ const store = configureStore();
 const Drawer = createDrawerNavigator();
 const HomeStack = createStackNavigator();
 
-function HomeScreen({route, navigation}) {
+function HomeScreen({ route, navigation }) {
   return (
     <Drawer.Navigator
       initialRouteName="Home"
       drawerContent={props => <DrawerContent {...props} />}>
       <Drawer.Screen
         name="Home"
-        initialParams={{params: route.params}}
+        initialParams={{ params: route.params }}
         component={HomePage}
       />
       <Drawer.Screen name="ProductPage" component={ProductPage} />
     </Drawer.Navigator>
   );
 }
-function AccProductTemp({route, navigation}) {
+function AccProductTemp({ route, navigation }) {
   return (
     <Drawer.Navigator
       initialRouteName="AccProduct"
@@ -59,7 +59,7 @@ function AccProductTemp({route, navigation}) {
       <Drawer.Screen
         name="AccProduct"
         component={AccProductPage}
-        initialParams={{id: route.params.id}}
+        initialParams={{ id: route.params.id }}
         options={{
           headerShown: true,
           title: 'TRANG PHỤ KIỆN',
@@ -76,7 +76,7 @@ function AccProductTemp({route, navigation}) {
     </Drawer.Navigator>
   );
 }
-function HomeStackScreen({route, navigation}) {
+function HomeStackScreen({ route, navigation }) {
   return (
     <HomeStack.Navigator
       screenOptions={{
@@ -92,7 +92,7 @@ function HomeStackScreen({route, navigation}) {
       <HomeStack.Screen
         name="AccProductTemp"
         component={AccProductTemp}
-        initialParams={{params: route.params}}
+        initialParams={{ params: route.params }}
       />
       <HomeStack.Screen name="Detail" component={DetailPage} />
       <HomeStack.Screen name="Accessories" component={AccessoriesPage} />
@@ -108,6 +108,7 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
+            marginLeft: 65,
           },
         }}
       />
@@ -123,12 +124,11 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
-            marginLeft: 100,
+            marginLeft: 75,
           },
         }}
       />
       <HomeStack.Screen name="Notification" component={NotificationScreen} />
-      <HomeStack.Screen name="Profile" component={ProfileScreen} />
       <HomeStack.Screen name="SignUp" component={SignUpPage} />
       <HomeStack.Screen name="SignIn" component={SignInPage} />
       <HomeStack.Screen name="Checkout" component={CheckoutPage} />
@@ -161,6 +161,7 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
+            marginLeft: 70
           },
         }}
       />
@@ -176,6 +177,7 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
+            marginLeft: 70
           },
         }}
       />
@@ -191,7 +193,7 @@ function HomeStackScreen({route, navigation}) {
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontSize: 16,
-            marginLeft: 50,
+            marginLeft: 60,
           },
         }}
       />
@@ -216,6 +218,34 @@ function HomeStackScreen({route, navigation}) {
   );
 }
 
+function UserProfileScreen({ route, navigation }) {
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <HomeStack.Screen name="Profile" component={ProfileScreen} />
+      <HomeStack.Screen
+        name="UserDetail"
+        component={UserDetailPage}
+        options={{
+          headerShown: true,
+          title: 'HỒ SƠ CÁ NHÂN',
+          headerStyle: {
+            backgroundColor: '#1e88e5',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 20,
+            textAlign: 'center',
+            marginLeft: -60,
+          },
+        }}
+      />
+    </HomeStack.Navigator>
+  )
+}
+
 class App extends Component {
   getTabBarVisibility = route => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
@@ -236,10 +266,10 @@ class App extends Component {
             <Tab.Screen
               name="Home"
               component={HomeStackScreen}
-              options={({route}) => ({
+              options={({ route }) => ({
                 tabBarVisible: this.getTabBarVisibility(route),
                 tabBarLabel: 'Trang chủ',
-                tabBarIcon: ({color}) => (
+                tabBarIcon: ({ color }) => (
                   <MaterialIcons name="home" size={26} color={color} />
                 ),
               })}
@@ -249,7 +279,7 @@ class App extends Component {
               component={NotificationScreen}
               options={{
                 title: 'Thông báo',
-                tabBarIcon: ({color}) => <NotificationBottom color={color} />,
+                tabBarIcon: ({ color }) => <NotificationBottom color={color} />,
               }}
             />
             <Tab.Screen
@@ -257,17 +287,17 @@ class App extends Component {
               component={RasaChat}
               options={{
                 tabBarLabel: 'Hỗ trợ',
-                tabBarIcon: ({color}) => (
+                tabBarIcon: ({ color }) => (
                   <MaterialIcons name="message" size={26} color={color} />
                 ),
               }}
             />
             <Tab.Screen
-              name="Profile"
-              component={ProfileScreen}
+              name="UserProfile"
+              component={UserProfileScreen}
               options={{
                 tabBarLabel: 'Cá nhân',
-                tabBarIcon: ({color}) => (
+                tabBarIcon: ({ color }) => (
                   <MaterialIcons name="person" size={26} color={color} />
                 ),
               }}

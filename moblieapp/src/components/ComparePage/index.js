@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   StyleSheet,
   View,
@@ -9,17 +9,18 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from 'react-native';
-import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
-import {Table, Row, Rows} from 'react-native-table-component';
+import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
+import { Table, Row, Rows } from 'react-native-table-component';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 // @Actions
+import numberWithCommas from '../../utils/formatPrice';
 import ProductsActions from '../../redux/actions/products';
 import CategoryActions from '../../redux/actions/categories';
 
 class ComparePage extends Component {
   constructor(props) {
     super(props);
-    const {route} = this.props;
+    const { route } = this.props;
     this.state = {
       data: '',
       dropdown: null,
@@ -32,8 +33,8 @@ class ComparePage extends Component {
     };
   }
   componentDidMount() {
-    const {onGetList, onGetCategory, onCompare, route} = this.props;
-    let {compare} = this.state;
+    const { onGetList, onGetCategory, onCompare, route } = this.props;
+    let { compare } = this.state;
     const params = {
       limit: 100,
       category: route.params.category,
@@ -52,7 +53,7 @@ class ComparePage extends Component {
     onGetCategory(route.params.category);
   }
   componentDidUpdate(prevProps) {
-    const {listProducts, listCompare, category} = this.props;
+    const { listProducts, listCompare, category } = this.props;
     if (listProducts && listProducts !== prevProps.listProducts) {
       this.setState({
         data: listProducts,
@@ -77,19 +78,19 @@ class ComparePage extends Component {
           specifications[i].product = product;
         }
       }
-      this.setState({specifications});
+      this.setState({ specifications });
     }
   }
   componentWillUnmount() {
-    const {onCompare} = this.props;
+    const { onCompare } = this.props;
     this.setState({
       compare: '',
     });
-    onCompare({compare: ''});
+    onCompare({ compare: '' });
   }
   setCompare = productID => {
-    const {onCompare} = this.props;
-    const {compare} = this.state;
+    const { onCompare } = this.props;
+    const { compare } = this.state;
     let temp = compare;
     const filters = compare.toString();
     var compareString = filters || '';
@@ -97,13 +98,13 @@ class ComparePage extends Component {
     if (index === -1) {
       if (temp[0] === '') {
         temp = [productID];
-        this.setState({compare: temp});
+        this.setState({ compare: temp });
       } else {
         temp = temp.concat(productID);
-        this.setState({compare: temp});
+        this.setState({ compare: temp });
       }
       compareString = temp.join();
-      onCompare({compare: compareString});
+      onCompare({ compare: compareString });
     } else {
       ToastAndroid.showWithGravity(
         'Sản phẩm đã được chọn',
@@ -114,24 +115,23 @@ class ComparePage extends Component {
   };
 
   removeCompare = productID => {
-    const {compare} = this.state;
-    const {onCompare, navigation, route} = this.props;
+    const { compare } = this.state;
+    const { onCompare, navigation, route } = this.props;
     const filters = compare.join();
     var compareString = filters;
     var compare1 = filters.split(',');
     const index = compare1.indexOf(productID);
     if (index > -1) {
       compare1.splice(index, 1);
-      console.log('de: ', compare1);
       compareString = compare1.join();
-      this.setState({compare: compare1});
+      this.setState({ compare: compare1 });
       if (compareString === '') {
         navigation.replace('Compare', {
           id: '',
           category: route.params.category,
         });
       } else {
-        onCompare({compare: compareString});
+        onCompare({ compare: compareString });
       }
     }
   };
@@ -141,13 +141,18 @@ class ComparePage extends Component {
       <View style={styles.item}>
         <Image
           style={styles.imgItem}
-          source={{uri: item.bigimage.public_url}}></Image>
-        <Text style={styles.textItem}>{item.name}</Text>
+          source={{ uri: item.bigimage.public_url }}></Image>
+        <View>
+          <Text style={styles.textItem}>{item.name}</Text>
+          <Text style={styles.textItemPrice}>
+            {numberWithCommas(item.price_min)} VNĐ
+          </Text>
+        </View>
       </View>
     );
   };
   setDropdown = value => {
-    const {listCompare} = this.props;
+    const { listCompare } = this.props;
     if (listCompare.length < 2 || !listCompare) {
       this.setState({
         dropdown: value.name,
@@ -162,24 +167,23 @@ class ComparePage extends Component {
     }
   };
   render() {
-    const {dropdown, data, specifications, compare} = this.state;
-    const {listCompare} = this.props;
-    console.log(listCompare);
+    const { dropdown, data, specifications, compare } = this.state;
+    const { listCompare } = this.props;
     const tableHead = ['Thuộc tính'];
     listCompare && listCompare.length > 0
       ? listCompare.map(item => {
-          tableHead.push(item.name);
-        })
+        tableHead.push(item.name);
+      })
       : tableHead.push('Tên sản phẩm', 'Tên sản phẩm');
     const tableData = specifications.map((item, index) => {
       const temp = [];
       {
         item.product && item.product.length > 0
           ? item.product.map((element, index) => {
-              return element
-                ? temp.push(element)
-                : temp.push('Chưa có thông tin');
-            })
+            return element
+              ? temp.push(element)
+              : temp.push('Chưa có thông tin');
+          })
           : temp.push('Chưa có thông tin', 'Chưa có thông tin');
       }
       return [item.name, ...temp];
@@ -188,8 +192,8 @@ class ComparePage extends Component {
     let tableHead1 = ['Thuộc tính'];
     listCompare && listCompare.length > 0
       ? listCompare.map(item => {
-          tableHead1.push(item.name);
-        })
+        tableHead1.push(item.name);
+      })
       : tableHead1.push('Tên sản phẩm', 'Tên sản phẩm');
     //-------
     let tableData1 = [];
@@ -200,19 +204,19 @@ class ComparePage extends Component {
     {
       listCompare && listCompare.length > 0
         ? listCompare.map(item => {
-            return (
-              item.warrently
-                ? Warranty.push(item.warrently)
-                : Warranty.push('Chưa có thông tin'),
-              item.included
-                ? Included.push(item.included)
-                : Included.push('Chưa có thông tin'),
-              item.size ? Size.push(item.size) : Size.push('Chưa có thông tin'),
-              item.weight
-                ? Weight.push(item.weight)
-                : Weight.push('Chưa có thông tin')
-            );
-          })
+          return (
+            item.warrently
+              ? Warranty.push(item.warrently)
+              : Warranty.push('Chưa có thông tin'),
+            item.included
+              ? Included.push(item.included)
+              : Included.push('Chưa có thông tin'),
+            item.size ? Size.push(item.size) : Size.push('Chưa có thông tin'),
+            item.weight
+              ? Weight.push(item.weight)
+              : Weight.push('Chưa có thông tin')
+          );
+        })
         : (Warranty.push('Chưa có thông tin', 'Chưa có thông tin'),
           Included.push('Chưa có thông tin', 'Chưa có thông tin'),
           Size.push('Chưa có thông tin', 'Chưa có thông tin'),
@@ -228,10 +232,10 @@ class ComparePage extends Component {
               style={styles.dropdown}
               data={data}
               search
-              searchPlaceholder="Search"
+              searchPlaceholder="Tìm kiếm"
               labelField="name"
               valueField="name"
-              placeholder="Select item"
+              placeholder="Chọn sản phẩm"
               value={dropdown}
               onChange={item => this.setDropdown(item)}
               renderItem={item => this._renderItem(item)}
@@ -246,8 +250,18 @@ class ComparePage extends Component {
                         key={item._id}
                         onPress={() => this.removeCompare(item._id)}
                         style={styles.itemCompare}>
-                        <Text style={styles.textItem}>{item.name}</Text>
-                        <FontAwesome name="close" color="#6c757d" size={14} />
+                        <View>
+                          <Text style={styles.textItem}>{item.name}</Text>
+                          <Text style={styles.textItemPrice}>
+                            {numberWithCommas(item.price_min)} VNĐ
+                          </Text>
+                        </View>
+                        <FontAwesome
+                          style={{ marginLeft: 10 }}
+                          name="close"
+                          color="#6c757d"
+                          size={18}
+                        />
                       </TouchableOpacity>
                     );
                   })
@@ -259,7 +273,7 @@ class ComparePage extends Component {
               </View>
             </View>
             <Text style={styles.titleItem}>Chi tiết so sánh</Text>
-            <View style={{marginTop: 5, marginBottom: 10}}>
+            <View style={{ marginTop: 5, marginBottom: 10 }}>
               <Table
                 borderStyle={{
                   borderWidth: 2,
@@ -268,7 +282,7 @@ class ComparePage extends Component {
                 }}>
                 <Row
                   data={tableHead}
-                  style={{height: 60, backgroundColor: '#f1f8ff'}}
+                  style={{ height: 60, backgroundColor: '#f1f8ff' }}
                   textStyle={{
                     margin: 6,
                     fontWeight: 'bold',
@@ -276,15 +290,15 @@ class ComparePage extends Component {
                     textAlign: 'center',
                   }}
                 />
-                <Rows data={tableData} textStyle={{margin: 6}} />
+                <Rows data={tableData} textStyle={{ margin: 6 }} />
               </Table>
             </View>
             <Text style={styles.titleItem}>Các thông tin khác</Text>
-            <View style={{marginTop: 5, marginBottom: 10}}>
-              <Table borderStyle={{borderWidth: 2, borderColor: '#1e88e5'}}>
+            <View style={{ marginTop: 5, marginBottom: 10 }}>
+              <Table borderStyle={{ borderWidth: 2, borderColor: '#1e88e5' }}>
                 <Row
                   data={tableHead1}
-                  style={{height: 60, backgroundColor: '#f1f8ff'}}
+                  style={{ height: 60, backgroundColor: '#f1f8ff' }}
                   textStyle={{
                     margin: 6,
                     fontWeight: 'bold',
@@ -292,7 +306,7 @@ class ComparePage extends Component {
                     textAlign: 'center',
                   }}
                 />
-                <Rows data={tableData1.reverse()} textStyle={{margin: 6}} />
+                <Rows data={tableData1.reverse()} textStyle={{ margin: 6 }} />
               </Table>
             </View>
           </View>
@@ -384,6 +398,11 @@ const styles = StyleSheet.create({
   textItem: {
     color: '#000',
     fontWeight: 'bold',
+    fontSize: 16,
+    marginRight: 5,
+  },
+  textItemPrice: {
+    color: '#666',
     fontSize: 16,
     marginRight: 5,
   },

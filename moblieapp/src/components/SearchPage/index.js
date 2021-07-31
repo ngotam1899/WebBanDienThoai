@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -8,7 +8,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import numberWithCommas from '../../utils/formatPrice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -20,12 +20,12 @@ import styles from './style';
 
 class ProductItem extends Component {
   render() {
-    const {product, navigation} = this.props;
+    const { product, navigation } = this.props;
     return (
       <TouchableOpacity
         style={[styles.itemContainer, (flex = 0.33)]}
         onPress={() => {
-          navigation.push('Detail', {id: product._id});
+          navigation.push('Detail', { id: product._id });
         }}>
         <Image
           source={{
@@ -50,25 +50,25 @@ class ProductItem extends Component {
 class SearchPage extends Component {
   constructor(props) {
     super(props);
-    const {category} = this.props;
+    const { category } = this.props;
     this.state = {
       categoryName: 'Tất cả',
     };
   }
   onSearchProduct = () => {
-    const {navigation} = this.props;
-    const {key} = this.state;
-    navigation.replace('Search', {keyword: key});
+    const { navigation } = this.props;
+    const { key } = this.state;
+    navigation.replace('Search', { keyword: key });
   };
   componentDidMount() {
-    const {onGetList, onGetListCategory, route} = this.props;
-    const params = {keyword: route.params.keyword, limit: 100};
+    const { onGetList, onGetListCategory, route } = this.props;
+    const params = { keyword: route.params.keyword, limit: 100 };
     onGetList(params);
     onGetListCategory(params);
   }
 
   onSetCategory = value => {
-    const {listCategory, onGetList, route} = this.props;
+    const { listCategory, onGetList, route } = this.props;
     var categoryId =
       value !== 'Tất cả'
         ? listCategory.find(item => item._id.name === value)._id._id
@@ -83,12 +83,12 @@ class SearchPage extends Component {
     });
     onGetList(params);
   };
-  componentDidUpdate(prevProps) {}
+  componentDidUpdate(prevProps) { }
   render() {
-    const {listProducts, listCategory, navigation, route} = this.props;
-    const {categoryName} = this.state;
+    const { listProducts, listCategory, navigation, route } = this.props;
+    const { categoryName } = this.state;
     return (
-      <View style={{backgroundColor: '#fff', flex: 1}}>
+      <View style={{ backgroundColor: '#fff', flex: 1 }}>
         <View style={styles.headerContainer}>
           <View style={styles.inputContainer}>
             <TouchableOpacity onPress={() => this.onSearchProduct()}>
@@ -105,10 +105,10 @@ class SearchPage extends Component {
           </View>
           <Header value="2" navigation={navigation}></Header>
         </View>
-        <View style={{paddingHorizontal: 12}}>
-          <View style={{marginVertical: 8}}>
+        <View style={{ paddingHorizontal: 12 }}>
+          <View style={{ marginVertical: 8 }}>
             <ScrollView
-              contentContainerStyle={{paddingTop: 10}}
+              contentContainerStyle={{ paddingTop: 10 }}
               horizontal={true}
               scrollEnabled={true}>
               <TouchableOpacity
@@ -130,7 +130,7 @@ class SearchPage extends Component {
               {listCategory ? (
                 listCategory.map((category, index) => {
                   return (
-                    <View key={category._id} style={{flexDirection: 'row'}}>
+                    <View key={index} style={{ flexDirection: 'row' }}>
                       <TouchableOpacity
                         style={
                           categoryName && categoryName === category._id.name
@@ -155,9 +155,9 @@ class SearchPage extends Component {
           <FlatList
             data={listProducts}
             numColumns={3}
-            contentContainerStyle={{flexGrow: 1}}
+            contentContainerStyle={{ flexGrow: 1 }}
             keyExtractor={(item, index) => item._id}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
               return (
                 <ProductItem
                   product={item}
