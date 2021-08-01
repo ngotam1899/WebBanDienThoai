@@ -27,7 +27,7 @@ const Product = require('./models/Product');
 // 2. Define server SocketIO, Express
 const app = express();
 const server = http.createServer(app)
-const io = socketIO(server,{
+const io = socketIO(server, {
 	cors: {
 		origin: '*',
 		methods: ["GET", "POST"],
@@ -55,8 +55,8 @@ mongoose.connect('mongodb+srv://mongodb:mongodb@cluster0.5yggc.mongodb.net/mongo
 	useUnifiedTopology: true,
 	useFindAndModify: false
 })
-.then(() => console.log('Connected to MongoDB!'))
-.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`)) 
+	.then(() => console.log('Connected to MongoDB!'))
+	.catch((error) => console.log(`Connect fail, please check and try again!Error: ${error}`))
 
 //@For dev
 /* mongoose
@@ -77,7 +77,7 @@ cloudinary.config({
 
 // 5. Middlewares
 app.use(cors());
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Credentials', true);
@@ -117,15 +117,15 @@ io.on('connection', (socket) => {
 	})
 	socket.on('installmentMoney', ({ email, installment }) => {
 		var installments = [];
-    installments.push(installment);
+		installments.push(installment);
 		io.sockets.emit("newInstallmentMoney", {
 			newInstallments: installments.length,
 			email
 		})
 	});
-  socket.on('order', ({ email, order }) => {
+	socket.on('order', ({ email, order }) => {
 		var orders = [];
-    orders.push(order);
+		orders.push(order);
 		io.sockets.emit("newOrder", {
 			newOrders: orders.length,
 			email
@@ -133,7 +133,7 @@ io.on('connection', (socket) => {
 	});
 	socket.on('installment', ({ email, installment }) => {
 		var installments = [];
-    installments.push(installment);
+		installments.push(installment);
 		io.sockets.emit("newInstallment", {
 			newInstallments: installments.length,
 			email
@@ -153,12 +153,14 @@ const likeProducts = (req, res, next) => {
 			// Convert string to JSON
 			var _data = JSON.stringify(data.toString())
 			var result = JSON.parse(JSON.parse(_data));
-			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 
-			'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
-			populate : {path : 'bigimage', select: "public_url"} });
+			await Product.populate(result, {
+				path: 'data', select: ['name', 'bigimage', 'stars', 'price_min',
+					'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
+				populate: { path: 'bigimage', select: "public_url" }
+			});
 			return res.status(200).json({ success: true, code: 200, result: result.data });
 		})
-	} catch(error){
+	} catch (error) {
 		next(error)
 	}
 }
@@ -174,12 +176,14 @@ const relateProducts = (req, res, next) => {
 			// Convert string to JSON
 			var _data = JSON.stringify(data.toString())
 			var result = JSON.parse(JSON.parse(_data));
-			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 
-			'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
-			populate : {path : 'bigimage', select: "public_url"} });
+			await Product.populate(result, {
+				path: 'data', select: ['name', 'bigimage', 'stars', 'price_min',
+					'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
+				populate: { path: 'bigimage', select: "public_url" }
+			});
 			return res.status(200).json({ success: true, code: 200, result: result.data });
 		})
-	} catch(error){
+	} catch (error) {
 		console.log(error)
 		next(error)
 	}
@@ -208,6 +212,6 @@ app.use((err, req, res, next) => {
 
 // 10. Start server
 app.set('port', process.env.PORT || 3000);
-server.listen(app.get('port'), function() {
+server.listen(app.get('port'), function () {
 	console.log('Server is listening at port ' + app.get('port'));
 });

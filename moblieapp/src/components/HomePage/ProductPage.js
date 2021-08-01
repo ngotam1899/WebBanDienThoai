@@ -21,7 +21,7 @@ class ProductItem extends Component {
     const { product, navigation } = this.props;
     return (
       <TouchableOpacity
-        style={[styles.itemContainer, (flex = 0.33)]}
+        style={styles.itemContainer}
         onPress={() => {
           navigation.push('Detail', { id: product._id });
         }}>
@@ -92,83 +92,73 @@ class ProductPage extends Component {
     const { category, listProducts } = this.props;
     this.state = {
       brandName: 'Tất cả',
-      paramValue: {
+      params: {
         category: category,
         brand: '',
-        limit: 9,
+        limit: 12,
+        page: 0,
         sort_p: '',
       },
       number: 1,
-      productList: listProducts ? listProducts : null,
+      productList: [],
       sortValue: 0,
+      isMounted: false,
     };
   }
   componentDidMount() {
-    const { category, onAddParams } = this.props;
+    const { onAddParams, onGetList, listProducts } = this.props;
+    const { params } = this.state;
     this.setState({
-      paramValue: { category: category },
-    });
-    var params = {
-      category: category,
-      limit: 9,
-      brand: '',
-      sort_p: 0,
-    };
+      productList: listProducts ? listProducts : [],
+    })
     onAddParams(params);
   }
   setSortValue = (itemValue, index) => {
-    const { onGetList, category, onAddParams } = this.props;
-    const { paramValue } = this.state;
+    const { onGetList, onAddParams } = this.props;
+    const { params } = this.state;
+    onAddParams({ ...params, sort_p: itemValue });
+    onGetList({ ...params, sort_p: itemValue });
     this.setState({
       sortValue: itemValue,
+      params: {
+        ...params,
+        sort_p: itemValue,
+      },
     });
-    var params = {
-      category: category,
-      limit: 100,
-      brand: paramValue.brand,
-      sort_p: itemValue,
-    };
-    onAddParams(params);
-    onGetList(params);
   };
   onSetBrand = value => {
-    const { listBrand, category, onGetList, onAddParams } = this.props;
+    const { listBrand, onGetList, onAddParams } = this.props;
+    const { params } = this.state;
     var brandId =
       value !== 'Tất cả'
         ? listBrand.find(item => item._id.name === value)._id._id
         : '';
-    var params = {
-      category: category,
-      brand: brandId,
-      limit: 100,
-    };
+    onGetList({ ...params, brand: brandId });
+    onAddParams({ ...params, brand: brandId });
     this.setState({
-      paramValue: params,
+      params: {
+        ...params,
+        brand: brandId,
+      },
       brandName: value,
-      sortValue: 0,
     });
-    onGetList(params);
-    onAddParams(params);
   };
-  // ReadMore() {
-  //   const {category, onAddParams} = this.props;
-  //   const {number} = this.state;
-  //   var params = {
-  //     category: category,
-  //     limit: 10,
-  //     page: number,
-  //     brand: '',
-  //     sort_p: 0,
-  //   };
-  //   onAddParams(params);
-  //   this.setState({
-  //     number: number + 1,
-  //   });
-  // }
-  componentWillUnmount() {
-    const { onClear } = this.props;
-    onClear();
+  ReadMore() {
+    const { onAddParams, onGetList, category, listProducts } = this.props;
+    const { number, params } = this.state;
+    if (listProducts?.length >= 12) {
+      onAddParams({ ...params, page: number, category: category });
+      onGetList({ ...params, page: number, category: category });
+      this.setState({
+        params: {
+          ...params,
+          page: number,
+        },
+        number: number + 1,
+      });
+    }
   }
+
   onCompare = () => {
     const { navigation, category } = this.props;
     navigation.navigate('Compare', {
@@ -177,21 +167,31 @@ class ProductPage extends Component {
     });
   };
   componentDidUpdate(prevProps) {
-    const { category, onAddParams } = this.props;
-    if (category !== prevProps.category) {
-      var params = {
-        category: category,
-        limit: 15,
-        page: 0,
-        brand: '',
-        sort_p: 0,
-      };
-      onAddParams(params);
+    const { category, onAddParams, onGetList, listProducts } = this.props;
+    const { params, isMounted, productList } = this.state;
+    if (isMounted) {
+      if (category !== prevProps.category) {
+        onAddParams({ ...params, category: category });
+        onGetList({ ...params, category: category });
+        this.setState({
+          params: {
+            ...params,
+            category: category,
+          },
+        });
+      }
     }
+  }
+  componentWillUnmount() {
+    console.log('111');
+    this.setState({
+      isMounted: false,
+      productList: []
+    });
   }
   render() {
     const { listProducts, navigation, listBrand } = this.props;
-    const { brandName, sortValue } = this.state;
+    const { brandName, sortValue, productList } = this.state;
     return (
       <View style={{ paddingHorizontal: 12, paddingBottom: 130 }}>
         <View style={{ marginVertical: 8 }}>
@@ -261,6 +261,8 @@ class ProductPage extends Component {
             data={listProducts}
             numColumns={3}
             contentContainerStyle={{ flexGrow: 1 }}
+            onEndReached={() => this.ReadMore()}
+            onEndReachedThreshold={0.0}
             keyExtractor={(item, index) => item._id}
             renderItem={({ item, index }) => {
               return (
@@ -296,7 +298,7 @@ const mapDispatchToProps = dispatch => {
     },
     onClear: () => {
       dispatch(ProductsActions.onClearState());
-    }
+    },
   };
 };
 

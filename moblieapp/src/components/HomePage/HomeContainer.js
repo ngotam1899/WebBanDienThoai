@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import 'react-native-gesture-handler';
 import {
   Image,
@@ -9,9 +9,9 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {SliderBox} from 'react-native-image-slider-box';
-import {AsyncStorage} from 'react-native';
+import { connect } from 'react-redux';
+import { SliderBox } from 'react-native-image-slider-box';
+import { AsyncStorage } from 'react-native';
 
 // @Components
 import ProductItem from '../ProductItem';
@@ -27,6 +27,9 @@ import styles from './style';
 class HomeContainer extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      _isMounted: false,
+    }
   }
   componentDidMount = async () => {
     const {
@@ -37,21 +40,22 @@ class HomeContainer extends Component {
       onGetListAd,
       onGetProfile,
     } = this.props;
-    const token = await AsyncStorage.getItem('AUTH_USER').then(data => {});
+    const token = await AsyncStorage.getItem('AUTH_USER').then(data => { });
     onGetProfile(null, token);
     onGetList();
     onGetBestSeller();
     onGetFavorite();
     onGetNewest();
-    onGetListAd({active: 1});
+    onGetListAd({ active: 1 });
   };
   render() {
-    const {bestSeller, newest, favorite, navigation, listAd} = this.props;
+    const { bestSeller, newest, favorite, navigation, listAd } = this.props;
     const images =
       listAd &&
       listAd.map(item => {
         return item.image.public_url;
       });
+    console.log("HomePage: ")
     return (
       <View style={styles.screenContainer}>
         <StatusBar backgroundColor="#1e88e5" barStyle="light-content" />
@@ -77,7 +81,7 @@ class HomeContainer extends Component {
                     scrollEventThrottle={10}
                     keyExtractor={(item, index) => index}
                     horizontal={true}
-                    renderItem={({item, index}) => {
+                    renderItem={({ item, index }) => {
                       return (
                         <ProductItem
                           name={item._id.name}
@@ -111,7 +115,7 @@ class HomeContainer extends Component {
                     scrollEventThrottle={10}
                     keyExtractor={(item, index) => item._id}
                     horizontal={true}
-                    renderItem={({item, index}) => {
+                    renderItem={({ item, index }) => {
                       return (
                         <ProductItem
                           name={item.name}
@@ -147,7 +151,7 @@ class HomeContainer extends Component {
                     scrollEventThrottle={10}
                     keyExtractor={(item, index) => item._id}
                     horizontal={true}
-                    renderItem={({item, index}) => {
+                    renderItem={({ item, index }) => {
                       return (
                         <ProductItem
                           name={item.name}
