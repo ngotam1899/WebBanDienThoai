@@ -286,5 +286,6 @@
 
   "review.card.header": "Đánh giá sản phẩm",
   "review.card.h4": "Đánh giá của bạn:",
-  "review.submit.button": "Gửi"
+  "review.submit.button": "Lưu",
+  "review.edit.button": "Sửa"
 }

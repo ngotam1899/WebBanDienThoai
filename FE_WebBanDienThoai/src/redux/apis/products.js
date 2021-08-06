@@ -52,12 +52,12 @@ export const getNewest  = () =>{
 
 // http://localhost:3000/products-like?product=6069f4fa8fa8a12d34256498  METHOD = GET
 export const getLikeProducts = (productId) =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}/products-like?product=${productId}`);
+  return axiosService.get(`${API_ENDPOINT_AUTH}/products/like/${productId}`);
 };
 
 // http://localhost:3000/products-relate?product=6069f4fa8fa8a12d34256498  METHOD = GET
 export const getRelateProducts = (productId) =>{
-  return axiosService.get(`${API_ENDPOINT_AUTH}/products-relate?product=${productId}`);
+  return axiosService.get(`${API_ENDPOINT_AUTH}/products/relate/${productId}`);
 };
 
 // http://localhost:3000/products/accessory?brand=608c1a1c99e77e244c7db4bd&limit=5&page=0&sort_p=-1

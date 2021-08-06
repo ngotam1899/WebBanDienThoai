@@ -119,7 +119,7 @@ function* handleGetLike({ id }) {
     const result = yield call(getLikeProducts, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    yield put(ProductsActions.onGetLikeSuccess(data.result));
+    yield put(ProductsActions.onGetLikeSuccess(data.result.recommend));
   } catch (error) {
     yield put(ProductsActions.onGetLikeError(error));
   }
@@ -130,7 +130,7 @@ function* handleGetRelate({ id }) {
     const result = yield call(getRelateProducts, id);
     const data = get(result, "data", {});
     if (data.code !== 200) throw data;
-    yield put(ProductsActions.onGetRelateSuccess(data.result));
+    yield put(ProductsActions.onGetRelateSuccess(data.result.recommend));
   } catch (error) {
     yield put(ProductsActions.onGetRelateError(error));
   }

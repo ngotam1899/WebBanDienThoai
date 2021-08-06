@@ -23,6 +23,8 @@ const fileUpload = require('express-fileupload');
 const http = require('http')
 const socketIO = require('socket.io')
 const Product = require('./models/Product');
+const Relate = require('./models/relate');
+const Like = require('./models/like');
 
 // 2. Define server SocketIO, Express
 const app = express();
@@ -142,51 +144,81 @@ io.on('connection', (socket) => {
 });
 
 // 8. Child process python machine learning
-const likeProducts = (req, res, next) => {
+const likeProducts = async (req, res, next) => {
 	try {
-		var spawn = require('child_process').spawn;
-		var process = spawn('python', [
-			'./middlewares/like.py',
-			req.query.product,
-		]);
-		process.stdout.on("data", async (data) => {
-			// Convert string to JSON
-			var _data = JSON.stringify(data.toString())
-			var result = JSON.parse(JSON.parse(_data));
-			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 
-			'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
-			populate : {path : 'bigimage', select: "public_url"} });
-			return res.status(200).json({ success: true, code: 200, result: result.data });
-		})
+		var products = await Product.find({}, {_id: 1});
+		for(let i=0; i < products.length; i++){
+			var spawn = require('child_process').spawn;
+			var process = spawn('python', [
+				'./middlewares/like.py',
+				products[i]._id,
+			]);
+			process.stdout.on("data", async (data) => {
+				// Convert string to JSON
+				var _data = JSON.stringify(data.toString())
+				var result = JSON.parse(JSON.parse(_data));
+				const recommendFound = await Like.findOne({product: products[i]._id})
+				if(recommendFound){
+					recommendFound.recommend = result.data;
+					await recommendFound.save();
+				}
+				else {
+					const relate = new Like();
+					relate.product = products[i]._id,
+					relate.recommend = result.data;
+					await relate.save()
+				}
+				/* await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 
+				'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
+				populate : {path : 'bigimage', select: "public_url"} });
+				return res.status(200).json({ success: true, code: 200, result: result.data }); */
+			})
+		}
+		return res.status(200).json({ success: true, code: 200, result: "Training successfully"  });
 	} catch(error){
 		next(error)
 	}
 }
 
-const relateProducts = (req, res, next) => {
+const relateProducts = async (req, res, next) => {
 	try {
-		var spawn = require('child_process').spawn;
-		var process = spawn('python', [
-			'./middlewares/relate.py',
-			req.query.product,
-		]);
-		process.stdout.on("data", async (data) => {
-			// Convert string to JSON
-			var _data = JSON.stringify(data.toString())
-			var result = JSON.parse(JSON.parse(_data));
-			await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 
-			'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
-			populate : {path : 'bigimage', select: "public_url"} });
-			return res.status(200).json({ success: true, code: 200, result: result.data });
-		})
+		var products = await Product.find({}, {_id: 1});
+		for(let i=0; i < products.length; i++){
+			var spawn = require('child_process').spawn;
+			var process = spawn('python', [
+				'./middlewares/relate.py',
+				products[i]._id,
+			]);
+			process.stdout.on("data", async (data) => {
+				// Convert string to JSON
+				var _data = JSON.stringify(data.toString())
+				var result = JSON.parse(JSON.parse(_data));
+				const recommendFound = await Relate.findOne({product: products[i]._id})
+				if(recommendFound){
+					recommendFound.recommend = result.data;
+					await recommendFound.save();
+				}
+				else {
+					const relate = new Relate();
+					relate.product = products[i]._id,
+					relate.recommend = result.data;
+					await relate.save()
+				}
+			})
+		}
+		return res.status(200).json({ success: true, code: 200, result: "Training successfully"  });
+		/* await Product.populate(result, { path: 'data', select: ['name', 'bigimage', 'stars', 'price_min', 
+				'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
+				populate : {path : 'bigimage', select: "public_url"} });
+				return res.status(200).json({ success: true, code: 200, result: result.data }); */
 	} catch(error){
 		console.log(error)
 		next(error)
 	}
 }
 
-app.get('/products-like', likeProducts);
-app.get('/products-relate', relateProducts);
+app.get('/train-like', likeProducts);
+app.get('/train-relate', relateProducts);
 
 // 9. Catch 404 error and forward them to error handler
 app.use((req, res, next) => {

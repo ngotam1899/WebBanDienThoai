@@ -447,14 +447,14 @@ class Header extends Component {
             pageId="104334418256109"
             appId="804609327113718"
             htmlRef="https://localhost:5000"
-          /> 
+          />  */}
           <Widget
             socketUrl={"http://localhost:5005"}
             socketPath={"/socket.io/"}
             customData={{"language": "en"}} // arbitrary custom data. Stay minimal as this will be added to the socket
             title={"TellMe - Mobile Shopping Online"}
             profileAvatar={assets("logo_fe.png")}
-          /> */}
+          />
         </div>
       </>
     );

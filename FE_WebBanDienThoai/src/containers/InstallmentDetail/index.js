@@ -190,7 +190,7 @@ class InstallmentDetail extends Component {
                               else this.setState({paypal: !paypal})
                             }
                             else toastWarning(`${t('installment.payment.placeholder')}`)
-                          }}>{paypal ? "Edit" : "Submit"}</button>
+                          }}>{paypal ? t("review.edit.button") : t("review.submit.button")}</button>
                         </div>
                       </div>
                     </div>}
