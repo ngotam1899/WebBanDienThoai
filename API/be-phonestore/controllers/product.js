@@ -8,7 +8,8 @@ const Image = require('../models/Image');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Specification = require('../models/specification');
-
+const Like = require('../models/like');
+const Relate = require('../models/relate');
 
 const getAllProduct = async (req, res, next) => {
 	try {
@@ -541,6 +542,34 @@ const accessoryProduct = async (req, res, next) => {
 		products });
 }
 
+const likeProducts = async (req, res, next) => {
+	try {
+		const { IDProduct } = req.params
+		const recommendFound = await Like.findOne({product: IDProduct});
+		await Product.populate(recommendFound, { path: 'recommend', select: ['name', 'bigimage', 'stars', 'price_min', 
+			'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
+			populate : {path : 'bigimage', select: "public_url"} });
+		return res.status(200).json({ success: true, code: 200, result: recommendFound });
+	}
+	catch(error){
+		next(error);
+	}
+}
+
+const relateProducts = async (req, res, next) => {
+	try {
+		const { IDProduct } = req.params
+		const recommendFound = await Relate.findOne({product: IDProduct});
+		await Product.populate(recommendFound, { path: 'recommend', select: ['name', 'bigimage', 'stars', 'price_min', 
+			'pathseo', 'active', 'reviewCount', 'real_price_min', 'real_price_max'],
+			populate : {path : 'bigimage', select: "public_url"} });
+		return res.status(200).json({ success: true, code: 200, result: recommendFound });
+	}
+	catch(error){
+		next(error);
+	}
+}
+
 module.exports = {
 	getAllProduct,
 	getProductDetail,
@@ -554,5 +583,8 @@ module.exports = {
 	favoriteProduct,
 	newestProduct,
 	clusterData,
-	accessoryProduct
+	accessoryProduct,
+
+	likeProducts,
+	relateProducts
 };

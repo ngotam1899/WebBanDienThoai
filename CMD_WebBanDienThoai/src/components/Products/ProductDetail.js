@@ -654,7 +654,7 @@ class ProductDetail extends Component {
           <div className="row">
             <div className="col-12 col-lg-8">
               <div className="row">
-                <div className="col-12 col-lg-6">
+                <div className="col-12 col-lg-6" style={{"height": "570px", "overflow": "scroll"}}>
               <div className="row">
                 <div className="col-6">
                   <div className="form-group">
@@ -1136,12 +1136,12 @@ class ProductDetail extends Component {
               </div>
             </div>
 
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-4" >
               <div className="card text-white mb-3">
                 <div className="card-header bg-primary">
                   Chi tiết sản phẩm
                 </div>
-                <div className="card-body text-dark">
+                <div className="card-body text-dark" style={{"height": "1060px", "overflow": "scroll"}}>
                   {specifications.map((item, index) => {
                     return (
                       <div className="form-group" key={index} className="my-1">

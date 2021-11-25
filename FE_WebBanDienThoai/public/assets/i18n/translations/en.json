@@ -286,5 +286,6 @@
 
   "review.card.header": "Product Review",
   "review.card.h4": "Your review:",
-  "review.submit.button": "Submit"
+  "review.submit.button": "Submit",
+  "review.edit.button": "Edit"
 }

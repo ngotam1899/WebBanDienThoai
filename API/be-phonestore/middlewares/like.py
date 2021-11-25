@@ -7,7 +7,7 @@ import numpy as np
 import sklearn
 from sklearn.decomposition import TruncatedSVD
 
-url = 'http://be-phonestore.herokuapp.com/reviews/list?limit=100'
+url = 'http://be-phonestore.herokuapp.com/reviews/list?limit=200'
 r = requests.get(url)
 data = r.json()
 
@@ -22,15 +22,17 @@ ratings_utility_matrix = orders.pivot_table(values='rating', index='user', colum
 X = ratings_utility_matrix.T
 X1 = X
 
+#Giảm kích thước
+#n_components: Kích thước mong muốn của dữ liệu đầu ra (Phải nhỏ hơn số lượng features)
 SVD = TruncatedSVD(n_components=3)
-decomposed_matrix = SVD.fit_transform(X)                #fit ma trận X theo SVD
-correlation_matrix = np.corrcoef(decomposed_matrix)     #Đưa về corr matrix
-i = sys.argv[1]                                         #Truyền id sản phẩm vào
+#Fit mô hình với X và thực hiện giảm kích thước trên X
+decomposed_matrix = SVD.fit_transform(X)
+correlation_matrix = np.corrcoef(decomposed_matrix)
 
-product_names = list(X.index)                           #list ra ds index
-
-product_ID = product_names.index(i)                       #Tìm index của id sp truyền vào trong mảng
-correlation_product_ID = correlation_matrix[product_ID]  #Lấy giá trị của vị trí vừa tìm được trong corr matrix
+i = sys.argv[1]
+product_names = list(X.index)
+product_ID = product_names.index(i)
+correlation_product_ID = correlation_matrix[product_ID]
 
 Recommend = list(X.index[correlation_product_ID > 0.90]) #Lấy ra các id của corr matrix tương ứng với id mình nhập
 Recommend.remove(i)                                      # Xóa id mình nhập vào để còn các id có độ tương tự cao

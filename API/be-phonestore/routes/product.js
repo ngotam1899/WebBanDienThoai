@@ -100,6 +100,11 @@ router.route('/:IDProduct/activate')
 router.route('/:IDProduct/deactivate')
 	.put(passport.authenticate('jwt', { session: false }), productController.deactivateProduct)
 
+router.route('/like/:IDProduct')
+  .get(productController.likeProducts)
+router.route('/relate/:IDProduct')
+  .get(productController.relateProducts)
+
 router.route('/comment')
 	.post(passport.authenticate('jwt', { session: false }), commentController.addComment);
 
